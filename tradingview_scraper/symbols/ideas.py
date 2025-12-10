@@ -7,15 +7,11 @@ import requests
 from requests.exceptions import RequestException, JSONDecodeError
 from tradingview_scraper.symbols.utils import save_csv_file, save_json_file, generate_user_agent
 
-#loading environment variables
-from dotenv import load_dotenv
-import os
-load_dotenv()
-
 class Ideas:
-    def __init__(self, export_result=False, export_type='json'):
+    def __init__(self, export_result=False, export_type='json', cookie=None):
         self.export_result = export_result
         self.export_type = export_type
+        self.cookie = cookie
         self.headers = {"user-agent": generate_user_agent()}
         
     def scrape(
@@ -60,9 +56,8 @@ class Ideas:
         The method includes a delay of 5 seconds between requests to avoid overwhelming
         the server with rapid requests.
         """
-        cookie = os.getenv("TRADINGVIEW_COOKIE", "")
-        if cookie:
-            self.headers["cookie"] = cookie
+        if self.cookie:
+            self.headers["cookie"] = self.cookie
         pageList = range(startPage, endPage + 1)
         articles = []
 
