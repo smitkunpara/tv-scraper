@@ -11,24 +11,27 @@ TradingView Scraper is a Python library for scraping trading data, ideas, news, 
 ### Installation and Setup
 ```bash
 # Install dependencies
-pip install -r requirements.txt
+uv sync
+
+# For testing
+uv sync --extra test
 
 # Install the package in development mode
-pip install -e .
+uv pip install -e .
 ```
 
 ### Testing
 ```bash
 # Run all tests
-pytest
+uv run pytest
 
 # Run specific test file
-pytest tests/test_ideas.py
-pytest tests/test_indicators.py
-pytest tests/test_realtime_price.py
+uv run pytest tests/test_ideas.py
+uv run pytest tests/test_indicators.py
+uv run pytest tests/test_realtime_price.py
 
 # Run tests with verbose output
-pytest -v
+uv run pytest -v
 ```
 
 ### Code Quality

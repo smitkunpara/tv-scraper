@@ -7,7 +7,7 @@ name = "tradingview-scraper"
 version = "0.4.20"
 description = "Tradingview scraper tool"
 authors = [
-    {name = "Mostafa Najmi", email = "m.n.irib@gmail.com"}
+    {name = "Smit Kunpara", email = "smitkunpara@gmail.com"}
 ]
 readme = "README.md"
 license = {text = "MIT"}
@@ -35,9 +35,9 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/mnwato/tradingview-scraper"
-Repository = "https://github.com/mnwato/tradingview-scraper"
-Download = "https://github.com/mnwato/tradingview-scraper/archive/refs/tags/0.4.9.zip"
+Homepage = "https://github.com/smitkunpara/tradingview-scraper"
+Repository = "https://github.com/smitkunpara/tradingview-scraper"
+Download = "https://github.com/smitkunpara/tradingview-scraper/archive/refs/tags/0.4.9.zip"
 
 [tool.setuptools.packages.find]
 include = ["tradingview_scraper*"]

@@ -1,7 +1,7 @@
 # TradingView Scraper
-[![Python 3.8](https://img.shields.io/badge/python-3.8-blue.svg)](https://www.python.org/downloads/release/python-380/)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![MIT License](https://img.shields.io/github/license/mnwato/tradingview-scraper.svg?color=brightgreen)](https://opensource.org/licenses/MIT)
+[![MIT License](https://img.shields.io/github/license/smitkunpara/tradingview-scraper.svg?color=brightgreen)](https://opensource.org/licenses/MIT)
 
 
 This is a Python library for scraping ideas and indicators from [TradingView.com](https://www.tradingview.com). The goal is to develop this package to scrape anything on [TradingView.com](https://www.tradingview.com) with real-time responses.  
@@ -30,7 +30,7 @@ This is a Python library for scraping ideas and indicators from [TradingView.com
   
   Additional suggestions welcome!
 
-### To be aware of the latest changes, go to the [end of this page](https://github.com/mnwato/tradingview-scraper#changes).
+### To be aware of the latest changes, go to the [end of this page](https://github.com/smitkunpara/tradingview-scraper#changes).
 
 ## Features
 
@@ -53,18 +53,19 @@ This is a Python library for scraping ideas and indicators from [TradingView.com
   - Body
   - Tags
 
-- **Webpage Scraping Options**
-  - Scrape All Pages
-  - Scrape a Specific Range of Pages
+- **Captcha Handling**
+  - Optional cookie support for Ideas and News scrapers to bypass captchas
+  - Automatic captcha detection and error logging
 
 - **Indicator Extraction**
   - Extract values for indicators like `RSI`, `Stoch.K`, etc. 
-  - [Full list of indicators](https://github.com/mnwato/tradingview-scraper/blob/dev/tradingview_scraper/indicators.txt)
+  - [Full list of indicators](https://github.com/smitkunpara/tradingview-scraper/blob/dev/tradingview_scraper/indicators.txt)
 
 - **Real-Time data Extraction**
   - OHLCV
   - Watchlist
   - Indicators
+  - Always returns parsed data as dict (no generator)
 
 - **Market Movers Scraping**
   - Gainers
@@ -134,16 +135,31 @@ Here’s a revised version of the Installation section that enhances clarity and
 
 To get started with the TradingView Scraper library, follow these simple steps:
 
-1. **Open your terminal**: Launch your preferred command line interface.
-
-2. **Install the package**: Run the following command to install the TradingView Scraper:
+1. **Install UV**: If you don't have UV installed, install it first:
    ```sh
-   pip install tradingview-scraper
+   # On Windows
+   winget install --id=astral-sh.uv -e
    ```
 
-3. **Upgrade if necessary**: If you already have the library installed and want to upgrade to the latest version, use:
+2. **Clone or download the repository** (for development):
    ```sh
-   pip install --upgrade --no-cache tradingview-scraper
+   git clone https://github.com/smitkunpara/tradingview-scraper.git
+   cd tradingview-scraper
+   ```
+
+3. **Install dependencies**: Use UV to sync dependencies:
+   ```sh
+   uv sync
+   ```
+   For testing:
+   ```sh
+   uv sync --extra test
+   ```
+
+4. **Upgrade if necessary**: Pull the latest changes and sync:
+   ```sh
+   git pull origin main
+   uv sync
    ```
 
 Here’s a revised version of the Examples section, focusing on clarity, ease of understanding, and providing essential information about default values:
@@ -157,12 +173,16 @@ To quickly scrape ideas using default settings, use the following code:
 from tradingview_scraper.symbols.ideas import Ideas
 
 # Initialize the Ideas scraper with default parameters
-ideas_scraper = Ideas()  # Default: export_result=False, export_type='json'
+ideas_scraper = Ideas()  # Default: export_result=False, export_type='json', cookie=None
 ideas = ideas_scraper.scrape()  # Default symbol: 'BTCUSD'
 print("Ideas:", ideas)
 ```
 **Default Parameters:**
 - `export_result`: `False` (no file will be saved)
+- `export_type`: `'json'` (if exporting)
+- `cookie`: `None` (provide a TradingView cookie to avoid captchas)
+
+**Note:** If you encounter captchas, pass a `cookie` from your TradingView session to bypass them.
 - `export_type`: `'json'` (output format)
 
 ### 2. Getting Ideas for a Specific Symbol, Export Type, and Pages
@@ -173,7 +193,8 @@ from tradingview_scraper.symbols.ideas import Ideas
 # Initialize the Ideas scraper with custom parameters
 ideas_scraper = Ideas(
   export_result=True,  # Set to True to save the results
-  export_type='csv'    # Specify the export type (json or csv)
+  export_type='csv',   # Specify the export type (json or csv)
+  cookie=None          # Optional: Provide TradingView cookie to bypass captcha
 )
 
 # Scrape ideas for the ETHUSD symbol, from page 1 to page 2
@@ -187,16 +208,18 @@ print("Ideas:", ideas)
 ```
 
 #### Using Cookie for Captcha Bypass
-To avoid captcha challenges, set your TradingView cookie as an environment variable:
+To avoid captcha challenges, pass your TradingView cookie directly to the scraper:
 
+```python
+ideas_scraper = Ideas(cookie="your_tradingview_cookie_here")
+```
+
+To get the cookie:
 1. Open https://www.tradingview.com/symbols/BTCUSD/ideas/ in your browser
 2. Open Developer Tools (F12) and go to Network tab
 3. Verify the captcha if prompted
 4. Refresh the page and find the GET request at the top of the list with URL `https://www.tradingview.com/symbols/BTCUSD/ideas/`
-5. Copy the cookie value and add it to your `.env` file:
-   ```
-   TRADINGVIEW_COOKIE=your_cookie_here
-   ```
+5. Copy the cookie value and pass it as shown above.
 
 ```python
 from tradingview_scraper.symbols.ideas import Ideas
@@ -274,7 +297,7 @@ print("All Indicators:", indicators)
 from tradingview_scraper.symbols.news import NewsScraper
 
 # Create an instance of the NewsScraper with export options
-news_scraper = NewsScraper(export_result=True, export_type='json')
+news_scraper = NewsScraper(export_result=True, export_type='json', cookie=None)
 
 # Retrieve news headlines from a specific provider
 news_headlines = news_scraper.scrape_headlines(
@@ -382,7 +405,7 @@ streamer = Streamer(
     websocket_jwt_token="Your-Tradingview-Websocket-JWT"
     )
 
-data_generator = streamer.stream(
+data = streamer.stream(
     exchange="BINANCE",
     symbol="BTCUSDT",
     timeframe="4h",
@@ -390,9 +413,10 @@ data_generator = streamer.stream(
     indicator_id="STD;RSI",
     indicator_version="31.0"
     )
+print(data)  # {'ohlc': [...], 'indicator': {...}}
 ```
 #### Important Notes
-- **Export Historical Data**: Set `export_result=True` if only historical data is needed. (returns json instead of generator)
+- **Export Historical Data**: Set `export_result=True` to save data to files. The method always returns a dict with parsed OHLC and indicator data.
 - **Stream Only OHLCV**: Do not include `indicator_id` or `indicator_version`.
 
 #### Indicator Search
@@ -1619,7 +1643,12 @@ All symbols must include exchange prefix:
 ```
 
 ## Changes:
-- Release `0.4.19`:
+- Release `0.4.20`:
+  Migrate to UV for dependency management with pyproject.toml
+  Add cookie support and captcha handling for Ideas and News scrapers
+  Fix Streamer to always return parsed data dict instead of generator
+  Update to Python 3.11+ minimum requirement
+  Replace deprecated pkg_resources with importlib.resources
   Fix raise error while fetching ideas for pages greater than 1
 - Release `0.4.17`:
   Add Fundamental Graphs feature for comprehensive financial data
@@ -1653,7 +1682,7 @@ All symbols must include exchange prefix:
   Add Market Movers scraper (Gainers, Losers, Penny Stocks, Pre-market/After-hours movers)
   Support multiple markets (USA, UK, India, Australia, Canada, Crypto, Forex, Bonds, Futures)
 - Release `0.4.9`:
-  Add [documentation](https://mnwato.github.io/tradingview-scraper/)
+  Add [documentation](https://smitkunpara.github.io/tradingview-scraper/)
 - Release `0.4.8`:
   Fix bug while fetching ADX+DI indicators
   Add timeframe param for streamer export data
