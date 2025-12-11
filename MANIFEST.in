@@ -1,0 +1,6 @@
+include README.md
+include LICENSE
+include pyproject.toml
+include setup.py
+recursive-include tradingview_scraper *.py *.json *.txt
+recursive-include docs *

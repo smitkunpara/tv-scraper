@@ -4,24 +4,26 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "tradingview-scraper"
-version = "0.4.20"
-description = "Tradingview scraper tool"
+version = "0.4.21"
+description = "A powerful Python library for scraping real-time market data, indicators, and ideas from TradingView."
 authors = [
     {name = "Smit Kunpara", email = "smitkunpara@gmail.com"}
 ]
 readme = "README.md"
 license = {text = "MIT"}
 requires-python = ">=3.11"
-keywords = ["tradingview", "scraper", "python", "crawler", "financial"]
+keywords = ["tradingview", "scraper", "python", "finance", "market-data", "technical-analysis", "real-time"]
 classifiers = [
-    "Development Status :: 2 - Pre-Alpha",
+    "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
+    "Intended Audience :: Financial and Insurance Industry",
     "Operating System :: OS Independent",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
-    "Programming Language :: Python :: 3.14",
+    "Topic :: Office/Business :: Financial :: Investment",
+    "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 dependencies = [
     "requests>=2.32.4",
@@ -36,6 +38,7 @@ dependencies = [
 [project.urls]
 Homepage = "https://github.com/smitkunpara/tradingview-scraper"
 Repository = "https://github.com/smitkunpara/tradingview-scraper"
+Issues = "https://github.com/smitkunpara/tradingview-scraper/issues"
 
 [tool.setuptools.packages.find]
 include = ["tradingview_scraper*"]

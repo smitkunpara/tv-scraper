@@ -13,8 +13,8 @@ TradingView Scraper is a Python library for scraping trading data, ideas, news, 
 # Install dependencies
 uv sync
 
-# For testing
-uv sync --extra test
+# For development (includes testing and docs tools)
+uv sync --extra dev
 
 # Install the package in development mode
 uv pip install -e .
@@ -47,8 +47,17 @@ pylint $(git ls-files '*.py')
 ### Building Documentation
 ```bash
 cd docs
-make html
+# Serve locally
+mkdocs serve
+# Build for production
+mkdocs build
 ```
+
+## Contributing
+- **Prerequisites**: Python 3.11+, uv, git.
+- **Workflow**: Fork -> Clone -> Branch (`feature/name`) -> Code -> Test -> PR.
+- **Style**: clean code, add tests, update docs.
+- **Bug Reports**: Include description, reproduction steps, expected/actual behavior, and environment.
 
 ## Architecture
 
