@@ -96,7 +96,7 @@ class Indicators:
             if unsupported_indicators:
                 raise ValueError(f"Unsupported indicators: {', '.join(unsupported_indicators)}. "
                                 "Please check the list of supported indicators at the following link:\n"
-                                "https://github.com/smitkunpara/tradingview-scraper/blob/main/tradingview_scraper/data/indicators.txt")
+                                "https://smitkunpara.github.io/tv-scraper/supported_data/")
         else:
             indicators = self.indicators
 

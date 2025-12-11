@@ -11,13 +11,13 @@ If you just want to use the library in your project:
 ### Install from GitHub
 
 ```bash
-pip install git+https://github.com/smitkunpara/tradingview-scraper.git
+pip install git+https://github.com/smitkunpara/tv-scraper.git
 ```
 
 ### Install using UV
 
 ```bash
-uv add git+https://github.com/smitkunpara/tradingview-scraper.git
+uv add git+https://github.com/smitkunpara/tv-scraper.git
 ```
 
 ## For Developers (Full Setup)
@@ -52,7 +52,7 @@ pip install uv
 For development or contribution purposes:
 
 ```bash
-git clone https://github.com/smitkunpara/tradingview-scraper.git
+git clone https://github.com/smitkunpara/tv-scraper.git
 cd tradingview-scraper
 ```
 

@@ -36,9 +36,9 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/smitkunpara/tradingview-scraper"
-Repository = "https://github.com/smitkunpara/tradingview-scraper"
-Issues = "https://github.com/smitkunpara/tradingview-scraper/issues"
+Homepage = "https://github.com/smitkunpara/tv-scraper"
+Repository = "https://github.com/smitkunpara/tv-scraper"
+Issues = "https://github.com/smitkunpara/tv-scraper/issues"
 
 [tool.setuptools.packages.find]
 include = ["tradingview_scraper*"]

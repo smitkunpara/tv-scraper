@@ -40,15 +40,15 @@ class NewsScraper:
 
         if exchange and exchange not in self.exchanges:
             raise ValueError("Unsupported exchange! Please check 'the available options' at the link below:\n\t"
-                             "https://github.com/smitkunpara/tradingview-scraper/blob/main/tradingview_scraper/data/exchanges.txt")
+                             "https://smitkunpara.github.io/tv-scraper/supported_data/")
 
         if provider and provider not in self.news_providers:
             raise ValueError("Unsupported provider! Please check 'the available options' at the link below:\n\t"
-                             "https://github.com/smitkunpara/tradingview-scraper/blob/main/tradingview_scraper/data/news_providers.txt")
+                             "https://smitkunpara.github.io/tv-scraper/supported_data/")
 
         if area and area not in self.areas:
             raise ValueError("Invalid area! Please check 'the available options' at the link below:\n\t"
-                             "https://github.com/smitkunpara/tradingview-scraper/blob/main/tradingview_scraper/data/areas.json")
+                             "https://smitkunpara.github.io/tv-scraper/supported_data/")
 
         if section not in ["all", "esg", "financial_statement", "press_release"]:
             raise ValueError("Invalid section! It must be 'all' or 'esg'.")
@@ -58,7 +58,7 @@ class NewsScraper:
 
         if language not in self.languages:
             raise ValueError("Unsupported language! Please check 'the available options' at the link below:\n\t"
-                             "https://github.com/smitkunpara/tradingview-scraper/blob/main/tradingview_scraper/data/languages.json")
+                             "https://smitkunpara.github.io/tv-scraper/supported_data/")
 
         return kwargs
         

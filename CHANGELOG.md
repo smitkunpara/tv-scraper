@@ -36,7 +36,7 @@ This is a major release marking a significant overhaul of the project structure,
 ### Removed
 - Outdated GitHub workflows for documentation, release, PyPI deployment, and stale issue management.
 
-**Full Changelog**: [Commits](https://github.com/smitkunpara/tradingview-scraper/commits/v0.4.21)
+**Full Changelog**: [Commits](https://github.com/smitkunpara/tv-scraper/commits/v0.4.21)
 
 ## [0.4.20] - 2025-12-10
 

@@ -1,13 +1,19 @@
-# TradingView Scraper
+# TV Scraper
 
 <div align="center" markdown="1">
 
 ![Python](https://img.shields.io/badge/python-3.11+-blue.svg)
-![License](https://img.shields.io/github/license/smitkunpara/tradingview-scraper.svg)
+![License](https://img.shields.io/github/license/smitkunpara/tv-scraper.svg)
 
 **The most comprehensive and powerful Python library for programmatic access to TradingView data.**
 
-[Get Started](quick_start.md){ .md-button .md-button--primary } [View on GitHub](https://github.com/smitkunpara/tradingview-scraper){ .md-button .md-button--secondary }
+[Get Started](quick_start.md){ .md-button .md-button--primary } [View on GitHub](https://github.com/smitkunpara/tv-scraper){ .md-button .md-button--secondary }
+
+---
+
+## Attribution
+
+This project is based on [mnwato/tradingview-scraper](https://github.com/mnwato/tradingview-scraper). Thanks to the original author for the foundational work.
 
 </div>
 

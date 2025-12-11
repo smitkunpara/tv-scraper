@@ -1,8 +1,8 @@
 site_name: TradingView Scraper
 site_description: Comprehensive documentation for the TradingView Scraper library
-site_url: https://smitkunpara.github.io/tradingview-scraper/
+site_url: https://smitkunpara.github.io/tv-scraper/
 repo_name: smitkunpara/tradingview-scraper
-repo_url: https://github.com/smitkunpara/tradingview-scraper
+repo_url: https://github.com/smitkunpara/tv-scraper
 
 theme:
   name: material

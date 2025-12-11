@@ -5,7 +5,7 @@ We welcome contributions from the community! This guide will help you get starte
 ## 🚀 Ways to Contribute
 
 ### Code Contributions
-- **Bug Fixes**: Fix issues reported in the [issue tracker](https://github.com/smitkunpara/tradingview-scraper/issues)
+- **Bug Fixes**: Fix issues reported in the [issue tracker](https://github.com/smitkunpara/tv-scraper/issues)
 - **New Features**: Implement new scraping modules or enhance existing ones
 - **Performance Improvements**: Optimize code for better performance
 - **Documentation**: Improve documentation, add examples, or fix typos
@@ -182,8 +182,8 @@ result = scraper.scrape(
 
 ## 📞 Getting Help
 
-- **Issues**: [GitHub Issues](https://github.com/smitkunpara/tradingview-scraper/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/smitkunpara/tradingview-scraper/discussions)
+- **Issues**: [GitHub Issues](https://github.com/smitkunpara/tv-scraper/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/smitkunpara/tv-scraper/discussions)
 - **Documentation**: [Full Documentation](https://smitkunpara.github.io/tradingview-scraper/)
 
 ## 📜 Code of Conduct
