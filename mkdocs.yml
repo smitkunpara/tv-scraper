@@ -1,0 +1,104 @@
+site_name: TradingView Scraper
+site_description: Comprehensive documentation for the TradingView Scraper library
+site_url: https://smitkunpara.github.io/tradingview-scraper/
+repo_name: smitkunpara/tradingview-scraper
+repo_url: https://github.com/smitkunpara/tradingview-scraper
+
+theme:
+  name: material
+  # Set a custom logo or use an icon
+  # logo: assets/logo.png # (Optional: Add a logo image to docs/assets/ for better branding)
+  favicon: material/library
+  features:
+    # --- Navigation Layout ---
+    # navigation.tabs      <-- REMOVED: This restores the Left Sidebar
+    # navigation.tabs.sticky
+    - navigation.sections
+    - navigation.expand    # Opens categories automatically
+    - navigation.top       # Back to top button
+    - navigation.tracking  # Updates URL as you scroll
+    - navigation.indexes   # Allows clicking section titles
+    - toc.follow           # Highlight TOC on the right as you scroll
+
+    # --- UI Features ---
+    - search.suggest
+    - search.highlight
+    - search.share
+    - content.tabs.link
+    - content.code.annotation
+    - content.code.copy    # Native copy button (no JS needed)
+    - content.tooltips
+    - navigation.footer
+  
+  palette:
+    # Option 1: System preference (Auto-detects Light/Dark)
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: deep purple
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    
+    # Option 2: System preference (Auto-detects Dark)
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: teal
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+
+  font:
+    text: Inter            # More modern than Roboto
+    code: JetBrains Mono   # Better for coding documentation
+
+# Structure
+nav:
+  - Home: index.md
+  - Getting Started:
+    - Installation: installation.md
+    - Quick Start: quick_start.md
+  - Core Features:
+    - Ideas Scraper: ideas.md
+    - Indicators: indicators.md
+    - News & Sentiment: news.md
+    - Realtime Stream: realtime.md
+    - Market Movers: market_movers.md
+    - Stock Screener: screener.md
+  - Market Data:
+    - Markets Overview: markets.md
+    - Symbol Overview: overview.md
+    - Community Minds: minds.md
+    - Financials: fundamentals.md
+    - Calendar Events: calendar.md
+  - Reference:
+    - Supported Data: supported_data.md
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+
+extra_css:
+  - assets/custom.css
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/smitkunpara
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/project/tradingview-scraper/
