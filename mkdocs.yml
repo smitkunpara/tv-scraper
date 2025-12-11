@@ -18,6 +18,7 @@ theme:
     - navigation.top       # Back to top button
     - navigation.tracking  # Updates URL as you scroll
     - navigation.indexes   # Allows clicking section titles
+    - navigation.instant   # Loads pages instantly
     - toc.follow           # Highlight TOC on the right as you scroll
 
     # --- UI Features ---
