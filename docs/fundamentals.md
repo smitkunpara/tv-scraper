@@ -7,7 +7,6 @@ The Fundamental Data module provides comprehensive access to financial fundament
 !!! note "Supported Data"
     For a complete list of supported exchanges and symbols, see [Supported Data](supported_data.md).
 
-
 ## Input Specification
 
 ### FundamentalGraphs Class Constructor
@@ -34,14 +33,14 @@ The module validates symbols with the following requirements:
 
 The module organizes fundamental data into 9 comprehensive categories:
 
-1. **Income Statement Fields** (12 fields)
-2. **Balance Sheet Fields** (6 fields)
-3. **Cash Flow Fields** (4 fields)
+1. **Income Statement Fields** (13 fields)
+2. **Balance Sheet Fields** (9 fields)
+3. **Cash Flow Fields** (7 fields)
 4. **Margin Fields** (8 fields)
 5. **Profitability Fields** (5 fields)
 6. **Liquidity Fields** (4 fields)
 7. **Leverage Fields** (3 fields)
-8. **Valuation Fields** (9 fields)
+8. **Valuation Fields** (8 fields)
 9. **Dividend Fields** (3 fields)
 
 ## Output Specification
@@ -175,7 +174,6 @@ For comparison methods, the response includes additional structure:
 | `dividends_yield` | Dividend yield | Percentage |
 | `dividends_per_share_fq` | Dividends per share (fiscal quarter) | Currency |
 | `dividend_payout_ratio_ttm` | Dividend payout ratio (trailing twelve months) | Percentage |
-
 
 ## Code Examples
 
@@ -369,7 +367,6 @@ if result['status'] == 'failed':
 ```
 
 **Solution**: Check the error message and handle missing data scenarios gracefully.
-
 
 ## Test-Verified Constraints
 

@@ -30,8 +30,8 @@ scrape(symbol="BTCUSD", startPage=1, endPage=1, sort="popular")
 | Parameter | Type | Default | Description | Constraints |
 |-----------|------|---------|-------------|-------------|
 | `symbol` | str | `"BTCUSD"` | Trading symbol to scrape ideas for | Must be a valid TradingView symbol |
-| `startPage` | int | `1` | Starting page number | Must be ≥ 1 |
-| `endPage` | int | `1` | Ending page number | Must be ≥ startPage |
+| `startPage` | int | `1` | Starting page number | Must be >= 1 |
+| `endPage` | int | `1` | Ending page number | Must be >= startPage |
 | `sort` | str | `"popular"` | Sorting criteria | Must be either `'popular'` or `'recent'` |
 
 ## Output Specification
@@ -65,7 +65,6 @@ The scraper returns a list of dictionaries, where each dictionary represents a t
 | `author` | str | Username of the idea author |
 | `likes_count` | int | Number of likes the idea has received |
 | `timestamp` | int | Unix timestamp indicating when the idea was published |
-
 
 ## Code Examples
 
@@ -124,9 +123,6 @@ ideas = ideas_scraper.scrape(
     endPage=10
 )
 ```
-
-
-**Solution**: Ensure `endPage` is greater than or equal to `startPage`.
 
 ## Additional Notes
 

@@ -9,7 +9,22 @@ The Technical Indicators module provides functionality to scrape technical analy
 
 ## Input Specification
 
-### Arguments
+### Constructor Parameters
+
+```python
+Indicators(export_result: bool = False, export_type: str = 'json')
+```
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `export_result` | bool | `False` | Whether to automatically export results to file |
+| `export_type` | str | `'json'` | Export format, either `'json'` or `'csv'` |
+
+### Scrape Method Parameters
+
+```python
+scrape(exchange="BITSTAMP", symbol="BTCUSD", timeframe="1d", indicators=None, allIndicators=False)
+```
 
 | Parameter | Type | Default | Description | Required |
 |-----------|------|---------|-------------|----------|
@@ -58,7 +73,6 @@ The Technical Indicators module provides functionality to scrape technical analy
     }
 }
 ```
-
 
 ## Code Examples
 
@@ -213,7 +227,7 @@ result = indicators_scraper.scrape(
 
 ## Supported Indicators Reference
 
-The system supports 81 technical indicators organized into several categories:
+The system supports technical indicators organized into several categories:
 
 ### Momentum Indicators
 - `RSI`, `RSI[1]`

@@ -1,4 +1,4 @@
-# News Scraping
+# News Scraper
 
 ## Overview
 
@@ -7,7 +7,6 @@ The News Scraping module provides functionality to scrape financial and cryptocu
 !!! note "Supported Data"
     For a complete list of supported news providers, areas, languages, and exchanges, see [Supported Data](supported_data.md).
 
-
 ## Input Specification
 
 ### NewsScraper Class Constructor
@@ -15,6 +14,8 @@ The News Scraping module provides functionality to scrape financial and cryptocu
 ```python
 NewsScraper(export_result=False, export_type='json', cookie=None)
 ```
+
+**Parameters:**
 
 - `export_result` (bool): Whether to export results to file. Default: `False`
 - `export_type` (str): Export format, either `'json'` or `'csv'`. Default: `'json'`
@@ -106,7 +107,6 @@ The `scrape_news_content` method returns a dictionary with detailed article info
     "tags": [str]             # List of article tags
 }
 ```
-
 
 ## Code Examples
 
@@ -239,7 +239,6 @@ news_scraper = NewsScraper(cookie="your_tradingview_cookie")
 ```
 
 **Solution**: Set a valid TradingView session cookie in the constructor or environment variables.
-
 
 ## Error Cases from Tests
 

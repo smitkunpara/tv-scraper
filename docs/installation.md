@@ -57,7 +57,8 @@ uv sync
 # For development with testing capabilities
 uv sync --extra test
 ```
-### 5. Verify Installation
+
+### 4. Verify Installation
 
 Verify that the installation was successful:
 

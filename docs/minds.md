@@ -7,7 +7,6 @@ The Minds module provides functionality to scrape and analyze community-generate
 !!! note "Supported Data"
     For a complete list of supported exchanges and symbols, see [Supported Data](supported_data.md).
 
-
 ## Input Specification
 
 ### Minds Class Constructor
@@ -101,7 +100,6 @@ Each item in the `data` array contains:
     'exchange': str                 # Exchange name (e.g., 'NASDAQ')
 }
 ```
-
 
 ## Code Examples
 
@@ -229,6 +227,3 @@ all_results = minds.get_all_minds(symbol='NASDAQ:AAPL', max_results=200)
 ```
 
 **Solution**: Use `get_all_minds()` when you need more than 50 results or want to handle pagination automatically.
-
-
-This documentation provides comprehensive coverage of the Minds module functionality, including recent, popular, and trending discussions retrieval, pagination logic, engagement metrics analysis, symbol information extraction, and export capabilities. The module integrates with the broader TradingView Scraper ecosystem and follows consistent patterns for error handling and data validation.

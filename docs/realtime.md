@@ -12,7 +12,6 @@ The module consists of three main components:
 !!! note "Supported Data"
     For a complete list of supported indicators, timeframes, and exchanges, see [Supported Data](supported_data.md).
 
-
 ## Input Specification
 
 ### RealTimeData Class
@@ -102,7 +101,6 @@ The `stream()` method returns a dictionary with two keys:
     }
 }
 ```
-
 
 ## Code Examples
 
@@ -237,7 +235,6 @@ streamer = Streamer(websocket_jwt_token="your_actual_jwt_token")
 
 **Solution**: Set the `TRADINGVIEW_JWT_TOKEN` environment variable or pass a valid JWT token for full functionality.
 
-
 ## JWT Token Requirements
 
 Real-time streaming requires a valid TradingView JWT token for full functionality:
@@ -308,5 +305,3 @@ finally:
     # Connection is automatically closed by Streamer
     pass
 ```
-
-This documentation provides comprehensive coverage of the real-time streaming functionality, including all major components, usage patterns, error handling, and edge cases as specified in the requirements.

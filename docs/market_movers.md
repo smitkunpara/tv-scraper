@@ -4,7 +4,6 @@
 
 The Market Movers module provides functionality to scrape and analyze market movers data from TradingView. This includes gainers, losers, most active stocks, penny stocks, and pre/after-market movers across various financial markets.
 
-
 ## Input Specification
 
 ### MarketMovers Class Constructor
@@ -95,7 +94,6 @@ The `scrape()` method returns a dictionary with the following structure:
 Each item in the `data` list contains:
 - `symbol` - The trading symbol (e.g., 'NASDAQ:AAPL')
 - Field values as specified in the request
-
 
 ## Code Examples
 
@@ -190,7 +188,7 @@ scraper.scrape(market='stocks-usa', category='gainers')
 scraper.scrape(limit=1000)
 ```
 
-**Solution**: Keep the limit reasonable (typically ≤ 100) to avoid API issues.
+**Solution**: Keep the limit reasonable (typically <= 100) to avoid API issues.
 
 ### Mistake: Not handling API errors
 
@@ -209,7 +207,6 @@ if result['status'] == 'success':
 else:
     print(f"Error: {result['error']}")
 ```
-
 
 ## Advanced Usage Patterns
 

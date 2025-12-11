@@ -7,7 +7,6 @@ The Symbol Overview module provides comprehensive functionality to retrieve deta
 !!! note "Supported Data"
     For a complete list of supported exchanges and other data types, see [Supported Data](supported_data.md).
 
-
 ## Input Specification
 
 ### Overview Class Constructor
@@ -212,7 +211,6 @@ All methods return a dictionary with the following structure:
 }
 ```
 
-
 ## Code Examples
 
 ### Basic Usage
@@ -342,6 +340,3 @@ else:
 ```
 
 **Solution**: Always check the `status` field before accessing the `data` field.
-
-
-This documentation provides comprehensive coverage of the Symbol Overview module, including all data categories, expected schemas, usage examples, and common pitfalls. The module offers flexible access to detailed symbol information for fundamental and technical analysis.

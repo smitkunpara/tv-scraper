@@ -7,7 +7,6 @@ The Calendar module provides functionality to scrape dividend and earnings event
 !!! note "Supported Data"
     For a complete list of supported areas and other data types, see [Supported Data](supported_data.md).
 
-
 ## Input Specification
 
 ### CalendarScraper Class
@@ -115,7 +114,6 @@ EarningsEvent = {
 }
 ```
 
-
 ## Code Examples
 
 ### Basic Usage
@@ -205,6 +203,3 @@ dividends = scraper.scrape_dividends(markets=["america", "uk"])
 ```
 
 **Solution**: Use valid market identifiers. Refer to the supported data documentation for available markets.
-
-
-This documentation provides comprehensive information about the calendar module's functionality, covering earnings events, dividend events, time range behavior, value selection, and market filtering as specified in the requirements.

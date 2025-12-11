@@ -39,7 +39,7 @@ scrape(
 | `symbol` | str | Required | Symbol to search for (e.g., 'AAPL', 'BTCUSD') | Must be valid TradingView symbol |
 | `columns` | List[str] | None | Specific columns to retrieve | Must be valid column names |
 | `scanner` | str | 'global' | Scanner endpoint ('global', 'america', 'crypto', 'forex', 'cfd') | Must be one of supported scanners |
-| `limit` | int | 150 | Maximum number of results | Must be positive integer ≤ 150 |
+| `limit` | int | 150 | Maximum number of results | Must be positive integer <= 150 |
 
 ### Markets Class
 
@@ -70,7 +70,7 @@ get_top_stocks(
 | `market` | str | 'america' | Market to scan | Must be supported market |
 | `by` | str | 'market_cap' | Sorting criteria | Must be supported sort criteria |
 | `columns` | List[str] | None | Specific columns to retrieve | Must be valid column names |
-| `limit` | int | 50 | Maximum number of results | Must be positive integer ≤ 50 |
+| `limit` | int | 50 | Maximum number of results | Must be positive integer <= 50 |
 
 ## Supported Scanners and Markets
 
@@ -285,7 +285,7 @@ for region in regions:
     )
     print(f"\nTop 5 stocks in {region.upper()}:")
     for stock in result['data']:
-        print(f"- {stock['symbol']}: ${stock['close']} ({stock['change']}%)")
+        print(f"- {stock['symbol']}: ${stock['close']} ({stock['change']}%) ")
 ```
 
 ## Common Mistakes and Solutions
@@ -354,7 +354,6 @@ else:
 ```
 
 **Solution**: Always check the 'status' field before accessing data
-
 
 ## Advanced Usage Patterns
 

@@ -4,7 +4,6 @@
 
 The Screener module provides powerful functionality to screen financial instruments across multiple markets (stocks, crypto, forex, bonds, futures) with custom filters, sorting, and column selection. It enables users to find instruments that meet specific technical and fundamental criteria.
 
-
 ## Input Specification
 
 ### Screener Class Constructor
@@ -135,7 +134,6 @@ The `screen()` method returns a dictionary with the following structure:
 Each data item contains:
 - `symbol`: Instrument symbol (e.g., 'NASDAQ:AAPL')
 - Dynamic fields based on requested columns
-
 
 ## Code Examples
 
@@ -303,7 +301,6 @@ for i in range(100):
 
 **Solution**: Add appropriate delays between requests and respect TradingView's API limits.
 
-
 ## Advanced Usage Patterns
 
 ### Combining Multiple Filters
@@ -367,5 +364,3 @@ tech_results = screener.screen(
 
 !!! warning
     Always validate your filters and parameters before running screens. Invalid combinations can lead to empty results or API errors.
-
-This comprehensive screener documentation provides everything needed to effectively use the TradingView Scraper's screening capabilities across all supported markets with various filtering, sorting, and export options.
