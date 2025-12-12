@@ -6,7 +6,8 @@ repo_url: https://github.com/smitkunpara/tv-scraper
 
 theme:
   name: material
-  favicon: material/library
+  icon:
+    logo: material/library
   features:
     - navigation.sections
     - navigation.expand    # Opens categories automatically
@@ -97,6 +98,4 @@ extra_css:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/smitkunpara
-    - icon: fontawesome/brands/python
-      link: https://pypi.org/project/tradingview-scraper/
+      link: https://github.com/smitkunpara/tv-scraper

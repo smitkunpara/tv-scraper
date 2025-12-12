@@ -22,49 +22,31 @@ Minds(export_result: bool = False, export_type: str = 'json')
 ### get_minds() Method
 
 ```python
-get_minds(symbol: str, sort: str = 'recent', limit: int = 50) -> Dict
+get_minds(symbol: str, limit: int = None) -> Dict
 ```
 
 **Parameters:**
 - `symbol` (str): The symbol to get discussions for (e.g., `'NASDAQ:AAPL'`). **Required.**
-- `sort` (str): Sort order. Options: `'recent'`, `'popular'`, `'trending'`. Defaults to `'recent'`.
-- `limit` (int): Maximum number of results to retrieve (1-50). Defaults to `50`.
+- `limit` (int, optional): Maximum number of results to retrieve from the first page. If `None`, fetches all available data from the first page. Defaults to `None`.
 
 **Constraints:**
 - Symbol must include exchange prefix (e.g., `'NASDAQ:AAPL'`, `'BITSTAMP:BTCUSD'`)
 - Symbol must be a non-empty string
-- Sort option must be one of the supported values
-- Limit must be a positive integer
-
-### get_all_minds() Method
-
-```python
-get_all_minds(symbol: str, sort: str = 'recent', max_results: int = 200) -> Dict
-```
-
-**Parameters:**
-- `symbol` (str): The symbol to get discussions for. **Required.**
-- `sort` (str): Sort order. Options: `'recent'`, `'popular'`, `'trending'`. Defaults to `'recent'`.
-- `max_results` (int): Maximum total results to retrieve across all pages. Defaults to `200`.
-
-**Constraints:**
-- Same symbol constraints as `get_minds()`
-- Maximum results limited to reasonable values to prevent excessive API calls
+- Limit must be a positive integer if provided
 
 ## Output Specification
 
 ### Response Structure
 
-Both methods return a dictionary with the following structure:
+The method returns a dictionary with the following structure:
 
 ```python
 {
     'status': str,          # 'success' or 'failed'
     'data': List[Dict],     # List of mind discussions (only on success)
-    'total': int,           # Total number of results
+    'total': int,           # Total number of results retrieved
     'symbol_info': Dict,    # Information about the symbol
-    'next_cursor': str,     # Cursor for pagination (get_minds only)
-    'pages': int,           # Number of pages retrieved (get_all_minds only)
+    'pages': int,           # Number of pages retrieved (always 1)
     'error': str            # Error message (only on failure)
 }
 ```
@@ -111,11 +93,9 @@ from tradingview_scraper.symbols.minds import Minds
 # Initialize Minds scraper
 minds = Minds()
 
-# Get recent discussions for Apple
+# Get discussions for Apple from first page
 aapl_discussions = minds.get_minds(
-    symbol='NASDAQ:AAPL',
-    sort='recent',
-    limit=20
+    symbol='NASDAQ:AAPL'
 )
 
 print(f"Found {aapl_discussions['total']} discussions")
@@ -123,14 +103,13 @@ for discussion in aapl_discussions['data']:
     print(f"{discussion['author']['username']}: {discussion['text'][:50]}...")
 ```
 
-### Popular Discussions
+### Limited Discussions
 
 ```python
-# Get popular discussions for Bitcoin
+# Get up to 100 discussions for Bitcoin from first page
 btc_discussions = minds.get_minds(
     symbol='BITSTAMP:BTCUSD',
-    sort='popular',
-    limit=15
+    limit=100
 )
 
 # Find most liked discussion
@@ -139,39 +118,36 @@ print(f"Most liked discussion: {most_liked['total_likes']} likes")
 print(f"Text: {most_liked['text']}")
 ```
 
-### Trending Discussions with Export
+### Discussions with Export
 
 ```python
-# Get trending discussions and export to JSON
+# Get discussions and export to JSON
 minds_with_export = Minds(export_result=True, export_type='json')
 
-trending = minds_with_export.get_minds(
-    symbol='NASDAQ:TSLA',
-    sort='trending',
-    limit=25
+discussions = minds_with_export.get_minds(
+    symbol='NASDAQ:TSLA'
 )
 
 # This automatically saves to a JSON file
 ```
 
-### Pagination with get_all_minds()
+### Large Dataset Retrieval
 
 ```python
-# Get all available discussions (up to 200)
-all_discussions = minds.get_all_minds(
+# Get up to 200 discussions for Apple from first page
+all_discussions = minds.get_minds(
     symbol='NASDAQ:AAPL',
-    sort='popular',
-    max_results=100
+    limit=200
 )
 
-print(f"Retrieved {all_discussions['total']} discussions across {all_discussions['pages']} pages")
+print(f"Retrieved {all_discussions['total']} discussions from first page")
 ```
 
 ### Error Handling
 
 ```python
 # Handle potential errors
-result = minds.get_minds(symbol='INVALID', sort='recent')
+result = minds.get_minds(symbol='INVALID')
 
 if result['status'] == 'failed':
     print(f"Error: {result['error']}")

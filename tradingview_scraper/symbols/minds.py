@@ -33,13 +33,6 @@ class Minds:
     # Minds API endpoint
     MINDS_API_URL = 'https://www.tradingview.com/api/v1/minds/'
 
-    # Sort options
-    SORT_OPTIONS = {
-        'recent': 'recent',
-        'popular': 'popular',
-        'trending': 'trending',
-    }
-
     def __init__(self, export_result: bool = False, export_type: str = 'json'):
         """
         Initialize the Minds scraper.
@@ -77,26 +70,6 @@ class Minds:
             )
 
         return symbol
-
-    def _validate_sort(self, sort: str) -> str:
-        """
-        Validate sort option.
-
-        Args:
-            sort (str): The sort option to validate.
-
-        Returns:
-            str: Validated sort option.
-
-        Raises:
-            ValueError: If sort option is invalid.
-        """
-        if sort not in self.SORT_OPTIONS:
-            raise ValueError(
-                f"Unsupported sort option: {sort}. "
-                f"Supported options: {', '.join(self.SORT_OPTIONS.keys())}"
-            )
-        return self.SORT_OPTIONS[sort]
 
     def _parse_mind(self, item: Dict) -> Dict:
         """
@@ -149,48 +122,43 @@ class Minds:
     def get_minds(
         self,
         symbol: str,
-        sort: str = 'recent',
-        limit: int = 50
+        limit: Optional[int] = None
     ) -> Dict:
         """
-        Get Minds discussions for a symbol.
+        Get Minds discussions for a symbol from the first page.
+
+        This method retrieves community discussions for the specified symbol
+        from the first page only (no pagination).
 
         Args:
             symbol (str): The symbol to get discussions for (e.g., 'NASDAQ:AAPL').
-            sort (str): Sort order ('recent', 'popular', 'trending'). Defaults to 'recent'.
-            limit (int): Maximum number of results. Defaults to 50.
+            limit (int, optional): Maximum number of results to retrieve from the first page.
 
         Returns:
             dict: A dictionary containing:
                 - status (str): 'success' or 'failed'
                 - data (List[Dict]): List of minds discussions
-                - total (int): Total number of results
+                - total (int): Total number of results retrieved
                 - symbol_info (Dict): Information about the symbol
-                - next_cursor (str): Cursor for pagination
+                - pages (int): Number of pages retrieved (always 1)
                 - error (str): Error message if failed
 
         Example:
             >>> minds = Minds()
             >>>
-            >>> # Get recent discussions for Apple
-            >>> aapl_minds = minds.get_minds(symbol='NASDAQ:AAPL', sort='recent', limit=30)
+            >>> # Get discussions for Apple from first page
+            >>> aapl_minds = minds.get_minds(symbol='NASDAQ:AAPL')
             >>>
-            >>> # Get popular discussions for Bitcoin
-            >>> btc_minds = minds.get_minds(symbol='BITSTAMP:BTCUSD', sort='popular', limit=20)
-            >>>
-            >>> # Get trending discussions
-            >>> trending = minds.get_minds(symbol='NASDAQ:TSLA', sort='trending', limit=25)
+            >>> # Get up to 50 discussions for Bitcoin from first page
+            >>> btc_minds = minds.get_minds(symbol='BITSTAMP:BTCUSD', limit=50)
         """
         try:
             # Validate inputs
             symbol = self._validate_symbol(symbol)
-            sort_option = self._validate_sort(sort)
 
-            # Build request parameters
+            # Build parameters
             params = {
                 'symbol': symbol,
-                'limit': limit,
-                'sort': sort_option,
             }
 
             # Make request
@@ -201,48 +169,47 @@ class Minds:
                 timeout=10
             )
 
-            if response.status_code == 200:
-                json_response = response.json()
-
-                # Extract data
-                results = json_response.get('results', [])
-
-                if not results:
-                    return {
-                        'status': 'failed',
-                        'error': f'No discussions found for symbol: {symbol}'
-                    }
-
-                # Parse each mind
-                parsed_data = [self._parse_mind(item) for item in results]
-
-                # Extract metadata
-                meta = json_response.get('meta', {})
-                symbol_info = meta.get('symbols_info', {}).get(symbol, {})
-
-                # Extract next cursor for pagination
-                next_cursor = json_response.get('next', '')
-
-                # Export if requested
-                if self.export_result:
-                    self._export(
-                        data=parsed_data,
-                        symbol=symbol.replace(':', '_'),
-                        data_category='minds'
-                    )
-
-                return {
-                    'status': 'success',
-                    'data': parsed_data,
-                    'total': len(parsed_data),
-                    'symbol_info': symbol_info,
-                    'next_cursor': next_cursor
-                }
-            else:
+            if response.status_code != 200:
                 return {
                     'status': 'failed',
                     'error': f'HTTP {response.status_code}: {response.text}'
                 }
+
+            json_response = response.json()
+            results = json_response.get('results', [])
+
+            if not results:
+                return {
+                    'status': 'failed',
+                    'error': f'No discussions found for symbol: {symbol}'
+                }
+
+            # Parse data
+            parsed_data = [self._parse_mind(item) for item in results]
+
+            # Apply limit if specified
+            if limit is not None and len(parsed_data) > limit:
+                parsed_data = parsed_data[:limit]
+
+            # Get symbol info
+            meta = json_response.get('meta', {})
+            symbol_info = meta.get('symbols_info', {}).get(symbol, {})
+
+            # Export if requested
+            if self.export_result and parsed_data:
+                self._export(
+                    data=parsed_data,
+                    symbol=symbol.replace(':', '_'),
+                    data_category='minds'
+                )
+
+            return {
+                'status': 'success',
+                'data': parsed_data,
+                'total': len(parsed_data),
+                'pages': 1,
+                'symbol_info': symbol_info
+            }
 
         except ValueError as e:
             return {
@@ -254,111 +221,6 @@ class Minds:
                 'status': 'failed',
                 'error': f'Request failed: {str(e)}'
             }
-        except Exception as e:
-            return {
-                'status': 'failed',
-                'error': f'Request failed: {str(e)}'
-            }
-
-    def get_all_minds(
-        self,
-        symbol: str,
-        sort: str = 'recent',
-        max_results: int = 200
-    ) -> Dict:
-        """
-        Get all available Minds discussions for a symbol with pagination.
-
-        Args:
-            symbol (str): The symbol to get discussions for.
-            sort (str): Sort order ('recent', 'popular', 'trending'). Defaults to 'recent'.
-            max_results (int): Maximum total results to retrieve. Defaults to 200.
-
-        Returns:
-            dict: A dictionary containing all discussions up to max_results.
-
-        Example:
-            >>> minds = Minds()
-            >>> all_discussions = minds.get_all_minds(
-            ...     symbol='NASDAQ:AAPL',
-            ...     sort='popular',
-            ...     max_results=100
-            ... )
-        """
-        try:
-            # Validate inputs
-            symbol = self._validate_symbol(symbol)
-            sort_option = self._validate_sort(sort)
-
-            all_data = []
-            next_cursor = None
-            page = 1
-
-            while len(all_data) < max_results:
-                # Build parameters
-                params = {
-                    'symbol': symbol,
-                    'limit': min(50, max_results - len(all_data)),
-                    'sort': sort_option,
-                }
-
-                # Add cursor if not first page
-                if next_cursor:
-                    params['c'] = next_cursor
-
-                # Make request
-                response = requests.get(
-                    self.MINDS_API_URL,
-                    params=params,
-                    headers=self.headers,
-                    timeout=10
-                )
-
-                if response.status_code != 200:
-                    break
-
-                json_response = response.json()
-                results = json_response.get('results', [])
-
-                if not results:
-                    break
-
-                # Parse and add to collection
-                parsed_data = [self._parse_mind(item) for item in results]
-                all_data.extend(parsed_data)
-
-                # Check for next page
-                next_url = json_response.get('next', '')
-                if not next_url or '?c=' not in next_url:
-                    break
-
-                # Extract cursor from next URL
-                next_cursor = next_url.split('?c=')[1].split('&')[0]
-                page += 1
-
-            # Get symbol info from first page
-            symbol_info = {}
-            if all_data:
-                first_result = self.get_minds(symbol=symbol, sort=sort, limit=1)
-                if first_result['status'] == 'success':
-                    symbol_info = first_result.get('symbol_info', {})
-
-            # Export if requested
-            if self.export_result and all_data:
-                self._export(
-                    data=all_data,
-                    symbol=symbol.replace(':', '_'),
-                    data_category='minds_all'
-                )
-
-            return {
-                'status': 'success',
-                'data': all_data,
-                'total': len(all_data),
-                'pages': page,
-                'symbol_info': symbol_info
-            }
-
         except Exception as e:
             return {
                 'status': 'failed',

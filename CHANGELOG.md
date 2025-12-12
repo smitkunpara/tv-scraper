@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.1] - 2025-12-13
+
+### Overview
+This release focuses on simplifying the Minds community discussions scraper by removing pagination and improving packaging for cleaner builds.
+
+### Changed
+- **Minds API Refactor**: Simplified `Minds.get_minds()` to fetch only the first page of discussions (removed pagination logic for better reliability and performance)
+- **API Simplification**: Removed `sort` parameter and `get_all_minds()` method from Minds scraper
+- **Build Backend**: Switched from setuptools to hatchling for modern packaging
+- **Build Configuration**: Cleaned up `pyproject.toml` by removing setuptools-specific configuration sections and removed obsolete `MANIFEST.in`
+- **Package Exclusions**: Ensured clean builds by relying on `.gitignore` for excluding unwanted files (`.vscode`, `__pycache__`, `dist`, etc.)
+- **Dependencies**: Removed `setuptools` from runtime dependencies in `setup.py`
+- **Documentation**: Updated MkDocs configuration to use proper icon syntax and cleaned up social links
+- **Tests**: Streamlined test suite by removing pagination-related tests and sort validation
+
+### Fixed
+- **Packaging**: Ensured clean package builds by properly excluding development and cache files
+
+**Full Changelog**: [Commits](https://github.com/smitkunpara/tv-scraper/commits/v0.5.1)
+
 ## [0.5.0] - 2025-12-11
 
 ### Overview
