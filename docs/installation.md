@@ -53,7 +53,7 @@ For development or contribution purposes:
 
 ```bash
 git clone https://github.com/smitkunpara/tv-scraper.git
-cd tradingview-scraper
+cd tv-scraper
 ```
 
 ### 3. Install Dependencies
@@ -64,8 +64,8 @@ Install the required dependencies using UV:
 # Install core dependencies
 uv sync
 
-# For development with testing capabilities
-uv sync --extra test
+# For development with testing and docs capabilities
+uv sync --extra dev
 ```
 
 ### 4. Verify Installation

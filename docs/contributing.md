@@ -27,8 +27,8 @@ We welcome contributions from the community! This guide will help you get starte
 
 1. **Fork and Clone the Repository**
    ```bash
-   git clone https://github.com/YOUR_USERNAME/tradingview-scraper.git
-   cd tradingview-scraper
+   git clone https://github.com/YOUR_USERNAME/tv-scraper.git
+   cd tv-scraper
    ```
 
 2. **Set up Development Environment**
@@ -43,10 +43,10 @@ We welcome contributions from the community! This guide will help you get starte
 3. **Run Tests**
    ```bash
    # Run all tests
-   python -m pytest
+   uv run pytest
 
    # Run specific test file
-   python -m pytest tests/test_indicators.py
+   uv run pytest tests/test_indicators.py
    ```
 
 4. **Build Documentation**

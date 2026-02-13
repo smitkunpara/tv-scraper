@@ -831,7 +831,7 @@ wheels = [
 
 [[package]]
 name = "tradingview-scraper"
-version = "0.4.21"
+version = "0.5.2"
 source = { editable = "." }
 dependencies = [
     { name = "beautifulsoup4" },

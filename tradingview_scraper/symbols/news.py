@@ -1,22 +1,24 @@
 """Module providing a function to scrape published news about a symbol."""
 
-import os
-import json
 import logging
 
 from bs4 import BeautifulSoup
 import requests
-from importlib import resources
 
-
-from tradingview_scraper.symbols.utils import save_csv_file, save_json_file, generate_user_agent
+from tradingview_scraper.symbols.utils import (
+    save_csv_file,
+    save_json_file,
+    generate_user_agent,
+    load_text_file,
+    load_json_file,
+)
 
 class NewsScraper:
     def __init__(self, export_result=False, export_type='json', cookie=None):
         self.export_result = export_result
         self.export_type = export_type
         self.cookie = cookie
-        self.headers = {"user-agent": generate_user_agent()}
+        self.headers = {"User-Agent": generate_user_agent()}
 
         self.exchanges = self._load_exchanges()
         self.languages = self._load_languages()
@@ -100,7 +102,7 @@ class NewsScraper:
         soup = BeautifulSoup(response.text, "html.parser")
         
         article_tag = soup.find('article')
-        row_tags = soup.find('div', class_=lambda x: x and x.startswith('rowTags-'))
+        row_tags = soup.find('div', class_=lambda x: x and x.startswith('rowTags-'))  # type: ignore[arg-type]
 
         article_json = {
             "breadcrumbs": None,
@@ -111,7 +113,10 @@ class NewsScraper:
             "tags": []
         }
         
-        # Extracting the fields
+        # Extracting the fields  
+        if not article_tag:
+            return article_json
+        
         # Breadcrumbs
         breadcrumbs = article_tag.find('nav', {'aria-label': 'Breadcrumbs'})
         if breadcrumbs:
@@ -245,6 +250,7 @@ class NewsScraper:
             
         url = f"https://news-headlines.tradingview.com/v2/view/headlines/symbol?client=web&lang={language}&area={area_code}&provider={provider}&section={section}&streaming=&symbol={exchange}:{symbol}"
         
+        response = None  # Initialize for type checking
         try:
             response = requests.get(url, headers=self.headers, timeout=5)
             response.raise_for_status()  # Raises HTTPError for bad responses (4xx and 5xx)
@@ -267,7 +273,7 @@ class NewsScraper:
             return news_list
             
         except requests.exceptions.HTTPError as http_err:
-            if response.status_code == 400:
+            if response and response.status_code == 400:
                 raise ValueError("Bad request: The server could not understand the request.") from http_err
             raise  # Propagate other HTTP errors
         except Exception as err:
@@ -304,88 +310,21 @@ class NewsScraper:
 
 
     def _load_languages(self):
-        """Load languages from a specified file.
-
-        Returns:
-            list: A list of languages loaded from the file.
-
-        Raises:
-            IOError: If there is an error reading the file.
-        """
-        path = str(resources.files('tradingview_scraper') / 'data/languages.json')
-        if not os.path.exists(path):
-            print(f"[ERROR] Languages file not found at {path}.")
-            return []
-        try:
-            with open(path, 'r', encoding="utf-8") as f:
-                exchanges = json.load(f)
-            return list(exchanges.values())
-        except IOError as e:
-            print(f"[ERROR] Error reading languages file: {e}")
-            return []
+        """Load languages from a specified file."""
+        data = load_json_file('data/languages.json', default={})
+        return list(data.values()) if data and isinstance(data, dict) else []
 
 
     def _load_exchanges(self):
-        """Load exchanges from a specified file.
-
-        Returns:
-            list: A list of exchanges loaded from the file. Returns an empty list if the file is not found.
-
-        Raises:
-            IOError: If there is an error reading the file.
-        """
-        path = str(resources.files('tradingview_scraper') / 'data/exchanges.txt')
-        if not os.path.exists(path):
-            print(f"[ERROR] Exchanges file not found at {path}.")
-            return []
-        try:
-            with open(path, 'r', encoding="utf-8") as f:
-                exchanges = f.readlines()
-            return [exchange.strip() for exchange in exchanges]
-        except IOError as e:
-            print(f"[ERROR] Error reading exchanges file: {e}")
-            return []
+        """Load exchanges from a specified file."""
+        return load_text_file('data/exchanges.txt')
 
 
     def _load_news_providers(self):
-        """Load news providers from a specified file.
-
-        Returns:
-            list: A list of news providers loaded from the file.
-
-        Raises:
-            IOError: If there is an error reading the file.
-        """
-        path = str(resources.files('tradingview_scraper') / 'data/news_providers.txt')
-        if not os.path.exists(path):
-            print(f"[ERROR] News provider file not found at {path}.")
-            return []
-        try:
-            with open(path, 'r', encoding="utf-8") as f:
-                providers = f.readlines()
-            return [provider.strip() for provider in providers]
-        except IOError as e:
-            print(f"[ERROR] Error reading providers file: {e}")
-            return []
+        """Load news providers from a specified file."""
+        return load_text_file('data/news_providers.txt')
 
     
     def _load_areas(self) -> list:
-        """Load areas from a specified file.
-
-        Returns:
-            list: A list of areas loaded from the file.
-
-        Raises:
-            IOError: If there is an error reading the file.
-        """
-        path = str(resources.files('tradingview_scraper') / 'data/areas.json')
-        if not os.path.exists(path):
-            print(f"[ERROR] Areas file not found at {path}.")
-            return []
-        try:
-            with open(path, 'r', encoding="utf-8") as f:
-                areas = json.load(f)
-            return areas
-        except IOError as e:
-            print(f"[ERROR] Error reading areas file: {e}")
-            return []
+        """Load areas from a specified file."""
+        return load_json_file('data/areas.json', default=[])

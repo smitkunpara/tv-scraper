@@ -235,10 +235,10 @@ class Streamer:
         """
         indicator_data = {}
         if pkt.get('m') == "du":
-            for item in pkt.get('p', []):
-                if isinstance(item, dict):
-                    for k, v in pkt.get('p')[1].items():
-                        if k.startswith('st') and k in self.study_id_to_name_map:
+            p_data = pkt.get('p', [])
+            if len(p_data) > 1 and isinstance(p_data[1], dict):
+                for k, v in p_data[1].items():
+                    if k.startswith('st') and k in self.study_id_to_name_map:
                             if 'st' in v and len(v['st']) > 10:
                                 indicator_name = self.study_id_to_name_map[k]
                                 json_data = []
@@ -285,12 +285,12 @@ class Streamer:
                                      timeframe,
                                      numb_price_candles)
 
-        if ind_flag:
+        if ind_flag and indicators is not None:
             self._add_indicators(indicators)
 
         ohlc_json_data = []
         indicator_json_data = {}
-        expected_indicator_count = len(indicators) if ind_flag else 0
+        expected_indicator_count = len(indicators) if ind_flag and indicators is not None else 0
         
         logging.info(f"Starting data collection for {numb_price_candles} candles and {expected_indicator_count} indicators")
         
@@ -322,7 +322,7 @@ class Streamer:
                 break
         
         # Check for empty indicator data and log errors
-        if ind_flag:
+        if ind_flag and indicators is not None:
             for indicator_id, _ in indicators:
                 if indicator_id not in indicator_json_data:
                     logging.error(f"❌ Unable to scrape indicator: {indicator_id} - No data received")
@@ -368,6 +368,9 @@ class Streamer:
                 try:
                     sleep(1)
                     result = self.stream_obj.ws.recv()
+                    # Ensure result is a string (WebSocket can return bytes)
+                    if isinstance(result, bytes):
+                        result = result.decode('utf-8')
                     # Check if the result is a heartbeat or actual data
                     if re.match(r"~m~\d+~m~~h~\d+$", result):
                         self.stream_obj.ws.recv()  # Echo back the message
@@ -390,17 +393,9 @@ class Streamer:
 
 
 # Signal handler for keyboard interrupt
-def signal_handler(sig, frame):
-    """
-    Handles keyboard interrupt signals to gracefully close the WebSocket connection.
-
-    Args:
-        sig: The signal number.
-        frame: The current stack frame.
-    """
-    logging.info("Keyboard interrupt received. Closing WebSocket connection.")
-    sys.exit()
-
-
-# Register the signal handler
-signal.signal(signal.SIGINT, signal_handler)
+def _register_signal_handler():
+    """Register a signal handler for graceful shutdown when running as a script."""
+    def signal_handler(sig, frame):
+        logging.info("Keyboard interrupt received. Closing WebSocket connection.")
+        sys.exit()
+    signal.signal(signal.SIGINT, signal_handler)

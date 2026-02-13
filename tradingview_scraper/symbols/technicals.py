@@ -1,15 +1,18 @@
-"""Module providing a function to recieve indicators of a symbol."""
+"""Module providing a function to receive indicators of a symbol."""
 
-import os
 import re
-import json
 import logging
 from typing import List, Optional
 
 import requests
-from importlib import resources
 
-from tradingview_scraper.symbols.utils import generate_user_agent, save_json_file, save_csv_file
+from tradingview_scraper.symbols.utils import (
+    generate_user_agent,
+    save_json_file,
+    save_csv_file,
+    load_text_file,
+    load_json_file,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -103,10 +106,9 @@ class Indicators:
         base_url = "https://scanner.tradingview.com/symbol"
         fields = self._edit_indicators_by_specified_timeframe(indicators, timeframe).replace('+', '%2B')
         url = f"{base_url}?symbol={exchange}:{symbol}&fields={fields}&no_404=true"
-        headers = {'user-agent': generate_user_agent()}
 
         try:
-            response = requests.get(url, headers=headers, timeout=5)
+            response = requests.get(url, headers={'User-Agent': generate_user_agent()}, timeout=5)
             
             if response.status_code == 200:
                 json_response = response.json()
@@ -121,7 +123,7 @@ class Indicators:
                 return {"status": "failed"}
             
         except requests.RequestException as e:
-            print(f"[ERROR] Failed to scrape data: {e}")
+            logger.error("Failed to scrape data: %s", e)
             return {"status": "failed"}
 
 
@@ -149,59 +151,27 @@ class Indicators:
         elif self.export_type == "csv":
             save_csv_file(data=data, symbol=symbol, data_category='indicators', timeframe=timeframe)
     
-    def _load_file(self, path):
-        """Load data from a specified file.
-
-        Args:
-            path (str): The path to the file.
-
-        Returns:
-            list: A list of data loaded from the file, or an empty list if the file is not found or an error occurs.
-        """
-        if not os.path.exists(path):
-            print(f"[ERROR] file not found at {path}.")
-            return []
-        try:
-            with open(path, 'r', encoding="utf-8") as f:
-                return [line.strip() for line in f.readlines()]
-        except IOError as e:
-            print(f"[ERROR] Error reading file {path}: {e}")
-            return []
-
     def _load_indicators(self) -> List[str]:
         """Load indicators from a specified file.
 
         Returns:
-            List[str]: A list of indicators loaded from the file. Returns an empty list if the file is not found.
+            List[str]: A list of indicators loaded from the file.
         """
-        path = str(resources.files('tradingview_scraper') / 'data/indicators.txt')
-        return self._load_file(path)
+        return load_text_file('data/indicators.txt')
 
     def _load_exchanges(self) -> List[str]:
         """Load exchanges from a specified file.
 
         Returns:
-            List[str]: A list of exchanges loaded from the file. Returns an empty list if the file is not found.
+            List[str]: A list of exchanges loaded from the file.
         """
-        path = str(resources.files('tradingview_scraper') / 'data/exchanges.txt')
-        return self._load_file(path)
+        return load_text_file('data/exchanges.txt')
     
     def _load_timeframes(self) -> dict:
         """Load timeframes from a specified file.
 
         Returns:
-            dict: A dictionary of timeframes loaded from the file. Returns a dict with '1d' as default.
+            dict: A dictionary of timeframes loaded from the file.
         """
-        path = str(resources.files('tradingview_scraper') / 'data/timeframes.json')
-        
-        if not os.path.exists(path):
-            logger.error("[ERROR] Timeframe file not found at %s.", path)
-            return {"1d": None}
-
-        try:
-            with open(path, 'r', encoding='utf-8') as f:
-                timeframes = json.load(f)
-            return timeframes.get('indicators', {"1d": None})
-        except (IOError, json.JSONDecodeError) as e:
-            logger.error("[ERROR] Error reading timeframe file: %s", e)
-            return {"1d": None}
+        data = load_json_file('data/timeframes.json', default={"indicators": {"1d": None}})
+        return data.get('indicators', {"1d": None}) if data else {"1d": None}

@@ -70,17 +70,21 @@ The package is organized into the following key components:
 - `technicals.py` - Fetches technical indicators via TradingView scanner API
 - `news.py` - Scrapes news headlines and content for symbols
 - `cal.py` - Scrapes calendar events (earnings, dividends)
-- `utils.py` - Shared utilities for file export, user agent generation, validation
+- `overview.py` - Scrapes symbol overview data
+- `fundamental_graphs.py` - Scrapes fundamental financial graphs data
+- `minds.py` - Scrapes Minds community discussions
+- `market_movers.py` - Scrapes market movers (gainers, losers, active)
+- `markets.py` - Scrapes market listings
+- `screener.py` - Stock/crypto/forex screener
+- `symbol_markets.py` - Scrapes symbol market data
+- `utils.py` - Shared utilities for file export, user agent generation, validation, data loading
 - `exceptions.py` - Custom exception classes
 
 **`tradingview_scraper/symbols/stream/`** - Real-time WebSocket streaming
 - `streamer.py` - Main `Streamer` class for OHLCV and indicator streaming with export capabilities
-- `price.py` - `RealTimeData` class for simple OHLCV and watchlist streaming
+- `price.py` - `RealTimeData` class for simple OHLCV and watchlist streaming (delegates to `StreamHandler`)
 - `stream_handler.py` - Low-level WebSocket connection and message handling
 - `utils.py` - WebSocket utilities, symbol validation, indicator metadata fetching
-
-**`tradingview_scraper/utils/`** - Shared utilities
-- Currently empty, reserved for future shared utilities
 
 **`tradingview_scraper/data/`** - Static configuration files
 - `indicators.txt` - List of supported indicator names
@@ -179,9 +183,9 @@ When adding tests:
 
 ## Version and Dependencies
 
-- Python 3.8+ required
-- Key dependencies: requests==2.32.4, pandas>=2.0.3, beautifulsoup4>=4.12.3, pydantic>=2.8.2, websockets>=13.1, websocket-client>=1.8.0
-- Current version: 0.4.19 (see setup.py:19)
+- Python 3.11+ required
+- Key dependencies: requests>=2.32.4, pandas>=2.0.3, beautifulsoup4>=4.12.3, pydantic>=2.8.2, websockets>=13.1, websocket-client>=1.8.0, python-dotenv>=1.0.1
+- Current version: 0.5.2 (see pyproject.toml)
 
 ## CI/CD
 

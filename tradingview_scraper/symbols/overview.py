@@ -8,6 +8,7 @@ from tradingview_scraper.symbols.utils import (
     save_csv_file,
     save_json_file,
     generate_user_agent,
+    validate_symbol,
 )
 
 
@@ -153,30 +154,8 @@ class Overview:
         self.headers = {"User-Agent": generate_user_agent()}
 
     def _validate_symbol(self, symbol: str) -> str:
-        """
-        Validate and format symbol.
-
-        Args:
-            symbol (str): The symbol to validate.
-
-        Returns:
-            str: Formatted symbol.
-
-        Raises:
-            ValueError: If symbol is invalid.
-        """
-        if not symbol or not isinstance(symbol, str):
-            raise ValueError("Symbol must be a non-empty string")
-
-        symbol = symbol.strip().upper()
-
-        # Add exchange prefix if not present
-        if ':' not in symbol:
-            raise ValueError(
-                "Symbol must include exchange prefix (e.g., 'NASDAQ:AAPL', 'BITSTAMP:BTCUSD')"
-            )
-
-        return symbol
+        """Validate and format symbol. Delegates to shared utility."""
+        return validate_symbol(symbol)
 
     def get_symbol_overview(
         self,

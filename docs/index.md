@@ -63,6 +63,10 @@ The library is organized into specialized modules to handle different types of d
 | **[`Screener`](screener.md)** | Filter stocks, crypto, and forex based on technical/fundamental criteria. |
 | **[`Fundamentals`](fundamentals.md)** | Retrieve balance sheets, income statements, and cash flow. |
 | **[`MarketMovers`](market_movers.md)** | Identify top gainers, losers, and active symbols. |
+| **[`Overview`](overview.md)** | Get comprehensive symbol overview data. |
+| **[`Calendar`](calendar.md)** | Scrape dividend and earnings calendar events. |
+| **[`Markets`](markets.md)** | Browse market listings and categories. |
+| **[`Minds`](minds.md)** | Access community Minds discussions. |
 
 ## ✨ Why TradingView Scraper?
 

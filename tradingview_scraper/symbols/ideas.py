@@ -12,7 +12,7 @@ class Ideas:
         self.export_result = export_result
         self.export_type = export_type
         self.cookie = cookie
-        self.headers = {"user-agent": generate_user_agent()}
+        self.headers = {"User-Agent": generate_user_agent()}
         
     def scrape(
         self,
@@ -79,7 +79,7 @@ class Ideas:
                     # errors.append(f"[ERROR] Failed to scrape page {page}: {e}")
 
         # Save results
-        if self.export_result == True:
+        if self.export_result:
             self._export(data=articles, symbol=symbol)
         
         return articles
@@ -137,12 +137,12 @@ class Ideas:
                 })
             return ideas
             
-        except RequestException as e:
-            logging.error(f"Network request failed for page {page} of {symbol}: {e}")
-            return []
-        
         except JSONDecodeError as e:
             logging.error(f"Invalid JSON for page {page} of {symbol}: {e}")
+            return []
+        
+        except RequestException as e:
+            logging.error(f"Network request failed for page {page} of {symbol}: {e}")
             return []
         
         except Exception as e:
