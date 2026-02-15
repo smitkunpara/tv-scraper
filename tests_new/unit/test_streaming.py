@@ -173,8 +173,8 @@ class TestStreamer:
         mock_validate.return_value = True
 
         # Build a timescale_update packet
-        ohlc_entry = {"i": 0, "v": [1700000000, 100.0, 105.0, 99.0, 102.0, 5000]}
-        ts_pkt = {"m": "timescale_update", "p": ["cs_test", {"sds_1": {"s": [ohlc_entry]}}]}
+        ohlcv_entry = {"i": 0, "v": [1700000000, 100.0, 105.0, 99.0, 102.0, 5000]}
+        ts_pkt = {"m": "timescale_update", "p": ["cs_test", {"sds_1": {"s": [ohlcv_entry]}}]}
         ts_raw = json.dumps(ts_pkt)
         framed = f"~m~{len(ts_raw)}~m~{ts_raw}"
 
@@ -187,22 +187,22 @@ class TestStreamer:
 
         assert result["status"] == "success"
         assert "data" in result
-        assert "ohlc" in result["data"]
+        assert "ohlcv" in result["data"]
         assert result["error"] is None
 
     @patch("tv_scraper.streaming.streamer.validate_symbols")
     @patch("tv_scraper.streaming.stream_handler.create_connection")
-    def test_get_candles_ohlc_extraction(self, mock_cc, mock_validate):
-        """OHLC data is correctly serialized from timescale_update packets."""
+    def test_get_candles_ohlcv_extraction(self, mock_cc, mock_validate):
+        """OHLCV data is correctly serialized from timescale_update packets."""
         mock_ws = MagicMock()
         mock_cc.return_value = mock_ws
         mock_validate.return_value = True
 
-        ohlc_entries = [
+        ohlcv_entries = [
             {"i": 0, "v": [1700000000, 100.0, 105.0, 99.0, 102.0, 5000]},
             {"i": 1, "v": [1700000060, 102.0, 108.0, 101.0, 107.0, 6000]},
         ]
-        ts_pkt = {"m": "timescale_update", "p": ["cs_test", {"sds_1": {"s": ohlc_entries}}]}
+        ts_pkt = {"m": "timescale_update", "p": ["cs_test", {"sds_1": {"s": ohlcv_entries}}]}
         ts_raw = json.dumps(ts_pkt)
         framed = f"~m~{len(ts_raw)}~m~{ts_raw}"
 
@@ -213,12 +213,12 @@ class TestStreamer:
         s = Streamer()
         result = s.get_candles(exchange="BINANCE", symbol="BTCUSDT", numb_candles=2)
 
-        ohlc = result["data"]["ohlc"]
-        assert len(ohlc) == 2
-        assert ohlc[0]["open"] == 100.0
-        assert ohlc[0]["close"] == 102.0
-        assert ohlc[0]["volume"] == 5000
-        assert ohlc[1]["high"] == 108.0
+        ohlcv = result["data"]["ohlcv"]
+        assert len(ohlcv) == 2
+        assert ohlcv[0]["open"] == 100.0
+        assert ohlcv[0]["close"] == 102.0
+        assert ohlcv[0]["volume"] == 5000
+        assert ohlcv[1]["high"] == 108.0
 
     @patch("tv_scraper.streaming.streamer.fetch_indicator_metadata")
     @patch("tv_scraper.streaming.streamer.validate_symbols")
@@ -235,9 +235,9 @@ class TestStreamer:
             "p": ["cs_test", "st9", "st1", "sds_1", "Script@tv-scripting-101!", {}],
         }
 
-        # OHLC packet
-        ohlc_entry = {"i": 0, "v": [1700000000, 100.0, 105.0, 99.0, 102.0, 5000]}
-        ts_pkt = {"m": "timescale_update", "p": ["cs_test", {"sds_1": {"s": [ohlc_entry]}}]}
+        # OHLCV packet
+        ohlcv_entry = {"i": 0, "v": [1700000000, 100.0, 105.0, 99.0, 102.0, 5000]}
+        ts_pkt = {"m": "timescale_update", "p": ["cs_test", {"sds_1": {"s": [ohlcv_entry]}}]}
         ts_raw = json.dumps(ts_pkt)
         ts_framed = f"~m~{len(ts_raw)}~m~{ts_raw}"
 
@@ -274,8 +274,8 @@ class TestStreamer:
         mock_cc.return_value = mock_ws
         mock_validate.return_value = True
 
-        ohlc_entry = {"i": 0, "v": [1700000000, 100.0, 105.0, 99.0, 102.0, 5000]}
-        ts_pkt = {"m": "timescale_update", "p": ["cs_test", {"sds_1": {"s": [ohlc_entry]}}]}
+        ohlcv_entry = {"i": 0, "v": [1700000000, 100.0, 105.0, 99.0, 102.0, 5000]}
+        ts_pkt = {"m": "timescale_update", "p": ["cs_test", {"sds_1": {"s": [ohlcv_entry]}}]}
         ts_raw = json.dumps(ts_pkt)
         framed = f"~m~{len(ts_raw)}~m~{ts_raw}"
 
@@ -300,8 +300,8 @@ class TestStreamer:
         mock_cc.return_value = mock_ws
         mock_validate.return_value = True
 
-        ohlc_entry = {"i": 0, "v": [1700000000, 100.0, 105.0, 99.0, 102.0, 5000]}
-        ts_pkt = {"m": "timescale_update", "p": ["cs_test", {"sds_1": {"s": [ohlc_entry]}}]}
+        ohlcv_entry = {"i": 0, "v": [1700000000, 100.0, 105.0, 99.0, 102.0, 5000]}
+        ts_pkt = {"m": "timescale_update", "p": ["cs_test", {"sds_1": {"s": [ohlcv_entry]}}]}
         ts_raw = json.dumps(ts_pkt)
         framed = f"~m~{len(ts_raw)}~m~{ts_raw}"
         mock_ws.recv.side_effect = [framed, ConnectionError("done")]
@@ -321,8 +321,8 @@ class TestStreamer:
         mock_cc.return_value = mock_ws
         mock_validate.return_value = True
 
-        ohlc_entry = {"i": 0, "v": [1700000000, 100.0, 105.0, 99.0, 102.0, 5000]}
-        ts_pkt = {"m": "timescale_update", "p": ["cs_test", {"sds_1": {"s": [ohlc_entry]}}]}
+        ohlcv_entry = {"i": 0, "v": [1700000000, 100.0, 105.0, 99.0, 102.0, 5000]}
+        ts_pkt = {"m": "timescale_update", "p": ["cs_test", {"sds_1": {"s": [ohlcv_entry]}}]}
         ts_raw = json.dumps(ts_pkt)
         framed = f"~m~{len(ts_raw)}~m~{ts_raw}"
         mock_ws.recv.side_effect = [framed, ConnectionError("done")]

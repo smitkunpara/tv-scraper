@@ -5,7 +5,7 @@ via TradingView's WebSocket API. There are two main entry points:
 
 | Class | Use case |
 |---|---|
-| [`Streamer`](streamer.md) | Fetch OHLC candles, indicators, and continuous price updates |
+| [`Streamer`](streamer.md) | Fetch OHLCV candles, indicators, and continuous price updates |
 | [`RealTimeData`](realtime-price.md) | Simple generators for raw OHLCV and watchlist packets |
 
 ## Architecture
@@ -54,7 +54,7 @@ from tv_scraper.streaming import Streamer
 # Fetch 10 candles
 s = Streamer()
 result = s.get_candles(exchange="BINANCE", symbol="BTCUSDT", timeframe="1h")
-print(result["data"]["ohlc"])
+print(result["data"]["ohlcv"])
 
 # Continuous realtime price updates
 for tick in s.stream_realtime_price(exchange="BINANCE", symbol="BTCUSDT"):

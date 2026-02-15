@@ -56,6 +56,9 @@ pylint-output.txt
 # Ignore running script
 run.py
 
+# Temp folder for manual testing
+/temp/
+
 # Docs
 .DS_Store
 docs/_build/

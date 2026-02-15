@@ -41,9 +41,9 @@ class TestScrapeSuccess:
     def test_scrape_success_default_indicators(self, technicals: Technicals) -> None:
         """Scrape with a few indicators and verify envelope format."""
         mock_resp = _mock_response({
-            "data": [
-                {"s": "BITSTAMP:BTCUSD", "d": [55.0, 0.7, 45.0]}
-            ]
+            "RSI": 55.0,
+            "Recommend.All": 0.7,
+            "CCI20": 45.0
         })
         with mock.patch.object(technicals, "_make_request", return_value=mock_resp):
             result = technicals.scrape(
@@ -61,9 +61,8 @@ class TestScrapeSuccess:
     def test_scrape_success_specific_indicators(self, technicals: Technicals) -> None:
         """Scrape with specific indicators returns correct mapped data."""
         mock_resp = _mock_response({
-            "data": [
-                {"s": "BINANCE:BTCUSD", "d": [50.0, 80.0]}
-            ]
+            "RSI": 50.0,
+            "Stoch.K": 80.0
         })
         with mock.patch.object(technicals, "_make_request", return_value=mock_resp):
             result = technicals.scrape(
@@ -80,12 +79,8 @@ class TestScrapeSuccess:
     def test_scrape_all_indicators(self, technicals: Technicals) -> None:
         """all_indicators=True loads every indicator from the data file."""
         all_inds = technicals.validator.get_indicators()
-        mock_values = [float(i) for i in range(len(all_inds))]
-        mock_resp = _mock_response({
-            "data": [
-                {"s": "BINANCE:BTCUSD", "d": mock_values}
-            ]
-        })
+        mock_data = {ind: float(i) for i, ind in enumerate(all_inds)}
+        mock_resp = _mock_response(mock_data)
         with mock.patch.object(technicals, "_make_request", return_value=mock_resp):
             result = technicals.scrape(
                 exchange="BINANCE",
@@ -99,9 +94,7 @@ class TestScrapeSuccess:
     def test_scrape_with_timeframe(self, technicals: Technicals) -> None:
         """Non-daily timeframe appends |{value} suffix to indicator names."""
         mock_resp = _mock_response({
-            "data": [
-                {"s": "BINANCE:BTCUSD", "d": [60.0]}
-            ]
+            "RSI|240": 60.0
         })
         with mock.patch.object(
             technicals, "_make_request", return_value=mock_resp
@@ -113,10 +106,12 @@ class TestScrapeSuccess:
                 technical_indicators=["RSI"],
             )
 
-        # Verify the API request contained the timeframe-suffixed indicator
+        # Verify the API request is GET with timeframe-suffixed indicator in params
         call_kwargs = mock_req.call_args[1]
-        json_body = call_kwargs["json_data"]
-        assert "RSI|240" in json_body["columns"]
+        params = call_kwargs["params"]
+        assert "RSI|240" in params["fields"]
+        assert params["symbol"] == "BINANCE:BTCUSD"
+        assert params["no_404"] == "true"
 
         # Verify response keys have the suffix stripped
         assert result["status"] == STATUS_SUCCESS

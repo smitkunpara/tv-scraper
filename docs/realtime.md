@@ -2,11 +2,11 @@
 
 ## Overview
 
-The real-time streaming module provides functionality to connect to TradingView's WebSocket API for receiving live market data. This includes OHLC (Open, High, Low, Close) data and technical indicator values in real-time.
+The real-time streaming module provides functionality to connect to TradingView's WebSocket API for receiving live market data. This includes OHLCV (Open, High, Low, Close) data and technical indicator values in real-time.
 
 The module consists of three main components:
 - `RealTimeData`: Low-level WebSocket connection handler for raw price data
-- `Streamer`: High-level interface for streaming OHLC and indicator data
+- `Streamer`: High-level interface for streaming OHLCV and indicator data
 - `StreamHandler`: Session management and message handling
 
 !!! note "Supported Data"
@@ -22,7 +22,7 @@ RealTimeData()
 
 **Methods:**
 
-- `get_ohlcv(exchange_symbol: str)` - Returns generator for OHLC data
+- `get_ohlcv(exchange_symbol: str)` - Returns generator for OHLCV data
 - `get_latest_trade_info(exchange_symbol: List[str])` - Returns generator for multiple symbols
 
 **Parameters:**
@@ -75,7 +75,7 @@ The `stream()` method returns a dictionary with two keys:
 
 ```python
 {
-    "ohlc": [
+    "ohlcv": [
         {
             "index": int,
             "timestamp": int,
@@ -85,7 +85,7 @@ The `stream()` method returns a dictionary with two keys:
             "close": float,
             "volume": float
         },
-        # ... more OHLC candles
+        # ... more OHLCV candles
     ],
     "indicator": {
         "STD;RSI": [
@@ -104,7 +104,7 @@ The `stream()` method returns a dictionary with two keys:
 
 ## Code Examples
 
-### Basic OHLC Streaming
+### Basic OHLCV Streaming
 
 ```python
 from tradingview_scraper.symbols.stream import Streamer
@@ -116,7 +116,7 @@ streamer = Streamer(
     websocket_jwt_token="your_jwt_token_here"
 )
 
-# Stream OHLC data only
+# Stream OHLCV data only
 result = streamer.stream(
     exchange="BINANCE",
     symbol="BTCUSDT",
@@ -124,8 +124,8 @@ result = streamer.stream(
     numb_price_candles=10
 )
 
-print(f"Received {len(result['ohlc'])} OHLC candles")
-print(f"First candle: {result['ohlc'][0]}")
+print(f"Received {len(result['ohlcv'])} OHLCV candles")
+print(f"First candle: {result['ohlcv'][0]}")
 ```
 
 ### Streaming with Single Indicator
@@ -140,7 +140,7 @@ result = streamer.stream(
     numb_price_candles=5
 )
 
-print(f"OHLC candles: {len(result['ohlc'])}")
+print(f"OHLCV candles: {len(result['ohlcv'])}")
 print(f"RSI data points: {len(result['indicator']['STD;RSI'])}")
 ```
 
@@ -170,7 +170,7 @@ from tradingview_scraper.symbols.stream import RealTimeData
 # Create real-time data instance
 real_time_data = RealTimeData()
 
-# Get OHLC data generator
+# Get OHLCV data generator
 data_generator = real_time_data.get_ohlcv("BINANCE:BTCUSDT")
 
 # Process real-time data

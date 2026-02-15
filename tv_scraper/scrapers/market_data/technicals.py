@@ -103,15 +103,19 @@ class Technicals(BaseScraper):
         else:
             api_indicators = list(indicators)
 
-        url = f"{SCANNER_URL}/symbol"
-        body: Dict[str, Any] = {
-            "symbols": {"tickers": [f"{exchange}:{symbol}"]},
-            "columns": api_indicators,
+        # Build query parameters for GET request
+        fields_param = ",".join(api_indicators)
+        params: Dict[str, str] = {
+            "symbol": f"{exchange}:{symbol}",
+            "fields": fields_param,
+            "no_404": "true",
         }
+
+        url = f"{SCANNER_URL}/symbol"
 
         # --- Execute request ---
         try:
-            response = self._make_request(url, method="POST", json_data=body)
+            response = self._make_request(url, method="GET", params=params)
             json_response: Dict[str, Any] = response.json()
         except NetworkError as exc:
             return self._error_response(str(exc))
@@ -119,16 +123,14 @@ class Technicals(BaseScraper):
             return self._error_response(f"Failed to parse API response: {exc}")
 
         # --- Parse response ---
-        data_items: List[Dict[str, Any]] = json_response.get("data", [])
-        if not data_items:
+        # API returns indicators directly as a dict, not wrapped in "data"
+        if not json_response:
             return self._error_response("No data returned from API.")
 
-        item = data_items[0]
-        values: List[Any] = item.get("d", [])
-
         result: Dict[str, Any] = {}
-        for i, ind in enumerate(api_indicators):
-            result[ind] = values[i] if i < len(values) else None
+        # Map requested indicators to response values
+        for ind in api_indicators:
+            result[ind] = json_response.get(ind)
 
         # Strip timeframe suffix from keys
         result = self._revise_response(result, timeframe_value)

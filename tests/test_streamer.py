@@ -1,6 +1,6 @@
 """
 Comprehensive tests for the Streamer class functionality.
-Tests cover: OHLC streaming, single/multiple indicators, error handling.
+Tests cover: OHLCV streaming, single/multiple indicators, error handling.
 
 Set the TRADINGVIEW_JWT_TOKEN environment variable to run these tests:
     export TRADINGVIEW_JWT_TOKEN="your_jwt_token_here"
@@ -22,11 +22,11 @@ JWT_TOKEN = os.getenv("TRADINGVIEW_JWT_TOKEN", "unauthorized_user_token")
 # )
 
 
-class TestStreamerOHLC:
-    """Test OHLC data streaming without indicators"""
+class TestStreamerOHLCV:
+    """Test OHLCV data streaming without indicators"""
     
-    def test_stream_ohlc_only(self):
-        """Test streaming OHLC data without any indicators"""
+    def test_stream_ohlcv_only(self):
+        """Test streaming OHLCV data without any indicators"""
         streamer = Streamer(
             export_result=True,
             export_type='json',
@@ -59,7 +59,7 @@ class TestStreamerSingleIndicator:
     """Test streaming with a single indicator"""
     
     def test_stream_with_rsi(self):
-        """Test streaming OHLC data with RSI indicator"""
+        """Test streaming OHLCV data with RSI indicator"""
         if JWT_TOKEN == "unauthorized_user_token":
             pytest.skip("Skipping indicator test: TRADINGVIEW_JWT_TOKEN not set")
 

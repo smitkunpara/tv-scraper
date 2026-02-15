@@ -93,7 +93,7 @@ streamer = Streamer(
     export_type='json'
 )
 
-# Stream OHLC data for BTCUSD
+# Stream OHLCV data for BTCUSD
 result = streamer.stream(
     exchange="BINANCE",
     symbol="BTCUSD",
@@ -102,14 +102,14 @@ result = streamer.stream(
 )
 
 print("Streaming Result:")
-print(f"OHLC candles: {len(result['ohlc'])}")
+print(f"OHLCV candles: {len(result['ohlcv'])}")
 print(f"Indicators: {len(result['indicator'])}")
 ```
 
 **Expected Output:**
 ```text
 Streaming Result:
-OHLC candles: 3
+OHLCV candles: 3
 Indicators: 0
 ```
 
@@ -135,14 +135,14 @@ result = streamer.stream(
 )
 
 print("Streaming with Indicators:")
-print(f"OHLC candles: {len(result['ohlc'])}")
+print(f"OHLCV candles: {len(result['ohlcv'])}")
 print(f"RSI data points: {len(result['indicator']['STD;RSI'])}")
 ```
 
 **Expected Output:**
 ```text
 Streaming with Indicators:
-OHLC candles: 3
+OHLCV candles: 3
 RSI data points: 3
 ```
 
