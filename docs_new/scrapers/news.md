@@ -76,22 +76,32 @@ scrape_content(story_path: str) -> Dict[str, Any]
 
 All methods return a standardized response envelope:
 
-```python
+```json
 {
-    "status": "success",       # or "failed"
-    "data": [...],             # list of headlines or article dict
-    "metadata": {
-        "symbol": "BTCUSD",
-        "exchange": "BINANCE",
-        "total": 5
-    },
-    "error": None              # or error message string
+  "status": "success",
+  "data": [
+    {
+      "id": "story_12345",
+      "title": "Bitcoin Surges as Institutional Interest Grows",
+      "provider": "cointelegraph",
+      "published": 1705350000,
+      "urgency": 2,
+      "storyPath": "/news/story_12345-bitcoin-surges/",
+      "link": "https://www.tradingview.com/news/story_12345/"
+    }
+  ],
+  "metadata": {
+    "exchange": "BINANCE",
+    "symbol": "BTCUSD",
+    "provider": "cointelegraph"
+  },
+  "error": null
 }
 ```
 
 ### Headline Item
 
-```python
+```json
 {
     "id": "12345",
     "title": "Bitcoin Hits New High",
@@ -105,8 +115,10 @@ All methods return a standardized response envelope:
 
 ### Article Content
 
-```python
+```json
 {
+  "status": "success",
+  "data": {
     "breadcrumbs": "Markets > Crypto",
     "title": "Bitcoin Hits New High",
     "published_datetime": "2025-01-15T10:00:00Z",
@@ -116,6 +128,12 @@ All methods return a standardized response envelope:
         {"type": "image", "src": "https://...", "alt": "Chart"}
     ],
     "tags": ["Bitcoin", "Crypto"]
+  },
+  "metadata": {
+    "symbol": "BTCUSD",
+    "exchange": "BINANCE"
+  },
+  "error": null
 }
 ```
 

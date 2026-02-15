@@ -57,20 +57,24 @@ All responses follow the standard envelope format:
 
 ### Success
 
-```python
+```json
 {
-    "status": "success",
-    "data": {
-        "RSI": 58.4,
-        "Stoch.K": 76.2,
-        "MACD.macd": 150.5
-    },
-    "metadata": {
-        "exchange": "BINANCE",
-        "symbol": "BTCUSD",
-        "timeframe": "1d"
-    },
-    "error": None
+  "status": "success",
+  "data": {
+    "RSI": 54.21,
+    "Recommend.All": 0.15,
+    "CCI20": 112.45,
+    "Stoch.K": 78.50,
+    "EMA20": 42150.25,
+    "MACD.macd": 150.12,
+    "MACD.signal": 120.45
+  },
+  "metadata": {
+    "exchange": "BINANCE",
+    "symbol": "BTCUSD",
+    "timeframe": "1d"
+  },
+  "error": null
 }
 ```
 

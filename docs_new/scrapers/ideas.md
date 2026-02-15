@@ -50,17 +50,30 @@ result = scraper.scrape(
 
 All responses use the standard envelope:
 
-```python
+```json
 {
-    "status": "success",        # or "failed"
-    "data": [...],              # list of idea dicts, or None on error
-    "metadata": {
-        "exchange": "CRYPTO",
-        "symbol": "BTCUSD",
-        "total": 20,
-        "pages": 2,
-    },
-    "error": None,              # error message string on failure
+  "status": "success",
+  "data": [
+    {
+      "title": "BTCUSD: Bullish Breakout Confirmed",
+      "description": "Bitcoin has broken above the key resistance level of $45k...",
+      "author": "CryptoAnalyst99",
+      "comments_count": 24,
+      "views_count": 1250,
+      "likes_count": 85,
+      "timestamp": 1705350400,
+      "chart_url": "https://www.tradingview.com/chart/BTCUSD/abc123xyz/",
+      "preview_image": ["https://s3.tradingview.com/i/abc123xyz_mid.png"]
+    }
+  ],
+  "metadata": {
+    "exchange": "CRYPTO",
+    "symbol": "BTCUSD",
+    "sort_by": "popular",
+    "pages": 1,
+    "total": 1
+  },
+  "error": null
 }
 ```
 
