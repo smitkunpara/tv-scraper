@@ -102,6 +102,7 @@ if result["status"] == "success":
 
 ### Core Modules
 - **Indicators**: 81+ technical indicators (RSI, MACD, Stochastic, etc.)
+- **Options**: Fetch option chains by expiration or strike price
 - **Ideas**: Community trading ideas and strategies
 - **News**: Financial news with provider filtering
 - **Real-Time**: WebSocket streaming for live data

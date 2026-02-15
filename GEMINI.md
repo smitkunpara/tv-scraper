@@ -16,7 +16,7 @@
 The project follows a modular architecture under the `tv_scraper` package:
 - `tv_scraper/core/`: Contains base classes (`BaseScraper`), shared constants, exception hierarchy, and the `DataValidator` singleton.
 - `tv_scraper/scrapers/`: Individual scraper modules categorized by data type:
-    - `market_data/`: Technicals (indicators), Overview, Fundamentals, Markets.
+    - `market_data/`: Technicals (indicators), Overview, Fundamentals, Markets, Options.
     - `social/`: Ideas, Minds, News.
     - `screening/`: Screener, Market Movers, Symbol Markets.
     - `events/`: Calendar (dividends, earnings).
@@ -37,6 +37,12 @@ uv sync
 Execute the full test suite using `pytest`:
 ```bash
 uv run pytest tests
+```
+
+### Live API Verification
+To check if the TradingView endpoints are currently active, run the smoke tests:
+```bash
+uv run pytest tests/live_api
 ```
 
 ### Manual Testing

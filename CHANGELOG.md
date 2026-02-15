@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-02-15
+
+### Added
+- **`Options` scraper** — Fetch option chains by expiration or strike price via TradingView's options scanner API
+- **Live API smoke tests** — New `tests/live_api/` directory for verifying real-time endpoint availability
+
+### Changed
+- **Unified Parameter Handling** — Standardized `EXCHANGE:SYMBOL` parsing across all core scrapers (`Ideas`, `News`, `Technicals`, `Fundamentals`, `Overview`)
+- **Cleaned Codebase** — Removed legacy backward compatibility logic for cleaner, more maintainable code
+
 ## [1.0.0] - 2026-02-15
 
 ### Overview

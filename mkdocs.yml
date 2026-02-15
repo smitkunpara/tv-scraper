@@ -59,6 +59,7 @@ nav:
     - Technicals: scrapers/technicals.md
     - Fundamentals: scrapers/fundamentals.md
     - Markets: scrapers/markets.md
+    - Options: scrapers/options.md
     - Ideas: scrapers/ideas.md
     - Minds: scrapers/minds.md
     - News: scrapers/news.md
