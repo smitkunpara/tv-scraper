@@ -62,9 +62,10 @@ class Ideas(BaseScraper):
         """Scrape trading ideas for a symbol across one or more pages.
 
         Args:
-            exchange: Exchange name (e.g. ``"CRYPTO"``). Used for metadata
-                only; the ideas URL uses the symbol slug directly.
-            symbol: Trading symbol (e.g. ``"BTCUSD"``).
+            exchange: Exchange name (e.g. ``"NSE"``). Can be empty if
+                combined symbol is used in the `symbol` parameter.
+            symbol: Trading symbol slug (e.g. ``"NIFTY"``) or combined
+                ``"EXCHANGE:SYMBOL"`` string (e.g. ``"NSE:NIFTY"``).
             start_page: First page to scrape (1-based).
             end_page: Last page to scrape (inclusive).
             sort_by: Sorting criteria — ``"popular"`` or ``"recent"``.
@@ -73,12 +74,21 @@ class Ideas(BaseScraper):
             Standardized response dict with keys
             ``status``, ``data``, ``metadata``, ``error``.
         """
+        # Support combined EXCHANGE:SYMBOL
+        if not exchange and ":" in symbol:
+            exchange, symbol = symbol.split(":", 1)
+
         # --- Validation ---
         try:
+            if exchange:
+                self.validator.validate_exchange(exchange)
             self.validator.validate_symbol(exchange, symbol)
             self.validator.validate_choice("sort_by", sort_by, ALLOWED_SORT_VALUES)
         except ValidationError as exc:
             return self._error_response(str(exc))
+
+        # Build the URL slug (TV uses HYPHEN for combined symbols in URLs)
+        url_slug = f"{exchange}-{symbol}" if exchange else symbol
 
         # Apply cookie header if available
         headers = dict(self._headers)
@@ -91,7 +101,7 @@ class Ideas(BaseScraper):
         # --- Concurrent page scraping ---
         with ThreadPoolExecutor(max_workers=3) as executor:
             futures = {
-                executor.submit(self._scrape_page, symbol, page, sort_by, headers): page
+                executor.submit(self._scrape_page, url_slug, page, sort_by, headers): page
                 for page in page_list
             }
             for future in as_completed(futures):
@@ -129,7 +139,7 @@ class Ideas(BaseScraper):
 
     def _scrape_page(
         self,
-        symbol: str,
+        url_slug: str,
         page: int,
         sort_by: str,
         headers: Dict[str, str],
@@ -137,7 +147,7 @@ class Ideas(BaseScraper):
         """Scrape a single page of ideas from the TradingView API.
 
         Args:
-            symbol: Trading symbol slug.
+            url_slug: Trading symbol slug (possibly combined with exchange).
             page: Page number to scrape (1-based).
             sort_by: Sorting criteria.
             headers: HTTP headers dict (including cookie if set).
@@ -146,9 +156,9 @@ class Ideas(BaseScraper):
             List of mapped idea dicts, or ``None`` if a captcha was detected.
         """
         if page == 1:
-            url = f"{BASE_URL}/symbols/{symbol}/ideas/"
+            url = f"{BASE_URL}/symbols/{url_slug}/ideas/"
         else:
-            url = f"{BASE_URL}/symbols/{symbol}/ideas/page-{page}/"
+            url = f"{BASE_URL}/symbols/{url_slug}/ideas/page-{page}/"
 
         params: Dict[str, str] = {"component-data-only": "1"}
         if sort_by == "recent":
@@ -162,13 +172,13 @@ class Ideas(BaseScraper):
             if response.status_code != 200:
                 logger.error(
                     "HTTP %d: Failed to fetch page %d for %s",
-                    response.status_code, page, symbol,
+                    response.status_code, page, url_slug,
                 )
                 raise Exception(f"HTTP {response.status_code}")
 
             if "<title>Captcha Challenge</title>" in response.text:
                 logger.error(
-                    "Captcha challenge on page %d of %s", page, symbol,
+                    "Captcha challenge on page %d of %s", page, url_slug,
                 )
                 return None
 
@@ -179,11 +189,11 @@ class Ideas(BaseScraper):
             return [self._map_idea(item) for item in items]
 
         except json.JSONDecodeError as exc:
-            logger.error("Invalid JSON for page %d of %s: %s", page, symbol, exc)
+            logger.error("Invalid JSON for page %d of %s: %s", page, url_slug, exc)
             raise
         except Exception as exc:
             logger.error(
-                "Request failed for page %d of %s: %s", page, symbol, exc,
+                "Request failed for page %d of %s: %s", page, url_slug, exc,
             )
             raise
 

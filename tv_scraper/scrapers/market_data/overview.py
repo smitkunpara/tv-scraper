@@ -155,8 +155,10 @@ class Overview(BaseScraper):
         """Get comprehensive overview data for a symbol.
 
         Args:
-            exchange: Exchange name (e.g. ``"NASDAQ"``).
-            symbol: Trading symbol (e.g. ``"AAPL"``).
+            exchange: Exchange name (e.g. ``"NASDAQ"``). Can be empty if
+                combined symbol is used in the `symbol` parameter.
+            symbol: Trading symbol (e.g. ``"AAPL"``) or combined
+                ``"EXCHANGE:SYMBOL"`` string (e.g. ``"NASDAQ:AAPL"``).
             fields: Specific fields to retrieve. If ``None``, retrieves all
                 fields defined in ``ALL_FIELDS``.
 
@@ -164,9 +166,14 @@ class Overview(BaseScraper):
             Standardized response dict with keys
             ``status``, ``data``, ``metadata``, ``error``.
         """
+        # Support combined EXCHANGE:SYMBOL
+        if not exchange and ":" in symbol:
+            exchange, symbol = symbol.split(":", 1)
+
         # --- Validation ---
         try:
-            self.validator.validate_exchange(exchange)
+            if exchange:
+                self.validator.validate_exchange(exchange)
             self.validator.validate_symbol(exchange, symbol)
         except ValidationError as exc:
             return self._error_response(str(exc))
@@ -174,10 +181,13 @@ class Overview(BaseScraper):
         # Determine fields to request
         field_list = fields if fields else self.ALL_FIELDS
 
+        # Build symbol string for API
+        api_symbol = f"{exchange}:{symbol}" if exchange else symbol
+
         # --- Build API request ---
         url = f"{SCANNER_URL}/symbol"
         params: Dict[str, str] = {
-            "symbol": f"{exchange}:{symbol}",
+            "symbol": api_symbol,
             "fields": ",".join(field_list),
             "no_404": "true",
         }
@@ -196,7 +206,7 @@ class Overview(BaseScraper):
             return self._error_response("No data returned from API.")
 
         # API returns a flat dict of field:value
-        result: Dict[str, Any] = {"symbol": f"{exchange}:{symbol}"}
+        result: Dict[str, Any] = {"symbol": api_symbol}
         for field in field_list:
             result[field] = json_response.get(field)
 
@@ -204,7 +214,7 @@ class Overview(BaseScraper):
         if self.export_result:
             self._export(
                 data=result,
-                symbol=f"{exchange}_{symbol}",
+                symbol=f"{exchange}_{symbol}" if exchange else symbol,
                 data_category="overview",
             )
 

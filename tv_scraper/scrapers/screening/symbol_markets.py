@@ -87,7 +87,8 @@ class SymbolMarkets(BaseScraper):
         """Scrape all markets/exchanges where a symbol is traded.
 
         Args:
-            symbol: The symbol to search for (e.g. ``"AAPL"``, ``"BTCUSD"``).
+            symbol: The symbol to search for (e.g. ``"AAPL"``, ``"BTCUSD"``)
+                or combined ``"EXCHANGE:SYMBOL"`` (e.g. ``"NASDAQ:AAPL"``).
             fields: Columns to retrieve. Defaults to :attr:`DEFAULT_FIELDS`.
             scanner: Scanner region (``"global"``, ``"america"``, ``"crypto"``,
                 ``"forex"``, ``"cfd"``).
@@ -97,8 +98,11 @@ class SymbolMarkets(BaseScraper):
             Standardized response envelope with ``status``, ``data``,
             ``metadata``, and ``error`` keys.
         """
+        # Support combined EXCHANGE:SYMBOL by extracting the symbol name
+        search_symbol = symbol.split(":", 1)[1] if ":" in symbol else symbol
+
         # Validate symbol
-        if not symbol or not symbol.strip():
+        if not search_symbol or not search_symbol.strip():
             return self._error_response(
                 "Symbol must be a non-empty string.",
             )
@@ -113,7 +117,7 @@ class SymbolMarkets(BaseScraper):
         resolved_fields = fields if fields is not None else list(self.DEFAULT_FIELDS)
 
         payload = self._build_payload(
-            symbol=symbol,
+            symbol=search_symbol,
             fields=resolved_fields,
             limit=limit,
         )

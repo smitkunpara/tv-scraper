@@ -58,8 +58,10 @@ class Technicals(BaseScraper):
         """Scrape technical indicator values for a symbol.
 
         Args:
-            exchange: Exchange name (e.g. ``"BINANCE"``).
-            symbol: Trading symbol (e.g. ``"BTCUSD"``).
+            exchange: Exchange name (e.g. ``"BINANCE"``). Can be empty if
+                combined symbol is used in the `symbol` parameter.
+            symbol: Trading symbol slug (e.g. ``"NIFTY"``) or combined
+                ``"EXCHANGE:SYMBOL"`` string (e.g. ``"NSE:NIFTY"``).
             timeframe: Timeframe string (e.g. ``"1d"``, ``"4h"``, ``"1w"``).
             technical_indicators: List of indicator names to fetch.
                 Required unless ``all_indicators=True``.
@@ -71,9 +73,14 @@ class Technicals(BaseScraper):
             Standardized response dict with keys
             ``status``, ``data``, ``metadata``, ``error``.
         """
+        # Support combined EXCHANGE:SYMBOL
+        if not exchange and ":" in symbol:
+            exchange, symbol = symbol.split(":", 1)
+
         # --- Validation ---
         try:
-            self.validator.validate_exchange(exchange)
+            if exchange:
+                self.validator.validate_exchange(exchange)
             self.validator.validate_symbol(exchange, symbol)
             self.validator.validate_timeframe(timeframe)
         except ValidationError as exc:
@@ -105,8 +112,12 @@ class Technicals(BaseScraper):
 
         # Build query parameters for GET request
         fields_param = ",".join(api_indicators)
+
+        # Build symbol string for API
+        api_symbol = f"{exchange}:{symbol}" if exchange else symbol
+
         params: Dict[str, str] = {
-            "symbol": f"{exchange}:{symbol}",
+            "symbol": api_symbol,
             "fields": fields_param,
             "no_404": "true",
         }

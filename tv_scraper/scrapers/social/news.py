@@ -80,8 +80,10 @@ class News(BaseScraper):
         """Scrape news headlines for a symbol.
 
         Args:
-            exchange: Exchange name (e.g. ``"BINANCE"``).
-            symbol: Trading symbol (e.g. ``"BTCUSD"``).
+            exchange: Exchange name (e.g. ``"NSE"``). Can be empty if
+                combined symbol is used in the `symbol` parameter.
+            symbol: Trading symbol slug (e.g. ``"NIFTY"``) or combined
+                ``"EXCHANGE:SYMBOL"`` string (e.g. ``"NSE:NIFTY"``).
             provider: Optional news provider filter (e.g. ``"cointelegraph"``).
             area: Optional region filter (e.g. ``"americas"``).
             sort_by: Sort order. One of ``"latest"``, ``"oldest"``,
@@ -94,9 +96,14 @@ class News(BaseScraper):
             Standardized response dict with keys
             ``status``, ``data``, ``metadata``, ``error``.
         """
+        # Support combined EXCHANGE:SYMBOL
+        if not exchange and ":" in symbol:
+            exchange, symbol = symbol.split(":", 1)
+
         # Validate inputs
         try:
-            self.validator.validate_exchange(exchange)
+            if exchange:
+                self.validator.validate_exchange(exchange)
             self.validator.validate_symbol(exchange, symbol)
             self.validator.validate_choice("sort_by", sort_by, VALID_SORT_OPTIONS)
             self.validator.validate_choice("section", section, VALID_SECTIONS)
@@ -126,6 +133,9 @@ class News(BaseScraper):
         provider_param = provider.replace(".", "_") if provider else ""
         section_param = "" if section == "all" else section
 
+        # Build symbol string for API
+        api_symbol = f"{exchange}:{symbol}" if exchange else symbol
+
         url = (
             f"{NEWS_HEADLINES_URL}"
             f"?client=web"
@@ -134,7 +144,7 @@ class News(BaseScraper):
             f"&provider={provider_param}"
             f"&section={section_param}"
             f"&streaming="
-            f"&symbol={exchange}:{symbol}"
+            f"&symbol={api_symbol}"
         )
 
         try:
@@ -177,7 +187,7 @@ class News(BaseScraper):
             if self.export_result:
                 self._export(
                     data=cleaned_items,
-                    symbol=f"{exchange}_{symbol}",
+                    symbol=f"{exchange}_{symbol}" if exchange else symbol,
                     data_category="news",
                 )
 

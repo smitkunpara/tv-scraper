@@ -275,6 +275,26 @@ class TestScrapeHeadlinesSuccess:
         assert result["data"] == []
         assert result["error"] is None
 
+    @patch("tv_scraper.core.base.BaseScraper._make_request")
+    def test_scrape_headlines_combined_symbol(
+        self, mock_get: MagicMock, news: News
+    ) -> None:
+        """Combined EXCHANGE:SYMBOL in symbol parameter is supported."""
+        mock_get.return_value = _mock_response(
+            json_data=_make_headlines_response([_sample_headline()]),
+        )
+
+        # Pass empty exchange and combined symbol
+        result = news.scrape_headlines(exchange="", symbol="BINANCE:BTCUSD")
+
+        assert result["status"] == STATUS_SUCCESS
+        assert result["metadata"]["exchange"] == "BINANCE"
+        assert result["metadata"]["symbol"] == "BTCUSD"
+
+        # Verify URL has correct symbol parameter
+        call_url = mock_get.call_args[0][0]
+        assert "symbol=BINANCE:BTCUSD" in call_url
+
 
 # ---------------------------------------------------------------------------
 # scrape_headlines — validation errors
