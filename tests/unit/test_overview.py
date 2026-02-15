@@ -39,24 +39,14 @@ class TestGetOverviewSuccess:
 
     def test_get_overview_success(self, overview: Overview) -> None:
         """Get overview with default (all) fields returns success envelope."""
-        mock_values = [
-            "AAPL", "Apple Inc.", "stock", "common", "NASDAQ", "US",
-            "Technology", "Consumer Electronics",
-            150.25, 2.5, 3.75, 1.2, 152.0, 148.0, 149.0, 1000000,
-            500000000.0, 155.0, 140.0,
-            2500000000000, 2600000000000, 2700000000000, 15000000000,
-            14000000000, 16000000000,
-            28.5, 35.0, 7.5, 25.0, 6.5, 6.3, 50.0,
-            0.65, 0.92, 15.0,
-            400000000000, 26.5, 100000000000, 45.0, 30.0, 25.0,
-            150.0, 12.0, 35.0, 1.5, 1.2, 0.9, 130000000000, 164000,
-            1.5, 5.0, 12.0, 20.0, 25.0, 10.0,
-            1.2, 2.0, 3.5, 1.15,
-            0.7, 55.0, 45.0, 25.0, 0.5, 60.0, 14.0,
-        ]
-        mock_resp = _mock_response({
-            "data": [{"s": "NASDAQ:AAPL", "d": mock_values}]
-        })
+        # Flat mock response as returned by GET /symbol endpoint
+        mock_data = {
+            "name": "AAPL",
+            "close": 150.25,
+            "market_cap_basic": 2500000000000,
+        }
+        mock_resp = _mock_response(mock_data)
+        
         with mock.patch.object(overview, "_make_request", return_value=mock_resp):
             result = overview.get_overview(exchange="NASDAQ", symbol="AAPL")
 
@@ -70,9 +60,13 @@ class TestGetOverviewSuccess:
     def test_get_overview_with_custom_fields(self, overview: Overview) -> None:
         """Custom fields are sent to the API and returned correctly."""
         custom_fields = ["close", "volume", "market_cap_basic"]
-        mock_resp = _mock_response({
-            "data": [{"s": "NASDAQ:AAPL", "d": [150.25, 1000000, 2500000000000]}]
-        })
+        mock_data = {
+            "close": 150.25,
+            "volume": 1000000,
+            "market_cap_basic": 2500000000000,
+        }
+        mock_resp = _mock_response(mock_data)
+        
         with mock.patch.object(
             overview, "_make_request", return_value=mock_resp
         ) as mock_req:
@@ -85,10 +79,11 @@ class TestGetOverviewSuccess:
         assert result["data"]["volume"] == 1000000
         assert result["data"]["market_cap_basic"] == 2500000000000
 
-        # Verify correct fields sent to API
+        # Verify correct params sent to API (GET uses params, not json_data)
         call_kwargs = mock_req.call_args[1]
-        json_body = call_kwargs["json_data"]
-        assert json_body["columns"] == custom_fields
+        params = call_kwargs["params"]
+        assert params["symbol"] == "NASDAQ:AAPL"
+        assert params["fields"] == ",".join(custom_fields)
 
 
 class TestGetOverviewErrors:
@@ -201,9 +196,8 @@ class TestResponseFormat:
 
     def test_response_has_standard_envelope(self, overview: Overview) -> None:
         """Response contains exactly status/data/metadata/error keys."""
-        mock_resp = _mock_response({
-            "data": [{"s": "NASDAQ:AAPL", "d": [150.25]}]
-        })
+        mock_data = {"close": 150.25}
+        mock_resp = _mock_response(mock_data)
         with mock.patch.object(overview, "_make_request", return_value=mock_resp):
             result = overview.get_overview(
                 exchange="NASDAQ", symbol="AAPL", fields=["close"]
@@ -214,9 +208,8 @@ class TestResponseFormat:
 
     def test_combines_exchange_symbol_for_api(self, overview: Overview) -> None:
         """Verify EXCHANGE:SYMBOL is combined internally for the API call."""
-        mock_resp = _mock_response({
-            "data": [{"s": "NASDAQ:AAPL", "d": [150.25]}]
-        })
+        mock_data = {"close": 150.25}
+        mock_resp = _mock_response(mock_data)
         with mock.patch.object(
             overview, "_make_request", return_value=mock_resp
         ) as mock_req:
@@ -225,5 +218,5 @@ class TestResponseFormat:
             )
 
         call_kwargs = mock_req.call_args[1]
-        json_body = call_kwargs["json_data"]
-        assert json_body["symbols"]["tickers"] == ["NASDAQ:AAPL"]
+        params = call_kwargs["params"]
+        assert params["symbol"] == "NASDAQ:AAPL"

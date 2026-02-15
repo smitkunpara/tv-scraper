@@ -39,79 +39,14 @@ class TestGetFundamentalsSuccess:
 
     def test_get_fundamentals_success(self, fundamentals: Fundamentals) -> None:
         """Get fundamentals with default (all) fields returns success envelope."""
-        mock_values: List[Any] = [
-            394000000000,  # total_revenue
-            26.5,          # revenue_per_share_ttm
-            390000000000,  # total_revenue_fy
-            170000000000,  # gross_profit
-            168000000000,  # gross_profit_fy
-            120000000000,  # operating_income
-            118000000000,  # operating_income_fy
-            100000000000,  # net_income
-            99000000000,   # net_income_fy
-            130000000000,  # EBITDA
-            6.5,           # basic_eps_net_income
-            6.3,           # earnings_per_share_basic_ttm
-            6.2,           # earnings_per_share_diluted_ttm
-            # balance sheet
-            350000000000,  # total_assets
-            345000000000,  # total_assets_fy
-            60000000000,   # cash_n_short_term_invest
-            58000000000,   # cash_n_short_term_invest_fy
-            120000000000,  # total_debt
-            118000000000,  # total_debt_fy
-            50000000000,   # stockholders_equity
-            48000000000,   # stockholders_equity_fy
-            3.5,           # book_value_per_share_fq
-            # cash flow
-            110000000000,  # cash_f_operating_activities
-            108000000000,  # cash_f_operating_activities_fy
-            -20000000000,  # cash_f_investing_activities
-            -18000000000,  # cash_f_investing_activities_fy
-            -90000000000,  # cash_f_financing_activities
-            -88000000000,  # cash_f_financing_activities_fy
-            85000000000,   # free_cash_flow
-            # margins
-            43.0,          # gross_margin
-            43.5,          # gross_margin_percent_ttm
-            30.0,          # operating_margin
-            30.5,          # operating_margin_ttm
-            28.0,          # pretax_margin_percent_ttm
-            25.0,          # net_margin
-            25.5,          # net_margin_percent_ttm
-            33.0,          # EBITDA_margin
-            # profitability
-            150.0,         # return_on_equity
-            145.0,         # return_on_equity_fq
-            30.0,          # return_on_assets
-            28.0,          # return_on_assets_fq
-            35.0,          # return_on_investment_ttm
-            # liquidity
-            1.1,           # current_ratio
-            1.0,           # current_ratio_fq
-            0.9,           # quick_ratio
-            0.85,          # quick_ratio_fq
-            # leverage
-            2.4,           # debt_to_equity
-            2.3,           # debt_to_equity_fq
-            0.35,          # debt_to_assets
-            # valuation
-            2800000000000, # market_cap_basic
-            2850000000000, # market_cap_calc
-            2900000000000, # market_cap_diluted_calc
-            2700000000000, # enterprise_value_fq
-            28.5,          # price_earnings_ttm
-            45.0,          # price_book_fq
-            7.5,           # price_sales_ttm
-            25.0,          # price_free_cash_flow_ttm
-            # dividends
-            0.65,          # dividends_yield
-            0.24,          # dividends_per_share_fq
-            15.0,          # dividend_payout_ratio_ttm
-        ]
-        mock_resp = _mock_response({
-            "data": [{"s": "NASDAQ:AAPL", "d": mock_values}],
-        })
+        # Flat mock response as returned by GET /symbol endpoint
+        mock_data: Dict[str, Any] = {
+            "total_revenue": 394000000000,
+            "EBITDA": 130000000000,
+            "market_cap_basic": 2800000000000,
+        }
+        mock_resp = _mock_response(mock_data)
+        
         with mock.patch.object(fundamentals, "_make_request", return_value=mock_resp):
             result = fundamentals.get_fundamentals(exchange="NASDAQ", symbol="AAPL")
 
@@ -127,9 +62,13 @@ class TestGetFundamentalsSuccess:
     ) -> None:
         """Custom fields are sent to the API and returned correctly."""
         custom_fields = ["total_revenue", "net_income", "EBITDA"]
-        mock_resp = _mock_response({
-            "data": [{"s": "NASDAQ:AAPL", "d": [394000000000, 100000000000, 130000000000]}],
-        })
+        mock_data: Dict[str, Any] = {
+            "total_revenue": 394000000000,
+            "net_income": 100000000000,
+            "EBITDA": 130000000000,
+        }
+        mock_resp = _mock_response(mock_data)
+        
         with mock.patch.object(
             fundamentals, "_make_request", return_value=mock_resp
         ) as mock_req:
@@ -142,10 +81,11 @@ class TestGetFundamentalsSuccess:
         assert result["data"]["net_income"] == 100000000000
         assert result["data"]["EBITDA"] == 130000000000
 
-        # Verify correct fields sent to API
+        # Verify correct params sent to API (GET uses params, not json_data)
         call_kwargs = mock_req.call_args[1]
-        json_body = call_kwargs["json_data"]
-        assert json_body["columns"] == custom_fields
+        params = call_kwargs["params"]
+        assert params["symbol"] == "NASDAQ:AAPL"
+        assert params["fields"] == ",".join(custom_fields)
 
 
 class TestGetFundamentalsErrors:
@@ -327,12 +267,12 @@ class TestCompareFundamentals:
         ]
         custom_fields = ["total_revenue", "net_income", "market_cap_basic"]
 
-        # First call for AAPL, second call for MSFT
+        # Flat mock responses
         aapl_resp = _mock_response({
-            "data": [{"s": "NASDAQ:AAPL", "d": [394000000000, 100000000000, 2800000000000]}],
+            "total_revenue": 394000000000, "net_income": 100000000000, "market_cap_basic": 2800000000000
         })
         msft_resp = _mock_response({
-            "data": [{"s": "NASDAQ:MSFT", "d": [200000000000, 70000000000, 2400000000000]}],
+            "total_revenue": 200000000000, "net_income": 70000000000, "market_cap_basic": 2400000000000
         })
 
         with mock.patch.object(
@@ -370,9 +310,7 @@ class TestResponseFormat:
         self, fundamentals: Fundamentals
     ) -> None:
         """Response contains exactly status/data/metadata/error keys."""
-        mock_resp = _mock_response({
-            "data": [{"s": "NASDAQ:AAPL", "d": [394000000000]}],
-        })
+        mock_resp = _mock_response({"total_revenue": 394000000000})
         with mock.patch.object(fundamentals, "_make_request", return_value=mock_resp):
             result = fundamentals.get_fundamentals(
                 exchange="NASDAQ", symbol="AAPL", fields=["total_revenue"]

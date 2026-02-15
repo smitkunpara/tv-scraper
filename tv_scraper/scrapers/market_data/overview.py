@@ -176,14 +176,15 @@ class Overview(BaseScraper):
 
         # --- Build API request ---
         url = f"{SCANNER_URL}/symbol"
-        body: Dict[str, Any] = {
-            "symbols": {"tickers": [f"{exchange}:{symbol}"]},
-            "columns": field_list,
+        params: Dict[str, str] = {
+            "symbol": f"{exchange}:{symbol}",
+            "fields": ",".join(field_list),
+            "no_404": "true",
         }
 
         # --- Execute request ---
         try:
-            response = self._make_request(url, method="POST", json_data=body)
+            response = self._make_request(url, method="GET", params=params)
             json_response: Dict[str, Any] = response.json()
         except NetworkError as exc:
             return self._error_response(str(exc))
@@ -191,16 +192,13 @@ class Overview(BaseScraper):
             return self._error_response(f"Failed to parse API response: {exc}")
 
         # --- Parse response ---
-        data_items: List[Dict[str, Any]] = json_response.get("data", [])
-        if not data_items:
+        if not json_response:
             return self._error_response("No data returned from API.")
 
-        item = data_items[0]
-        values: List[Any] = item.get("d", [])
-
-        result: Dict[str, Any] = {"symbol": item.get("s", f"{exchange}:{symbol}")}
-        for i, field in enumerate(field_list):
-            result[field] = values[i] if i < len(values) else None
+        # API returns a flat dict of field:value
+        result: Dict[str, Any] = {"symbol": f"{exchange}:{symbol}"}
+        for field in field_list:
+            result[field] = json_response.get(field)
 
         # --- Export ---
         if self.export_result:
