@@ -1,0 +1,102 @@
+site_name: tv-scraper v1.0.0
+site_description: Documentation for the refactored TradingView Scraper library
+site_url: https://smitkunpara.github.io/tv-scraper/
+repo_name: smitkunpara/tv-scraper
+repo_url: https://github.com/smitkunpara/tv-scraper
+edit_uri: edit/main/docs_new/
+
+docs_dir: docs_new
+
+theme:
+  name: material
+  icon:
+    logo: material/library
+  features:
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - navigation.tracking
+    - navigation.indexes
+    - navigation.instant
+    - toc.follow
+    - search.suggest
+    - search.highlight
+    - search.share
+    - content.tabs.link
+    - content.code.annotation
+    - content.code.copy
+    - content.tooltips
+    - navigation.footer
+    
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: deep purple
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: teal
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+
+  font:
+    text: Inter
+    code: JetBrains Mono
+
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+  - Migration Guide: migration-guide.md
+  - Architecture: architecture.md
+  - API Conventions: api-conventions.md
+  - Scrapers:
+    - Overview: scrapers/overview.md
+    - Technicals: scrapers/technicals.md
+    - Fundamentals: scrapers/fundamentals.md
+    - Markets: scrapers/markets.md
+    - Ideas: scrapers/ideas.md
+    - Minds: scrapers/minds.md
+    - News: scrapers/news.md
+    - Screener: scrapers/screener.md
+    - Market Movers: scrapers/market_movers.md
+    - Symbol Markets: scrapers/symbol_markets.md
+    - Calendar: scrapers/calendar.md
+  - Streaming:
+    - Overview: streaming/index.md
+    - Streamer: streaming/streamer.md
+    - Real-time Price: streaming/realtime-price.md
+  - Reference:
+    - Supported Data: supported_data.md
+    - Getting Cookies: getting_cookies.md
+  - Contributing: contributing.md
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+
+extra_css:
+  - assets/custom.css
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/smitkunpara/tv-scraper

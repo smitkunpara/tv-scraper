@@ -30,7 +30,7 @@ def _mock_calendar_response(
 # ---- Fixtures ----
 
 @pytest.fixture
-def scraper() -> Iterator[None]:
+def scraper() -> Iterator[Calendar]:
     """Create a Calendar instance for testing."""
     yield Calendar(export_result=False)
 

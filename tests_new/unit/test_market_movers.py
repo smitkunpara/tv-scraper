@@ -11,7 +11,7 @@ from tv_scraper.scrapers.screening.market_movers import MarketMovers
 
 
 @pytest.fixture
-def scraper() -> Iterator[None]:
+def scraper() -> Iterator[MarketMovers]:
     """Create a MarketMovers instance for testing."""
     yield MarketMovers(export_result=False)
 
