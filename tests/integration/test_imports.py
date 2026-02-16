@@ -175,9 +175,9 @@ class TestVersionAndAll:
         import tv_scraper
 
         for name in tv_scraper.__all__:
-            assert hasattr(
-                tv_scraper, name
-            ), f"{name} listed in __all__ not found in tv_scraper"
+            assert hasattr(tv_scraper, name), (
+                f"{name} listed in __all__ not found in tv_scraper"
+            )
 
     def test_all_count(self) -> None:
         """__all__ should have exactly 14 entries."""

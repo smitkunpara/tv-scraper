@@ -210,9 +210,9 @@ class TestLiveStreamer:
             avg_interval = sum(intervals) / len(intervals)
 
             # Updates should come within reasonable time (< 15 seconds on average)
-            assert (
-                avg_interval < 15
-            ), f"Updates too slow: {avg_interval:.1f}s average interval"
+            assert avg_interval < 15, (
+                f"Updates too slow: {avg_interval:.1f}s average interval"
+            )
 
     def test_live_stream_handles_qsd_and_du_messages(self) -> None:
         """Verify streaming handles both QSD and DU message types."""
