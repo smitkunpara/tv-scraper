@@ -7,20 +7,20 @@ This guide covers installation, basic usage, response format, export options, an
 ### Using pip
 
 ```bash
-pip install tv_scraper
+pip install tv-scraper
 ```
 
 ### Using uv
 
 ```bash
-uv add tv_scraper
+uv add tv-scraper
 ```
 
 ### Development Installation
 
 ```bash
-git clone https://github.com/smitkunpara/tv_scraper.git
-cd tv_scraper
+git clone https://github.com/smitkunpara/tv-scraper.git
+cd tv-scraper
 uv sync --extra dev
 ```
 

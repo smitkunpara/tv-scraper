@@ -3,8 +3,8 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "tv_scraper"
-version = "1.0.0"
+name = "tv-scraper"
+version = "1.0.2"
 description = "A powerful Python library for scraping real-time market data, indicators, and ideas from TradingView."
 authors = [
     {name = "Smit Kunpara", email = "smitkunpara@gmail.com"}
@@ -55,9 +55,9 @@ csv = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/smitkunpara/tv_scraper"
-Repository = "https://github.com/smitkunpara/tv_scraper"
-Issues = "https://github.com/smitkunpara/tv_scraper/issues"
+Homepage = "https://github.com/smitkunpara/tv-scraper"
+Repository = "https://github.com/smitkunpara/tv-scraper"
+Issues = "https://github.com/smitkunpara/tv-scraper/issues"
 
 [tool.hatch.build.targets.wheel]
 packages = ["tv_scraper"]

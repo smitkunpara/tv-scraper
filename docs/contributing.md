@@ -182,9 +182,9 @@ result = scraper.scrape(
 
 ## 📞 Getting Help
 
-- **Issues**: [GitHub Issues](https://github.com/smitkunpara/tv_scraper/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/smitkunpara/tv_scraper/discussions)
-- **Documentation**: [Full Documentation](https://smitkunpara.github.io/tv_scraper/)
+- **Issues**: [GitHub Issues](https://github.com/smitkunpara/tv-scraper/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/smitkunpara/tv-scraper/discussions)
+- **Documentation**: [Full Documentation](https://smitkunpara.github.io/tv-scraper/)
 
 ## 📜 Code of Conduct
 

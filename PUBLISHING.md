@@ -1,6 +1,6 @@
 # Publishing to PyPI
 
-This guide explains how to publish the `tv_scraper` package to PyPI (Python Package Index) using **Trusted Publishing** (OIDC), which is the most secure and modern way to publish Python packages.
+This guide explains how to publish the `tv-scraper` package to PyPI (Python Package Index) using **Trusted Publishing** (OIDC), which is the most secure and modern way to publish Python packages.
 
 ## 1. Create a PyPI Account
 If you don't have one yet, create an account on [PyPI](https://pypi.org/account/register/).
@@ -13,7 +13,7 @@ You do **not** need to create an API token or add secrets to your GitHub reposit
 3. Select **GitHub**.
 4. Fill in the details:
    - **Owner**: `smitkunpara`
-   - **Repository**: `tv_scraper`
+   - **Repository**: `tv-scraper`
    - **Workflow name**: `publish.yml`
    - **Environment name**: `pypi` (optional, but recommended if you use GitHub Environments)
 5. Click **Add Publisher**.
@@ -26,24 +26,24 @@ You do **not** need to create an API token or add secrets to your GitHub reposit
 ## 4. Trigger the Publish Workflow
 To publish a new version:
 
-1. **Update Version**: Change the `version` field in `pyproject.toml` (e.g., from `1.0.0` to `1.0.1`).
+1. **Update Version**: Change the `version` field in `pyproject.toml` (e.g., from `1.0.0` to `1.0.2`).
 2. **Commit and Push**:
    ```bash
    git add pyproject.toml
-   git commit -m "chore: bump version to 1.0.1"
+   git commit -m "chore: bump version to 1.0.2"
    git push origin main
    ```
 3. **Create a GitHub Release**:
    - Go to the **Releases** section on your GitHub repository.
    - Click **Draft a new release**.
-   - Create a new tag (e.g., `v1.0.1`).
+   - Create a new tag (e.g., `v1.0.0`).
    - Fill in the release title and description.
    - Click **Publish release**.
 
 The [Publish to PyPI](.github/workflows/publish.yml) workflow will start automatically, build the package using `uv`, and upload it to PyPI.
 
 ## ⚠️ Important Notes
-- **Package Name**: Ensure `tv_scraper` isn't already taken on PyPI. If it is, you'll need to change the `name` in `pyproject.toml`.
+- **Package Name**: Ensure `tv-scraper` isn't already taken on PyPI. If it is, you'll need to change the `name` in `pyproject.toml`.
 - **First-time Publish**: For the very first publish, you might need to use a temporary API token or run the workflow manually once if PyPI doesn't let you set up OIDC before the project exists.
    - *Alternative*: If it's your first time, you can temporarily use an API token by reverting the `publish.yml` changes or following the PyPI "Pending Publisher" instructions.
 - **Manual Publish**: If you ever need to publish manually from your local machine:

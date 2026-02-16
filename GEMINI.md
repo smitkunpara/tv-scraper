@@ -1,7 +1,7 @@
-# GEMINI.md - TV Scraper Project Context
+# GEMINI.md - tv-scraper Project Context
 
 ## Project Overview
-**TV Scraper** is a powerful Python library designed to extract financial data, technical indicators, and trading ideas from TradingView.com. It supports both HTTP-based scraping (for historical and fundamental data) and WebSocket-based streaming (for real-time OHLCV and indicator updates).
+**tv-scraper** is a powerful Python library designed to extract financial data, technical indicators, and trading ideas from TradingView.com. It supports both HTTP-based scraping (for historical and fundamental data) and WebSocket-based streaming (for real-time OHLCV and indicator updates).
 
 ### Main Technologies
 - **Python 3.11+**: Core programming language.

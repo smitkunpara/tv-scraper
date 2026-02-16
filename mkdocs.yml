@@ -1,8 +1,8 @@
-site_name: tv_scraper v1.0.0
+site_name: tv-scraper v1.0.0
 site_description: Documentation for the refactored TradingView Scraper library
-site_url: https://smitkunpara.github.io/tv_scraper/
-repo_name: smitkunpara/tv_scraper
-repo_url: https://github.com/smitkunpara/tv_scraper
+site_url: https://smitkunpara.github.io/tv-scraper/
+repo_name: smitkunpara/tv-scraper
+repo_url: https://github.com/smitkunpara/tv-scraper
 edit_uri: edit/main/docs/
 
 docs_dir: docs
@@ -100,4 +100,4 @@ extra_css:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/smitkunpara/tv_scraper
+      link: https://github.com/smitkunpara/tv-scraper
