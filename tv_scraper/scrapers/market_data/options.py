@@ -1,7 +1,7 @@
 """Options scraper for fetching option chain data from TradingView."""
 
 import logging
-from typing import Any, Dict, List, Optional, Union
+from typing import Any
 
 from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.constants import SCANNER_URL
@@ -69,8 +69,8 @@ class Options(BaseScraper):
         symbol: str,
         expiration: int,
         root: str,
-        columns: Optional[List[str]] = None,
-    ) -> Dict[str, Any]:
+        columns: list[str] | None = None,
+    ) -> dict[str, Any]:
         """Fetch option chain for a symbol filtered by expiration date.
 
         Args:
@@ -118,9 +118,9 @@ class Options(BaseScraper):
         self,
         exchange: str,
         symbol: str,
-        strike: Union[int, float],
-        columns: Optional[List[str]] = None,
-    ) -> Dict[str, Any]:
+        strike: int | float,
+        columns: list[str] | None = None,
+    ) -> dict[str, Any]:
         """Fetch option chain for a symbol filtered by strike price.
 
         Args:
@@ -164,24 +164,24 @@ class Options(BaseScraper):
 
     def _execute_request(
         self,
-        payload: Dict[str, Any],
+        payload: dict[str, Any],
         exchange: str,
         symbol: str,
         filter_type: str,
         filter_value: Any,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Internal helper to execute the POST request and format response."""
         try:
             response = self._make_request(
                 OPTIONS_SCANNER_URL, method="POST", json_data=payload
             )
-            
+
             if response.status_code == 404:
                 return self._error_response(
                     f"Options chain not found for symbol '{exchange}:{symbol}'. "
                     "This symbol may not have options available on TradingView."
                 )
-                
+
             response.raise_for_status()
             json_response = response.json()
         except NetworkError as exc:
@@ -193,7 +193,7 @@ class Options(BaseScraper):
 
         fields = json_response.get("fields", [])
         raw_symbols = json_response.get("symbols", [])
-        
+
         if not raw_symbols:
             return self._error_response(
                 f"No options found for symbol '{exchange}:{symbol}'. "

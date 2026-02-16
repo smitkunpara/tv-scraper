@@ -1,6 +1,6 @@
 """Type definitions for tv_scraper."""
 
-from typing import Any, Optional, TypedDict
+from typing import Any, TypedDict
 
 
 class ResponseMetadata(TypedDict, total=False):
@@ -19,4 +19,4 @@ class ScraperResponse(TypedDict):
     status: str  # "success" or "failed"
     data: Any
     metadata: ResponseMetadata
-    error: Optional[str]
+    error: str | None

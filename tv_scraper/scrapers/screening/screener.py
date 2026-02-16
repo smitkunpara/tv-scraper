@@ -1,7 +1,7 @@
 """Screener module for screening financial instruments with custom filters."""
 
 import logging
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.constants import SCANNER_URL
@@ -101,7 +101,7 @@ class Screener(BaseScraper):
         "Recommend.All",
     ]
 
-    def _get_default_fields(self, market: str) -> List[str]:
+    def _get_default_fields(self, market: str) -> list[str]:
         """Return default fields for the given market type.
 
         Args:
@@ -118,13 +118,13 @@ class Screener(BaseScraper):
 
     def _build_payload(
         self,
-        fields: List[str],
+        fields: list[str],
         market: str,
-        filters: Optional[List[Dict[str, Any]]] = None,
-        sort_by: Optional[str] = None,
+        filters: list[dict[str, Any]] | None = None,
+        sort_by: str | None = None,
         sort_order: str = "desc",
         limit: int = 50,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Build the scanner API request payload.
 
         Args:
@@ -138,7 +138,7 @@ class Screener(BaseScraper):
         Returns:
             Payload dict ready for JSON serialization.
         """
-        payload: Dict[str, Any] = {
+        payload: dict[str, Any] = {
             "columns": fields,
             "options": {"lang": "en"},
             "range": [0, limit],
@@ -155,12 +155,12 @@ class Screener(BaseScraper):
     def screen(
         self,
         market: str = "america",
-        filters: Optional[List[Dict[str, Any]]] = None,
-        fields: Optional[List[str]] = None,
-        sort_by: Optional[str] = None,
+        filters: list[dict[str, Any]] | None = None,
+        fields: list[str] | None = None,
+        sort_by: str | None = None,
         sort_order: str = "desc",
         limit: int = 50,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Screen financial instruments based on custom filters.
 
         Args:
@@ -184,7 +184,9 @@ class Screener(BaseScraper):
             )
 
         # Resolve fields
-        resolved_fields = fields if fields is not None else self._get_default_fields(market)
+        resolved_fields = (
+            fields if fields is not None else self._get_default_fields(market)
+        )
 
         # Build payload
         payload = self._build_payload(

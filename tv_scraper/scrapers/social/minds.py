@@ -2,10 +2,10 @@
 
 import logging
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from tv_scraper.core.base import BaseScraper
-from tv_scraper.core.exceptions import NetworkError, ValidationError
+from tv_scraper.core.exceptions import ValidationError
 
 logger = logging.getLogger(__name__)
 
@@ -48,8 +48,8 @@ class Minds(BaseScraper):
         self,
         exchange: str,
         symbol: str,
-        limit: Optional[int] = None,
-    ) -> Dict[str, Any]:
+        limit: int | None = None,
+    ) -> dict[str, Any]:
         """Get Minds discussions for a symbol with cursor-based pagination.
 
         Args:
@@ -70,14 +70,14 @@ class Minds(BaseScraper):
 
         combined_symbol = f"{exchange.upper()}:{symbol.upper()}"
 
-        parsed_data: List[Dict[str, Any]] = []
-        next_cursor: Optional[str] = None
+        parsed_data: list[dict[str, Any]] = []
+        next_cursor: str | None = None
         pages = 0
-        symbol_info: Dict[str, Any] = {}
+        symbol_info: dict[str, Any] = {}
 
         try:
             while True:
-                params: Dict[str, str] = {"symbol": combined_symbol}
+                params: dict[str, str] = {"symbol": combined_symbol}
                 if next_cursor:
                     params["c"] = next_cursor
 
@@ -105,9 +105,7 @@ class Minds(BaseScraper):
                 # Extract symbol info from first page
                 if pages == 1:
                     meta = json_response.get("meta", {})
-                    symbol_info = meta.get("symbols_info", {}).get(
-                        combined_symbol, {}
-                    )
+                    symbol_info = meta.get("symbols_info", {}).get(combined_symbol, {})
 
                 # Check if limit reached
                 if limit is not None and len(parsed_data) >= limit:
@@ -142,7 +140,7 @@ class Minds(BaseScraper):
             symbol_info=symbol_info,
         )
 
-    def _parse_mind(self, item: Dict[str, Any]) -> Dict[str, Any]:
+    def _parse_mind(self, item: dict[str, Any]) -> dict[str, Any]:
         """Parse a single mind item from the API response.
 
         Args:
@@ -163,9 +161,7 @@ class Minds(BaseScraper):
         # Parse created date
         created = item.get("created", "")
         try:
-            created_datetime = datetime.fromisoformat(
-                created.replace("Z", "+00:00")
-            )
+            created_datetime = datetime.fromisoformat(created.replace("Z", "+00:00"))
             created_formatted = created_datetime.strftime("%Y-%m-%d %H:%M:%S")
         except (ValueError, AttributeError):
             created_formatted = created

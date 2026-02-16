@@ -1,7 +1,6 @@
 """Streaming utility functions: symbol validation, indicator metadata fetching."""
 
 import logging
-from typing import List, Optional
 
 import requests
 
@@ -14,9 +13,7 @@ _VALIDATE_URL = (
 
 _INDICATOR_SEARCH_URL = "https://www.tradingview.com/pubscripts-suggest-json/?search="
 
-_PINE_FACADE_URL = (
-    "https://pine-facade.tradingview.com/pine-facade/translate/{script_id}/{script_version}"
-)
+_PINE_FACADE_URL = "https://pine-facade.tradingview.com/pine-facade/translate/{script_id}/{script_version}"
 
 _PINE_LIST_URL = "https://pine-facade.tradingview.com/pine-facade/list?filter=standard"
 
@@ -46,14 +43,21 @@ def validate_symbols(exchange: str, symbol: str, retries: int = 3) -> bool:
             resp.raise_for_status()
             return True
         except requests.RequestException as exc:
-            status = getattr(exc.response, "status_code", None) if hasattr(exc, "response") else None
+            status = (
+                getattr(exc.response, "status_code", None)
+                if hasattr(exc, "response")
+                else None
+            )
             if status == 404:
                 raise ValueError(
                     f"Invalid exchange:symbol '{exchange}:{symbol}'"
                 ) from exc
             logger.warning(
                 "Attempt %d failed to validate '%s:%s': %s",
-                attempt + 1, exchange, symbol, exc,
+                attempt + 1,
+                exchange,
+                symbol,
+                exc,
             )
             if attempt >= retries - 1:
                 raise ValueError(
@@ -63,7 +67,7 @@ def validate_symbols(exchange: str, symbol: str, retries: int = 3) -> bool:
     return False  # pragma: no cover
 
 
-def fetch_tradingview_indicators(query: str) -> List[dict]:
+def fetch_tradingview_indicators(query: str) -> list[dict]:
     """Search public TradingView indicators by name or author.
 
     Args:
@@ -81,21 +85,23 @@ def fetch_tradingview_indicators(query: str) -> List[dict]:
         json_data = resp.json()
 
         results = json_data.get("results", [])
-        filtered: List[dict] = []
+        filtered: list[dict] = []
 
         for indicator in results:
             name = indicator.get("scriptName", "")
             author = indicator.get("author", {}).get("username", "")
             if query.lower() in name.lower() or query.lower() in author.lower():
-                filtered.append({
-                    "scriptName": name,
-                    "imageUrl": indicator.get("imageUrl", ""),
-                    "author": author,
-                    "agreeCount": indicator.get("agreeCount", 0),
-                    "isRecommended": indicator.get("isRecommended", False),
-                    "scriptIdPart": indicator.get("scriptIdPart", ""),
-                    "version": indicator.get("version"),
-                })
+                filtered.append(
+                    {
+                        "scriptName": name,
+                        "imageUrl": indicator.get("imageUrl", ""),
+                        "author": author,
+                        "agreeCount": indicator.get("agreeCount", 0),
+                        "isRecommended": indicator.get("isRecommended", False),
+                        "scriptIdPart": indicator.get("scriptIdPart", ""),
+                        "version": indicator.get("version"),
+                    }
+                )
         return filtered
 
     except requests.RequestException as exc:
@@ -197,7 +203,7 @@ def prepare_indicator_metadata(
     return output_data
 
 
-def fetch_available_indicators() -> List[dict]:
+def fetch_available_indicators() -> list[dict]:
     """Fetch the list of standard built-in indicators from TradingView.
 
     Note:

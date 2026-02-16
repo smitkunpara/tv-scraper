@@ -26,11 +26,17 @@ tradingview_scraper.egg-info/*
 
 # Pytest
 .cache
+.pytest_cache/
 
 # Coverage
+.coverage
 coverage.xml
 *.cover
 *.py,cover
+htmlcov/
+
+# Ruff
+.ruff_cache/
 
 # Mypy
 .mypy_cache/

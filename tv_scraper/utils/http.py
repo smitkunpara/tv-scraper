@@ -1,7 +1,7 @@
 """HTTP utilities for tv_scraper."""
 
 import logging
-from typing import Any, Dict, Optional
+from typing import Any
 
 import requests
 
@@ -15,9 +15,9 @@ def make_request(
     url: str,
     *,
     method: str = "GET",
-    headers: Optional[Dict[str, str]] = None,
-    params: Optional[Dict[str, Any]] = None,
-    json_data: Optional[Dict[str, Any]] = None,
+    headers: dict[str, str] | None = None,
+    params: dict[str, Any] | None = None,
+    json_data: dict[str, Any] | None = None,
     timeout: int = DEFAULT_TIMEOUT,
 ) -> requests.Response:
     """Make an HTTP request with error handling.

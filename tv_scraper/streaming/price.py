@@ -7,8 +7,7 @@ WebSocket feed. For normalized price data, see :class:`Streamer.stream_realtime_
 import json
 import logging
 import re
-import socket
-from typing import Generator, List
+from collections.abc import Generator
 
 from websocket import WebSocketConnectionClosedException
 
@@ -49,7 +48,7 @@ class RealTimeData:
         return self._get_data()
 
     def get_latest_trade_info(
-        self, exchanges: List[str], symbols: List[str]
+        self, exchanges: list[str], symbols: list[str]
     ) -> Generator[dict, None, None]:
         """Stream summary trade info for multiple symbols.
 
@@ -77,18 +76,25 @@ class RealTimeData:
     ) -> None:
         """Add a symbol to quote and chart sessions."""
         resolve_symbol = json.dumps({"adjustment": "splits", "symbol": exchange_symbol})
-        self._handler.send_message("quote_add_symbols", [quote_session, f"={resolve_symbol}"])
+        self._handler.send_message(
+            "quote_add_symbols", [quote_session, f"={resolve_symbol}"]
+        )
         self._handler.send_message(
             "resolve_symbol", [chart_session, "sds_sym_1", f"={resolve_symbol}"]
         )
         self._handler.send_message(
             "create_series", [chart_session, "sds_1", "s1", "sds_sym_1", "1", 10, ""]
         )
-        self._handler.send_message("quote_fast_symbols", [quote_session, exchange_symbol])
+        self._handler.send_message(
+            "quote_fast_symbols", [quote_session, exchange_symbol]
+        )
         self._handler.send_message(
             "create_study",
             [
-                chart_session, "st1", "st1", "sds_1",
+                chart_session,
+                "st1",
+                "st1",
+                "sds_1",
                 "Volume@tv-basicstudies-246",
                 {"length": 20, "col_prev_close": "false"},
             ],
@@ -96,20 +102,30 @@ class RealTimeData:
         self._handler.send_message("quote_hibernate_all", [quote_session])
 
     def _add_multiple_symbols_to_sessions(
-        self, quote_session: str, exchange_symbols: List[str]
+        self, quote_session: str, exchange_symbols: list[str]
     ) -> None:
         """Add multiple symbols to the quote session."""
         first_symbol = exchange_symbols[0] if exchange_symbols else ""
-        resolve_symbol = json.dumps({
-            "adjustment": "splits",
-            "currency-id": "USD",
-            "session": "regular",
-            "symbol": first_symbol,
-        })
-        self._handler.send_message("quote_add_symbols", [quote_session, f"={resolve_symbol}"])
-        self._handler.send_message("quote_fast_symbols", [quote_session, f"={resolve_symbol}"])
-        self._handler.send_message("quote_add_symbols", [quote_session] + exchange_symbols)
-        self._handler.send_message("quote_fast_symbols", [quote_session] + exchange_symbols)
+        resolve_symbol = json.dumps(
+            {
+                "adjustment": "splits",
+                "currency-id": "USD",
+                "session": "regular",
+                "symbol": first_symbol,
+            }
+        )
+        self._handler.send_message(
+            "quote_add_symbols", [quote_session, f"={resolve_symbol}"]
+        )
+        self._handler.send_message(
+            "quote_fast_symbols", [quote_session, f"={resolve_symbol}"]
+        )
+        self._handler.send_message(
+            "quote_add_symbols", [quote_session] + exchange_symbols
+        )
+        self._handler.send_message(
+            "quote_fast_symbols", [quote_session] + exchange_symbols
+        )
 
     def _get_data(self) -> Generator[dict, None, None]:
         """Receive and parse WebSocket data, handling heartbeats.
@@ -143,7 +159,7 @@ class RealTimeData:
                 except WebSocketConnectionClosedException:
                     logger.error("WebSocket connection closed.")
                     break
-                except socket.timeout:
+                except TimeoutError:
                     # Socket timeout is expected with non-blocking socket
                     # Just continue to next iteration
                     continue

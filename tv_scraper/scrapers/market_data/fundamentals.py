@@ -1,7 +1,7 @@
 """Fundamentals scraper for fetching financial data from TradingView."""
 
 import logging
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.constants import SCANNER_URL
@@ -30,7 +30,7 @@ class Fundamentals(BaseScraper):
         data = scraper.get_fundamentals(exchange="NASDAQ", symbol="AAPL")
     """
 
-    INCOME_STATEMENT_FIELDS: List[str] = [
+    INCOME_STATEMENT_FIELDS: list[str] = [
         "total_revenue",
         "revenue_per_share_ttm",
         "total_revenue_fy",
@@ -46,7 +46,7 @@ class Fundamentals(BaseScraper):
         "earnings_per_share_diluted_ttm",
     ]
 
-    BALANCE_SHEET_FIELDS: List[str] = [
+    BALANCE_SHEET_FIELDS: list[str] = [
         "total_assets",
         "total_assets_fy",
         "cash_n_short_term_invest",
@@ -58,7 +58,7 @@ class Fundamentals(BaseScraper):
         "book_value_per_share_fq",
     ]
 
-    CASH_FLOW_FIELDS: List[str] = [
+    CASH_FLOW_FIELDS: list[str] = [
         "cash_f_operating_activities",
         "cash_f_operating_activities_fy",
         "cash_f_investing_activities",
@@ -68,7 +68,7 @@ class Fundamentals(BaseScraper):
         "free_cash_flow",
     ]
 
-    MARGIN_FIELDS: List[str] = [
+    MARGIN_FIELDS: list[str] = [
         "gross_margin",
         "gross_margin_percent_ttm",
         "operating_margin",
@@ -79,7 +79,7 @@ class Fundamentals(BaseScraper):
         "EBITDA_margin",
     ]
 
-    PROFITABILITY_FIELDS: List[str] = [
+    PROFITABILITY_FIELDS: list[str] = [
         "return_on_equity",
         "return_on_equity_fq",
         "return_on_assets",
@@ -87,20 +87,20 @@ class Fundamentals(BaseScraper):
         "return_on_investment_ttm",
     ]
 
-    LIQUIDITY_FIELDS: List[str] = [
+    LIQUIDITY_FIELDS: list[str] = [
         "current_ratio",
         "current_ratio_fq",
         "quick_ratio",
         "quick_ratio_fq",
     ]
 
-    LEVERAGE_FIELDS: List[str] = [
+    LEVERAGE_FIELDS: list[str] = [
         "debt_to_equity",
         "debt_to_equity_fq",
         "debt_to_assets",
     ]
 
-    VALUATION_FIELDS: List[str] = [
+    VALUATION_FIELDS: list[str] = [
         "market_cap_basic",
         "market_cap_calc",
         "market_cap_diluted_calc",
@@ -111,13 +111,13 @@ class Fundamentals(BaseScraper):
         "price_free_cash_flow_ttm",
     ]
 
-    DIVIDEND_FIELDS: List[str] = [
+    DIVIDEND_FIELDS: list[str] = [
         "dividends_yield",
         "dividends_per_share_fq",
         "dividend_payout_ratio_ttm",
     ]
 
-    ALL_FIELDS: List[str] = (
+    ALL_FIELDS: list[str] = (
         INCOME_STATEMENT_FIELDS
         + BALANCE_SHEET_FIELDS
         + CASH_FLOW_FIELDS
@@ -130,7 +130,7 @@ class Fundamentals(BaseScraper):
     )
 
     # Default fields used for multi-symbol comparison when none specified
-    DEFAULT_COMPARISON_FIELDS: List[str] = [
+    DEFAULT_COMPARISON_FIELDS: list[str] = [
         "total_revenue",
         "net_income",
         "EBITDA",
@@ -156,8 +156,8 @@ class Fundamentals(BaseScraper):
         self,
         exchange: str,
         symbol: str,
-        fields: Optional[List[str]] = None,
-    ) -> Dict[str, Any]:
+        fields: list[str] | None = None,
+    ) -> dict[str, Any]:
         """Get fundamental financial data for a symbol.
 
         Args:
@@ -188,7 +188,7 @@ class Fundamentals(BaseScraper):
 
         # --- Build API request ---
         url = f"{SCANNER_URL}/symbol"
-        params: Dict[str, str] = {
+        params: dict[str, str] = {
             "symbol": f"{exchange}:{symbol}",
             "fields": ",".join(field_list),
             "no_404": "true",
@@ -197,7 +197,7 @@ class Fundamentals(BaseScraper):
         # --- Execute request ---
         try:
             response = self._make_request(url, method="GET", params=params)
-            json_response: Dict[str, Any] = response.json()
+            json_response: dict[str, Any] = response.json()
         except NetworkError as exc:
             return self._error_response(str(exc))
         except (ValueError, KeyError) as exc:
@@ -208,7 +208,7 @@ class Fundamentals(BaseScraper):
             return self._error_response("No data returned from API.")
 
         # API returns a flat dict of field:value
-        result: Dict[str, Any] = {"symbol": f"{exchange}:{symbol}"}
+        result: dict[str, Any] = {"symbol": f"{exchange}:{symbol}"}
         for field in field_list:
             result[field] = json_response.get(field)
 
@@ -228,9 +228,9 @@ class Fundamentals(BaseScraper):
 
     def compare_fundamentals(
         self,
-        symbols: List[Dict[str, str]],
-        fields: Optional[List[str]] = None,
-    ) -> Dict[str, Any]:
+        symbols: list[dict[str, str]],
+        fields: list[str] | None = None,
+    ) -> dict[str, Any]:
         """Compare fundamental data across multiple symbols.
 
         Args:
@@ -248,8 +248,8 @@ class Fundamentals(BaseScraper):
 
         field_list = fields if fields else self.DEFAULT_COMPARISON_FIELDS
 
-        all_items: List[Dict[str, Any]] = []
-        comparison: Dict[str, Dict[str, Any]] = {}
+        all_items: list[dict[str, Any]] = []
+        comparison: dict[str, dict[str, Any]] = {}
 
         for sym in symbols:
             exchange = sym.get("exchange", "")
@@ -272,7 +272,7 @@ class Fundamentals(BaseScraper):
         if not all_items:
             return self._error_response("No data retrieved for any symbols.")
 
-        data: Dict[str, Any] = {
+        data: dict[str, Any] = {
             "items": all_items,
             "comparison": comparison,
         }
@@ -289,9 +289,7 @@ class Fundamentals(BaseScraper):
 
     # ---- Category helpers ------------------------------------------------
 
-    def get_income_statement(
-        self, exchange: str, symbol: str
-    ) -> Dict[str, Any]:
+    def get_income_statement(self, exchange: str, symbol: str) -> dict[str, Any]:
         """Get income statement data for a symbol.
 
         Args:
@@ -305,9 +303,7 @@ class Fundamentals(BaseScraper):
             exchange=exchange, symbol=symbol, fields=self.INCOME_STATEMENT_FIELDS
         )
 
-    def get_balance_sheet(
-        self, exchange: str, symbol: str
-    ) -> Dict[str, Any]:
+    def get_balance_sheet(self, exchange: str, symbol: str) -> dict[str, Any]:
         """Get balance sheet data for a symbol.
 
         Args:
@@ -321,9 +317,7 @@ class Fundamentals(BaseScraper):
             exchange=exchange, symbol=symbol, fields=self.BALANCE_SHEET_FIELDS
         )
 
-    def get_cash_flow(
-        self, exchange: str, symbol: str
-    ) -> Dict[str, Any]:
+    def get_cash_flow(self, exchange: str, symbol: str) -> dict[str, Any]:
         """Get cash flow statement data for a symbol.
 
         Args:
@@ -337,9 +331,7 @@ class Fundamentals(BaseScraper):
             exchange=exchange, symbol=symbol, fields=self.CASH_FLOW_FIELDS
         )
 
-    def get_statistics(
-        self, exchange: str, symbol: str
-    ) -> Dict[str, Any]:
+    def get_statistics(self, exchange: str, symbol: str) -> dict[str, Any]:
         """Get statistics data for a symbol.
 
         Combines liquidity, leverage, and valuation fields.
@@ -352,13 +344,9 @@ class Fundamentals(BaseScraper):
             Statistics data including ratios and valuation metrics.
         """
         fields = self.LIQUIDITY_FIELDS + self.LEVERAGE_FIELDS + self.VALUATION_FIELDS
-        return self.get_fundamentals(
-            exchange=exchange, symbol=symbol, fields=fields
-        )
+        return self.get_fundamentals(exchange=exchange, symbol=symbol, fields=fields)
 
-    def get_dividends(
-        self, exchange: str, symbol: str
-    ) -> Dict[str, Any]:
+    def get_dividends(self, exchange: str, symbol: str) -> dict[str, Any]:
         """Get dividend information for a symbol.
 
         Args:
@@ -372,9 +360,7 @@ class Fundamentals(BaseScraper):
             exchange=exchange, symbol=symbol, fields=self.DIVIDEND_FIELDS
         )
 
-    def get_profitability(
-        self, exchange: str, symbol: str
-    ) -> Dict[str, Any]:
+    def get_profitability(self, exchange: str, symbol: str) -> dict[str, Any]:
         """Get profitability ratios for a symbol.
 
         Args:
@@ -388,9 +374,7 @@ class Fundamentals(BaseScraper):
             exchange=exchange, symbol=symbol, fields=self.PROFITABILITY_FIELDS
         )
 
-    def get_margins(
-        self, exchange: str, symbol: str
-    ) -> Dict[str, Any]:
+    def get_margins(self, exchange: str, symbol: str) -> dict[str, Any]:
         """Get margin metrics for a symbol.
 
         Args:

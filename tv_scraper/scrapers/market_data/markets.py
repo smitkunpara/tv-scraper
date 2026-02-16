@@ -4,7 +4,7 @@ Queries the TradingView scanner API to fetch ranked stock lists
 across supported markets, sorted by market cap, volume, change, etc.
 """
 
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.constants import SCANNER_URL
@@ -29,7 +29,7 @@ class Markets(BaseScraper):
             print(stock["symbol"], stock["close"])
     """
 
-    VALID_MARKETS: List[str] = [
+    VALID_MARKETS: list[str] = [
         "america",
         "australia",
         "canada",
@@ -41,7 +41,7 @@ class Markets(BaseScraper):
         "global",
     ]
 
-    SORT_CRITERIA: Dict[str, str] = {
+    SORT_CRITERIA: dict[str, str] = {
         "market_cap": "market_cap_basic",
         "volume": "volume",
         "change": "change",
@@ -49,7 +49,7 @@ class Markets(BaseScraper):
         "volatility": "Volatility.D",
     }
 
-    DEFAULT_FIELDS: List[str] = [
+    DEFAULT_FIELDS: list[str] = [
         "name",
         "close",
         "change",
@@ -63,7 +63,7 @@ class Markets(BaseScraper):
         "industry",
     ]
 
-    STOCK_FILTERS: List[Dict[str, str]] = [
+    STOCK_FILTERS: list[dict[str, str]] = [
         {"left": "type", "operation": "equal", "right": "stock"},
         {"left": "market_cap_basic", "operation": "nempty"},
     ]
@@ -72,10 +72,10 @@ class Markets(BaseScraper):
         self,
         market: str = "america",
         sort_by: str = "market_cap",
-        fields: Optional[List[str]] = None,
+        fields: list[str] | None = None,
         sort_order: str = "desc",
         limit: int = 50,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Get top stocks ranked by the chosen criterion.
 
         Args:
@@ -108,7 +108,7 @@ class Markets(BaseScraper):
         used_fields = fields if fields is not None else self.DEFAULT_FIELDS
         sort_field = self.SORT_CRITERIA[sort_by]
 
-        payload: Dict[str, Any] = {
+        payload: dict[str, Any] = {
             "columns": used_fields,
             "options": {"lang": "en"},
             "range": [0, limit],
@@ -128,7 +128,7 @@ class Markets(BaseScraper):
         except Exception as exc:
             return self._error_response(str(exc))
 
-        items: List[Dict[str, Any]] = json_data.get("data", [])
+        items: list[dict[str, Any]] = json_data.get("data", [])
         total_count: int = json_data.get("totalCount", len(items))
 
         if not items:

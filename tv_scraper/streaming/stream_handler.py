@@ -7,8 +7,8 @@ and session initialization.
 import json
 import logging
 import secrets
-import string
 import socket
+import string
 
 from websocket import create_connection
 
@@ -19,6 +19,9 @@ logger = logging.getLogger(__name__)
 # Default WebSocket URL with chart query params
 _DEFAULT_WS_URL = WEBSOCKET_URL + "?from=chart%2F&type=chart"
 
+# HTTP headers for WebSocket handshake
+# NOTE: User-Agent should be kept updated to avoid potential blocks from TradingView.
+# Current version: Chrome 107. Consider updating periodically or making configurable.
 _REQUEST_HEADERS = {
     "Accept-Encoding": "gzip, deflate, br, zstd",
     "Accept-Language": "en-US,en;q=0.9",
@@ -36,12 +39,37 @@ _REQUEST_HEADERS = {
 }
 
 _QUOTE_FIELDS = [
-    "ch", "chp", "current_session", "description", "local_description",
-    "language", "exchange", "fractional", "is_tradable", "lp",
-    "lp_time", "minmov", "minmove2", "original_name", "pricescale",
-    "pro_name", "short_name", "type", "update_mode", "volume",
-    "currency_code", "rchp", "rtc", "high_price", "low_price", "open_price",
-    "prev_close_price", "bid", "ask", "bid_size", "ask_size",
+    "ch",
+    "chp",
+    "current_session",
+    "description",
+    "local_description",
+    "language",
+    "exchange",
+    "fractional",
+    "is_tradable",
+    "lp",
+    "lp_time",
+    "minmov",
+    "minmove2",
+    "original_name",
+    "pricescale",
+    "pro_name",
+    "short_name",
+    "type",
+    "update_mode",
+    "volume",
+    "currency_code",
+    "rchp",
+    "rtc",
+    "high_price",
+    "low_price",
+    "open_price",
+    "prev_close_price",
+    "bid",
+    "ask",
+    "bid_size",
+    "ask_size",
 ]
 
 
@@ -63,14 +91,18 @@ class StreamHandler:
         jwt_token: str = "unauthorized_user_token",
     ) -> None:
         url = websocket_url or _DEFAULT_WS_URL
-        
-        # Create WebSocket with optimized settings for low latency
+
+        # Create WebSocket with optimized settings for reliability and low latency
         self.ws = create_connection(
-            url, 
+            url,
             headers=_REQUEST_HEADERS,
-            sockopt=[(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)]  # Disable Nagle's algorithm for lower latency
+            sockopt=[
+                (socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+            ],  # Disable Nagle's algorithm for lower latency
+            timeout=10,  # Socket read timeout to prevent indefinite hangs
+            enable_multithread=True,  # Thread-safe for concurrent operations
         )
-        
+
         self._initialize(jwt_token)
 
     # -- Session helpers ---------------------------------------------------

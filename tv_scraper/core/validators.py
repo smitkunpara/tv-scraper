@@ -4,7 +4,7 @@ import json
 import logging
 from difflib import get_close_matches
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Set
+from typing import Any, Optional
 
 from tv_scraper.core.exceptions import ValidationError
 
@@ -33,15 +33,23 @@ class DataValidator:
 
     def _load_data(self) -> None:
         """Load all JSON data files from tv_scraper/data/."""
-        self._exchanges: List[str] = self._load_json("exchanges.json").get("exchanges", [])
-        self._indicators: List[str] = self._load_json("indicators.json").get("indicators", [])
-        self._timeframes: Dict[str, Any] = self._load_json("timeframes.json").get("indicators", {})
-        self._languages: Dict[str, str] = self._load_json("languages.json")
-        self._areas: Dict[str, str] = self._load_json("areas.json")
-        self._news_providers: List[str] = self._load_json("news_providers.json").get("providers", [])
+        self._exchanges: list[str] = self._load_json("exchanges.json").get(
+            "exchanges", []
+        )
+        self._indicators: list[str] = self._load_json("indicators.json").get(
+            "indicators", []
+        )
+        self._timeframes: dict[str, Any] = self._load_json("timeframes.json").get(
+            "indicators", {}
+        )
+        self._languages: dict[str, str] = self._load_json("languages.json")
+        self._areas: dict[str, str] = self._load_json("areas.json")
+        self._news_providers: list[str] = self._load_json("news_providers.json").get(
+            "providers", []
+        )
 
     @staticmethod
-    def _load_json(filename: str) -> Dict[str, Any]:
+    def _load_json(filename: str) -> dict[str, Any]:
         """Load a JSON file from the data directory.
 
         Args:
@@ -52,9 +60,9 @@ class DataValidator:
         """
         path = _DATA_DIR / filename
         try:
-            with open(path, "r", encoding="utf-8") as f:
+            with open(path, encoding="utf-8") as f:
                 return json.load(f)
-        except (IOError, json.JSONDecodeError) as e:
+        except (OSError, json.JSONDecodeError) as e:
             logger.error("Error loading data file %s: %s", path, e)
             return {}
 
@@ -72,8 +80,12 @@ class DataValidator:
         """
         if exchange.upper() in (e.upper() for e in self._exchanges):
             return True
-        suggestions = get_close_matches(exchange.upper(), self._exchanges, n=5, cutoff=0.6)
-        suggestion_str = f" Did you mean one of: {', '.join(suggestions)}?" if suggestions else ""
+        suggestions = get_close_matches(
+            exchange.upper(), self._exchanges, n=5, cutoff=0.6
+        )
+        suggestion_str = (
+            f" Did you mean one of: {', '.join(suggestions)}?" if suggestions else ""
+        )
         sample = ", ".join(self._exchanges[:10])
         raise ValidationError(
             f"Invalid exchange: '{exchange}'.{suggestion_str} "
@@ -99,7 +111,7 @@ class DataValidator:
             )
         return True
 
-    def validate_indicators(self, indicators: List[str]) -> bool:
+    def validate_indicators(self, indicators: list[str]) -> bool:
         """Validate all indicators exist in known list.
 
         Args:
@@ -112,11 +124,17 @@ class DataValidator:
             ValidationError: If any indicator is invalid or list is empty.
         """
         if not indicators:
-            raise ValidationError("No indicators provided. Provide at least one indicator.")
+            raise ValidationError(
+                "No indicators provided. Provide at least one indicator."
+            )
         for indicator in indicators:
             if indicator not in self._indicators:
-                suggestions = get_close_matches(indicator, self._indicators, n=3, cutoff=0.5)
-                suggestion_str = f" Did you mean: {', '.join(suggestions)}?" if suggestions else ""
+                suggestions = get_close_matches(
+                    indicator, self._indicators, n=3, cutoff=0.5
+                )
+                suggestion_str = (
+                    f" Did you mean: {', '.join(suggestions)}?" if suggestions else ""
+                )
                 raise ValidationError(
                     f"Invalid indicator: '{indicator}'.{suggestion_str}"
                 )
@@ -141,7 +159,7 @@ class DataValidator:
             f"Invalid timeframe: '{timeframe}'. Valid timeframes: {valid}"
         )
 
-    def validate_choice(self, field_name: str, value: str, allowed: Set[str]) -> bool:
+    def validate_choice(self, field_name: str, value: str, allowed: set[str]) -> bool:
         """Generic validator for choice fields.
 
         Args:
@@ -161,7 +179,9 @@ class DataValidator:
             f"Invalid {field_name}: '{value}'. Allowed values: {', '.join(sorted(allowed))}"
         )
 
-    def validate_fields(self, fields: List[str], allowed: List[str], field_name: str = "fields") -> bool:
+    def validate_fields(
+        self, fields: list[str], allowed: list[str], field_name: str = "fields"
+    ) -> bool:
         """Validate a list of fields against allowed values.
 
         Args:
@@ -184,27 +204,27 @@ class DataValidator:
             )
         return True
 
-    def get_exchanges(self) -> List[str]:
+    def get_exchanges(self) -> list[str]:
         """Return list of all valid exchanges."""
         return list(self._exchanges)
 
-    def get_indicators(self) -> List[str]:
+    def get_indicators(self) -> list[str]:
         """Return list of all valid indicators."""
         return list(self._indicators)
 
-    def get_timeframes(self) -> Dict[str, Any]:
+    def get_timeframes(self) -> dict[str, Any]:
         """Return timeframe mappings."""
         return dict(self._timeframes)
 
-    def get_news_providers(self) -> List[str]:
+    def get_news_providers(self) -> list[str]:
         """Return list of all valid news providers."""
         return list(self._news_providers)
 
-    def get_languages(self) -> Dict[str, str]:
+    def get_languages(self) -> dict[str, str]:
         """Return language name-to-code mappings."""
         return dict(self._languages)
 
-    def get_areas(self) -> Dict[str, str]:
+    def get_areas(self) -> dict[str, str]:
         """Return area name-to-code mappings."""
         return dict(self._areas)
 

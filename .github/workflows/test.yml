@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12"]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v1
+      with:
+        version: "latest"
+
+    - name: Set up Python ${{ matrix.python-version }}
+      run: uv python install ${{ matrix.python-version }}
+
+    - name: Install dependencies
+      run: uv sync --all-extras --dev
+
+    - name: Lint with ruff
+      run: |
+        uv run ruff check .
+        uv run ruff format --check .
+
+    - name: Type check with mypy
+      run: uv run mypy tv_scraper/
+      continue-on-error: true  # Don't fail the build on type errors initially
+
+    - name: Run Unit Tests
+      run: uv run pytest tests/unit tests/integration -v --cov=tv_scraper --cov-report=term-missing
+
+    # Optional: Run live tests only if a secret is present or on a schedule
+    # - name: Run Live Tests
+    #   if: env.TRADINGVIEW_COOKIE != ''
+    #   run: uv run pytest tests/live_api
+    #   env:
+    #     TRADINGVIEW_COOKIE: ${{ secrets.TRADINGVIEW_COOKIE }}

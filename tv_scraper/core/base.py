@@ -1,7 +1,7 @@
 """Base scraper class for tv_scraper."""
 
 import logging
-from typing import Any, Dict, List, Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     import requests
@@ -44,9 +44,9 @@ class BaseScraper:
         self.export_type = export_type
         self.timeout = timeout
         self.validator = DataValidator()
-        self._headers: Dict[str, str] = {"User-Agent": generate_user_agent()}
+        self._headers: dict[str, str] = {"User-Agent": generate_user_agent()}
 
-    def _success_response(self, data: Any, **metadata: Any) -> Dict[str, Any]:
+    def _success_response(self, data: Any, **metadata: Any) -> dict[str, Any]:
         """Build a standardized success response.
 
         Args:
@@ -63,7 +63,7 @@ class BaseScraper:
             "error": None,
         }
 
-    def _error_response(self, error: str, **metadata: Any) -> Dict[str, Any]:
+    def _error_response(self, error: str, **metadata: Any) -> dict[str, Any]:
         """Build a standardized error response.
 
         Args:
@@ -80,7 +80,9 @@ class BaseScraper:
             "error": error,
         }
 
-    def _make_request(self, url: str, method: str = "GET", **kwargs: Any) -> "requests.Response":
+    def _make_request(
+        self, url: str, method: str = "GET", **kwargs: Any
+    ) -> "requests.Response":
         """Make an HTTP request with default headers and timeout.
 
         Args:
@@ -121,13 +123,17 @@ class BaseScraper:
         """
         if not self.export_result:
             return
-        filepath = generate_export_filepath(symbol, data_category, self.export_type, timeframe)
+        filepath = generate_export_filepath(
+            symbol, data_category, self.export_type, timeframe
+        )
         if self.export_type == "csv":
             save_csv_file(data, filepath)
         else:
             save_json_file(data, filepath)
 
-    def _map_scanner_rows(self, items: List[Dict[str, Any]], fields: List[str]) -> List[Dict[str, Any]]:
+    def _map_scanner_rows(
+        self, items: list[dict[str, Any]], fields: list[str]
+    ) -> list[dict[str, Any]]:
         """Map TradingView scanner response rows to field-named dicts.
 
         Scanner API returns items like ``{"s": "EXCHANGE:SYMBOL", "d": [val1, val2, ...]}``.
@@ -140,9 +146,9 @@ class BaseScraper:
         Returns:
             List of dicts with ``symbol`` key and field-named values.
         """
-        result: List[Dict[str, Any]] = []
+        result: list[dict[str, Any]] = []
         for item in items:
-            row: Dict[str, Any] = {"symbol": item.get("s", "")}
+            row: dict[str, Any] = {"symbol": item.get("s", "")}
             values = item.get("d", [])
             for i, field in enumerate(fields):
                 row[field] = values[i] if i < len(values) else None

@@ -1,10 +1,10 @@
 """Ideas scraper for fetching trading ideas from TradingView."""
 
+import json
 import logging
 import os
-import json
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.constants import BASE_URL
@@ -42,14 +42,14 @@ class Ideas(BaseScraper):
         export_result: bool = False,
         export_type: str = "json",
         timeout: int = 10,
-        cookie: Optional[str] = None,
+        cookie: str | None = None,
     ) -> None:
         super().__init__(
             export_result=export_result,
             export_type=export_type,
             timeout=timeout,
         )
-        self._cookie: Optional[str] = cookie or os.environ.get("TRADINGVIEW_COOKIE")
+        self._cookie: str | None = cookie or os.environ.get("TRADINGVIEW_COOKIE")
 
     def scrape(
         self,
@@ -58,7 +58,7 @@ class Ideas(BaseScraper):
         start_page: int = 1,
         end_page: int = 1,
         sort_by: str = "popular",
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Scrape trading ideas for a symbol across one or more pages.
 
         Args:
@@ -95,12 +95,14 @@ class Ideas(BaseScraper):
             headers["cookie"] = self._cookie
 
         page_list = list(range(start_page, end_page + 1))
-        articles: List[Dict[str, Any]] = []
+        articles: list[dict[str, Any]] = []
 
         # --- Concurrent page scraping ---
         with ThreadPoolExecutor(max_workers=3) as executor:
             futures = {
-                executor.submit(self._scrape_page, url_slug, page, sort_by, headers): page
+                executor.submit(
+                    self._scrape_page, url_slug, page, sort_by, headers
+                ): page
                 for page in page_list
             }
             for future in as_completed(futures):
@@ -141,8 +143,8 @@ class Ideas(BaseScraper):
         url_slug: str,
         page: int,
         sort_by: str,
-        headers: Dict[str, str],
-    ) -> Optional[List[Dict[str, Any]]]:
+        headers: dict[str, str],
+    ) -> list[dict[str, Any]] | None:
         """Scrape a single page of ideas from the TradingView API.
 
         Args:
@@ -159,7 +161,7 @@ class Ideas(BaseScraper):
         else:
             url = f"{BASE_URL}/symbols/{url_slug}/ideas/page-{page}/"
 
-        params: Dict[str, str] = {"component-data-only": "1"}
+        params: dict[str, str] = {"component-data-only": "1"}
         if sort_by == "recent":
             params["sort"] = "recent"
 
@@ -171,13 +173,17 @@ class Ideas(BaseScraper):
             if response.status_code != 200:
                 logger.error(
                     "HTTP %d: Failed to fetch page %d for %s",
-                    response.status_code, page, url_slug,
+                    response.status_code,
+                    page,
+                    url_slug,
                 )
                 raise Exception(f"HTTP {response.status_code}")
 
             if "<title>Captcha Challenge</title>" in response.text:
                 logger.error(
-                    "Captcha challenge on page %d of %s", page, url_slug,
+                    "Captcha challenge on page %d of %s",
+                    page,
+                    url_slug,
                 )
                 return None
 
@@ -192,12 +198,15 @@ class Ideas(BaseScraper):
             raise
         except Exception as exc:
             logger.error(
-                "Request failed for page %d of %s: %s", page, url_slug, exc,
+                "Request failed for page %d of %s: %s",
+                page,
+                url_slug,
+                exc,
             )
             raise
 
     @staticmethod
-    def _map_idea(item: Dict[str, Any]) -> Dict[str, Any]:
+    def _map_idea(item: dict[str, Any]) -> dict[str, Any]:
         """Map a raw API idea item to the output schema.
 
         Args:

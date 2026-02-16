@@ -1,8 +1,8 @@
 """Technicals scraper for fetching technical analysis indicators."""
 
-import re
 import logging
-from typing import Any, Dict, List, Optional
+import re
+from typing import Any
 
 from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.constants import SCANNER_URL
@@ -51,10 +51,10 @@ class Technicals(BaseScraper):
         exchange: str = "BITSTAMP",
         symbol: str = "BTCUSD",
         timeframe: str = "1d",
-        technical_indicators: Optional[List[str]] = None,
+        technical_indicators: list[str] | None = None,
         all_indicators: bool = False,
-        fields: Optional[List[str]] = None,
-    ) -> Dict[str, Any]:
+        fields: list[str] | None = None,
+    ) -> dict[str, Any]:
         """Scrape technical indicator values for a symbol.
 
         Args:
@@ -112,7 +112,7 @@ class Technicals(BaseScraper):
         # Build query parameters for GET request
         fields_param = ",".join(api_indicators)
 
-        params: Dict[str, str] = {
+        params: dict[str, str] = {
             "symbol": f"{exchange}:{symbol}",
             "fields": fields_param,
             "no_404": "true",
@@ -123,7 +123,7 @@ class Technicals(BaseScraper):
         # --- Execute request ---
         try:
             response = self._make_request(url, method="GET", params=params)
-            json_response: Dict[str, Any] = response.json()
+            json_response: dict[str, Any] = response.json()
         except NetworkError as exc:
             return self._error_response(str(exc))
         except (ValueError, KeyError) as exc:
@@ -134,7 +134,7 @@ class Technicals(BaseScraper):
         if not json_response:
             return self._error_response("No data returned from API.")
 
-        result: Dict[str, Any] = {}
+        result: dict[str, Any] = {}
         # Map requested indicators to response values
         for ind in api_indicators:
             result[ind] = json_response.get(ind)
@@ -163,8 +163,8 @@ class Technicals(BaseScraper):
         )
 
     def _revise_response(
-        self, data: Dict[str, Any], timeframe_value: str
-    ) -> Dict[str, Any]:
+        self, data: dict[str, Any], timeframe_value: str
+    ) -> dict[str, Any]:
         """Clean indicator key names by stripping timeframe suffixes.
 
         Args:

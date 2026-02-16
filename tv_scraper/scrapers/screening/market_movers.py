@@ -1,7 +1,7 @@
 """Market Movers module for scraping top gainers, losers, and active instruments."""
 
 import logging
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.constants import SCANNER_URL
@@ -75,7 +75,7 @@ class MarketMovers(BaseScraper):
     ]
 
     # Maps market identifier to scanner API path segment
-    _MARKET_TO_SCANNER: Dict[str, str] = {
+    _MARKET_TO_SCANNER: dict[str, str] = {
         "stocks-usa": "america",
         "stocks-uk": "uk",
         "stocks-india": "india",
@@ -88,7 +88,7 @@ class MarketMovers(BaseScraper):
     }
 
     # Sort configuration per category
-    _CATEGORY_SORT: Dict[str, Dict[str, str]] = {
+    _CATEGORY_SORT: dict[str, dict[str, str]] = {
         "gainers": {"sortBy": "change", "sortOrder": "desc"},
         "losers": {"sortBy": "change", "sortOrder": "asc"},
         "most-active": {"sortBy": "volume", "sortOrder": "desc"},
@@ -111,7 +111,7 @@ class MarketMovers(BaseScraper):
         segment = self._MARKET_TO_SCANNER.get(market, "america")
         return f"{SCANNER_URL}/{segment}/scan"
 
-    def _get_sort_config(self, category: str) -> Dict[str, str]:
+    def _get_sort_config(self, category: str) -> dict[str, str]:
         """Return sort configuration for the given category.
 
         Args:
@@ -121,14 +121,12 @@ class MarketMovers(BaseScraper):
             Sort config dict with ``sortBy`` and ``sortOrder`` keys.
         """
         return dict(
-            self._CATEGORY_SORT.get(
-                category, {"sortBy": "change", "sortOrder": "desc"}
-            )
+            self._CATEGORY_SORT.get(category, {"sortBy": "change", "sortOrder": "desc"})
         )
 
     def _get_filter_conditions(
         self, market: str, category: str
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         """Build filter conditions for the scanner API.
 
         Args:
@@ -138,7 +136,7 @@ class MarketMovers(BaseScraper):
         Returns:
             List of filter condition dicts.
         """
-        filters: List[Dict[str, Any]] = []
+        filters: list[dict[str, Any]] = []
 
         # Market filter for stock markets
         scanner_segment = self._MARKET_TO_SCANNER.get(market)
@@ -169,9 +167,9 @@ class MarketMovers(BaseScraper):
         self,
         market: str,
         category: str,
-        fields: List[str],
+        fields: list[str],
         limit: int,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Build the scanner API request payload.
 
         Args:
@@ -195,9 +193,9 @@ class MarketMovers(BaseScraper):
         self,
         market: str = "stocks-usa",
         category: str = "gainers",
-        fields: Optional[List[str]] = None,
+        fields: list[str] | None = None,
         limit: int = 50,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Scrape market movers data from TradingView.
 
         Args:

@@ -1,7 +1,7 @@
 """Symbol Markets module for finding all exchanges where a symbol is traded."""
 
 import logging
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.constants import SCANNER_URL
@@ -55,9 +55,9 @@ class SymbolMarkets(BaseScraper):
     def _build_payload(
         self,
         symbol: str,
-        fields: List[str],
+        fields: list[str],
         limit: int,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Build the scanner API request payload.
 
         Args:
@@ -80,10 +80,10 @@ class SymbolMarkets(BaseScraper):
     def scrape(
         self,
         symbol: str,
-        fields: Optional[List[str]] = None,
+        fields: list[str] | None = None,
         scanner: str = "global",
         limit: int = 150,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Scrape all markets/exchanges where a symbol is traded.
 
         Args:

@@ -119,6 +119,44 @@ if result["status"] == "success":
 
 ---
 
+## 🛠️ Development & Testing
+
+For contributors and developers, this project includes comprehensive tooling for local testing.
+
+### Quick Commands
+
+```bash
+# Run all quality checks before committing
+make check
+
+# Full CI simulation with coverage
+make ci
+
+# Individual checks
+make lint          # Run ruff linter
+make format        # Auto-format code
+make type-check    # Run mypy type checker
+make test          # Run tests
+```
+
+### Pre-commit Hooks
+
+Pre-commit hooks automatically run on every commit to enforce code quality:
+```bash
+# Install hooks (one-time setup)
+make install-hooks
+```
+
+### Full Documentation
+
+See [LOCAL_TESTING.md](LOCAL_TESTING.md) for complete details on:
+- Makefile commands
+- Pre-commit hook configuration
+- Running GitHub Actions locally with act
+- CI/CD workflow testing
+
+---
+
 ## 🤝 Contributing
 
 We welcome contributions! Please see our [Contributing Guide](https://smitkunpara.github.io/tv-scraper/contributing/) for details.

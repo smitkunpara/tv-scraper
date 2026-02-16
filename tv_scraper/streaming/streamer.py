@@ -7,12 +7,11 @@ Provides ``get_candles()`` for historical OHLCV + indicator data and
 import json
 import logging
 import re
-import socket
-from typing import Generator, List, Optional, Tuple
+from collections.abc import Generator
 
 from websocket import WebSocketConnectionClosedException
 
-from tv_scraper.core.constants import STATUS_FAILED, STATUS_SUCCESS, EXPORT_TYPES
+from tv_scraper.core.constants import EXPORT_TYPES, STATUS_FAILED, STATUS_SUCCESS
 from tv_scraper.streaming.stream_handler import StreamHandler
 from tv_scraper.streaming.utils import (
     fetch_available_indicators,
@@ -89,7 +88,7 @@ class Streamer:
     # ------------------------------------------------------------------
 
     @staticmethod
-    def get_available_indicators() -> List[dict]:
+    def get_available_indicators() -> list[dict]:
         """Fetch the list of available built-in indicators.
 
         Use this to find the correct `id` (e.g. ``"STD;RSI"``) and `version`
@@ -106,7 +105,7 @@ class Streamer:
         symbol: str,
         timeframe: str = "1m",
         numb_candles: int = 10,
-        indicators: Optional[List[Tuple[str, str]]] = None,
+        indicators: list[tuple[str, str]] | None = None,
     ) -> dict:
         """Fetch OHLCV candle data and optional indicator values.
 
@@ -161,7 +160,9 @@ class Streamer:
                 if i > 15:
                     logger.warning(
                         "Timeout after %d packets. OHLCV=%d, Indicators=%d",
-                        i, len(ohlcv_data), len(indicator_data),
+                        i,
+                        len(ohlcv_data),
+                        len(indicator_data),
                     )
                     break
 
@@ -215,17 +216,21 @@ class Streamer:
         resolve_symbol = json.dumps({"adjustment": "splits", "symbol": exchange_symbol})
         qs = self._handler.quote_session
         cs = self._handler.chart_session
-        
+
         # Subscribe to quote session for price updates
         self._handler.send_message("quote_add_symbols", [qs, f"={resolve_symbol}"])
         self._handler.send_message("quote_fast_symbols", [qs, exchange_symbol])
-        
+
         # Subscribe to chart session for real-time OHLCV updates
-        self._handler.send_message("resolve_symbol", [cs, "sds_sym_1", f"={resolve_symbol}"])
-        self._handler.send_message("create_series", [cs, "sds_1", "s1", "sds_sym_1", "1", 1, ""])
-        
+        self._handler.send_message(
+            "resolve_symbol", [cs, "sds_sym_1", f"={resolve_symbol}"]
+        )
+        self._handler.send_message(
+            "create_series", [cs, "sds_1", "s1", "sds_sym_1", "1", 1, ""]
+        )
+
         last_price = None
-        
+
         for pkt in self._get_data():
             # Handle quote session data (qsd)
             if pkt.get("m") == "qsd":
@@ -249,7 +254,7 @@ class Streamer:
                             "bid": v.get("bid"),
                             "ask": v.get("ask"),
                         }
-            
+
             # Handle chart session data updates (du) for faster OHLCV updates
             elif pkt.get("m") == "du":
                 p_data = pkt.get("p", [])
@@ -257,22 +262,26 @@ class Streamer:
                     # Check for series data
                     sds_data = p_data[1].get("sds_1", {})
                     series = sds_data.get("s", [])
-                    
+
                     for entry in series:
                         if "v" in entry and len(entry["v"]) >= 5:
                             # OHLCV: [timestamp, open, high, low, close, volume]
                             close_price = entry["v"][4]
                             volume = entry["v"][5] if len(entry["v"]) > 5 else None
-                            
+
                             # Calculate change if we have last price
                             change = None
                             change_percent = None
                             if last_price is not None:
                                 change = close_price - last_price
-                                change_percent = (change / last_price * 100) if last_price != 0 else 0
-                            
+                                change_percent = (
+                                    (change / last_price * 100)
+                                    if last_price != 0
+                                    else 0
+                                )
+
                             last_price = close_price
-                            
+
                             yield {
                                 "exchange": exchange,
                                 "symbol": symbol,
@@ -324,7 +333,7 @@ class Streamer:
                 except WebSocketConnectionClosedException:
                     logger.error("WebSocket connection closed.")
                     break
-                except socket.timeout:
+                except TimeoutError:
                     # Socket timeout is expected with non-blocking socket
                     # Just continue to next iteration
                     continue
@@ -348,7 +357,9 @@ class Streamer:
         """Register symbol in both quote and chart sessions."""
         mapped_tf = _TIMEFRAME_MAP.get(timeframe, "1")
         resolve_symbol = json.dumps({"adjustment": "splits", "symbol": exchange_symbol})
-        self._handler.send_message("quote_add_symbols", [quote_session, f"={resolve_symbol}"])
+        self._handler.send_message(
+            "quote_add_symbols", [quote_session, f"={resolve_symbol}"]
+        )
         self._handler.send_message(
             "resolve_symbol", [chart_session, "sds_sym_1", f"={resolve_symbol}"]
         )
@@ -356,12 +367,20 @@ class Streamer:
             "create_series",
             [chart_session, "sds_1", "s1", "sds_sym_1", mapped_tf, numb_candles, ""],
         )
-        self._handler.send_message("quote_fast_symbols", [quote_session, exchange_symbol])
+        self._handler.send_message(
+            "quote_fast_symbols", [quote_session, exchange_symbol]
+        )
 
-    def _add_indicators(self, indicators: List[Tuple[str, str]]) -> None:
+    def _add_indicators(self, indicators: list[tuple[str, str]]) -> None:
         """Add one or more indicator studies to the chart session."""
         for idx, (script_id, script_version) in enumerate(indicators):
-            logger.info("Processing indicator %d/%d: %s v%s", idx + 1, len(indicators), script_id, script_version)
+            logger.info(
+                "Processing indicator %d/%d: %s v%s",
+                idx + 1,
+                len(indicators),
+                script_id,
+                script_version,
+            )
 
             ind_study = fetch_indicator_metadata(
                 script_id=script_id,
@@ -369,7 +388,9 @@ class Streamer:
                 chart_session=self._handler.chart_session,
             )
             if not ind_study or "p" not in ind_study:
-                logger.error("Failed to fetch metadata for %s v%s", script_id, script_version)
+                logger.error(
+                    "Failed to fetch metadata for %s v%s", script_id, script_version
+                )
                 continue
 
             study_id = f"st{9 + idx}"
@@ -378,7 +399,9 @@ class Streamer:
 
             try:
                 self._handler.send_message("create_study", ind_study["p"])
-                self._handler.send_message("quote_hibernate_all", [self._handler.quote_session])
+                self._handler.send_message(
+                    "quote_hibernate_all", [self._handler.quote_session]
+                )
             except Exception as exc:
                 logger.error("Failed to add indicator %s: %s", script_id, exc)
 

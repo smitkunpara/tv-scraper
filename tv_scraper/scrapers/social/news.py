@@ -1,7 +1,7 @@
 """News scraper for fetching headlines and article content from TradingView."""
 
 import logging
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.exceptions import ValidationError
@@ -9,12 +9,8 @@ from tv_scraper.core.exceptions import ValidationError
 logger = logging.getLogger(__name__)
 
 # TradingView News API endpoints
-NEWS_HEADLINES_URL = (
-    "https://news-headlines.tradingview.com/v2/view/headlines/symbol"
-)
-NEWS_STORY_URL = (
-    "https://news-mediator.tradingview.com/public/news/v1/story"
-)
+NEWS_HEADLINES_URL = "https://news-headlines.tradingview.com/v2/view/headlines/symbol"
+NEWS_STORY_URL = "https://news-mediator.tradingview.com/public/news/v1/story"
 
 # Valid sort options
 VALID_SORT_OPTIONS = {"latest", "oldest", "most_urgent", "least_urgent"}
@@ -51,7 +47,7 @@ class News(BaseScraper):
         export_result: bool = False,
         export_type: str = "json",
         timeout: int = 10,
-        cookie: Optional[str] = None,
+        cookie: str | None = None,
     ) -> None:
         super().__init__(
             export_result=export_result,
@@ -62,21 +58,21 @@ class News(BaseScraper):
             self._headers["cookie"] = cookie
 
         # Cache validation data
-        self._news_providers: List[str] = self.validator.get_news_providers()
-        self._languages: Dict[str, str] = self.validator.get_languages()
-        self._areas: Dict[str, str] = self.validator.get_areas()
-        self._language_codes: List[str] = list(self._languages.values())
+        self._news_providers: list[str] = self.validator.get_news_providers()
+        self._languages: dict[str, str] = self.validator.get_languages()
+        self._areas: dict[str, str] = self.validator.get_areas()
+        self._language_codes: list[str] = list(self._languages.values())
 
     def scrape_headlines(
         self,
         exchange: str,
         symbol: str,
-        provider: Optional[str] = None,
-        area: Optional[str] = None,
+        provider: str | None = None,
+        area: str | None = None,
         sort_by: str = "latest",
         section: str = "all",
         language: str = "en",
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Scrape news headlines for a symbol.
 
         Args:
@@ -163,7 +159,7 @@ class News(BaseScraper):
                 )
 
             response_json = response.json()
-            items: List[Dict[str, Any]] = response_json.get("items", [])
+            items: list[dict[str, Any]] = response_json.get("items", [])
 
             if not items:
                 return self._success_response(
@@ -201,7 +197,7 @@ class News(BaseScraper):
         self,
         story_id: str,
         language: str = "en",
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Scrape full article content from a TradingView news story.
 
         Args:
@@ -242,9 +238,9 @@ class News(BaseScraper):
 
     def _sort_news(
         self,
-        news_list: List[Dict[str, Any]],
+        news_list: list[dict[str, Any]],
         sort_by: str,
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         """Sort news items by the given criterion.
 
         Args:
@@ -255,24 +251,16 @@ class News(BaseScraper):
             Sorted list of news headline dicts.
         """
         if sort_by == "latest":
-            return sorted(
-                news_list, key=lambda x: x.get("published", 0), reverse=True
-            )
+            return sorted(news_list, key=lambda x: x.get("published", 0), reverse=True)
         elif sort_by == "oldest":
-            return sorted(
-                news_list, key=lambda x: x.get("published", 0), reverse=False
-            )
+            return sorted(news_list, key=lambda x: x.get("published", 0), reverse=False)
         elif sort_by == "most_urgent":
-            return sorted(
-                news_list, key=lambda x: x.get("urgency", 0), reverse=True
-            )
+            return sorted(news_list, key=lambda x: x.get("urgency", 0), reverse=True)
         elif sort_by == "least_urgent":
-            return sorted(
-                news_list, key=lambda x: x.get("urgency", 0), reverse=False
-            )
+            return sorted(news_list, key=lambda x: x.get("urgency", 0), reverse=False)
         return news_list
 
-    def _clean_headline(self, item: Dict[str, Any]) -> Dict[str, Any]:
+    def _clean_headline(self, item: dict[str, Any]) -> dict[str, Any]:
         """Remove unwanted fields from headline.
 
         Removes: id, sourceLogoid, provider, relatedSymbols, permission, urgency
@@ -296,7 +284,7 @@ class News(BaseScraper):
             "storyPath": story_path,
         }
 
-    def _parse_story(self, story_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _parse_story(self, story_data: dict[str, Any]) -> dict[str, Any]:
         """Parse story JSON into simplified format.
 
         Extracts title, description, and published timestamp.
@@ -313,9 +301,7 @@ class News(BaseScraper):
         published = story_data.get("published", 0)
 
         # Parse ast_description to build description
-        description = self._parse_ast_description(
-            story_data.get("ast_description", {})
-        )
+        description = self._parse_ast_description(story_data.get("ast_description", {}))
 
         # Ensure story_path starts with "/"
         story_path = story_data.get("story_path", "")
@@ -329,7 +315,7 @@ class News(BaseScraper):
             "storyPath": story_path,
         }
 
-    def _parse_ast_description(self, ast_desc: Dict[str, Any]) -> str:
+    def _parse_ast_description(self, ast_desc: dict[str, Any]) -> str:
         """Parse ast_description.children into a description string.
 
         Merges paragraph children, extracting text from strings and
@@ -342,7 +328,7 @@ class News(BaseScraper):
             Merged description string with paragraphs separated by newlines.
         """
         children = ast_desc.get("children", [])
-        paragraphs: List[str] = []
+        paragraphs: list[str] = []
 
         for child in children:
             if not isinstance(child, dict):
@@ -358,7 +344,7 @@ class News(BaseScraper):
 
         return "\n".join(paragraphs)
 
-    def _parse_paragraph_children(self, children: List[Any]) -> str:
+    def _parse_paragraph_children(self, children: list[Any]) -> str:
         """Parse children of a paragraph node.
 
         Extracts text from string children and params.text from object children.
@@ -369,7 +355,7 @@ class News(BaseScraper):
         Returns:
             Merged paragraph text.
         """
-        parts: List[str] = []
+        parts: list[str] = []
 
         for item in children:
             if isinstance(item, str):

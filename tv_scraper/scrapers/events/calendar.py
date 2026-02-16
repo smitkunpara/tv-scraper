@@ -2,7 +2,7 @@
 
 import datetime
 import logging
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.constants import SCANNER_URL
@@ -11,7 +11,7 @@ from tv_scraper.core.exceptions import NetworkError, ValidationError
 logger = logging.getLogger(__name__)
 
 # Default fields for dividend calendar (TradingView web defaults, Jan 2025)
-DEFAULT_DIVIDEND_FIELDS: List[str] = [
+DEFAULT_DIVIDEND_FIELDS: list[str] = [
     "dividend_ex_date_recent",
     "dividend_ex_date_upcoming",
     "logoid",
@@ -27,7 +27,7 @@ DEFAULT_DIVIDEND_FIELDS: List[str] = [
 ]
 
 # Default fields for earnings calendar (TradingView web defaults, Jan 2025)
-DEFAULT_EARNINGS_FIELDS: List[str] = [
+DEFAULT_EARNINGS_FIELDS: list[str] = [
     "earnings_release_next_date",
     "earnings_release_date",
     "logoid",
@@ -96,11 +96,11 @@ class Calendar(BaseScraper):
 
     def get_dividends(
         self,
-        timestamp_from: Optional[int] = None,
-        timestamp_to: Optional[int] = None,
-        markets: Optional[List[str]] = None,
-        fields: Optional[List[str]] = None,
-    ) -> Dict[str, Any]:
+        timestamp_from: int | None = None,
+        timestamp_to: int | None = None,
+        markets: list[str] | None = None,
+        fields: list[str] | None = None,
+    ) -> dict[str, Any]:
         """Fetch dividend events from the TradingView calendar.
 
         Args:
@@ -130,11 +130,11 @@ class Calendar(BaseScraper):
 
     def get_earnings(
         self,
-        timestamp_from: Optional[int] = None,
-        timestamp_to: Optional[int] = None,
-        markets: Optional[List[str]] = None,
-        fields: Optional[List[str]] = None,
-    ) -> Dict[str, Any]:
+        timestamp_from: int | None = None,
+        timestamp_to: int | None = None,
+        markets: list[str] | None = None,
+        fields: list[str] | None = None,
+    ) -> dict[str, Any]:
         """Fetch earnings events from the TradingView calendar.
 
         Args:
@@ -170,13 +170,13 @@ class Calendar(BaseScraper):
         self,
         label: str,
         filter_left: str,
-        default_fields: List[str],
-        fields: Optional[List[str]],
-        timestamp_from: Optional[int],
-        timestamp_to: Optional[int],
-        markets: Optional[List[str]],
+        default_fields: list[str],
+        fields: list[str] | None,
+        timestamp_from: int | None,
+        timestamp_to: int | None,
+        markets: list[str] | None,
         data_category: str,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Shared implementation for fetching calendar events.
 
         Args:
@@ -196,7 +196,9 @@ class Calendar(BaseScraper):
         use_fields = default_fields
         if fields:
             try:
-                self.validator.validate_fields(fields, default_fields, field_name="fields")
+                self.validator.validate_fields(
+                    fields, default_fields, field_name="fields"
+                )
             except ValidationError as exc:
                 return self._error_response(str(exc))
             use_fields = fields
@@ -210,11 +212,13 @@ class Calendar(BaseScraper):
         if timestamp_to is None:
             now = datetime.datetime.now().timestamp()
             midnight = now - (now % _SECONDS_PER_DAY)
-            timestamp_to = int(midnight + _DAYS_OFFSET * _SECONDS_PER_DAY + _SECONDS_PER_DAY - 1)
+            timestamp_to = int(
+                midnight + _DAYS_OFFSET * _SECONDS_PER_DAY + _SECONDS_PER_DAY - 1
+            )
 
         # Build payload
         url = f"{SCANNER_URL}/global/scan?label-product={label}"
-        payload: Dict[str, Any] = {
+        payload: dict[str, Any] = {
             "columns": use_fields,
             "filter": [
                 {
@@ -233,14 +237,14 @@ class Calendar(BaseScraper):
         # Execute request
         try:
             response = self._make_request(url, method="POST", json_data=payload)
-            json_response: Dict[str, Any] = response.json()
+            json_response: dict[str, Any] = response.json()
         except NetworkError as exc:
             return self._error_response(str(exc))
         except (ValueError, KeyError) as exc:
             return self._error_response(f"Failed to parse API response: {exc}")
 
         # Parse events
-        data_items: List[Dict[str, Any]] = json_response.get("data", [])
+        data_items: list[dict[str, Any]] = json_response.get("data", [])
         events = self._map_scanner_rows(data_items, use_fields)
 
         # Export if enabled

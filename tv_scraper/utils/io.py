@@ -51,7 +51,9 @@ def generate_export_filepath(
     extension = f".{export_type}"
     root_path = os.getcwd()
     return os.path.join(
-        root_path, "export", f"{data_category}_{symbol_part}{timeframe_part}{timestamp}{extension}"
+        root_path,
+        "export",
+        f"{data_category}_{symbol_part}{timeframe_part}{timestamp}{extension}",
     )
 
 
@@ -70,7 +72,7 @@ def save_json_file(data: Any, filepath: str) -> None:
         with open(filepath, "w", encoding="utf-8") as f:
             json.dump(data, f, ensure_ascii=False, indent=2)
         logger.info("JSON file saved at: %s", filepath)
-    except (TypeError, IOError, PermissionError) as e:
+    except (OSError, TypeError, PermissionError) as e:
         raise ExportError(f"Failed to save JSON file {filepath}: {e}") from e
 
 
@@ -91,5 +93,5 @@ def save_csv_file(data: Any, filepath: str) -> None:
         df = pd.DataFrame.from_dict(data)
         df.to_csv(filepath, index=False)
         logger.info("CSV file saved at: %s", filepath)
-    except (ValueError, IOError, PermissionError) as e:
+    except (OSError, ValueError, PermissionError) as e:
         raise ExportError(f"Failed to save CSV file {filepath}: {e}") from e

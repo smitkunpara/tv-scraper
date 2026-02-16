@@ -1,7 +1,7 @@
 """Overview scraper for fetching comprehensive symbol data from TradingView."""
 
 import logging
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.constants import SCANNER_URL
@@ -29,7 +29,7 @@ class Overview(BaseScraper):
         data = scraper.get_overview(exchange="NASDAQ", symbol="AAPL")
     """
 
-    BASIC_FIELDS: List[str] = [
+    BASIC_FIELDS: list[str] = [
         "name",
         "description",
         "type",
@@ -40,7 +40,7 @@ class Overview(BaseScraper):
         "industry",
     ]
 
-    PRICE_FIELDS: List[str] = [
+    PRICE_FIELDS: list[str] = [
         "close",
         "change",
         "change_abs",
@@ -54,7 +54,7 @@ class Overview(BaseScraper):
         "price_52_week_low",
     ]
 
-    MARKET_FIELDS: List[str] = [
+    MARKET_FIELDS: list[str] = [
         "market_cap_basic",
         "market_cap_calc",
         "market_cap_diluted_calc",
@@ -63,7 +63,7 @@ class Overview(BaseScraper):
         "shares_diluted",
     ]
 
-    VALUATION_FIELDS: List[str] = [
+    VALUATION_FIELDS: list[str] = [
         "price_earnings_ttm",
         "price_book_fq",
         "price_sales_ttm",
@@ -73,13 +73,13 @@ class Overview(BaseScraper):
         "book_value_per_share_fq",
     ]
 
-    DIVIDEND_FIELDS: List[str] = [
+    DIVIDEND_FIELDS: list[str] = [
         "dividends_yield",
         "dividends_per_share_fq",
         "dividend_payout_ratio_ttm",
     ]
 
-    FINANCIAL_FIELDS: List[str] = [
+    FINANCIAL_FIELDS: list[str] = [
         "total_revenue",
         "revenue_per_share_ttm",
         "net_income_fy",
@@ -96,7 +96,7 @@ class Overview(BaseScraper):
         "employees",
     ]
 
-    PERFORMANCE_FIELDS: List[str] = [
+    PERFORMANCE_FIELDS: list[str] = [
         "Perf.W",
         "Perf.1M",
         "Perf.3M",
@@ -105,14 +105,14 @@ class Overview(BaseScraper):
         "Perf.YTD",
     ]
 
-    VOLATILITY_FIELDS: List[str] = [
+    VOLATILITY_FIELDS: list[str] = [
         "Volatility.D",
         "Volatility.W",
         "Volatility.M",
         "beta_1_year",
     ]
 
-    TECHNICAL_FIELDS: List[str] = [
+    TECHNICAL_FIELDS: list[str] = [
         "Recommend.All",
         "RSI",
         "CCI20",
@@ -122,7 +122,7 @@ class Overview(BaseScraper):
         "ATR",
     ]
 
-    ALL_FIELDS: List[str] = (
+    ALL_FIELDS: list[str] = (
         BASIC_FIELDS
         + PRICE_FIELDS
         + MARKET_FIELDS
@@ -150,8 +150,8 @@ class Overview(BaseScraper):
         self,
         exchange: str,
         symbol: str,
-        fields: Optional[List[str]] = None,
-    ) -> Dict[str, Any]:
+        fields: list[str] | None = None,
+    ) -> dict[str, Any]:
         """Get comprehensive overview data for a symbol.
 
         Args:
@@ -182,7 +182,7 @@ class Overview(BaseScraper):
 
         # --- Build API request ---
         url = f"{SCANNER_URL}/symbol"
-        params: Dict[str, str] = {
+        params: dict[str, str] = {
             "symbol": f"{exchange}:{symbol}",
             "fields": ",".join(field_list),
             "no_404": "true",
@@ -191,7 +191,7 @@ class Overview(BaseScraper):
         # --- Execute request ---
         try:
             response = self._make_request(url, method="GET", params=params)
-            json_response: Dict[str, Any] = response.json()
+            json_response: dict[str, Any] = response.json()
         except NetworkError as exc:
             return self._error_response(str(exc))
         except (ValueError, KeyError) as exc:
@@ -202,7 +202,7 @@ class Overview(BaseScraper):
             return self._error_response("No data returned from API.")
 
         # API returns a flat dict of field:value
-        result: Dict[str, Any] = {"symbol": f"{exchange}:{symbol}"}
+        result: dict[str, Any] = {"symbol": f"{exchange}:{symbol}"}
         for field in field_list:
             result[field] = json_response.get(field)
 
@@ -220,7 +220,7 @@ class Overview(BaseScraper):
             symbol=symbol,
         )
 
-    def get_profile(self, exchange: str, symbol: str) -> Dict[str, Any]:
+    def get_profile(self, exchange: str, symbol: str) -> dict[str, Any]:
         """Get basic profile information for a symbol.
 
         Args:
@@ -230,9 +230,11 @@ class Overview(BaseScraper):
         Returns:
             Profile data including name, description, exchange, sector, industry.
         """
-        return self.get_overview(exchange=exchange, symbol=symbol, fields=self.BASIC_FIELDS)
+        return self.get_overview(
+            exchange=exchange, symbol=symbol, fields=self.BASIC_FIELDS
+        )
 
-    def get_statistics(self, exchange: str, symbol: str) -> Dict[str, Any]:
+    def get_statistics(self, exchange: str, symbol: str) -> dict[str, Any]:
         """Get market statistics for a symbol.
 
         Args:
@@ -245,7 +247,7 @@ class Overview(BaseScraper):
         fields = self.MARKET_FIELDS + self.VALUATION_FIELDS + self.DIVIDEND_FIELDS
         return self.get_overview(exchange=exchange, symbol=symbol, fields=fields)
 
-    def get_financials(self, exchange: str, symbol: str) -> Dict[str, Any]:
+    def get_financials(self, exchange: str, symbol: str) -> dict[str, Any]:
         """Get financial metrics for a symbol.
 
         Args:
@@ -255,9 +257,11 @@ class Overview(BaseScraper):
         Returns:
             Financial data including revenue, margins, ratios, EBITDA.
         """
-        return self.get_overview(exchange=exchange, symbol=symbol, fields=self.FINANCIAL_FIELDS)
+        return self.get_overview(
+            exchange=exchange, symbol=symbol, fields=self.FINANCIAL_FIELDS
+        )
 
-    def get_performance(self, exchange: str, symbol: str) -> Dict[str, Any]:
+    def get_performance(self, exchange: str, symbol: str) -> dict[str, Any]:
         """Get performance metrics for a symbol.
 
         Args:
@@ -267,9 +271,11 @@ class Overview(BaseScraper):
         Returns:
             Performance data including weekly, monthly, yearly returns.
         """
-        return self.get_overview(exchange=exchange, symbol=symbol, fields=self.PERFORMANCE_FIELDS)
+        return self.get_overview(
+            exchange=exchange, symbol=symbol, fields=self.PERFORMANCE_FIELDS
+        )
 
-    def get_technicals(self, exchange: str, symbol: str) -> Dict[str, Any]:
+    def get_technicals(self, exchange: str, symbol: str) -> dict[str, Any]:
         """Get technical indicators for a symbol.
 
         Args:
