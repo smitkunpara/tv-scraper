@@ -37,6 +37,8 @@ dev = [
     "pytest-cov",
     "mkdocs>=1.5.0",
     "mkdocs-material>=9.0.0",
+    "flake8",
+    "pylint",
 ]
 
 # test extra used by CI workflows (uv sync --extra test)
