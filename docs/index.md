@@ -1,89 +1,99 @@
-# TV Scraper
+# tv_scraper Documentation
 
-<div align="center" markdown="1">
+**tv_scraper** is a Python library for scraping trading data, ideas, news, and real-time market information from TradingView.com. It provides a clean, modular API with standardized response formats and built-in data export.
 
-![Python](https://img.shields.io/badge/python-3.11+-blue.svg)
-![License](https://img.shields.io/github/license/smitkunpara/tv-scraper.svg)
+## Installation
 
-**The most comprehensive and powerful Python library for programmatic access to TradingView data.**
-
-[Get Started](quick_start.md){ .md-button .md-button--primary } [View on GitHub](https://github.com/smitkunpara/tv-scraper){ .md-button .md-button--secondary }
-
----
-
-## Attribution
-
-This project is based on [mnwato/tradingview-scraper](https://github.com/mnwato/tradingview-scraper). Thanks to the original author for the foundational work.
-
-</div>
-
----
-
-## 🚀 Introduction
-
-**TradingView Scraper** is a robust Python library designed to bridge the gap between TradingView's visual data and your algorithmic needs. Whether you are building a trading bot, a market analysis dashboard, or a research tool, this library allows you to extract real-time and historical data directly from TradingView without the need for an official API key.
-
-It goes beyond simple price scraping, offering deep access to:
-- **Technical Analysis**: 80+ built-in indicators (RSI, MACD, Bollinger Bands, etc.) calculated in real-time.
-- **Social Sentiment**: Community Ideas, Minds discussions, and News sentiment.
-- **Fundamental Data**: Financial statements, ratios, and company overview.
-- **Live Streaming**: WebSocket integration for real-time OHLCV and indicator updates.
-
-## ⚡ Quick Glance
-
-Get up and running in seconds. Here's how to fetch technical indicators for Bitcoin:
-
-```python
-from tradingview_scraper.symbols.technicals import Indicators
-
-# Initialize the scraper
-scraper = Indicators()
-
-# Get RSI and MACD for BTCUSD on Binance
-data = scraper.scrape(
-    exchange="BINANCE",
-    symbol="BTCUSD",
-    timeframe="1d",
-    indicators=["RSI", "MACD"]
-)
-
-print(data)
+```bash
+pip install tradingview-scraper
 ```
 
-## 📦 Key Modules
+Or with [uv](https://docs.astral.sh/uv/):
 
-The library is organized into specialized modules to handle different types of data efficiently:
+```bash
+uv add tradingview-scraper
+```
+
+## Quick Start
+
+```python
+from tv_scraper import Technicals, Ideas, Screener
+
+# Get technical indicators
+tech = Technicals()
+result = tech.scrape(exchange="NASDAQ", symbol="AAPL")
+print(result["data"])
+
+# Fetch trading ideas
+ideas = Ideas()
+result = ideas.scrape(exchange="CRYPTO", symbol="BTCUSD")
+print(result["data"])
+
+# Screen stocks
+screener = Screener()
+result = screener.screen(market="america")
+print(result["data"])
+```
+
+All methods return a **standardized response envelope**:
+
+```python
+{
+    "status": "success",   # or "failed"
+    "data": { ... },       # the payload
+    "metadata": { ... },   # symbol, exchange, etc.
+    "error": None          # error message if status == "failed"
+}
+```
+
+## Available Modules
+
+### Market Data
 
 | Module | Description |
-| :--- | :--- |
-| **[`Indicators`](indicators.md)** | Fetch values for standard and custom technical indicators. |
-| **[`Streamer`](realtime.md)** | Connect to WebSocket for live price and indicator updates. |
-| **[`Ideas`](ideas.md)** | Scrape trading ideas, strategies, and educational content. |
-| **[`News`](news.md)** | Access real-time news headlines and detailed articles. |
-| **[`Screener`](screener.md)** | Filter stocks, crypto, and forex based on technical/fundamental criteria. |
-| **[`Fundamentals`](fundamentals.md)** | Retrieve balance sheets, income statements, and cash flow. |
-| **[`MarketMovers`](market_movers.md)** | Identify top gainers, losers, and active symbols. |
-| **[`Overview`](overview.md)** | Get comprehensive symbol overview data. |
-| **[`Calendar`](calendar.md)** | Scrape dividend and earnings calendar events. |
-| **[`Markets`](markets.md)** | Browse market listings and categories. |
-| **[`Minds`](minds.md)** | Access community Minds discussions. |
+|--------|-------------|
+| [Technicals](scrapers/technicals.md) | Technical indicators via TradingView scanner API |
+| [Overview](scrapers/overview.md) | Symbol overview data (profile, stats, financials) |
+| [Fundamentals](scrapers/fundamentals.md) | Fundamental financial graphs and metrics |
+| [Markets](scrapers/markets.md) | Market listings and top stocks |
 
-## ✨ Why TradingView Scraper?
+### Social
 
-- **Zero Configuration**: No API keys required for most features. Works out of the box.
-- **Broad Coverage**: Supports **260+ exchanges** (Binance, NASDAQ, NYSE, Forex) and **18+ markets**.
-- **Real-Time & Historical**: switch seamlessly between scraping static data and streaming live updates.
-- **Developer Friendly**: Fully typed, structured JSON output, and built with modern Python (3.11+).
-- **Export Ready**: Built-in support for exporting data to **JSON** and **CSV** for analysis.
+| Module | Description |
+|--------|-------------|
+| [Ideas](scrapers/ideas.md) | Trading ideas from the TradingView community |
+| [Minds](scrapers/minds.md) | Minds community discussions |
+| [News](scrapers/news.md) | News headlines and content for symbols |
 
+### Screening
 
-## 📚 Next Steps
+| Module | Description |
+|--------|-------------|
+| [Screener](scrapers/screener.md) | Stock/crypto/forex screener with custom filters |
+| [Market Movers](scrapers/market_movers.md) | Gainers, losers, and most active symbols |
+| [Symbol Markets](scrapers/symbol_markets.md) | Find all exchanges where a symbol is traded |
 
-- Follow the [**Quick Start Guide**](quick_start.md) to set up your first scraper.
-- Explore [**Supported Data**](supported_data.md) to see available exchanges and indicators.
-- Learn about [**Real-time Streaming**](realtime.md) for live data applications.
+### Events
 
----
-<p align="center">
-    <em>Built with ❤️ for the algorithmic trading community.</em>
-</p>
+| Module | Description |
+|--------|-------------|
+| [Calendar](scrapers/calendar.md) | Earnings and dividend calendar events |
+
+### Streaming
+
+| Module | Description |
+|--------|-------------|
+| [Streamer](streaming/streamer.md) | Real-time OHLCV + indicator streaming |
+| [RealTimeData](streaming/realtime-price.md) | Simple OHLCV and watchlist streaming |
+
+## Architecture
+
+See the [Architecture Guide](architecture.md) for details on the modular design, base classes, and data flow.
+
+## Migration from tradingview_scraper
+
+If you're upgrading from the legacy `tradingview_scraper` package, see the [Migration Guide](migration-guide.md).
+
+## API Conventions
+
+See [API Conventions](api-conventions.md) for details on response formats, error handling, and export options.

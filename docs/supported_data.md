@@ -170,6 +170,7 @@ UNISWAP3POLYGON UPBIT UPCOM VANTAGE VELODROME VERSEETH VIE VVSFINANCE WAGYUSWAP 
 | Ichimoku.BLine | Ichimoku Baseline |
 | close | Close Price |
 | W.R | Williams %R |
+| Stoch.RSI.K | Stochastic RSI %K |
 
 ## Supported Languages
 

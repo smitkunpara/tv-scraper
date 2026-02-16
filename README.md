@@ -48,20 +48,21 @@ uv sync
 Get RSI and Stochastic indicators for Bitcoin on Binance:
 
 ```python
-from tradingview_scraper.symbols.technicals import Indicators
+from tv_scraper import Technicals
 
 # Initialize scraper
-indicators_scraper = Indicators()
+technicals = Technicals()
 
 # Scrape indicators for BTCUSD
-result = indicators_scraper.scrape(
+result = technicals.scrape(
     exchange="BINANCE",
     symbol="BTCUSD",
     timeframe="1d",
-    indicators=["RSI", "Stoch.K"]
+    technical_indicators=["RSI", "Stoch.K"]
 )
 
-print(result)
+if result["status"] == "success":
+    print(result["data"])
 ```
 
 #### Scraping Trading Ideas
@@ -69,20 +70,22 @@ print(result)
 Get popular trading ideas for Ethereum:
 
 ```python
-from tradingview_scraper.symbols.ideas import Ideas
+from tv_scraper import Ideas
 
 # Initialize scraper
-ideas_scraper = Ideas()
+ideas = Ideas()
 
 # Scrape popular ideas for ETHUSD
-result = ideas_scraper.scrape(
+result = ideas.scrape(
+    exchange="CRYPTO",
     symbol="ETHUSD",
-    startPage=1,
-    endPage=1,
-    sort="popular"
+    start_page=1,
+    end_page=1,
+    sort_by="popular"
 )
 
-print(f"Found {len(result)} ideas.")
+if result["status"] == "success":
+    print(f"Found {len(result['data'])} ideas.")
 ```
 
 ## ✨ Key Features
@@ -99,6 +102,7 @@ print(f"Found {len(result)} ideas.")
 
 ### Core Modules
 - **Indicators**: 81+ technical indicators (RSI, MACD, Stochastic, etc.)
+- **Options**: Fetch option chains by expiration or strike price
 - **Ideas**: Community trading ideas and strategies
 - **News**: Financial news with provider filtering
 - **Real-Time**: WebSocket streaming for live data

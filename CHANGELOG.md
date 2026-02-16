@@ -5,6 +5,69 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0] - 2026-02-16
+
+### Overview
+Major release introducing the new `tv_scraper` package — a complete architectural refactor with modular design, standardized APIs, comprehensive test coverage, and optimized WebSocket streaming.
+
+### Added
+- **New `tv_scraper` package** with clean modular architecture alongside the legacy `tradingview_scraper` package
+- **`Options` scraper** — Fetch option chains by expiration or strike price via TradingView's options scanner API
+- **WebSocket Performance Optimizations** — Low-latency streaming with TCP_NODELAY socket option
+- **Dual Session Subscription** — Real-time price streaming subscribes to both quote session (QSD) and chart session (DU) for maximum update frequency (~1 update per 3-4 seconds)
+- **Enhanced Message Processing** — Added support for DU (data update) messages in addition to QSD messages for faster price updates
+- **Comprehensive Live API Tests** — Added `tests/live_api/test_streaming.py` with extensive real-world streaming tests covering multiple timeframes, exchanges, asset types, update frequency verification, connection stability, and edge cases
+- **Unit Tests for WebSocket Optimizations** — Added detailed tests for TCP_NODELAY, dual session subscription, mixed message handling, and socket timeout handling
+- **Live API smoke tests** — New `tests/live_api/` directory for verifying real-time endpoint availability
+- **`Streamer.get_available_indicators()`** — fetch standard built-in indicator IDs and versions for candle streaming
+- **12 scraper modules** organized into four categories:
+  - Market Data: `Technicals`, `Overview`, `Fundamentals`, `Markets`, `Options`
+  - Social: `Ideas`, `Minds`, `News`
+  - Screening: `Screener`, `MarketMovers`, `SymbolMarkets`
+  - Events: `Calendar`
+- **Streaming module** with `Streamer` (OHLC + indicators) and `RealTimeData` (simple OHLCV/watchlist)
+- **`BaseScraper` base class** providing standardized response envelopes, HTTP handling, and export logic
+- **`DataValidator` singleton** for exchange, indicator, timeframe, and field validation with suggestions
+- **Standardized response envelope** (`status`, `data`, `metadata`, `error`) across all scrapers
+- **Core exception hierarchy**: `TvScraperError`, `ValidationError`, `DataNotFoundError`, `NetworkError`, `ExportError`
+- **Top-level re-exports** — all public classes importable directly from `tv_scraper`
+- **265+ unit tests** covering all modules with full mocking (no network calls)
+- **50+ live API tests** for comprehensive connectivity verification and streaming performance testing
+- **Live connectivity verification tests** for import smoke testing and cross-module verification
+- **Comprehensive documentation** with migration guide, API conventions, and per-module docs
+
+### Changed
+- **StreamHandler** — Added TCP_NODELAY socket option during WebSocket connection creation to disable Nagle's algorithm for lower latency
+- **Streamer.stream_realtime_price()** — Now subscribes to both quote and chart sessions, processes both QSD and DU message types
+- **Socket Timeout Handling** — Added graceful handling of socket.timeout exceptions in streaming generators
+- **Unified Parameter Handling** — Standardized `EXCHANGE:SYMBOL` parsing across all core scrapers (`Ideas`, `News`, `Technicals`, `Fundamentals`, `Overview`)
+- **API naming conventions**: consistent `get_*` method names (e.g., `get_technicals`, `get_ideas`, `get_news`)
+- **Parameter splitting**: exchange and symbol are always separate parameters
+- **Error handling**: scrapers return error envelopes instead of raising exceptions
+- **Export validation**: invalid `export_type` raises `ValueError` at construction time
+- **Cleaned Codebase** — Removed legacy backward compatibility logic for cleaner, more maintainable code
+
+### Performance Improvements
+- **WebSocket Update Frequency**: Increased from ~1 update per 15 seconds to ~1 update per 3-4 seconds, matching browser performance
+- **Reduced Latency**: TCP_NODELAY eliminates packet transmission delays
+- **Enhanced Reliability**: Better handling of network timeouts and connection stability
+- **Dual Session Data**: Combines quote and chart session updates for comprehensive real-time market data
+
+### Technical Details
+- TCP_NODELAY applied via `sockopt` parameter: `[(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)]`
+- Chart session uses 1-second timeframe for real-time OHLCV updates
+- DU messages extract close price and volume from OHLCV arrays: `[timestamp, open, high, low, close, volume]`
+- QSD messages provide quote-level data with bid/ask spreads, volume, and percentage changes
+
+### Documentation
+- Updated `docs/streaming/index.md` with performance optimization overview
+- Updated `docs/streaming/streamer.md` with WebSocket optimization details and dual session strategy
+- Updated `docs/streaming/realtime-price.md` with performance notes
+- Updated `GEMINI.md` with comprehensive WebSocket implementation details, message types, and testing strategy
+
+### Migration
+See `docs_new/migration-guide.md` for the complete migration guide from `tradingview_scraper` to `tv_scraper`.
+
 ## [0.5.2] - 2025-12-18
 
 ### Overview

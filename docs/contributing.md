@@ -69,27 +69,27 @@ We welcome contributions from the community! This guide will help you get starte
 ### Test Structure
 ```python
 import pytest
-from tradingview_scraper.symbols.indicators import Indicators
+from tv_scraper import Technicals
 
-class TestIndicators:
+class TestTechnicals:
     def test_scrape_valid_indicators(self):
         """Test scraping with valid indicators."""
-        scraper = Indicators()
+        scraper = Technicals()
         result = scraper.scrape(
             exchange="BINANCE",
             symbol="BTCUSD",
-            indicators=["RSI"]
+            technical_indicators=["RSI"]
         )
         assert result["status"] == "success"
         assert "RSI" in result["data"]
 
     def test_scrape_invalid_exchange(self):
         """Test error handling for invalid exchange."""
-        scraper = Indicators()
+        scraper = Technicals()
         result = scraper.scrape(
             exchange="INVALID",
             symbol="BTCUSD",
-            indicators=["RSI"]
+            technical_indicators=["RSI"]
         )
         assert result["status"] == "failed"
 ```
@@ -153,17 +153,17 @@ When reporting bugs, please include:
 
 ### Example Bug Report
 ```
-**Bug: Indicators scraper fails with timeout**
+**Bug: Technicals scraper fails with timeout**
 
 **Steps to reproduce:**
 ```python
-from tradingview_scraper.symbols.indicators import Indicators
+from tv_scraper import Technicals
 
-scraper = Indicators()
+scraper = Technicals()
 result = scraper.scrape(
     exchange="BINANCE",
     symbol="BTCUSD",
-    indicators=["RSI", "MACD"]
+    technical_indicators=["RSI", "MACD"]
 )
 ```
 
