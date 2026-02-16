@@ -1,6 +1,7 @@
 """Tests for Fundamentals scraper module."""
 
-from typing import Any, Dict, Iterator, List
+from collections.abc import Iterator
+from typing import Any
 from unittest import mock
 from unittest.mock import MagicMock
 
@@ -18,7 +19,7 @@ def fundamentals() -> Iterator[Fundamentals]:
     yield Fundamentals()
 
 
-def _mock_response(data: Dict[str, Any]) -> MagicMock:
+def _mock_response(data: dict[str, Any]) -> MagicMock:
     """Create a mock requests.Response with a .json() method."""
     response = MagicMock()
     response.json.return_value = data
@@ -40,13 +41,13 @@ class TestGetFundamentalsSuccess:
     def test_get_fundamentals_success(self, fundamentals: Fundamentals) -> None:
         """Get fundamentals with default (all) fields returns success envelope."""
         # Flat mock response as returned by GET /symbol endpoint
-        mock_data: Dict[str, Any] = {
+        mock_data: dict[str, Any] = {
             "total_revenue": 394000000000,
             "EBITDA": 130000000000,
             "market_cap_basic": 2800000000000,
         }
         mock_resp = _mock_response(mock_data)
-        
+
         with mock.patch.object(fundamentals, "_make_request", return_value=mock_resp):
             result = fundamentals.get_fundamentals(exchange="NASDAQ", symbol="AAPL")
 
@@ -62,13 +63,13 @@ class TestGetFundamentalsSuccess:
     ) -> None:
         """Custom fields are sent to the API and returned correctly."""
         custom_fields = ["total_revenue", "net_income", "EBITDA"]
-        mock_data: Dict[str, Any] = {
+        mock_data: dict[str, Any] = {
             "total_revenue": 394000000000,
             "net_income": 100000000000,
             "EBITDA": 130000000000,
         }
         mock_resp = _mock_response(mock_data)
-        
+
         with mock.patch.object(
             fundamentals, "_make_request", return_value=mock_resp
         ) as mock_req:
@@ -102,18 +103,14 @@ class TestGetFundamentalsErrors:
         assert result["data"] is None
         assert "Invalid exchange" in result["error"]
 
-    def test_get_fundamentals_empty_symbol(
-        self, fundamentals: Fundamentals
-    ) -> None:
+    def test_get_fundamentals_empty_symbol(self, fundamentals: Fundamentals) -> None:
         """Empty symbol returns error response."""
         result = fundamentals.get_fundamentals(exchange="NASDAQ", symbol="")
         assert result["status"] == STATUS_FAILED
         assert result["data"] is None
         assert result["error"] is not None
 
-    def test_get_fundamentals_network_error(
-        self, fundamentals: Fundamentals
-    ) -> None:
+    def test_get_fundamentals_network_error(self, fundamentals: Fundamentals) -> None:
         """Network error returns error response, does not raise."""
         with mock.patch.object(
             fundamentals,
@@ -257,23 +254,29 @@ class TestCategoryMethods:
 class TestCompareFundamentals:
     """Tests for multi-symbol comparison."""
 
-    def test_compare_fundamentals_success(
-        self, fundamentals: Fundamentals
-    ) -> None:
+    def test_compare_fundamentals_success(self, fundamentals: Fundamentals) -> None:
         """compare_fundamentals with valid symbols returns comparison data."""
-        symbols: List[Dict[str, str]] = [
+        symbols: list[dict[str, str]] = [
             {"exchange": "NASDAQ", "symbol": "AAPL"},
             {"exchange": "NASDAQ", "symbol": "MSFT"},
         ]
         custom_fields = ["total_revenue", "net_income", "market_cap_basic"]
 
         # Flat mock responses
-        aapl_resp = _mock_response({
-            "total_revenue": 394000000000, "net_income": 100000000000, "market_cap_basic": 2800000000000
-        })
-        msft_resp = _mock_response({
-            "total_revenue": 200000000000, "net_income": 70000000000, "market_cap_basic": 2400000000000
-        })
+        aapl_resp = _mock_response(
+            {
+                "total_revenue": 394000000000,
+                "net_income": 100000000000,
+                "market_cap_basic": 2800000000000,
+            }
+        )
+        msft_resp = _mock_response(
+            {
+                "total_revenue": 200000000000,
+                "net_income": 70000000000,
+                "market_cap_basic": 2400000000000,
+            }
+        )
 
         with mock.patch.object(
             fundamentals, "_make_request", side_effect=[aapl_resp, msft_resp]
@@ -293,9 +296,7 @@ class TestCompareFundamentals:
         assert len(data["items"]) == 2
         assert "total_revenue" in data["comparison"]
 
-    def test_compare_fundamentals_empty_list(
-        self, fundamentals: Fundamentals
-    ) -> None:
+    def test_compare_fundamentals_empty_list(self, fundamentals: Fundamentals) -> None:
         """Empty symbols list returns error response."""
         result = fundamentals.compare_fundamentals(symbols=[], fields=["total_revenue"])
         assert result["status"] == STATUS_FAILED
@@ -306,9 +307,7 @@ class TestCompareFundamentals:
 class TestResponseFormat:
     """Tests for response envelope structure."""
 
-    def test_response_has_standard_envelope(
-        self, fundamentals: Fundamentals
-    ) -> None:
+    def test_response_has_standard_envelope(self, fundamentals: Fundamentals) -> None:
         """Response contains exactly status/data/metadata/error keys."""
         mock_resp = _mock_response({"total_revenue": 394000000000})
         with mock.patch.object(fundamentals, "_make_request", return_value=mock_resp):

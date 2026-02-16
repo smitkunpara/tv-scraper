@@ -4,13 +4,11 @@ Verifies cross-cutting concerns such as inheritance, response format,
 export validation, and singleton consistency — all without network calls.
 """
 
-from unittest.mock import patch
 
 import pytest
 
 from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.constants import STATUS_FAILED, STATUS_SUCCESS
-from tv_scraper.core.validators import DataValidator
 from tv_scraper.scrapers.events.calendar import Calendar
 from tv_scraper.scrapers.market_data.fundamentals import Fundamentals
 from tv_scraper.scrapers.market_data.markets import Markets
@@ -24,9 +22,16 @@ from tv_scraper.scrapers.social.minds import Minds
 from tv_scraper.scrapers.social.news import News
 
 ALL_SCRAPER_CLASSES = [
-    Technicals, Overview, Fundamentals, Markets,
-    Ideas, Minds, News,
-    Screener, MarketMovers, SymbolMarkets,
+    Technicals,
+    Overview,
+    Fundamentals,
+    Markets,
+    Ideas,
+    Minds,
+    News,
+    Screener,
+    MarketMovers,
+    SymbolMarkets,
     Calendar,
 ]
 

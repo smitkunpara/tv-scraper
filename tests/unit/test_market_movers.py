@@ -1,6 +1,7 @@
 """Unit tests for tv_scraper.scrapers.screening.market_movers.MarketMovers."""
 
-from typing import Any, Dict, Iterator, List
+from collections.abc import Iterator
+from typing import Any
 from unittest import mock
 
 import pytest
@@ -17,13 +18,13 @@ def scraper() -> Iterator[MarketMovers]:
 
 
 def _mock_scanner_response(
-    symbols: List[str],
-    fields: List[str],
-    values: List[List[Any]],
+    symbols: list[str],
+    fields: list[str],
+    values: list[list[Any]],
 ) -> mock.Mock:
     """Build a mock response matching the TradingView scanner format."""
     data = []
-    for sym, vals in zip(symbols, values):
+    for sym, vals in zip(symbols, values, strict=True):
         data.append({"s": sym, "d": vals})
     resp = mock.Mock()
     resp.status_code = 200
@@ -54,8 +55,30 @@ class TestScrapeSuccess:
             symbols=["NASDAQ:AAPL", "NASDAQ:MSFT"],
             fields=fields,
             values=[
-                ["Apple Inc.", 190.5, 3.2, 5.1, 80_000_000, 3e12, 30.0, 6.5, "apple", "Tech"],
-                ["Microsoft", 410.0, 2.1, 8.0, 40_000_000, 3.1e12, 35.0, 11.0, "msft", "Tech"],
+                [
+                    "Apple Inc.",
+                    190.5,
+                    3.2,
+                    5.1,
+                    80_000_000,
+                    3e12,
+                    30.0,
+                    6.5,
+                    "apple",
+                    "Tech",
+                ],
+                [
+                    "Microsoft",
+                    410.0,
+                    2.1,
+                    8.0,
+                    40_000_000,
+                    3.1e12,
+                    35.0,
+                    11.0,
+                    "msft",
+                    "Tech",
+                ],
             ],
         )
 
@@ -78,7 +101,18 @@ class TestScrapeSuccess:
             symbols=["NYSE:BAC"],
             fields=fields,
             values=[
-                ["Bank of America", 32.0, -4.5, -1.5, 60_000_000, 2.5e11, 10.0, 3.0, "bac", "Finance"],
+                [
+                    "Bank of America",
+                    32.0,
+                    -4.5,
+                    -1.5,
+                    60_000_000,
+                    2.5e11,
+                    10.0,
+                    3.0,
+                    "bac",
+                    "Finance",
+                ],
             ],
         )
 
@@ -103,7 +137,18 @@ class TestScrapeSuccess:
             symbols=["NASDAQ:TSLA"],
             fields=fields,
             values=[
-                ["Tesla", 250.0, 0.5, 1.2, 150_000_000, 8e11, 60.0, 4.0, "tsla", "Auto"],
+                [
+                    "Tesla",
+                    250.0,
+                    0.5,
+                    1.2,
+                    150_000_000,
+                    8e11,
+                    60.0,
+                    4.0,
+                    "tsla",
+                    "Auto",
+                ],
             ],
         )
 
@@ -156,7 +201,18 @@ class TestCustomFieldsAndLimit:
             symbols=["NASDAQ:GOOG"],
             fields=MarketMovers.DEFAULT_FIELDS,
             values=[
-                ["Alphabet", 140.0, 1.5, 2.0, 20_000_000, 1.7e12, 24.0, 5.8, "goog", "Tech"],
+                [
+                    "Alphabet",
+                    140.0,
+                    1.5,
+                    2.0,
+                    20_000_000,
+                    1.7e12,
+                    24.0,
+                    5.8,
+                    "goog",
+                    "Tech",
+                ],
             ],
         )
 

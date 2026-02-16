@@ -1,7 +1,8 @@
 """Unit tests for tv_scraper.scrapers.events.calendar.Calendar."""
 
 import datetime
-from typing import Any, Dict, Iterator, List
+from collections.abc import Iterator
+from typing import Any
 from unittest import mock
 
 import pytest
@@ -10,16 +11,16 @@ from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.exceptions import NetworkError
 from tv_scraper.scrapers.events.calendar import Calendar
 
-
 # ---- Helpers ----
 
+
 def _mock_calendar_response(
-    symbols: List[str],
-    values: List[List[Any]],
+    symbols: list[str],
+    values: list[list[Any]],
 ) -> mock.Mock:
     """Build a mock response matching the TradingView calendar scanner format."""
     data = []
-    for sym, vals in zip(symbols, values):
+    for sym, vals in zip(symbols, values, strict=True):
         data.append({"s": sym, "d": vals})
     resp = mock.Mock()
     resp.status_code = 200
@@ -28,6 +29,7 @@ def _mock_calendar_response(
 
 
 # ---- Fixtures ----
+
 
 @pytest.fixture
 def scraper() -> Iterator[Calendar]:
@@ -56,8 +58,34 @@ class TestGetDividends:
         mock_req.return_value = _mock_calendar_response(
             symbols=["NASDAQ:AAPL", "NYSE:KO"],
             values=[
-                [1700000000, 1700100000, "apple", "Apple Inc.", "Apple Inc.", 0.55, 1700200000, 1700300000, 0.24, 0.25, "USD", "america"],
-                [1700000001, 1700100001, "coca-cola", "Coca-Cola", "Coca-Cola Co", 3.1, 1700200001, 1700300001, 0.46, 0.47, "USD", "america"],
+                [
+                    1700000000,
+                    1700100000,
+                    "apple",
+                    "Apple Inc.",
+                    "Apple Inc.",
+                    0.55,
+                    1700200000,
+                    1700300000,
+                    0.24,
+                    0.25,
+                    "USD",
+                    "america",
+                ],
+                [
+                    1700000001,
+                    1700100001,
+                    "coca-cola",
+                    "Coca-Cola",
+                    "Coca-Cola Co",
+                    3.1,
+                    1700200001,
+                    1700300001,
+                    0.46,
+                    0.47,
+                    "USD",
+                    "america",
+                ],
             ],
         )
 
@@ -98,7 +126,22 @@ class TestGetDividends:
         """Markets parameter is included in the API payload."""
         mock_req.return_value = _mock_calendar_response(
             symbols=["LSE:SHEL"],
-            values=[[1700000000, None, "shell", "Shell", "Shell plc", 3.8, None, None, 0.30, None, "GBP", "uk"]],
+            values=[
+                [
+                    1700000000,
+                    None,
+                    "shell",
+                    "Shell",
+                    "Shell plc",
+                    3.8,
+                    None,
+                    None,
+                    0.30,
+                    None,
+                    "GBP",
+                    "uk",
+                ]
+            ],
         )
 
         result = scraper.get_dividends(markets=["uk"])
@@ -154,17 +197,35 @@ class TestGetDividends:
 
 class TestGetEarnings:
     @mock.patch("tv_scraper.core.base.make_request")
-    def test_get_earnings_success(
-        self, mock_req: mock.Mock, scraper: Calendar
-    ) -> None:
+    def test_get_earnings_success(self, mock_req: mock.Mock, scraper: Calendar) -> None:
         """Default call returns success envelope with earnings data."""
         mock_req.return_value = _mock_calendar_response(
             symbols=["NASDAQ:AAPL"],
             values=[
-                [1700000000, 1700100000, "apple", "Apple Inc.", "Apple Inc.",
-                 1.46, 1.50, 0.05, 3.5, 90_000_000_000, 95_000_000_000,
-                 3_000_000_000_000, 0, 1, 1.45, 89_000_000_000,
-                 "USD", "america", 0, 1, 1_000_000_000, 1.2],
+                [
+                    1700000000,
+                    1700100000,
+                    "apple",
+                    "Apple Inc.",
+                    "Apple Inc.",
+                    1.46,
+                    1.50,
+                    0.05,
+                    3.5,
+                    90_000_000_000,
+                    95_000_000_000,
+                    3_000_000_000_000,
+                    0,
+                    1,
+                    1.45,
+                    89_000_000_000,
+                    "USD",
+                    "america",
+                    0,
+                    1,
+                    1_000_000_000,
+                    1.2,
+                ],
             ],
         )
 
@@ -219,7 +280,22 @@ class TestResponseEnvelope:
         """All responses must have status, data, metadata, error keys."""
         mock_req.return_value = _mock_calendar_response(
             symbols=["NASDAQ:AAPL"],
-            values=[[1700000000, None, "apple", "Apple", "Apple Inc.", 0.55, None, None, 0.24, None, "USD", "america"]],
+            values=[
+                [
+                    1700000000,
+                    None,
+                    "apple",
+                    "Apple",
+                    "Apple Inc.",
+                    0.55,
+                    None,
+                    None,
+                    0.24,
+                    None,
+                    "USD",
+                    "america",
+                ]
+            ],
         )
 
         result = scraper.get_dividends()

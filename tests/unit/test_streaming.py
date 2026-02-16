@@ -6,7 +6,7 @@ All tests use mocking — no actual WebSocket or HTTP connections.
 import json
 import re
 import socket
-from unittest.mock import MagicMock, patch, call
+from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -123,7 +123,7 @@ class TestStreamHandler:
         mock_cc.return_value = mock_ws
         from tv_scraper.streaming.stream_handler import StreamHandler
 
-        handler = StreamHandler(jwt_token="test_token")
+        _handler = StreamHandler(jwt_token="test_token")
         # Gather all sent message bodies
         sent_messages = []
         for c in mock_ws.send.call_args_list:
@@ -175,7 +175,10 @@ class TestStreamer:
 
         # Build a timescale_update packet
         ohlcv_entry = {"i": 0, "v": [1700000000, 100.0, 105.0, 99.0, 102.0, 5000]}
-        ts_pkt = {"m": "timescale_update", "p": ["cs_test", {"sds_1": {"s": [ohlcv_entry]}}]}
+        ts_pkt = {
+            "m": "timescale_update",
+            "p": ["cs_test", {"sds_1": {"s": [ohlcv_entry]}}],
+        }
         ts_raw = json.dumps(ts_pkt)
         framed = f"~m~{len(ts_raw)}~m~{ts_raw}"
 
@@ -203,7 +206,10 @@ class TestStreamer:
             {"i": 0, "v": [1700000000, 100.0, 105.0, 99.0, 102.0, 5000]},
             {"i": 1, "v": [1700000060, 102.0, 108.0, 101.0, 107.0, 6000]},
         ]
-        ts_pkt = {"m": "timescale_update", "p": ["cs_test", {"sds_1": {"s": ohlcv_entries}}]}
+        ts_pkt = {
+            "m": "timescale_update",
+            "p": ["cs_test", {"sds_1": {"s": ohlcv_entries}}],
+        }
         ts_raw = json.dumps(ts_pkt)
         framed = f"~m~{len(ts_raw)}~m~{ts_raw}"
 
@@ -224,7 +230,9 @@ class TestStreamer:
     @patch("tv_scraper.streaming.streamer.fetch_indicator_metadata")
     @patch("tv_scraper.streaming.streamer.validate_symbols")
     @patch("tv_scraper.streaming.stream_handler.create_connection")
-    def test_get_candles_indicator_extraction(self, mock_cc, mock_validate, mock_fetch_meta):
+    def test_get_candles_indicator_extraction(
+        self, mock_cc, mock_validate, mock_fetch_meta
+    ):
         """Indicator data is correctly extracted from du packets."""
         mock_ws = MagicMock()
         mock_cc.return_value = mock_ws
@@ -238,7 +246,10 @@ class TestStreamer:
 
         # OHLCV packet
         ohlcv_entry = {"i": 0, "v": [1700000000, 100.0, 105.0, 99.0, 102.0, 5000]}
-        ts_pkt = {"m": "timescale_update", "p": ["cs_test", {"sds_1": {"s": [ohlcv_entry]}}]}
+        ts_pkt = {
+            "m": "timescale_update",
+            "p": ["cs_test", {"sds_1": {"s": [ohlcv_entry]}}],
+        }
         ts_raw = json.dumps(ts_pkt)
         ts_framed = f"~m~{len(ts_raw)}~m~{ts_raw}"
 
@@ -246,7 +257,10 @@ class TestStreamer:
         ind_data = [
             {"i": 0, "v": [1700000000, 55.5, 60.0]},
             {"i": 1, "v": [1700000060, 56.2, 61.0]},
-        ] + [{"i": k, "v": [1700000000 + k * 60, 50.0 + k, 60.0 + k]} for k in range(2, 12)]
+        ] + [
+            {"i": k, "v": [1700000000 + k * 60, 50.0 + k, 60.0 + k]}
+            for k in range(2, 12)
+        ]
         du_pkt = {"m": "du", "p": ["cs_test", {"st9": {"st": ind_data}}]}
         du_raw = json.dumps(du_pkt)
         du_framed = f"~m~{len(du_raw)}~m~{du_raw}"
@@ -276,7 +290,10 @@ class TestStreamer:
         mock_validate.return_value = True
 
         ohlcv_entry = {"i": 0, "v": [1700000000, 100.0, 105.0, 99.0, 102.0, 5000]}
-        ts_pkt = {"m": "timescale_update", "p": ["cs_test", {"sds_1": {"s": [ohlcv_entry]}}]}
+        ts_pkt = {
+            "m": "timescale_update",
+            "p": ["cs_test", {"sds_1": {"s": [ohlcv_entry]}}],
+        }
         ts_raw = json.dumps(ts_pkt)
         framed = f"~m~{len(ts_raw)}~m~{ts_raw}"
 
@@ -287,7 +304,9 @@ class TestStreamer:
         s = Streamer()
         # Reset send mock to track only session-add messages
         mock_ws.send.reset_mock()
-        s.get_candles(exchange="BINANCE", symbol="BTCUSDT", timeframe="1h", numb_candles=1)
+        s.get_candles(
+            exchange="BINANCE", symbol="BTCUSDT", timeframe="1h", numb_candles=1
+        )
 
         # Verify the mapped timeframe '60' was sent in create_series
         all_sent = " ".join(c[0][0] for c in mock_ws.send.call_args_list)
@@ -302,7 +321,10 @@ class TestStreamer:
         mock_validate.return_value = True
 
         ohlcv_entry = {"i": 0, "v": [1700000000, 100.0, 105.0, 99.0, 102.0, 5000]}
-        ts_pkt = {"m": "timescale_update", "p": ["cs_test", {"sds_1": {"s": [ohlcv_entry]}}]}
+        ts_pkt = {
+            "m": "timescale_update",
+            "p": ["cs_test", {"sds_1": {"s": [ohlcv_entry]}}],
+        }
         ts_raw = json.dumps(ts_pkt)
         framed = f"~m~{len(ts_raw)}~m~{ts_raw}"
         mock_ws.recv.side_effect = [framed, ConnectionError("done")]
@@ -346,7 +368,10 @@ class TestStreamer:
 
         from websocket import WebSocketConnectionClosedException
 
-        mock_ws.recv.side_effect = [framed, WebSocketConnectionClosedException("closed")]
+        mock_ws.recv.side_effect = [
+            framed,
+            WebSocketConnectionClosedException("closed"),
+        ]
 
         from tv_scraper.streaming.streamer import Streamer
 
@@ -355,6 +380,7 @@ class TestStreamer:
 
         # Should be a generator
         import types
+
         assert isinstance(gen, types.GeneratorType)
 
         data = next(gen)
@@ -444,7 +470,10 @@ class TestRealTimeData:
 
         from websocket import WebSocketConnectionClosedException
 
-        mock_ws.recv.side_effect = [framed, WebSocketConnectionClosedException("closed")]
+        mock_ws.recv.side_effect = [
+            framed,
+            WebSocketConnectionClosedException("closed"),
+        ]
 
         from tv_scraper.streaming.price import RealTimeData
 
@@ -452,6 +481,7 @@ class TestRealTimeData:
         gen = rt.get_ohlcv(exchange="BINANCE", symbol="BTCUSDT")
 
         import types
+
         assert isinstance(gen, types.GeneratorType)
 
     @patch("tv_scraper.streaming.stream_handler.create_connection")
@@ -460,13 +490,19 @@ class TestRealTimeData:
         mock_ws = MagicMock()
         mock_cc.return_value = mock_ws
 
-        qsd_pkt = {"m": "qsd", "p": ["qs_test", {"n": "BINANCE:BTCUSDT", "v": {"lp": 100}}]}
+        qsd_pkt = {
+            "m": "qsd",
+            "p": ["qs_test", {"n": "BINANCE:BTCUSDT", "v": {"lp": 100}}],
+        }
         raw = json.dumps(qsd_pkt)
         framed = f"~m~{len(raw)}~m~{raw}"
 
         from websocket import WebSocketConnectionClosedException
 
-        mock_ws.recv.side_effect = [framed, WebSocketConnectionClosedException("closed")]
+        mock_ws.recv.side_effect = [
+            framed,
+            WebSocketConnectionClosedException("closed"),
+        ]
 
         from tv_scraper.streaming.price import RealTimeData
 
@@ -477,6 +513,7 @@ class TestRealTimeData:
         )
 
         import types
+
         assert isinstance(gen, types.GeneratorType)
 
     @patch("tv_scraper.streaming.stream_handler.create_connection")
@@ -492,7 +529,11 @@ class TestRealTimeData:
 
         from websocket import WebSocketConnectionClosedException
 
-        mock_ws.recv.side_effect = [heartbeat, framed, WebSocketConnectionClosedException("closed")]
+        mock_ws.recv.side_effect = [
+            heartbeat,
+            framed,
+            WebSocketConnectionClosedException("closed"),
+        ]
 
         from tv_scraper.streaming.price import RealTimeData
 
@@ -583,7 +624,7 @@ class TestStreamingUtils:
         assert result["p"][0] == "cs_abc"
         assert result["p"][1] == "st9"  # default study id
         # The dict param should contain input overrides in_0, in_1
-        dict_param = [p for p in result["p"] if isinstance(p, dict)][0]
+        dict_param = next(p for p in result["p"] if isinstance(p, dict))
         assert "in_0" in dict_param
         assert dict_param["in_0"]["v"] == 14
 
@@ -668,8 +709,8 @@ class TestWebSocketOptimizations:
         mock_cc.return_value = mock_ws
         from tv_scraper.streaming.stream_handler import StreamHandler
 
-        handler = StreamHandler()
-        
+        _handler = StreamHandler()
+
         # Verify create_connection was called with TCP_NODELAY
         mock_cc.assert_called_once()
         call_kwargs = mock_cc.call_args[1]
@@ -689,10 +730,10 @@ class TestWebSocketOptimizations:
 
         s = Streamer()
         mock_ws.send.reset_mock()
-        
+
         # Start streaming (will initialize subscriptions)
         gen = s.stream_realtime_price(exchange="NSE", symbol="NIFTY")
-        
+
         # Mock a single packet to trigger one iteration
         qsd_pkt = {
             "m": "qsd",
@@ -700,13 +741,17 @@ class TestWebSocketOptimizations:
         }
         qsd_raw = json.dumps(qsd_pkt)
         framed = f"~m~{len(qsd_raw)}~m~{qsd_raw}"
-        
+
         from websocket import WebSocketConnectionClosedException
-        mock_ws.recv.side_effect = [framed, WebSocketConnectionClosedException("closed")]
-        
+
+        mock_ws.recv.side_effect = [
+            framed,
+            WebSocketConnectionClosedException("closed"),
+        ]
+
         # Consume generator
         list(gen)
-        
+
         # Verify both quote_add_symbols and create_series were called
         all_sent = " ".join(str(c) for c in mock_ws.send.call_args_list)
         assert "quote_add_symbols" in all_sent
@@ -729,7 +774,17 @@ class TestWebSocketOptimizations:
                 {
                     "sds_1": {
                         "s": [
-                            {"i": 0, "v": [1700000000, 25000.0, 25100.0, 24900.0, 25050.0, 1000000]}
+                            {
+                                "i": 0,
+                                "v": [
+                                    1700000000,
+                                    25000.0,
+                                    25100.0,
+                                    24900.0,
+                                    25050.0,
+                                    1000000,
+                                ],
+                            }
                         ]
                     }
                 },
@@ -739,7 +794,11 @@ class TestWebSocketOptimizations:
         framed = f"~m~{len(du_raw)}~m~{du_raw}"
 
         from websocket import WebSocketConnectionClosedException
-        mock_ws.recv.side_effect = [framed, WebSocketConnectionClosedException("closed")]
+
+        mock_ws.recv.side_effect = [
+            framed,
+            WebSocketConnectionClosedException("closed"),
+        ]
 
         from tv_scraper.streaming.streamer import Streamer
 
@@ -780,7 +839,11 @@ class TestWebSocketOptimizations:
         framed = f"~m~{len(qsd_raw)}~m~{qsd_raw}"
 
         from websocket import WebSocketConnectionClosedException
-        mock_ws.recv.side_effect = [framed, WebSocketConnectionClosedException("closed")]
+
+        mock_ws.recv.side_effect = [
+            framed,
+            WebSocketConnectionClosedException("closed"),
+        ]
 
         from tv_scraper.streaming.streamer import Streamer
 
@@ -810,8 +873,9 @@ class TestWebSocketOptimizations:
         framed = f"~m~{len(qsd_raw)}~m~{qsd_raw}"
 
         from websocket import WebSocketConnectionClosedException
+
         mock_ws.recv.side_effect = [
-            socket.timeout("timeout"),
+            TimeoutError("timeout"),
             framed,
             WebSocketConnectionClosedException("closed"),
         ]
@@ -848,7 +912,19 @@ class TestWebSocketOptimizations:
                 "cs_test",
                 {
                     "sds_1": {
-                        "s": [{"i": 0, "v": [1700000000, 25600.0, 25700.0, 25500.0, 25650.0, 2000]}]
+                        "s": [
+                            {
+                                "i": 0,
+                                "v": [
+                                    1700000000,
+                                    25600.0,
+                                    25700.0,
+                                    25500.0,
+                                    25650.0,
+                                    2000,
+                                ],
+                            }
+                        ]
                     }
                 },
             ],
@@ -857,6 +933,7 @@ class TestWebSocketOptimizations:
         du_framed = f"~m~{len(du_raw)}~m~{du_raw}"
 
         from websocket import WebSocketConnectionClosedException
+
         mock_ws.recv.side_effect = [
             qsd_framed,
             du_framed,

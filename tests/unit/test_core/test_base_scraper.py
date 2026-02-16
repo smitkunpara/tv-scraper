@@ -3,8 +3,6 @@
 import json
 from unittest import mock
 
-import pytest
-
 from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.constants import DEFAULT_TIMEOUT, STATUS_FAILED, STATUS_SUCCESS
 
@@ -39,6 +37,7 @@ class TestBaseScraperInit:
     def test_has_validator(self) -> None:
         scraper = BaseScraper()
         from tv_scraper.core.validators import DataValidator
+
         assert isinstance(scraper.validator, DataValidator)
 
 
@@ -165,15 +164,19 @@ class TestExport:
 
     def test_calls_save_json_file_when_json(self) -> None:
         scraper = BaseScraper(export_result=True, export_type="json")
-        with mock.patch("tv_scraper.core.base.save_json_file") as mock_save, \
-             mock.patch("tv_scraper.core.base.generate_export_filepath", return_value="/tmp/test.json"):
+        with mock.patch("tv_scraper.core.base.save_json_file") as mock_save, mock.patch(
+            "tv_scraper.core.base.generate_export_filepath",
+            return_value="/tmp/test.json",
+        ):
             scraper._export({"key": "val"}, symbol="AAPL", data_category="test")
             mock_save.assert_called_once_with({"key": "val"}, "/tmp/test.json")
 
     def test_calls_save_csv_file_when_csv(self) -> None:
         scraper = BaseScraper(export_result=True, export_type="csv")
-        with mock.patch("tv_scraper.core.base.save_csv_file") as mock_save, \
-             mock.patch("tv_scraper.core.base.generate_export_filepath", return_value="/tmp/test.csv"):
+        with mock.patch("tv_scraper.core.base.save_csv_file") as mock_save, mock.patch(
+            "tv_scraper.core.base.generate_export_filepath",
+            return_value="/tmp/test.csv",
+        ):
             scraper._export({"key": "val"}, symbol="AAPL", data_category="test")
             mock_save.assert_called_once_with({"key": "val"}, "/tmp/test.csv")
 
@@ -188,7 +191,10 @@ class TestMakeRequest:
             scraper._make_request("https://example.com")
             mock_req.assert_called_once()
             call_kwargs = mock_req.call_args
-            assert call_kwargs[1]["headers"]["User-Agent"] == scraper._headers["User-Agent"]
+            assert (
+                call_kwargs[1]["headers"]["User-Agent"]
+                == scraper._headers["User-Agent"]
+            )
             assert call_kwargs[1]["timeout"] == 15
 
     def test_passes_method(self) -> None:

@@ -1,18 +1,17 @@
 """Tests for Ideas scraper module."""
 
-from typing import Any, Dict, Iterator, List
-from unittest import mock
+from collections.abc import Iterator
+from typing import Any
 from unittest.mock import MagicMock, patch
 
 import pytest
 
 from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.constants import STATUS_FAILED, STATUS_SUCCESS
-from tv_scraper.core.exceptions import NetworkError
 from tv_scraper.scrapers.social.ideas import Ideas
 
 
-def _make_api_response(items: List[Dict[str, Any]]) -> Dict[str, Any]:
+def _make_api_response(items: list[dict[str, Any]]) -> dict[str, Any]:
     """Build a TradingView ideas JSON API response structure."""
     return {
         "data": {
@@ -33,7 +32,7 @@ def _sample_idea(
     views: int = 500,
     likes: int = 42,
     timestamp: int = 1700000000,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Build a single idea item as returned by the TradingView API."""
     return {
         "name": title,
@@ -49,7 +48,7 @@ def _sample_idea(
 
 
 def _mock_response(
-    json_data: Dict[str, Any],
+    json_data: dict[str, Any],
     status_code: int = 200,
     text: str = "",
 ) -> MagicMock:
@@ -123,17 +122,18 @@ class TestScrapeSuccess:
     @patch("tv_scraper.core.base.BaseScraper._make_request")
     def test_scrape_multiple_pages(self, mock_get: MagicMock, ideas: Ideas) -> None:
         """Multi-page scrape with ThreadPoolExecutor returns combined results."""
-        mock_get.return_value = _mock_response(
-            _make_api_response([_sample_idea()])
-        )
+        mock_get.return_value = _mock_response(_make_api_response([_sample_idea()]))
 
         result = ideas.scrape(
-            exchange="CRYPTO", symbol="BTCUSD",
-            start_page=1, end_page=3, sort_by="popular",
+            exchange="CRYPTO",
+            symbol="BTCUSD",
+            start_page=1,
+            end_page=3,
+            sort_by="popular",
         )
 
         assert result["status"] == STATUS_SUCCESS
-        # 3 pages × 1 idea each = 3 ideas
+        # 3 pages x 1 idea each = 3 ideas
         assert len(result["data"]) == 3
         assert mock_get.call_count == 3
         assert result["metadata"]["pages"] == 3
@@ -159,7 +159,9 @@ class TestScrapeErrors:
 
         assert result["status"] == STATUS_FAILED
         assert result["data"] is None
-        assert "sort_by" in result["error"].lower() or "invalid" in result["error"].lower()
+        assert (
+            "sort_by" in result["error"].lower() or "invalid" in result["error"].lower()
+        )
 
     def test_scrape_empty_symbol(self, ideas: Ideas) -> None:
         """Empty symbol returns error response."""
@@ -204,9 +206,7 @@ class TestResponseFormat:
         self, mock_get: MagicMock, ideas: Ideas
     ) -> None:
         """Response contains exactly status/data/metadata/error keys."""
-        mock_get.return_value = _mock_response(
-            _make_api_response([_sample_idea()])
-        )
+        mock_get.return_value = _mock_response(_make_api_response([_sample_idea()]))
 
         result = ideas.scrape(exchange="CRYPTO", symbol="BTCUSD")
 
@@ -218,9 +218,7 @@ class TestResponseFormat:
     @patch("tv_scraper.core.base.BaseScraper._make_request")
     def test_snake_case_params(self, mock_get: MagicMock, ideas: Ideas) -> None:
         """Verify snake_case parameter names are accepted."""
-        mock_get.return_value = _mock_response(
-            _make_api_response([_sample_idea()])
-        )
+        mock_get.return_value = _mock_response(_make_api_response([_sample_idea()]))
 
         # These should all be valid snake_case param names (no camelCase)
         result = ideas.scrape(
@@ -242,9 +240,7 @@ class TestCookieHandling:
         """Cookie passed in constructor is sent as request header."""
         cookie_value = "sessionid=abc123; _sp_id=xyz789"
         scraper = Ideas(cookie=cookie_value)
-        mock_get.return_value = _mock_response(
-            _make_api_response([_sample_idea()])
-        )
+        mock_get.return_value = _mock_response(_make_api_response([_sample_idea()]))
 
         scraper.scrape(exchange="CRYPTO", symbol="BTCUSD")
 
@@ -257,9 +253,7 @@ class TestCookieHandling:
     def test_cookie_from_env_var(self, mock_get: MagicMock) -> None:
         """Cookie loaded from TRADINGVIEW_COOKIE env var when not passed directly."""
         scraper = Ideas()
-        mock_get.return_value = _mock_response(
-            _make_api_response([_sample_idea()])
-        )
+        mock_get.return_value = _mock_response(_make_api_response([_sample_idea()]))
 
         scraper.scrape(exchange="CRYPTO", symbol="BTCUSD")
 

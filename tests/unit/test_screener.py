@@ -1,6 +1,6 @@
 """Tests for Screener scraper module."""
 
-from typing import Dict, Iterator
+from collections.abc import Iterator
 from unittest import mock
 from unittest.mock import MagicMock
 
@@ -18,7 +18,7 @@ def screener() -> Iterator[Screener]:
     yield Screener()
 
 
-def _mock_response(data: Dict) -> MagicMock:
+def _mock_response(data: dict) -> MagicMock:
     """Create a mock requests.Response with a .json() method."""
     response = MagicMock()
     response.json.return_value = data
@@ -39,21 +39,41 @@ class TestScreenSuccess:
 
     def test_screen_success(self, screener: Screener) -> None:
         """Default params return success envelope with data list."""
-        mock_resp = _mock_response({
-            "data": [
-                {
-                    "s": "NASDAQ:AAPL",
-                    "d": ["Apple Inc.", 150.25, 2.5, 3.75, 50000000,
-                           0.8, 2500000000000, 25.5, 6.0],
-                },
-                {
-                    "s": "NASDAQ:GOOGL",
-                    "d": ["Alphabet Inc.", 2800.0, 1.8, 50.0, 30000000,
-                           0.7, 1800000000000, 28.0, 100.0],
-                },
-            ],
-            "totalCount": 500,
-        })
+        mock_resp = _mock_response(
+            {
+                "data": [
+                    {
+                        "s": "NASDAQ:AAPL",
+                        "d": [
+                            "Apple Inc.",
+                            150.25,
+                            2.5,
+                            3.75,
+                            50000000,
+                            0.8,
+                            2500000000000,
+                            25.5,
+                            6.0,
+                        ],
+                    },
+                    {
+                        "s": "NASDAQ:GOOGL",
+                        "d": [
+                            "Alphabet Inc.",
+                            2800.0,
+                            1.8,
+                            50.0,
+                            30000000,
+                            0.7,
+                            1800000000000,
+                            28.0,
+                            100.0,
+                        ],
+                    },
+                ],
+                "totalCount": 500,
+            }
+        )
         with mock.patch.object(screener, "_make_request", return_value=mock_resp):
             result = screener.screen(market="america", limit=10)
 
@@ -67,18 +87,18 @@ class TestScreenSuccess:
     def test_screen_custom_fields(self, screener: Screener) -> None:
         """Custom fields list is used instead of defaults."""
         custom_fields = ["name", "close", "volume"]
-        mock_resp = _mock_response({
-            "data": [
-                {"s": "NASDAQ:AAPL", "d": ["Apple Inc.", 150.0, 50000000]},
-            ],
-            "totalCount": 1,
-        })
+        mock_resp = _mock_response(
+            {
+                "data": [
+                    {"s": "NASDAQ:AAPL", "d": ["Apple Inc.", 150.0, 50000000]},
+                ],
+                "totalCount": 1,
+            }
+        )
         with mock.patch.object(
             screener, "_make_request", return_value=mock_resp
         ) as mock_req:
-            result = screener.screen(
-                market="america", fields=custom_fields, limit=5
-            )
+            result = screener.screen(market="america", fields=custom_fields, limit=5)
 
         assert result["status"] == STATUS_SUCCESS
         assert result["data"][0]["name"] == "Apple Inc."
@@ -96,14 +116,27 @@ class TestScreenSuccess:
             {"left": "close", "operation": "greater", "right": 100},
             {"left": "volume", "operation": "greater", "right": 1000000},
         ]
-        mock_resp = _mock_response({
-            "data": [
-                {"s": "NASDAQ:AAPL", "d": ["Apple Inc.", 150.0, 2.5, 3.75,
-                                             50000000, 0.8, 2500000000000,
-                                             25.5, 6.0]},
-            ],
-            "totalCount": 1,
-        })
+        mock_resp = _mock_response(
+            {
+                "data": [
+                    {
+                        "s": "NASDAQ:AAPL",
+                        "d": [
+                            "Apple Inc.",
+                            150.0,
+                            2.5,
+                            3.75,
+                            50000000,
+                            0.8,
+                            2500000000000,
+                            25.5,
+                            6.0,
+                        ],
+                    },
+                ],
+                "totalCount": 1,
+            }
+        )
         with mock.patch.object(
             screener, "_make_request", return_value=mock_resp
         ) as mock_req:
@@ -116,14 +149,27 @@ class TestScreenSuccess:
 
     def test_screen_with_sort(self, screener: Screener) -> None:
         """sort_by and sort_order are included in the API payload."""
-        mock_resp = _mock_response({
-            "data": [
-                {"s": "NASDAQ:AAPL", "d": ["Apple Inc.", 150.0, 2.5, 3.75,
-                                             50000000, 0.8, 2500000000000,
-                                             25.5, 6.0]},
-            ],
-            "totalCount": 1,
-        })
+        mock_resp = _mock_response(
+            {
+                "data": [
+                    {
+                        "s": "NASDAQ:AAPL",
+                        "d": [
+                            "Apple Inc.",
+                            150.0,
+                            2.5,
+                            3.75,
+                            50000000,
+                            0.8,
+                            2500000000000,
+                            25.5,
+                            6.0,
+                        ],
+                    },
+                ],
+                "totalCount": 1,
+            }
+        )
         with mock.patch.object(
             screener, "_make_request", return_value=mock_resp
         ) as mock_req:
@@ -139,14 +185,27 @@ class TestScreenSuccess:
 
     def test_screen_with_limit(self, screener: Screener) -> None:
         """Limit param controls the range in the API payload."""
-        mock_resp = _mock_response({
-            "data": [
-                {"s": "NASDAQ:AAPL", "d": ["Apple", 150.0, 2.5, 3.75,
-                                             50000000, 0.8, 2500000000000,
-                                             25.5, 6.0]},
-            ],
-            "totalCount": 100,
-        })
+        mock_resp = _mock_response(
+            {
+                "data": [
+                    {
+                        "s": "NASDAQ:AAPL",
+                        "d": [
+                            "Apple",
+                            150.0,
+                            2.5,
+                            3.75,
+                            50000000,
+                            0.8,
+                            2500000000000,
+                            25.5,
+                            6.0,
+                        ],
+                    },
+                ],
+                "totalCount": 100,
+            }
+        )
         with mock.patch.object(
             screener, "_make_request", return_value=mock_resp
         ) as mock_req:
@@ -187,14 +246,27 @@ class TestResponseFormat:
 
     def test_response_has_standard_envelope(self, screener: Screener) -> None:
         """Success response contains exactly status/data/metadata/error keys."""
-        mock_resp = _mock_response({
-            "data": [
-                {"s": "NASDAQ:AAPL", "d": ["Apple", 150.0, 2.5, 3.75,
-                                             50000000, 0.8, 2500000000000,
-                                             25.5, 6.0]},
-            ],
-            "totalCount": 1,
-        })
+        mock_resp = _mock_response(
+            {
+                "data": [
+                    {
+                        "s": "NASDAQ:AAPL",
+                        "d": [
+                            "Apple",
+                            150.0,
+                            2.5,
+                            3.75,
+                            50000000,
+                            0.8,
+                            2500000000000,
+                            25.5,
+                            6.0,
+                        ],
+                    },
+                ],
+                "totalCount": 1,
+            }
+        )
         with mock.patch.object(screener, "_make_request", return_value=mock_resp):
             result = screener.screen(market="america")
 
@@ -220,10 +292,12 @@ class TestUsesMapScannerRows:
         raw_items = [
             {"s": "NASDAQ:AAPL", "d": ["Apple", 150.0]},
         ]
-        mock_resp = _mock_response({
-            "data": raw_items,
-            "totalCount": 1,
-        })
+        mock_resp = _mock_response(
+            {
+                "data": raw_items,
+                "totalCount": 1,
+            }
+        )
         fields = ["name", "close"]
         with mock.patch.object(screener, "_make_request", return_value=mock_resp):
             with mock.patch.object(
@@ -244,14 +318,25 @@ class TestDefaultFields:
 
     def test_crypto_default_fields(self, screener: Screener) -> None:
         """Crypto market uses crypto-specific default fields."""
-        mock_resp = _mock_response({
-            "data": [
-                {"s": "BINANCE:BTCUSD", "d": ["Bitcoin", 50000.0, 5.0,
-                                                2500.0, 1000000, 900000000000,
-                                                0.9]},
-            ],
-            "totalCount": 1,
-        })
+        mock_resp = _mock_response(
+            {
+                "data": [
+                    {
+                        "s": "BINANCE:BTCUSD",
+                        "d": [
+                            "Bitcoin",
+                            50000.0,
+                            5.0,
+                            2500.0,
+                            1000000,
+                            900000000000,
+                            0.9,
+                        ],
+                    },
+                ],
+                "totalCount": 1,
+            }
+        )
         with mock.patch.object(
             screener, "_make_request", return_value=mock_resp
         ) as mock_req:
@@ -264,13 +349,14 @@ class TestDefaultFields:
 
     def test_forex_default_fields(self, screener: Screener) -> None:
         """Forex market uses forex-specific default fields."""
-        mock_resp = _mock_response({
-            "data": [
-                {"s": "FX:EURUSD", "d": ["EUR/USD", 1.10, 0.5, 0.005,
-                                           0.7]},
-            ],
-            "totalCount": 1,
-        })
+        mock_resp = _mock_response(
+            {
+                "data": [
+                    {"s": "FX:EURUSD", "d": ["EUR/USD", 1.10, 0.5, 0.005, 0.7]},
+                ],
+                "totalCount": 1,
+            }
+        )
         with mock.patch.object(
             screener, "_make_request", return_value=mock_resp
         ) as mock_req:

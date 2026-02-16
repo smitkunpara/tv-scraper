@@ -1,6 +1,7 @@
 """Tests for Minds scraper module."""
 
-from typing import Any, Dict, Iterator, List
+from collections.abc import Iterator
+from typing import Any
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -18,12 +19,12 @@ def _sample_mind(
     uri: str = "/u/testuser/",
     is_broker: bool = False,
     created: str = "2025-01-07T12:00:00Z",
-    symbols: Dict[str, str] | None = None,
+    symbols: dict[str, str] | None = None,
     total_likes: int = 10,
     total_comments: int = 5,
     modified: bool = False,
     hidden: bool = False,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Build a single mind item as returned by the TradingView API."""
     if symbols is None:
         symbols = {"AAPL": "NASDAQ:AAPL"}
@@ -46,10 +47,10 @@ def _sample_mind(
 
 
 def _make_page_response(
-    results: List[Dict[str, Any]],
+    results: list[dict[str, Any]],
     next_url: str = "",
     symbol: str = "NASDAQ:AAPL",
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Build a TradingView minds API page response."""
     return {
         "results": results,
@@ -59,7 +60,7 @@ def _make_page_response(
             "symbols_info": {
                 symbol: {
                     "short_name": symbol.split(":")[1],
-                    "exchange": symbol.split(":")[0],
+                    "exchange": symbol.split(":", maxsplit=1)[0],
                 }
             },
         },
@@ -67,7 +68,7 @@ def _make_page_response(
 
 
 def _mock_response(
-    json_data: Dict[str, Any],
+    json_data: dict[str, Any],
     status_code: int = 200,
 ) -> MagicMock:
     """Create a mock requests.Response."""
@@ -98,9 +99,7 @@ class TestGetMindsSuccess:
     @patch("tv_scraper.core.base.BaseScraper._make_request")
     def test_get_minds_success(self, mock_get: MagicMock, minds: Minds) -> None:
         """Single page success returns standard envelope with parsed data."""
-        mock_get.return_value = _mock_response(
-            _make_page_response([_sample_mind()])
-        )
+        mock_get.return_value = _mock_response(_make_page_response([_sample_mind()]))
 
         result = minds.get_minds(exchange="NASDAQ", symbol="AAPL")
 
@@ -124,9 +123,7 @@ class TestGetMindsSuccess:
     def test_get_minds_with_limit(self, mock_get: MagicMock, minds: Minds) -> None:
         """Limit parameter truncates results to at most that many items."""
         items = [_sample_mind(uid=f"m{i}") for i in range(5)]
-        mock_get.return_value = _mock_response(
-            _make_page_response(items)
-        )
+        mock_get.return_value = _mock_response(_make_page_response(items))
 
         result = minds.get_minds(exchange="NASDAQ", symbol="AAPL", limit=3)
 
@@ -160,9 +157,7 @@ class TestGetMindsSuccess:
     @patch("tv_scraper.core.base.BaseScraper._make_request")
     def test_get_minds_no_data(self, mock_get: MagicMock, minds: Minds) -> None:
         """Empty results returns success with empty list."""
-        mock_get.return_value = _mock_response(
-            _make_page_response([])
-        )
+        mock_get.return_value = _mock_response(_make_page_response([]))
 
         result = minds.get_minds(exchange="NASDAQ", symbol="AAPL")
 
@@ -181,7 +176,10 @@ class TestGetMindsErrors:
         assert result["status"] == STATUS_FAILED
         assert result["data"] is None
         assert result["error"] is not None
-        assert "exchange" in result["error"].lower() or "invalid" in result["error"].lower()
+        assert (
+            "exchange" in result["error"].lower()
+            or "invalid" in result["error"].lower()
+        )
 
     def test_get_minds_empty_symbol(self, minds: Minds) -> None:
         """Empty symbol returns error response."""
@@ -229,7 +227,9 @@ class TestParseMind:
         assert parsed["text"] == "Buy signal"
         assert parsed["url"] == "https://example.com"
         assert parsed["author"]["username"] == "analyst"
-        assert parsed["author"]["profile_url"] == "https://www.tradingview.com/u/analyst/"
+        assert (
+            parsed["author"]["profile_url"] == "https://www.tradingview.com/u/analyst/"
+        )
         assert parsed["author"]["is_broker"] is True
         assert parsed["created"] == "2025-06-15 08:30:00"
         assert parsed["total_likes"] == 99
@@ -255,9 +255,7 @@ class TestResponseFormat:
         self, mock_get: MagicMock, minds: Minds
     ) -> None:
         """Response contains exactly status/data/metadata/error keys."""
-        mock_get.return_value = _mock_response(
-            _make_page_response([_sample_mind()])
-        )
+        mock_get.return_value = _mock_response(_make_page_response([_sample_mind()]))
 
         result = minds.get_minds(exchange="NASDAQ", symbol="AAPL")
 

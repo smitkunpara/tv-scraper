@@ -1,6 +1,7 @@
 """Tests for Markets scraper module."""
 
-from typing import Any, Dict, Iterator, List
+from collections.abc import Iterator
+from typing import Any
 from unittest import mock
 from unittest.mock import MagicMock
 
@@ -18,7 +19,7 @@ def markets() -> Iterator[Markets]:
     yield Markets()
 
 
-def _mock_response(data: Dict[str, Any]) -> MagicMock:
+def _mock_response(data: dict[str, Any]) -> MagicMock:
     """Create a mock requests.Response with a .json() method."""
     response = MagicMock()
     response.json.return_value = data
@@ -29,21 +30,37 @@ def _mock_response(data: Dict[str, Any]) -> MagicMock:
 # ---------------------------------------------------------------------------
 # Sample API data
 # ---------------------------------------------------------------------------
-SAMPLE_API_RESPONSE: Dict[str, Any] = {
+SAMPLE_API_RESPONSE: dict[str, Any] = {
     "data": [
         {
             "s": "NASDAQ:AAPL",
             "d": [
-                "AAPL", 150.25, 2.5, 3.75, 50000000,
-                0.8, 2500000000000, 25.5, 6.0, "Technology",
+                "AAPL",
+                150.25,
+                2.5,
+                3.75,
+                50000000,
+                0.8,
+                2500000000000,
+                25.5,
+                6.0,
+                "Technology",
                 "Consumer Electronics",
             ],
         },
         {
             "s": "NASDAQ:MSFT",
             "d": [
-                "MSFT", 380.00, 1.8, 6.80, 30000000,
-                0.7, 2800000000000, 30.0, 12.5, "Technology",
+                "MSFT",
+                380.00,
+                1.8,
+                6.80,
+                30000000,
+                0.7,
+                2800000000000,
+                30.0,
+                12.5,
+                "Technology",
                 "Software",
             ],
         },
@@ -90,7 +107,7 @@ class TestGetTopStocksSuccess:
     def test_get_top_stocks_custom_fields(self, markets: Markets) -> None:
         """Custom fields list is sent in the request and mapped correctly."""
         custom_fields = ["name", "close", "volume"]
-        api_resp: Dict[str, Any] = {
+        api_resp: dict[str, Any] = {
             "data": [
                 {"s": "NYSE:GE", "d": ["GE", 120.0, 8000000]},
             ],
@@ -212,10 +229,11 @@ class TestUsesMapScannerRows:
     def test_uses_map_scanner_rows(self, markets: Markets) -> None:
         """get_top_stocks must call _map_scanner_rows for data mapping."""
         mock_resp = _mock_response(SAMPLE_API_RESPONSE)
-        with mock.patch.object(markets, "_make_request", return_value=mock_resp), \
-             mock.patch.object(
-                 markets, "_map_scanner_rows", wraps=markets._map_scanner_rows
-             ) as spy:
+        with mock.patch.object(
+            markets, "_make_request", return_value=mock_resp
+        ), mock.patch.object(
+            markets, "_map_scanner_rows", wraps=markets._map_scanner_rows
+        ) as spy:
             result = markets.get_top_stocks()
 
         spy.assert_called_once()

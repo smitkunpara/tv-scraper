@@ -5,12 +5,23 @@ connectivity and endpoint verification across all modules.
 """
 
 import pytest
+
 from tv_scraper import (
-    Fundamentals, Ideas, Markets, News, Options, 
-    Overview, Technicals, Minds, Screener,
-    MarketMovers, SymbolMarkets, Calendar, Streamer
+    Calendar,
+    Fundamentals,
+    Ideas,
+    MarketMovers,
+    Markets,
+    Minds,
+    News,
+    Options,
+    Overview,
+    Screener,
+    Streamer,
+    SymbolMarkets,
+    Technicals,
 )
-from tv_scraper.core.constants import STATUS_SUCCESS, STATUS_FAILED
+from tv_scraper.core.constants import STATUS_FAILED, STATUS_SUCCESS
 
 
 @pytest.mark.live
@@ -22,21 +33,27 @@ class TestLiveEndpoints:
     def test_live_technicals(self) -> None:
         """Verify technicals endpoint is working."""
         scraper = Technicals()
-        result = scraper.scrape(exchange="NASDAQ", symbol="AAPL", technical_indicators=["RSI"])
+        result = scraper.scrape(
+            exchange="NASDAQ", symbol="AAPL", technical_indicators=["RSI"]
+        )
         assert result["status"] == STATUS_SUCCESS
         assert "RSI" in result["data"]
 
     def test_live_fundamentals(self) -> None:
         """Verify fundamentals endpoint is working."""
         scraper = Fundamentals()
-        result = scraper.get_fundamentals(exchange="NASDAQ", symbol="AAPL", fields=["total_revenue"])
+        result = scraper.get_fundamentals(
+            exchange="NASDAQ", symbol="AAPL", fields=["total_revenue"]
+        )
         assert result["status"] == STATUS_SUCCESS
         assert "total_revenue" in result["data"]
 
     def test_live_overview(self) -> None:
         """Verify overview endpoint is working."""
         scraper = Overview()
-        result = scraper.get_overview(exchange="NASDAQ", symbol="AAPL", fields=["close"])
+        result = scraper.get_overview(
+            exchange="NASDAQ", symbol="AAPL", fields=["close"]
+        )
         assert result["status"] == STATUS_SUCCESS
         assert "close" in result["data"]
 
@@ -51,17 +68,24 @@ class TestLiveEndpoints:
         """Verify options endpoint is working for a symbol with options."""
         scraper = Options()
         # Apple usually has options
-        result = scraper.get_chain_by_strike(exchange="NASDAQ", symbol="AAPL", strike=200)
+        result = scraper.get_chain_by_strike(
+            exchange="NASDAQ", symbol="AAPL", strike=200
+        )
         assert result["status"] == STATUS_SUCCESS
 
     def test_live_options_not_found(self) -> None:
         """Verify options endpoint returns specific error for symbols without options."""
         scraper = Options()
         # BINANCE:BTCUSDT typically does not have traditional option chains here
-        result = scraper.get_chain_by_strike(exchange="BINANCE", symbol="BTCUSDT", strike=100000)
+        result = scraper.get_chain_by_strike(
+            exchange="BINANCE", symbol="BTCUSDT", strike=100000
+        )
         # Should return FAILED because we explicitly checked if data exists
         assert result["status"] == STATUS_FAILED
-        assert "not found" in result["error"].lower() or "no options" in result["error"].lower()
+        assert (
+            "not found" in result["error"].lower()
+            or "no options" in result["error"].lower()
+        )
 
     # --- Social ---
 
@@ -92,7 +116,7 @@ class TestLiveEndpoints:
         result = scraper.screen(
             market="america",
             filters=[{"left": "close", "operation": "greater", "right": 100}],
-            limit=5
+            limit=5,
         )
         assert result["status"] == STATUS_SUCCESS
 
@@ -122,10 +146,7 @@ class TestLiveEndpoints:
         """Verify streamer can fetch historic candles."""
         scraper = Streamer()
         result = scraper.get_candles(
-            exchange="NASDAQ",
-            symbol="AAPL",
-            timeframe="1h",
-            numb_candles=5
+            exchange="NASDAQ", symbol="AAPL", timeframe="1h", numb_candles=5
         )
         assert result["status"] == STATUS_SUCCESS
         assert len(result["data"]["ohlcv"]) > 0

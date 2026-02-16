@@ -1,11 +1,11 @@
 """Tests for DataValidator singleton."""
 
-from typing import Iterator
+from collections.abc import Iterator
 
 import pytest
 
-from tv_scraper.core.validators import DataValidator
 from tv_scraper.core.exceptions import ValidationError
+from tv_scraper.core.validators import DataValidator
 
 
 @pytest.fixture(autouse=True)
@@ -90,7 +90,7 @@ class TestValidateIndicators:
 
     def test_empty_list_raises_validation_error(self) -> None:
         validator = DataValidator()
-        with pytest.raises(ValidationError, match="[Ee]mpty|[Nn]o indicators"):
+        with pytest.raises(ValidationError, match=r"[Ee]mpty|[Nn]o indicators"):
             validator.validate_indicators([])
 
 
@@ -116,7 +116,9 @@ class TestValidateChoice:
 
     def test_valid_choice_returns_true(self) -> None:
         validator = DataValidator()
-        assert validator.validate_choice("color", "red", {"red", "blue", "green"}) is True
+        assert (
+            validator.validate_choice("color", "red", {"red", "blue", "green"}) is True
+        )
 
     def test_invalid_choice_raises_validation_error(self) -> None:
         validator = DataValidator()

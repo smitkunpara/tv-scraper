@@ -1,14 +1,12 @@
 """Tests for Technicals scraper module."""
 
-import re
-from typing import Dict
 from unittest import mock
 from unittest.mock import MagicMock
 
 import pytest
 
 from tv_scraper.core.base import BaseScraper
-from tv_scraper.core.constants import SCANNER_URL, STATUS_FAILED, STATUS_SUCCESS
+from tv_scraper.core.constants import STATUS_FAILED, STATUS_SUCCESS
 from tv_scraper.core.exceptions import NetworkError
 from tv_scraper.scrapers.market_data.technicals import Technicals
 
@@ -19,7 +17,7 @@ def technicals() -> Technicals:
     return Technicals()
 
 
-def _mock_response(data: Dict) -> MagicMock:
+def _mock_response(data: dict) -> MagicMock:
     """Create a mock requests.Response with a .json() method."""
     response = MagicMock()
     response.json.return_value = data
@@ -40,11 +38,7 @@ class TestScrapeSuccess:
 
     def test_scrape_success_default_indicators(self, technicals: Technicals) -> None:
         """Scrape with a few indicators and verify envelope format."""
-        mock_resp = _mock_response({
-            "RSI": 55.0,
-            "Recommend.All": 0.7,
-            "CCI20": 45.0
-        })
+        mock_resp = _mock_response({"RSI": 55.0, "Recommend.All": 0.7, "CCI20": 45.0})
         with mock.patch.object(technicals, "_make_request", return_value=mock_resp):
             result = technicals.scrape(
                 exchange="BITSTAMP",
@@ -60,10 +54,7 @@ class TestScrapeSuccess:
 
     def test_scrape_success_specific_indicators(self, technicals: Technicals) -> None:
         """Scrape with specific indicators returns correct mapped data."""
-        mock_resp = _mock_response({
-            "RSI": 50.0,
-            "Stoch.K": 80.0
-        })
+        mock_resp = _mock_response({"RSI": 50.0, "Stoch.K": 80.0})
         with mock.patch.object(technicals, "_make_request", return_value=mock_resp):
             result = technicals.scrape(
                 exchange="BINANCE",
@@ -93,9 +84,7 @@ class TestScrapeSuccess:
 
     def test_scrape_with_timeframe(self, technicals: Technicals) -> None:
         """Non-daily timeframe appends |{value} suffix to indicator names."""
-        mock_resp = _mock_response({
-            "RSI|240": 60.0
-        })
+        mock_resp = _mock_response({"RSI|240": 60.0})
         with mock.patch.object(
             technicals, "_make_request", return_value=mock_resp
         ) as mock_req:
@@ -200,9 +189,7 @@ class TestResponseFormat:
 
     def test_response_has_standard_envelope(self, technicals: Technicals) -> None:
         """Success response contains exactly status/data/metadata/error keys."""
-        mock_resp = _mock_response({
-            "data": [{"s": "BINANCE:BTCUSD", "d": [50.0]}]
-        })
+        mock_resp = _mock_response({"data": [{"s": "BINANCE:BTCUSD", "d": [50.0]}]})
         with mock.patch.object(technicals, "_make_request", return_value=mock_resp):
             result = technicals.scrape(
                 exchange="BINANCE",
@@ -231,9 +218,7 @@ class TestReviseResponse:
         assert result["RSI"] == 50.0
         assert result["close"] == 100.0
 
-    def test_revise_response_no_suffix_when_daily(
-        self, technicals: Technicals
-    ) -> None:
+    def test_revise_response_no_suffix_when_daily(self, technicals: Technicals) -> None:
         """When timeframe_value is empty, keys remain unchanged."""
         data = {"RSI": 50.0, "Stoch.K": 80.0}
         result = technicals._revise_response(data, "")

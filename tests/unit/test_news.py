@@ -1,6 +1,7 @@
 """Tests for News scraper module."""
 
-from typing import Any, Dict, Iterator, List
+from collections.abc import Iterator
+from typing import Any
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -8,7 +9,6 @@ import pytest
 from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.constants import STATUS_FAILED, STATUS_SUCCESS
 from tv_scraper.scrapers.social.news import News
-
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -21,7 +21,7 @@ def _sample_headline(
     short_description: str = "Bitcoin reached an all-time high today.",
     published: int = 1678900000,
     story_path: str = "/news/story/h123",
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Build a headline item as returned by the TradingView news API."""
     return {
         "id": headline_id,
@@ -42,7 +42,7 @@ def _sample_cleaned_headline(
     short_description: str = "Bitcoin reached an all-time high today.",
     published: int = 1678900000,
     story_path: str = "/news/story/h123",
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Build a cleaned headline (after filtering)."""
     return {
         "title": title,
@@ -53,8 +53,8 @@ def _sample_cleaned_headline(
 
 
 def _make_headlines_response(
-    items: List[Dict[str, Any]] | None = None,
-) -> Dict[str, Any]:
+    items: list[dict[str, Any]] | None = None,
+) -> dict[str, Any]:
     """Build a TradingView news headlines API response."""
     if items is None:
         items = [_sample_headline()]
@@ -62,7 +62,7 @@ def _make_headlines_response(
 
 
 def _mock_response(
-    json_data: Dict[str, Any] | None = None,
+    json_data: dict[str, Any] | None = None,
     text: str = "",
     status_code: int = 200,
 ) -> MagicMock:
@@ -173,9 +173,7 @@ class TestScrapeHeadlinesSuccess:
     """Tests for successful headline scraping."""
 
     @patch("tv_scraper.core.base.BaseScraper._make_request")
-    def test_scrape_headlines_success(
-        self, mock_get: MagicMock, news: News
-    ) -> None:
+    def test_scrape_headlines_success(self, mock_get: MagicMock, news: News) -> None:
         """Standard headline retrieval returns success envelope."""
         mock_get.return_value = _mock_response(
             json_data=_make_headlines_response([_sample_headline()]),
@@ -223,9 +221,7 @@ class TestScrapeHeadlinesSuccess:
         assert "provider=cointelegraph" in call_url
 
     @patch("tv_scraper.core.base.BaseScraper._make_request")
-    def test_scrape_headlines_with_area(
-        self, mock_get: MagicMock, news: News
-    ) -> None:
+    def test_scrape_headlines_with_area(self, mock_get: MagicMock, news: News) -> None:
         """Area filter is converted to area code and passed through."""
         mock_get.return_value = _mock_response(
             json_data=_make_headlines_response([_sample_headline()]),
@@ -311,7 +307,10 @@ class TestScrapeHeadlinesValidation:
         assert result["status"] == STATUS_FAILED
         assert result["data"] is None
         assert result["error"] is not None
-        assert "exchange" in result["error"].lower() or "invalid" in result["error"].lower()
+        assert (
+            "exchange" in result["error"].lower()
+            or "invalid" in result["error"].lower()
+        )
 
     def test_scrape_headlines_empty_symbol(self, news: News) -> None:
         """Empty symbol returns error response."""
@@ -343,7 +342,9 @@ class TestScrapeHeadlinesValidation:
 
         assert result["status"] == STATUS_FAILED
         assert result["data"] is None
-        assert "section" in result["error"].lower() or "invalid" in result["error"].lower()
+        assert (
+            "section" in result["error"].lower() or "invalid" in result["error"].lower()
+        )
 
 
 # ---------------------------------------------------------------------------
@@ -368,9 +369,7 @@ class TestScrapeHeadlinesErrors:
         assert result["error"] is not None
 
     @patch("tv_scraper.core.base.BaseScraper._make_request")
-    def test_scrape_headlines_captcha(
-        self, mock_get: MagicMock, news: News
-    ) -> None:
+    def test_scrape_headlines_captcha(self, mock_get: MagicMock, news: News) -> None:
         """Captcha challenge returns error response."""
         mock_get.return_value = _mock_response(
             text="<title>Captcha Challenge</title>",
@@ -392,15 +391,11 @@ class TestScrapeContentSuccess:
     """Tests for article content scraping using JSON API."""
 
     @patch("tv_scraper.core.base.BaseScraper._make_request")
-    def test_scrape_content_success(
-        self, mock_get: MagicMock, news: News
-    ) -> None:
+    def test_scrape_content_success(self, mock_get: MagicMock, news: News) -> None:
         """Successfully parse article JSON into structured content."""
         mock_get.return_value = _mock_response(json_data=_STORY_JSON)
 
-        result = news.scrape_content(
-            story_id="tag:reuters.com,2026:newsml_L4N3Z9104:0"
-        )
+        result = news.scrape_content(story_id="tag:reuters.com,2026:newsml_L4N3Z9104:0")
 
         assert result["status"] == STATUS_SUCCESS
         assert result["error"] is None
@@ -409,7 +404,7 @@ class TestScrapeContentSuccess:
         assert data["title"] == "Bitcoin Hits New High"
         assert data["published"] == 1643097623
         assert data["storyPath"] == "/news/story/h123"
-        
+
         # Check description is properly merged from ast_description
         description = data["description"]
         assert "Bitcoin surged to a new all-time high today." in description
@@ -425,12 +420,10 @@ class TestScrapeContentSuccess:
         """Story path without leading slash should be fixed."""
         story_json = _STORY_JSON.copy()
         story_json["story_path"] = "news/story/h123"  # No leading slash
-        
+
         mock_get.return_value = _mock_response(json_data=story_json)
 
-        result = news.scrape_content(
-            story_id="tag:reuters.com,2026:newsml_L4N3Z9104:0"
-        )
+        result = news.scrape_content(story_id="tag:reuters.com,2026:newsml_L4N3Z9104:0")
 
         assert result["status"] == STATUS_SUCCESS
         assert result["data"]["storyPath"] == "/news/story/h123"
@@ -451,9 +444,7 @@ class TestScrapeContentErrors:
         """Network failure returns error response."""
         mock_get.side_effect = Exception("Connection refused")
 
-        result = news.scrape_content(
-            story_id="tag:reuters.com,2026:newsml_L4N3Z9104:0"
-        )
+        result = news.scrape_content(story_id="tag:reuters.com,2026:newsml_L4N3Z9104:0")
 
         assert result["status"] == STATUS_FAILED
         assert result["data"] is None

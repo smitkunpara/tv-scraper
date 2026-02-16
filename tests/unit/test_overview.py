@@ -1,6 +1,6 @@
 """Tests for Overview scraper module."""
 
-from typing import Dict, Iterator
+from collections.abc import Iterator
 from unittest import mock
 from unittest.mock import MagicMock
 
@@ -18,7 +18,7 @@ def overview() -> Iterator[Overview]:
     yield Overview()
 
 
-def _mock_response(data: Dict) -> MagicMock:
+def _mock_response(data: dict) -> MagicMock:
     """Create a mock requests.Response with a .json() method."""
     response = MagicMock()
     response.json.return_value = data
@@ -46,7 +46,7 @@ class TestGetOverviewSuccess:
             "market_cap_basic": 2500000000000,
         }
         mock_resp = _mock_response(mock_data)
-        
+
         with mock.patch.object(overview, "_make_request", return_value=mock_resp):
             result = overview.get_overview(exchange="NASDAQ", symbol="AAPL")
 
@@ -66,7 +66,7 @@ class TestGetOverviewSuccess:
             "market_cap_basic": 2500000000000,
         }
         mock_resp = _mock_response(mock_data)
-        
+
         with mock.patch.object(
             overview, "_make_request", return_value=mock_resp
         ) as mock_req:
@@ -135,12 +135,15 @@ class TestCategoryMethods:
     def test_get_statistics_returns_stats_fields(self, overview: Overview) -> None:
         """get_statistics passes correct combined fields."""
         expected_fields = (
-            Overview.MARKET_FIELDS + Overview.VALUATION_FIELDS + Overview.DIVIDEND_FIELDS
+            Overview.MARKET_FIELDS
+            + Overview.VALUATION_FIELDS
+            + Overview.DIVIDEND_FIELDS
         )
         with mock.patch.object(overview, "get_overview") as mock_get:
             mock_get.return_value = overview._success_response(
                 {"market_cap_basic": 2500000000000},
-                exchange="NASDAQ", symbol="AAPL",
+                exchange="NASDAQ",
+                symbol="AAPL",
             )
             result = overview.get_statistics(exchange="NASDAQ", symbol="AAPL")
 
@@ -154,7 +157,8 @@ class TestCategoryMethods:
         with mock.patch.object(overview, "get_overview") as mock_get:
             mock_get.return_value = overview._success_response(
                 {"total_revenue": 400000000000},
-                exchange="NASDAQ", symbol="AAPL",
+                exchange="NASDAQ",
+                symbol="AAPL",
             )
             result = overview.get_financials(exchange="NASDAQ", symbol="AAPL")
 
@@ -163,7 +167,9 @@ class TestCategoryMethods:
         )
         assert result["status"] == STATUS_SUCCESS
 
-    def test_get_performance_returns_performance_fields(self, overview: Overview) -> None:
+    def test_get_performance_returns_performance_fields(
+        self, overview: Overview
+    ) -> None:
         """get_performance passes PERFORMANCE_FIELDS."""
         with mock.patch.object(overview, "get_overview") as mock_get:
             mock_get.return_value = overview._success_response(
@@ -213,9 +219,7 @@ class TestResponseFormat:
         with mock.patch.object(
             overview, "_make_request", return_value=mock_resp
         ) as mock_req:
-            overview.get_overview(
-                exchange="NASDAQ", symbol="AAPL", fields=["close"]
-            )
+            overview.get_overview(exchange="NASDAQ", symbol="AAPL", fields=["close"])
 
         call_kwargs = mock_req.call_args[1]
         params = call_kwargs["params"]

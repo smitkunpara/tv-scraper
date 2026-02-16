@@ -1,6 +1,6 @@
 """Tests for SymbolMarkets scraper module."""
 
-from typing import Dict, Iterator
+from collections.abc import Iterator
 from unittest import mock
 from unittest.mock import MagicMock
 
@@ -18,7 +18,7 @@ def symbol_markets() -> Iterator[SymbolMarkets]:
     yield SymbolMarkets()
 
 
-def _mock_response(data: Dict) -> MagicMock:
+def _mock_response(data: dict) -> MagicMock:
     """Create a mock requests.Response with a .json() method."""
     response = MagicMock()
     response.json.return_value = data
@@ -39,25 +39,43 @@ class TestScrapeSuccess:
 
     def test_scrape_success(self, symbol_markets: SymbolMarkets) -> None:
         """Default params return success envelope with data list."""
-        mock_resp = _mock_response({
-            "data": [
-                {
-                    "s": "NASDAQ:AAPL",
-                    "d": [
-                        "AAPL", 150.25, 2.5, 3.75, 50000000,
-                        "NASDAQ", "stock", "Apple Inc.", "USD", 2500000000000,
-                    ],
-                },
-                {
-                    "s": "GPW:AAPL",
-                    "d": [
-                        "AAPL", 148.50, 1.2, 1.80, 1000000,
-                        "GPW", "stock", "Apple Inc.", "PLN", 2500000000000,
-                    ],
-                },
-            ],
-            "totalCount": 2,
-        })
+        mock_resp = _mock_response(
+            {
+                "data": [
+                    {
+                        "s": "NASDAQ:AAPL",
+                        "d": [
+                            "AAPL",
+                            150.25,
+                            2.5,
+                            3.75,
+                            50000000,
+                            "NASDAQ",
+                            "stock",
+                            "Apple Inc.",
+                            "USD",
+                            2500000000000,
+                        ],
+                    },
+                    {
+                        "s": "GPW:AAPL",
+                        "d": [
+                            "AAPL",
+                            148.50,
+                            1.2,
+                            1.80,
+                            1000000,
+                            "GPW",
+                            "stock",
+                            "Apple Inc.",
+                            "PLN",
+                            2500000000000,
+                        ],
+                    },
+                ],
+                "totalCount": 2,
+            }
+        )
         with mock.patch.object(symbol_markets, "_make_request", return_value=mock_resp):
             result = symbol_markets.scrape(symbol="AAPL")
 
@@ -72,12 +90,14 @@ class TestScrapeSuccess:
     def test_scrape_custom_fields(self, symbol_markets: SymbolMarkets) -> None:
         """Custom fields list is used instead of defaults."""
         custom_fields = ["name", "close", "volume", "exchange"]
-        mock_resp = _mock_response({
-            "data": [
-                {"s": "NASDAQ:AAPL", "d": ["AAPL", 150.0, 50000000, "NASDAQ"]},
-            ],
-            "totalCount": 1,
-        })
+        mock_resp = _mock_response(
+            {
+                "data": [
+                    {"s": "NASDAQ:AAPL", "d": ["AAPL", 150.0, 50000000, "NASDAQ"]},
+                ],
+                "totalCount": 1,
+            }
+        )
         with mock.patch.object(
             symbol_markets, "_make_request", return_value=mock_resp
         ) as mock_req:
@@ -96,15 +116,28 @@ class TestScrapeSuccess:
 
     def test_scrape_custom_scanner(self, symbol_markets: SymbolMarkets) -> None:
         """Custom scanner is used in the URL."""
-        mock_resp = _mock_response({
-            "data": [
-                {"s": "BINANCE:BTCUSD", "d": [
-                    "BTCUSD", 50000.0, 5.0, 2500.0, 1000000,
-                    "BINANCE", "crypto", "Bitcoin / USD", "USD", 900000000000,
-                ]},
-            ],
-            "totalCount": 1,
-        })
+        mock_resp = _mock_response(
+            {
+                "data": [
+                    {
+                        "s": "BINANCE:BTCUSD",
+                        "d": [
+                            "BTCUSD",
+                            50000.0,
+                            5.0,
+                            2500.0,
+                            1000000,
+                            "BINANCE",
+                            "crypto",
+                            "Bitcoin / USD",
+                            "USD",
+                            900000000000,
+                        ],
+                    },
+                ],
+                "totalCount": 1,
+            }
+        )
         with mock.patch.object(
             symbol_markets, "_make_request", return_value=mock_resp
         ) as mock_req:
@@ -118,15 +151,28 @@ class TestScrapeSuccess:
 
     def test_scrape_with_limit(self, symbol_markets: SymbolMarkets) -> None:
         """Limit param controls the range in the API payload."""
-        mock_resp = _mock_response({
-            "data": [
-                {"s": "NASDAQ:AAPL", "d": [
-                    "AAPL", 150.0, 2.5, 3.75, 50000000,
-                    "NASDAQ", "stock", "Apple Inc.", "USD", 2500000000000,
-                ]},
-            ],
-            "totalCount": 100,
-        })
+        mock_resp = _mock_response(
+            {
+                "data": [
+                    {
+                        "s": "NASDAQ:AAPL",
+                        "d": [
+                            "AAPL",
+                            150.0,
+                            2.5,
+                            3.75,
+                            50000000,
+                            "NASDAQ",
+                            "stock",
+                            "Apple Inc.",
+                            "USD",
+                            2500000000000,
+                        ],
+                    },
+                ],
+                "totalCount": 100,
+            }
+        )
         with mock.patch.object(
             symbol_markets, "_make_request", return_value=mock_resp
         ) as mock_req:
@@ -174,17 +220,32 @@ class TestScrapeErrors:
 class TestResponseFormat:
     """Tests for response envelope structure."""
 
-    def test_response_has_standard_envelope(self, symbol_markets: SymbolMarkets) -> None:
+    def test_response_has_standard_envelope(
+        self, symbol_markets: SymbolMarkets
+    ) -> None:
         """Success response contains exactly status/data/metadata/error keys."""
-        mock_resp = _mock_response({
-            "data": [
-                {"s": "NASDAQ:AAPL", "d": [
-                    "AAPL", 150.0, 2.5, 3.75, 50000000,
-                    "NASDAQ", "stock", "Apple Inc.", "USD", 2500000000000,
-                ]},
-            ],
-            "totalCount": 50,
-        })
+        mock_resp = _mock_response(
+            {
+                "data": [
+                    {
+                        "s": "NASDAQ:AAPL",
+                        "d": [
+                            "AAPL",
+                            150.0,
+                            2.5,
+                            3.75,
+                            50000000,
+                            "NASDAQ",
+                            "stock",
+                            "Apple Inc.",
+                            "USD",
+                            2500000000000,
+                        ],
+                    },
+                ],
+                "totalCount": 50,
+            }
+        )
         with mock.patch.object(symbol_markets, "_make_request", return_value=mock_resp):
             result = symbol_markets.scrape(symbol="AAPL")
 
@@ -210,15 +271,28 @@ class TestUsesMapScannerRows:
     def test_uses_map_scanner_rows(self, symbol_markets: SymbolMarkets) -> None:
         """scrape() calls _map_scanner_rows to transform API data."""
         raw_items = [
-            {"s": "NASDAQ:AAPL", "d": [
-                "AAPL", 150.0, 2.5, 3.75, 50000000,
-                "NASDAQ", "stock", "Apple Inc.", "USD", 2500000000000,
-            ]},
+            {
+                "s": "NASDAQ:AAPL",
+                "d": [
+                    "AAPL",
+                    150.0,
+                    2.5,
+                    3.75,
+                    50000000,
+                    "NASDAQ",
+                    "stock",
+                    "Apple Inc.",
+                    "USD",
+                    2500000000000,
+                ],
+            },
         ]
-        mock_resp = _mock_response({
-            "data": raw_items,
-            "totalCount": 1,
-        })
+        mock_resp = _mock_response(
+            {
+                "data": raw_items,
+                "totalCount": 1,
+            }
+        )
         with mock.patch.object(symbol_markets, "_make_request", return_value=mock_resp):
             with mock.patch.object(
                 symbol_markets,
