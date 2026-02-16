@@ -19,8 +19,8 @@ uv add tradingview-scraper
 ### Development Installation
 
 ```bash
-git clone https://github.com/smitkunpara/tv-scraper.git
-cd tv-scraper
+git clone https://github.com/smitkunpara/tv_scraper.git
+cd tv_scraper
 uv sync --extra dev
 ```
 

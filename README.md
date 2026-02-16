@@ -2,7 +2,7 @@
 # TV Scraper
 
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
-[![MIT License](https://img.shields.io/github/license/smitkunpara/tv-scraper.svg?color=brightgreen)](https://opensource.org/licenses/MIT)
+[![MIT License](https://img.shields.io/github/license/smitkunpara/tv_scraper.svg?color=brightgreen)](https://opensource.org/licenses/MIT)
 
 **A powerful, real-time Python library for extracting financial data, indicators, and ideas from TradingView.com.**
 
@@ -16,13 +16,13 @@ This project is based on [mnwato/tradingview-scraper](https://github.com/mnwato/
 
 For complete documentation, installation guides, API references, and examples, visit:
 
-**[📖 Full Documentation](https://smitkunpara.github.io/tv-scraper/)**
+**[📖 Full Documentation](https://smitkunpara.github.io/tv_scraper/)**
 
 ### Quick Links
-- [🚀 Quick Start Guide](https://smitkunpara.github.io/tv-scraper/quick_start/)
-- [📦 Installation](https://smitkunpara.github.io/tv-scraper/installation/)
-- [📊 Supported Data](https://smitkunpara.github.io/tv-scraper/supported_data/)
-- [🔧 API Reference](https://smitkunpara.github.io/tv-scraper/)
+- [🚀 Quick Start Guide](https://smitkunpara.github.io/tv_scraper/quick_start/)
+- [📦 Installation](https://smitkunpara.github.io/tv_scraper/installation/)
+- [📊 Supported Data](https://smitkunpara.github.io/tv_scraper/supported_data/)
+- [🔧 API Reference](https://smitkunpara.github.io/tv_scraper/)
 
 ---
 
@@ -34,8 +34,8 @@ This library requires Python 3.11+ and uses `uv` for dependency management.
 
 ```bash
 # Clone the repository
-git clone https://github.com/smitkunpara/tv-scraper.git
-cd tv-scraper
+git clone https://github.com/smitkunpara/tv_scraper.git
+cd tv_scraper
 
 # Install dependencies (uv auto-creates virtual environment)
 uv sync
@@ -164,10 +164,10 @@ See [PUBLISHING.md](PUBLISHING.md) for step-by-step instructions on setting up y
 
 ## 🤝 Contributing
 
-We welcome contributions! Please see our [Contributing Guide](https://smitkunpara.github.io/tv-scraper/contributing/) for details.
+We welcome contributions! Please see our [Contributing Guide](https://smitkunpara.github.io/tv_scraper/contributing/) for details.
 
-- **🐛 Bug Reports**: [Open an issue](https://github.com/smitkunpara/tv-scraper/issues)
-- **💡 Feature Requests**: [Start a discussion](https://github.com/smitkunpara/tv-scraper/discussions)
+- **🐛 Bug Reports**: [Open an issue](https://github.com/smitkunpara/tv_scraper/issues)
+- **💡 Feature Requests**: [Start a discussion](https://github.com/smitkunpara/tv_scraper/discussions)
 
 ---
 

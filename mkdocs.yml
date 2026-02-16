@@ -27,7 +27,7 @@ theme:
     - content.code.copy
     - content.tooltips
     - navigation.footer
-    
+
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
@@ -100,4 +100,4 @@ extra_css:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/smitkunpara/tv-scraper
+      link: https://github.com/smitkunpara/tv_scraper

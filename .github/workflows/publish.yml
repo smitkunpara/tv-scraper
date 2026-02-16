@@ -10,7 +10,7 @@ jobs:
     name: Build and publish to PyPI
     runs-on: ubuntu-latest
     permissions:
-      id-token: write  # Required for Trusted Publishing
+      id-token: write
       contents: read
 
     steps:
@@ -31,6 +31,4 @@ jobs:
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
-          # Trusted Publishing doesn't require secrets
-          # It uses GitHub OIDC tokens
           print-hash: true

@@ -55,9 +55,9 @@ csv = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/smitkunpara/tv-scraper"
-Repository = "https://github.com/smitkunpara/tv-scraper"
-Issues = "https://github.com/smitkunpara/tv-scraper/issues"
+Homepage = "https://github.com/smitkunpara/tv_scraper"
+Repository = "https://github.com/smitkunpara/tv_scraper"
+Issues = "https://github.com/smitkunpara/tv_scraper/issues"
 
 [tool.hatch.build.targets.wheel]
 packages = ["tv_scraper"]

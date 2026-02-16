@@ -99,7 +99,7 @@ This release reintroduces pagination support for the Minds discussions scraper t
 - **Large Limit Handling**: Resolved issues with large limit parameters by implementing proper pagination instead of limiting to first page only
 - **Import Errors**: Fixed pandas-related import failures by deferring import until CSV export is actually needed
 
-**Full Changelog**: [Commits](https://github.com/smitkunpara/tv-scraper/commits/v0.5.2)
+**Full Changelog**: [Commits](https://github.com/smitkunpara/tv_scraper/commits/v0.5.2)
 
 ## [0.5.1] - 2025-12-13
 
@@ -119,7 +119,7 @@ This release focuses on simplifying the Minds community discussions scraper by r
 ### Fixed
 - **Packaging**: Ensured clean package builds by properly excluding development and cache files
 
-**Full Changelog**: [Commits](https://github.com/smitkunpara/tv-scraper/commits/v0.5.1)
+**Full Changelog**: [Commits](https://github.com/smitkunpara/tv_scraper/commits/v0.5.1)
 
 ## [0.5.0] - 2025-12-11
 
@@ -152,7 +152,7 @@ This is a major release marking a significant overhaul of the project structure,
 ### Removed
 - Outdated GitHub workflows for documentation, release, PyPI deployment, and stale issue management.
 
-**Full Changelog**: [Commits](https://github.com/smitkunpara/tv-scraper/commits/v0.4.21)
+**Full Changelog**: [Commits](https://github.com/smitkunpara/tv_scraper/commits/v0.4.21)
 
 ## [0.4.20] - 2025-12-10
 

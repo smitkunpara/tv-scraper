@@ -13,7 +13,7 @@ You do **not** need to create an API token or add secrets to your GitHub reposit
 3. Select **GitHub**.
 4. Fill in the details:
    - **Owner**: `smitkunpara`
-   - **Repository**: `tv-scraper`
+   - **Repository**: `tv_scraper`
    - **Workflow name**: `publish.yml`
    - **Environment name**: `pypi` (optional, but recommended if you use GitHub Environments)
 5. Click **Add Publisher**.
