@@ -140,6 +140,9 @@ class TestLiveStreamer:
         assert first_update["price"] is not None
         assert first_update["price"] > 0
 
+    @pytest.mark.skip(
+        reason="NSE market hours: 9:15 AM - 3:30 PM IST. Test can timeout outside trading hours."
+    )
     def test_live_stream_realtime_price_indian_market(self) -> None:
         """Verify real-time streaming works for Indian market (NSE)."""
         streamer = Streamer()
