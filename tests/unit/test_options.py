@@ -3,7 +3,7 @@
 from collections.abc import Iterator
 from typing import Any
 from unittest import mock
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -38,7 +38,11 @@ class TestInheritance:
 class TestGetOptionsChainSuccess:
     """Tests for successful option chain retrieval."""
 
-    def test_get_chain_by_expiry_success(self, options: Options) -> None:
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_options_symbol",
+        return_value=True,
+    )
+    def test_get_chain_by_expiry_success(self, mock_verify, options: Options) -> None:
         """Get chain by expiry returns mapped data."""
         mock_data = {
             "totalCount": 1,
@@ -62,7 +66,11 @@ class TestGetOptionsChainSuccess:
         assert result["metadata"]["exchange"] == "BSE"
         assert result["metadata"]["symbol"] == "SENSEX"
 
-    def test_get_chain_by_strike_success(self, options: Options) -> None:
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_options_symbol",
+        return_value=True,
+    )
+    def test_get_chain_by_strike_success(self, mock_verify, options: Options) -> None:
         """Get chain by strike returns mapped data."""
         mock_data = {
             "totalCount": 1,
@@ -83,7 +91,11 @@ class TestGetOptionsChainSuccess:
         assert result["metadata"]["filter_type"] == "strike"
         assert result["metadata"]["filter_value"] == 83300
 
-    def test_combined_symbol_support(self, options: Options) -> None:
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_options_symbol",
+        return_value=True,
+    )
+    def test_combined_symbol_support(self, mock_verify, options: Options) -> None:
         """Combined EXCHANGE:SYMBOL is supported."""
         mock_data = {"totalCount": 0, "fields": [], "symbols": []}
         mock_resp = _mock_response(mock_data)
@@ -114,7 +126,11 @@ class TestGetOptionsChainErrors:
         result = options.get_chain_by_strike(exchange="BSE", symbol="", strike=83300)
         assert result["status"] == STATUS_FAILED
 
-    def test_network_error(self, options: Options) -> None:
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_options_symbol",
+        return_value=True,
+    )
+    def test_network_error(self, mock_verify, options: Options) -> None:
         """Network failure returns error response."""
         with mock.patch.object(
             options, "_make_request", side_effect=NetworkError("Timeout")

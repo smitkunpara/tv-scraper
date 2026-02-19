@@ -80,8 +80,7 @@ class Ideas(BaseScraper):
 
         # --- Validation ---
         try:
-            self.validator.validate_exchange(exchange)
-            self.validator.validate_symbol(exchange, symbol)
+            self.validator.verify_symbol_exchange(exchange, symbol)
             self.validator.validate_choice("sort_by", sort_by, ALLOWED_SORT_VALUES)
         except ValidationError as exc:
             return self._error_response(str(exc))

@@ -10,6 +10,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
+from tv_scraper.core.exceptions import ValidationError
+
 # ---------------------------------------------------------------------------
 # StreamHandler tests
 # ---------------------------------------------------------------------------
@@ -165,7 +167,10 @@ class TestStreamHandler:
 class TestStreamer:
     """Tests for the main Streamer class (candles + indicators)."""
 
-    @patch("tv_scraper.streaming.streamer.validate_symbols")
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
+        return_value=True,
+    )
     @patch("tv_scraper.streaming.stream_handler.create_connection")
     def test_get_candles_returns_success_response(self, mock_cc, mock_validate):
         """get_candles returns standardized response envelope on success."""
@@ -194,7 +199,10 @@ class TestStreamer:
         assert "ohlcv" in result["data"]
         assert result["error"] is None
 
-    @patch("tv_scraper.streaming.streamer.validate_symbols")
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
+        return_value=True,
+    )
     @patch("tv_scraper.streaming.stream_handler.create_connection")
     def test_get_candles_ohlcv_extraction(self, mock_cc, mock_validate):
         """OHLCV data is correctly serialized from timescale_update packets."""
@@ -228,7 +236,10 @@ class TestStreamer:
         assert ohlcv[1]["high"] == 108.0
 
     @patch("tv_scraper.streaming.streamer.fetch_indicator_metadata")
-    @patch("tv_scraper.streaming.streamer.validate_symbols")
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
+        return_value=True,
+    )
     @patch("tv_scraper.streaming.stream_handler.create_connection")
     def test_get_candles_indicator_extraction(
         self, mock_cc, mock_validate, mock_fetch_meta
@@ -281,7 +292,10 @@ class TestStreamer:
         assert "STD;RSI" in result["data"]["indicators"]
         assert len(result["data"]["indicators"]["STD;RSI"]) > 0
 
-    @patch("tv_scraper.streaming.streamer.validate_symbols")
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
+        return_value=True,
+    )
     @patch("tv_scraper.streaming.stream_handler.create_connection")
     def test_get_candles_with_timeframe(self, mock_cc, mock_validate):
         """Timeframe mapping: '1h' → '60', '1d' → '1D', etc."""
@@ -312,7 +326,10 @@ class TestStreamer:
         all_sent = " ".join(c[0][0] for c in mock_ws.send.call_args_list)
         assert '"60"' in all_sent or "'60'" in all_sent
 
-    @patch("tv_scraper.streaming.streamer.validate_symbols")
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
+        return_value=True,
+    )
     @patch("tv_scraper.streaming.stream_handler.create_connection")
     def test_get_candles_export(self, mock_cc, mock_validate):
         """Export is called when export_result=True."""
@@ -336,7 +353,10 @@ class TestStreamer:
             s.get_candles(exchange="BINANCE", symbol="BTCUSDT", numb_candles=1)
             assert mock_save.called
 
-    @patch("tv_scraper.streaming.streamer.validate_symbols")
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
+        return_value=True,
+    )
     @patch("tv_scraper.streaming.stream_handler.create_connection")
     def test_stream_realtime_price_yields_data(self, mock_cc, mock_validate):
         """stream_realtime_price returns a generator that yields normalized price data."""
@@ -389,7 +409,10 @@ class TestStreamer:
         assert data["change"] == 150.0
         assert data["change_percent"] == 0.36
 
-    @patch("tv_scraper.streaming.streamer.validate_symbols")
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
+        return_value=True,
+    )
     @patch("tv_scraper.streaming.stream_handler.create_connection")
     def test_stream_realtime_price_heartbeat(self, mock_cc, mock_validate):
         """Heartbeat messages are echoed back, not yielded as data."""
@@ -431,13 +454,13 @@ class TestStreamer:
         # But we only get the qsd data, not heartbeat
         assert data["price"] == 42000.0
 
-    @patch("tv_scraper.streaming.streamer.validate_symbols")
+    @patch("tv_scraper.core.validators.DataValidator.verify_symbol_exchange")
     @patch("tv_scraper.streaming.stream_handler.create_connection")
     def test_get_candles_error_returns_error_response(self, mock_cc, mock_validate):
         """When validation fails, an error response is returned (not raised)."""
         mock_ws = MagicMock()
         mock_cc.return_value = mock_ws
-        mock_validate.side_effect = ValueError("Invalid symbol")
+        mock_validate.side_effect = ValidationError("Invalid symbol")
 
         from tv_scraper.streaming.streamer import Streamer
 
@@ -516,14 +539,18 @@ class TestRealTimeData:
 
         assert isinstance(gen, types.GeneratorType)
 
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
+        return_value=True,
+    )
     @patch("tv_scraper.streaming.stream_handler.create_connection")
-    def test_heartbeat_handling(self, mock_cc):
+    def test_heartbeat_handling(self, mock_cc, mock_validate):
         """Heartbeat messages are echoed back, not yielded."""
         mock_ws = MagicMock()
         mock_cc.return_value = mock_ws
 
         heartbeat = "~m~4~m~~h~99"
-        pkt = {"m": "qsd", "p": ["qs_test", {"n": "X:Y", "v": {"lp": 50}}]}
+        pkt = {"m": "qsd", "p": ["qs_test", {"n": "BINANCE:BTCUSDT", "v": {"lp": 50}}]}
         raw = json.dumps(pkt)
         framed = f"~m~{len(raw)}~m~{raw}"
 
@@ -538,7 +565,7 @@ class TestRealTimeData:
         from tv_scraper.streaming.price import RealTimeData
 
         rt = RealTimeData()
-        gen = rt.get_ohlcv(exchange="X", symbol="Y")
+        gen = rt.get_ohlcv(exchange="BINANCE", symbol="BTCUSDT")
         data = next(gen)
 
         # Heartbeat should be echoed
@@ -555,34 +582,42 @@ class TestRealTimeData:
 class TestStreamingUtils:
     """Tests for streaming utility functions."""
 
-    @patch("tv_scraper.streaming.utils.requests.get")
+    @patch("tv_scraper.core.validators.requests.get")
     def test_validate_symbols_valid(self, mock_get):
-        """Valid symbol returns True."""
+        """verify_symbol_exchange returns True for a valid combination."""
+        from tv_scraper.core.validators import DataValidator
+
+        DataValidator.reset()
         mock_resp = MagicMock()
         mock_resp.status_code = 200
         mock_resp.raise_for_status.return_value = None
         mock_get.return_value = mock_resp
 
-        from tv_scraper.streaming.utils import validate_symbols
-
-        result = validate_symbols("BINANCE", "BTCUSDT")
+        validator = DataValidator()
+        result = validator.verify_symbol_exchange("BINANCE", "BTCUSDT")
         assert result is True
+        DataValidator.reset()
 
-    @patch("tv_scraper.streaming.utils.requests.get")
+    @patch("tv_scraper.core.validators.requests.get")
     def test_validate_symbols_invalid(self, mock_get):
-        """Invalid symbol raises ValueError."""
+        """verify_symbol_exchange raises ValidationError for invalid combo."""
         import requests as req_lib
 
+        from tv_scraper.core.exceptions import ValidationError
+        from tv_scraper.core.validators import DataValidator
+
+        DataValidator.reset()
         mock_resp = MagicMock()
         mock_resp.status_code = 404
         exc = req_lib.exceptions.HTTPError(response=mock_resp)
+        exc.response = mock_resp
         mock_resp.raise_for_status.side_effect = exc
         mock_get.return_value = mock_resp
 
-        from tv_scraper.streaming.utils import validate_symbols
-
-        with pytest.raises(ValueError, match="Invalid"):
-            validate_symbols("BAD", "XXXYYY")
+        validator = DataValidator()
+        with pytest.raises(ValidationError, match="not found"):
+            validator.verify_symbol_exchange("BINANCE", "XXXYYY")
+        DataValidator.reset()
 
     @patch("tv_scraper.streaming.utils.requests.get")
     def test_fetch_indicator_metadata(self, mock_get):
@@ -718,7 +753,10 @@ class TestWebSocketOptimizations:
         sockopt = call_kwargs["sockopt"]
         assert (socket.IPPROTO_TCP, socket.TCP_NODELAY, 1) in sockopt
 
-    @patch("tv_scraper.streaming.streamer.validate_symbols")
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
+        return_value=True,
+    )
     @patch("tv_scraper.streaming.stream_handler.create_connection")
     def test_stream_realtime_price_dual_session(self, mock_cc, mock_validate):
         """stream_realtime_price subscribes to both quote and chart sessions."""
@@ -758,7 +796,10 @@ class TestWebSocketOptimizations:
         assert "create_series" in all_sent
         assert "resolve_symbol" in all_sent
 
-    @patch("tv_scraper.streaming.streamer.validate_symbols")
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
+        return_value=True,
+    )
     @patch("tv_scraper.streaming.stream_handler.create_connection")
     def test_stream_realtime_price_handles_du_messages(self, mock_cc, mock_validate):
         """stream_realtime_price correctly parses DU (data update) messages."""
@@ -810,7 +851,10 @@ class TestWebSocketOptimizations:
         assert data["price"] == 25050.0
         assert data["volume"] == 1000000
 
-    @patch("tv_scraper.streaming.streamer.validate_symbols")
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
+        return_value=True,
+    )
     @patch("tv_scraper.streaming.stream_handler.create_connection")
     def test_stream_realtime_price_handles_qsd_messages(self, mock_cc, mock_validate):
         """stream_realtime_price correctly parses QSD (quote session data) messages."""
@@ -856,7 +900,10 @@ class TestWebSocketOptimizations:
         assert data["change"] == 180.0
         assert data["change_percent"] == 0.71
 
-    @patch("tv_scraper.streaming.streamer.validate_symbols")
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
+        return_value=True,
+    )
     @patch("tv_scraper.streaming.stream_handler.create_connection")
     def test_socket_timeout_handling(self, mock_cc, mock_validate):
         """Socket timeout exceptions are handled gracefully."""
@@ -889,7 +936,10 @@ class TestWebSocketOptimizations:
         data = next(gen)
         assert data["price"] == 25000.0
 
-    @patch("tv_scraper.streaming.streamer.validate_symbols")
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
+        return_value=True,
+    )
     @patch("tv_scraper.streaming.stream_handler.create_connection")
     def test_stream_realtime_price_mixed_messages(self, mock_cc, mock_validate):
         """stream_realtime_price handles mixed QSD and DU messages."""

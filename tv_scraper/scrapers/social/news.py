@@ -98,8 +98,7 @@ class News(BaseScraper):
 
         # Validate inputs
         try:
-            self.validator.validate_exchange(exchange)
-            self.validator.validate_symbol(exchange, symbol)
+            self.validator.verify_symbol_exchange(exchange, symbol)
             self.validator.validate_choice("sort_by", sort_by, VALID_SORT_OPTIONS)
             self.validator.validate_choice("section", section, VALID_SECTIONS)
 

@@ -1,4 +1,4 @@
-"""Streaming utility functions: symbol validation, indicator metadata fetching."""
+"""Streaming utility functions: indicator metadata fetching."""
 
 import logging
 
@@ -6,65 +6,11 @@ import requests
 
 logger = logging.getLogger(__name__)
 
-_VALIDATE_URL = (
-    "https://scanner.tradingview.com/symbol?"
-    "symbol={exchange}%3A{symbol}&fields=market&no_404=false"
-)
-
 _INDICATOR_SEARCH_URL = "https://www.tradingview.com/pubscripts-suggest-json/?search="
 
 _PINE_FACADE_URL = "https://pine-facade.tradingview.com/pine-facade/translate/{script_id}/{script_version}"
 
 _PINE_LIST_URL = "https://pine-facade.tradingview.com/pine-facade/list?filter=standard"
-
-
-def validate_symbols(exchange: str, symbol: str, retries: int = 3) -> bool:
-    """Validate an exchange:symbol pair against the TradingView scanner API.
-
-    Args:
-        exchange: Exchange name (e.g. ``"BINANCE"``).
-        symbol: Symbol name (e.g. ``"BTCUSDT"``).
-        retries: Number of HTTP retries.
-
-    Returns:
-        ``True`` if the symbol is valid.
-
-    Raises:
-        ValueError: If the symbol is invalid or validation fails after all retries.
-    """
-    if not exchange or not symbol:
-        raise ValueError("exchange and symbol cannot be empty")
-
-    url = _VALIDATE_URL.format(exchange=exchange, symbol=symbol)
-
-    for attempt in range(retries):
-        try:
-            resp = requests.get(url, timeout=5)
-            resp.raise_for_status()
-            return True
-        except requests.RequestException as exc:
-            status = (
-                getattr(exc.response, "status_code", None)
-                if hasattr(exc, "response")
-                else None
-            )
-            if status == 404:
-                raise ValueError(
-                    f"Invalid exchange:symbol '{exchange}:{symbol}'"
-                ) from exc
-            logger.warning(
-                "Attempt %d failed to validate '%s:%s': %s",
-                attempt + 1,
-                exchange,
-                symbol,
-                exc,
-            )
-            if attempt >= retries - 1:
-                raise ValueError(
-                    f"Invalid exchange:symbol '{exchange}:{symbol}' after {retries} attempts"
-                ) from exc
-
-    return False  # pragma: no cover
 
 
 def fetch_tradingview_indicators(query: str) -> list[dict]:

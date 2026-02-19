@@ -91,10 +91,9 @@ class Options(BaseScraper):
         if not exchange and ":" in symbol:
             exchange, symbol = symbol.split(":", 1)
 
-        # Validation
+        # Validation — verify combination exists and has options
         try:
-            self.validator.validate_exchange(exchange)
-            self.validator.validate_symbol(exchange, symbol)
+            self.validator.verify_options_symbol(exchange, symbol)
         except ValidationError as exc:
             return self._error_response(str(exc))
 
@@ -140,10 +139,9 @@ class Options(BaseScraper):
         if not exchange and ":" in symbol:
             exchange, symbol = symbol.split(":", 1)
 
-        # Validation
+        # Validation — verify combination exists and has options
         try:
-            self.validator.validate_exchange(exchange)
-            self.validator.validate_symbol(exchange, symbol)
+            self.validator.verify_options_symbol(exchange, symbol)
         except ValidationError as exc:
             return self._error_response(str(exc))
 

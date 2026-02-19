@@ -12,11 +12,11 @@ from collections.abc import Generator
 from websocket import WebSocketConnectionClosedException
 
 from tv_scraper.core.constants import EXPORT_TYPES, STATUS_FAILED, STATUS_SUCCESS
+from tv_scraper.core.validators import DataValidator
 from tv_scraper.streaming.stream_handler import StreamHandler
 from tv_scraper.streaming.utils import (
     fetch_available_indicators,
     fetch_indicator_metadata,
-    validate_symbols,
 )
 from tv_scraper.utils.helpers import format_symbol
 from tv_scraper.utils.io import generate_export_filepath, save_csv_file, save_json_file
@@ -122,7 +122,7 @@ class Streamer:
         """
         try:
             exchange_symbol = format_symbol(exchange, symbol)
-            validate_symbols(exchange, symbol)
+            DataValidator().verify_symbol_exchange(exchange, symbol)
 
             ind_flag = bool(indicators)
 
@@ -210,7 +210,7 @@ class Streamer:
             Normalised price update dicts.
         """
         exchange_symbol = format_symbol(exchange, symbol)
-        validate_symbols(exchange, symbol)
+        DataValidator().verify_symbol_exchange(exchange, symbol)
 
         # Add symbol to both quote and chart sessions for maximum update frequency
         resolve_symbol = json.dumps({"adjustment": "splits", "symbol": exchange_symbol})

@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.3] - 2026-02-19
+
+### ✨ Unified Validation & Options Stability
+This release centralizes all symbol, exchange, and indicator validation into a single core component, eliminating redundancy across the library. It also significantly improves the stability of the Options scraper by adding browser-standard headers to prevent API blocks and fixing result sanitization.
+
+### Added
+- **Unified Validation System**: Core `DataValidator.verify_symbol_exchange()` and `verify_options_symbol()` methods for reliable cross-module validation.
+- **Browser-Standard Headers**: Standardized HTTP headers for Options searching to ensure 100% success rate and avoid 403 Forbidden errors.
+
+### Changed
+- **Validator Migration**: Moved `validate_symbols` out of `streaming.utils` and into `core.validators` to serve as a library-wide singleton.
+- **Improved Result Parsing**: Added HTML tag stripping (e.g., `<em>`) for cleaner option search results.
+- **Refactored Scrapers**: Updated all scrapers (Technicals, Fundamentals, Overview, etc.) to use the unified validation layer for better performance and consistency.
+
+### Fixed
+- **Options Search Block**: Resolved issue where searching for options would return 403 Forbidden on certain environments.
+- **Redundant Streaming Code**: Removed duplicate validation logic from `streaming/utils.py`.
+
 ## [1.0.2] - 2026-02-16
 
 ### 🚀 Initial Production Release

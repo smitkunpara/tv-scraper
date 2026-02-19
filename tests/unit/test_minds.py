@@ -261,9 +261,13 @@ class TestResponseFormat:
 
         assert set(result.keys()) == {"status", "data", "metadata", "error"}
 
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
+        return_value=True,
+    )
     @patch("tv_scraper.core.base.BaseScraper._make_request")
     def test_separate_exchange_symbol_params(
-        self, mock_get: MagicMock, minds: Minds
+        self, mock_get: MagicMock, mock_verify: MagicMock, minds: Minds
     ) -> None:
         """Exchange and symbol are separate params, combined internally."""
         mock_get.return_value = _mock_response(

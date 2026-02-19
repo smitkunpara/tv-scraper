@@ -12,6 +12,7 @@ from collections.abc import Generator
 from websocket import WebSocketConnectionClosedException
 
 from tv_scraper.core.constants import WEBSOCKET_URL
+from tv_scraper.core.validators import DataValidator
 from tv_scraper.streaming.stream_handler import StreamHandler
 from tv_scraper.utils.helpers import format_symbol
 
@@ -39,7 +40,11 @@ class RealTimeData:
 
         Yields:
             Parsed JSON packets from the TradingView WebSocket.
+
+        Raises:
+            ValidationError: If the exchange:symbol combination is invalid.
         """
+        DataValidator().verify_symbol_exchange(exchange, symbol)
         exchange_symbol = format_symbol(exchange, symbol)
         qs = self._handler.quote_session
         cs = self._handler.chart_session

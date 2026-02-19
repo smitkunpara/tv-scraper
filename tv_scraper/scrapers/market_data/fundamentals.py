@@ -178,8 +178,7 @@ class Fundamentals(BaseScraper):
 
         # --- Validation ---
         try:
-            self.validator.validate_exchange(exchange)
-            self.validator.validate_symbol(exchange, symbol)
+            self.validator.verify_symbol_exchange(exchange, symbol)
         except ValidationError as exc:
             return self._error_response(str(exc))
 
