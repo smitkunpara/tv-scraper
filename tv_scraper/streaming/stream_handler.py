@@ -11,6 +11,7 @@ import secrets
 import socket
 import string
 from collections.abc import Generator
+from typing import Any
 
 from websocket import WebSocketConnectionClosedException, create_connection
 
@@ -141,7 +142,7 @@ class StreamHandler:
         return f"~m~{len(message)}~m~{message}"
 
     @staticmethod
-    def construct_message(func: str, param_list: list) -> str:
+    def construct_message(func: str, param_list: list[object]) -> str:
         """Build a JSON-RPC-style message body.
 
         Args:
@@ -153,7 +154,7 @@ class StreamHandler:
         """
         return json.dumps({"m": func, "p": param_list}, separators=(",", ":"))
 
-    def create_message(self, func: str, param_list: list) -> str:
+    def create_message(self, func: str, param_list: list[object]) -> str:
         """Create a complete framed message ready for sending.
 
         Args:
@@ -165,7 +166,7 @@ class StreamHandler:
         """
         return self.prepend_header(self.construct_message(func, param_list))
 
-    def send_message(self, func: str, args: list) -> None:
+    def send_message(self, func: str, args: list[object]) -> None:
         """Send a framed message over the WebSocket.
 
         Args:
@@ -203,7 +204,7 @@ class StreamHandler:
         self.send_message("quote_set_fields", [quote_session, *_QUOTE_FIELDS])
         self.send_message("quote_hibernate_all", [quote_session])
 
-    def receive_packets(self) -> Generator[dict, None, None]:
+    def receive_packets(self) -> Generator[dict[str, Any], None, None]:
         """Receive and parse WebSocket data, handling heartbeats.
 
         Yields parsed JSON packets from the TradingView stream.

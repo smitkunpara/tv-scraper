@@ -27,7 +27,7 @@ class Technicals(BaseScraper):
         from tv_scraper.scrapers.market_data import Technicals
 
         scraper = Technicals()
-        data = scraper.scrape(
+        data = scraper.get_data(
             exchange="BINANCE",
             symbol="BTCUSD",
             technical_indicators=["RSI", "Stoch.K"],

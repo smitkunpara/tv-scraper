@@ -90,7 +90,8 @@ class DataValidator:
         path = _DATA_DIR / filename
         try:
             with open(path, encoding="utf-8") as f:
-                return json.load(f)
+                result: dict[str, Any] = json.load(f)
+                return result
         except (OSError, json.JSONDecodeError) as e:
             logger.error("Error loading data file %s: %s", path, e)
             return {}

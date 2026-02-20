@@ -7,6 +7,7 @@ Provides ``get_candles()`` for historical OHLCV + indicator data and
 import json
 import logging
 from collections.abc import Generator
+from typing import Any
 
 from tv_scraper.core.constants import EXPORT_TYPES, STATUS_FAILED, STATUS_SUCCESS
 from tv_scraper.core.validators import DataValidator
@@ -57,7 +58,7 @@ class Streamer:
             )
         self.export_result = export_result
         self.export_type = export_type
-        self.study_id_to_name_map: dict = {}
+        self.study_id_to_name_map: dict[str, str] = {}
         self._handler = StreamHandler(jwt_token=websocket_jwt_token)
 
     # ------------------------------------------------------------------
@@ -65,7 +66,7 @@ class Streamer:
     # ------------------------------------------------------------------
 
     @staticmethod
-    def get_available_indicators() -> list[dict]:
+    def get_available_indicators() -> list[dict[str, Any]]:
         """Fetch the list of available built-in indicators.
 
         Use this to find the correct `id` (e.g. ``"STD;RSI"``) and `version`
@@ -83,7 +84,7 @@ class Streamer:
         timeframe: str = "1m",
         numb_candles: int = 10,
         indicators: list[tuple[str, str]] | None = None,
-    ) -> dict:
+    ) -> dict[str, Any]:
         """Fetch OHLCV candle data and optional indicator values.
 
         Args:
@@ -114,8 +115,8 @@ class Streamer:
             if ind_flag and indicators:
                 self._add_indicators(indicators)
 
-            ohlcv_data: list = []
-            indicator_data: dict = {}
+            ohlcv_data: list[dict[str, Any]] = []
+            indicator_data: dict[str, Any] = {}
             expected_ind_count = len(indicators) if ind_flag and indicators else 0
 
             for i, pkt in enumerate(self._handler.receive_packets()):
@@ -178,7 +179,7 @@ class Streamer:
         self,
         exchange: str,
         symbol: str,
-    ) -> Generator[dict, None, None]:
+    ) -> Generator[dict[str, Any], None, None]:
         """Persistent generator yielding normalized realtime price updates.
 
         Yields ``qsd`` (quote session data) and ``du`` (data update) packets
@@ -345,7 +346,7 @@ class Streamer:
             except Exception as exc:
                 logger.error("Failed to add indicator %s: %s", script_id, exc)
 
-    def _serialize_ohlcv(self, raw_data: dict) -> list:
+    def _serialize_ohlcv(self, raw_data: dict[str, Any]) -> list[dict[str, Any]]:
         """Extract OHLCV entries from a timescale_update packet."""
         ohlcv_entries = raw_data.get("p", [{}, {}])[1].get("sds_1", {}).get("s", [])
         result = []
@@ -363,15 +364,15 @@ class Streamer:
             result.append(rec)
         return result
 
-    def _extract_ohlcv_from_stream(self, pkt: dict) -> list:
+    def _extract_ohlcv_from_stream(self, pkt: dict[str, Any]) -> list[dict[str, Any]]:
         """Extract OHLCV from a packet if it's a timescale_update."""
         if pkt.get("m") == "timescale_update":
             return self._serialize_ohlcv(pkt)
         return []
 
-    def _extract_indicator_from_stream(self, pkt: dict) -> dict:
+    def _extract_indicator_from_stream(self, pkt: dict[str, Any]) -> dict[str, Any]:
         """Extract indicator data from a ``du`` packet."""
-        indicator_data: dict = {}
+        indicator_data: dict[str, Any] = {}
         if pkt.get("m") != "du":
             return indicator_data
 
@@ -392,7 +393,7 @@ class Streamer:
 
         return indicator_data
 
-    def _export(self, data, symbol: str, data_category: str) -> None:
+    def _export(self, data: Any, symbol: str, data_category: str) -> None:
         """Export data to file."""
         filepath = generate_export_filepath(symbol, data_category, self.export_type)
         if self.export_type == "csv":

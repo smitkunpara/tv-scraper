@@ -1,6 +1,7 @@
 """Streaming utility functions: indicator metadata fetching."""
 
 import logging
+from typing import Any
 
 import requests
 
@@ -13,7 +14,7 @@ _PINE_FACADE_URL = "https://pine-facade.tradingview.com/pine-facade/translate/{s
 _PINE_LIST_URL = "https://pine-facade.tradingview.com/pine-facade/list?filter=standard"
 
 
-def fetch_tradingview_indicators(query: str) -> list[dict]:
+def fetch_tradingview_indicators(query: str) -> list[dict[str, Any]]:
     """Search public TradingView indicators by name or author.
 
     Args:
@@ -31,7 +32,7 @@ def fetch_tradingview_indicators(query: str) -> list[dict]:
         json_data = resp.json()
 
         results = json_data.get("results", [])
-        filtered: list[dict] = []
+        filtered: list[dict[str, Any]] = []
 
         for indicator in results:
             name = indicator.get("scriptName", "")
@@ -59,7 +60,7 @@ def fetch_indicator_metadata(
     script_id: str,
     script_version: str,
     chart_session: str,
-) -> dict:
+) -> dict[str, Any]:
     """Fetch and prepare indicator metadata from the pine-facade API.
 
     Args:
@@ -89,9 +90,9 @@ def fetch_indicator_metadata(
 
 def prepare_indicator_metadata(
     script_id: str,
-    metainfo: dict,
+    metainfo: dict[str, Any],
     chart_session: str,
-) -> dict:
+) -> dict[str, Any]:
     """Build the ``create_study`` WebSocket payload from indicator metainfo.
 
     Args:
@@ -105,7 +106,7 @@ def prepare_indicator_metadata(
     pine_version = metainfo.get("pine", {}).get("version", "1.0")
     first_input = metainfo.get("inputs", [{}])[0].get("defval", "")
 
-    output_data: dict = {
+    output_data: dict[str, Any] = {
         "m": "create_study",
         "p": [
             chart_session,
@@ -132,7 +133,7 @@ def prepare_indicator_metadata(
     }
 
     # Collect in_* input overrides
-    in_x: dict = {}
+    in_x: dict[str, Any] = {}
     for input_item in metainfo.get("inputs", []):
         if input_item["id"].startswith("in_"):
             in_x[input_item["id"]] = {
@@ -149,7 +150,7 @@ def prepare_indicator_metadata(
     return output_data
 
 
-def fetch_available_indicators() -> list[dict]:
+def fetch_available_indicators() -> list[dict[str, Any]]:
     """Fetch the list of standard built-in indicators from TradingView.
 
     Note:

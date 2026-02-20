@@ -7,6 +7,7 @@ WebSocket feed. For normalized price data, see :class:`Streamer.stream_realtime_
 import json
 import logging
 from collections.abc import Generator
+from typing import Any
 
 from tv_scraper.core.constants import WEBSOCKET_URL
 from tv_scraper.core.validators import DataValidator
@@ -28,7 +29,9 @@ class RealTimeData:
     def __init__(self) -> None:
         self._handler = StreamHandler(websocket_url=_SCREENER_WS_URL)
 
-    def get_ohlcv(self, exchange: str, symbol: str) -> Generator[dict, None, None]:
+    def get_ohlcv(
+        self, exchange: str, symbol: str
+    ) -> Generator[dict[str, Any], None, None]:
         """Stream OHLCV data for a single symbol.
 
         Args:
@@ -51,7 +54,7 @@ class RealTimeData:
 
     def get_latest_trade_info(
         self, exchanges: list[str], symbols: list[str]
-    ) -> Generator[dict, None, None]:
+    ) -> Generator[dict[str, Any], None, None]:
         """Stream summary trade info for multiple symbols.
 
         Args:
