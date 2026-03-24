@@ -18,6 +18,8 @@ def make_request(
     headers: dict[str, str] | None = None,
     params: dict[str, Any] | None = None,
     json_data: dict[str, Any] | None = None,
+    data: dict[str, Any] | None = None,
+    files: dict[str, Any] | None = None,
     timeout: int = DEFAULT_TIMEOUT,
 ) -> requests.Response:
     """Make an HTTP request with error handling.
@@ -28,6 +30,8 @@ def make_request(
         headers: Optional request headers.
         params: Optional query parameters.
         json_data: Optional JSON body for POST requests.
+        data: Optional form-encoded body.
+        files: Optional multipart form fields/files.
         timeout: Request timeout in seconds.
 
     Returns:
@@ -44,6 +48,8 @@ def make_request(
             headers=headers,
             params=params,
             json=json_data,
+            data=data,
+            files=files,
             timeout=timeout,
         )
         response.raise_for_status()

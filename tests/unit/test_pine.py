@@ -102,3 +102,118 @@ class TestListSavedScripts:
 
         assert result["status"] == STATUS_FAILED
         assert "unexpected response format" in (result["error"] or "").lower()
+
+
+class TestValidateScript:
+    """Tests for Pine source validation."""
+
+    @patch("tv_scraper.core.base.BaseScraper._make_request")
+    def test_validate_script_with_errors_returns_failed(
+        self,
+        mock_request: MagicMock,
+        pine: Pine,
+    ) -> None:
+        mock_request.return_value = _mock_response(
+            {
+                "success": True,
+                "result": {
+                    "errors": [
+                        {
+                            "message": '"sdf" is not a valid statement.',
+                            "start": {"line": 8, "column": 1},
+                            "end": {"line": 8, "column": 3},
+                        }
+                    ],
+                    "warnings": [],
+                },
+            }
+        )
+
+        result = pine.validate_script("indicator('x')\nsdf")
+
+        assert result["status"] == STATUS_FAILED
+        assert result["error"] == "Pine script validation failed."
+        assert len(result["metadata"]["errors"]) == 1
+
+    @patch("tv_scraper.core.base.BaseScraper._make_request")
+    def test_validate_script_with_warning_returns_success(
+        self,
+        mock_request: MagicMock,
+        pine: Pine,
+    ) -> None:
+        mock_request.return_value = _mock_response(
+            {
+                "success": True,
+                "result": {
+                    "errors": [],
+                    "warnings": [{"message": "sample warning"}],
+                },
+            }
+        )
+
+        result = pine.validate_script("indicator('x')\nplot(close)")
+
+        assert result["status"] == STATUS_SUCCESS
+        assert result["error"] is None
+        assert result["metadata"]["warnings"] == [{"message": "sample warning"}]
+
+
+class TestCreateScript:
+    """Tests for creating new Pine scripts."""
+
+    @patch("tv_scraper.scrapers.scripts.pine.Pine.validate_script")
+    @patch("tv_scraper.core.base.BaseScraper._make_request")
+    def test_create_script_success(
+        self,
+        mock_request: MagicMock,
+        mock_validate: MagicMock,
+        pine: Pine,
+    ) -> None:
+        mock_validate.return_value = {
+            "status": STATUS_SUCCESS,
+            "data": None,
+            "metadata": {"warnings": []},
+            "error": None,
+        }
+        mock_request.return_value = _mock_response(
+            {
+                "success": True,
+                "result": {
+                    "metaInfo": {
+                        "scriptIdPart": "USER;new123",
+                        "description": "My Script",
+                        "shortDescription": "My Script",
+                    }
+                },
+            }
+        )
+
+        result = pine.create_script(name="My Script", source="indicator('My Script')")
+
+        assert result["status"] == STATUS_SUCCESS
+        assert result["error"] is None
+        assert result["data"]["id"] == "USER;new123"
+        assert result["data"]["name"] == "My Script"
+
+    @patch("tv_scraper.scrapers.scripts.pine.Pine.validate_script")
+    def test_create_script_stops_when_validation_fails(
+        self,
+        mock_validate: MagicMock,
+        pine: Pine,
+    ) -> None:
+        mock_validate.return_value = {
+            "status": STATUS_FAILED,
+            "data": None,
+            "metadata": {"errors": [{"message": "invalid"}]},
+            "error": "Pine script validation failed.",
+        }
+
+        result = pine.create_script(name="My Script", source="bad source")
+
+        assert result["status"] == STATUS_FAILED
+        assert result["error"] == "Pine script validation failed."
+
+    def test_create_script_empty_name_returns_error(self, pine: Pine) -> None:
+        result = pine.create_script(name="   ", source="indicator('x')")
+        assert result["status"] == STATUS_FAILED
+        assert "name cannot be empty" in (result["error"] or "").lower()
