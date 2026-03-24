@@ -158,23 +158,33 @@ def fetch_available_indicators() -> list[dict[str, Any]]:
 
     Returns:
         List of indicator dicts with: name, id, version.
+
+    Raises:
+        RuntimeError: If request or JSON parsing fails.
+        ValueError: If response payload format is unexpected.
     """
     try:
         resp = requests.get(_PINE_LIST_URL, timeout=10)
         resp.raise_for_status()
         data = resp.json()
-
-        if not isinstance(data, list):
-            return []
-
-        return [
-            {
-                "name": item.get("scriptName"),
-                "id": item.get("scriptIdPart"),
-                "version": item.get("version"),
-            }
-            for item in data
-        ]
-    except Exception as exc:
+    except requests.RequestException as exc:
         logger.error("Error fetching available indicators: %s", exc)
-        return []
+        raise RuntimeError(f"Failed to fetch available indicators: {exc}") from exc
+    except ValueError as exc:
+        logger.error("Error parsing available indicators response: %s", exc)
+        raise RuntimeError(
+            "Failed to parse available indicators response as JSON"
+        ) from exc
+
+    if not isinstance(data, list):
+        raise ValueError("Unexpected available indicators response format")
+
+    return [
+        {
+            "name": item.get("scriptName"),
+            "id": item.get("scriptIdPart"),
+            "version": item.get("version"),
+        }
+        for item in data
+        if isinstance(item, dict)
+    ]

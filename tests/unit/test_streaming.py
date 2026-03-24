@@ -9,6 +9,7 @@ import socket
 from unittest.mock import MagicMock, patch
 
 import pytest
+import requests
 
 from tv_scraper.core.exceptions import ValidationError
 
@@ -471,6 +472,41 @@ class TestStreamer:
         assert result["data"] is None
         assert "Invalid symbol" in result["error"]
 
+    @patch("tv_scraper.streaming.streamer.fetch_available_indicators")
+    def test_get_available_indicators_returns_success_response(self, mock_fetch):
+        """get_available_indicators returns standardized success envelope."""
+        mock_fetch.return_value = [
+            {
+                "name": "Relative Strength Index",
+                "id": "STD;RSI",
+                "version": "45.0",
+            }
+        ]
+
+        from tv_scraper.streaming.streamer import Streamer
+
+        result = Streamer.get_available_indicators()
+
+        assert result["status"] == "success"
+        assert isinstance(result["data"], list)
+        assert result["data"][0]["id"] == "STD;RSI"
+        assert result["metadata"] == {}
+        assert result["error"] is None
+
+    @patch("tv_scraper.streaming.streamer.fetch_available_indicators")
+    def test_get_available_indicators_returns_failed_response(self, mock_fetch):
+        """get_available_indicators returns standardized failed envelope on errors."""
+        mock_fetch.side_effect = RuntimeError("upstream failed")
+
+        from tv_scraper.streaming.streamer import Streamer
+
+        result = Streamer.get_available_indicators()
+
+        assert result["status"] == "failed"
+        assert result["data"] is None
+        assert result["metadata"] == {}
+        assert "upstream failed" in result["error"]
+
 
 # ---------------------------------------------------------------------------
 # RealTimeData tests
@@ -727,6 +763,16 @@ class TestStreamingUtils:
         assert results[0]["name"] == "Relative Strength Index"
         assert results[0]["id"] == "STD;RSI"
         assert results[0]["version"] == "45.0"
+
+    @patch("tv_scraper.streaming.utils.requests.get")
+    def test_fetch_available_indicators_request_error_raises(self, mock_get):
+        """fetch_available_indicators raises RuntimeError on request failures."""
+        mock_get.side_effect = requests.RequestException("network down")
+
+        from tv_scraper.streaming.utils import fetch_available_indicators
+
+        with pytest.raises(RuntimeError, match="Failed to fetch available indicators"):
+            fetch_available_indicators()
 
 
 # ---------------------------------------------------------------------------
