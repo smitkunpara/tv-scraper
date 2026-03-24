@@ -6,6 +6,8 @@
 
 **A powerful, real-time Python library for extracting financial data, indicators, and ideas from TradingView.com.**
 
+> 🔥 New feature coming soon: use Python to view, edit, and run Pine Script directly in this library. Stay tuned!
+
 ---
 
 ## Attribution
@@ -111,6 +113,7 @@ if result["status"] == "success":
 - **📋 Structured Output**: All data returned as clean JSON/Python dictionaries
 - **🌍 Multi-Market Support**: 260+ exchanges across stocks, crypto, forex, and commodities
 - **⚡ Fast & Reliable**: Built with async support and robust error handling
+- **🛠️ Coming Soon**: View/edit/run Pine Script directly from Python in this library (Development in progress)
 
 ## 📋 What's Included
 
@@ -188,4 +191,3 @@ We welcome contributions! Please see our [Contributing Guide](https://smitkunpar
 ## 📄 License
 
 This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
-
