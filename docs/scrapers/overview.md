@@ -125,13 +125,3 @@ overview = Overview(export_result=True, export_type="csv")
 result = overview.get_overview(exchange="NASDAQ", symbol="AAPL")
 # File saved to export/ directory
 ```
-
-## Migration from Old API
-
-| Old API | New API |
-|---------|---------|
-| `from tradingview_scraper.symbols.overview import Overview` | `from tv_scraper.scrapers.market_data import Overview` |
-| `overview.get_symbol_overview(symbol="NASDAQ:AAPL")` | `overview.get_overview(exchange="NASDAQ", symbol="AAPL")` |
-| `overview.get_profile("NASDAQ:AAPL")` | `overview.get_profile(exchange="NASDAQ", symbol="AAPL")` |
-| Combined symbol `"EXCHANGE:SYMBOL"` | Separate `exchange` and `symbol` parameters |
-| Response: `{"status", "data", "error"}` | Response: `{"status", "data", "metadata", "error"}` |

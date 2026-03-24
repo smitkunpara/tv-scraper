@@ -106,16 +106,3 @@ result = cal.get_dividends(timestamp_from=now, timestamp_to=week_later)
 cal = Calendar(export_result=True, export_type="csv")
 result = cal.get_earnings()
 ```
-
-## Migration from `tradingview_scraper`
-
-| Old (`CalendarScraper`)                  | New (`Calendar`)                        |
-|------------------------------------------|-----------------------------------------|
-| `CalendarScraper()`                      | `Calendar()`                            |
-| `scrape_dividends(...)`                  | `get_dividends(...)`                    |
-| `scrape_earnings(...)`                   | `get_earnings(...)`                     |
-| `values=["name", "logoid"]`             | `fields=["name", "logoid"]`            |
-| Raises `ValueError` on invalid fields   | Returns error response envelope         |
-| Raises `requests.HTTPError` on failure  | Returns error response envelope         |
-| Returns `List[DividendEvent]`           | Returns `Dict[str, Any]` envelope       |
-| Fields filtered with `values` param     | Fields filtered with `fields` param     |

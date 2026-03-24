@@ -152,14 +152,3 @@ result = markets.get_data(
 markets = Markets(export_result=True, export_type="csv")
 result = markets.get_data(market="uk", sort_by="market_cap")
 ```
-
-## Migration from `tradingview_scraper`
-
-| Old (`tradingview_scraper`)                        | New (`tv_scraper`)                                     |
-|----------------------------------------------------|--------------------------------------------------------|
-| `from tradingview_scraper.symbols.markets import Markets` | `from tv_scraper.scrapers.market_data import Markets` |
-| `get_top_stocks(by="market_cap")`                  | `get_top_stocks(sort_by="market_cap")`                 |
-| `get_top_stocks(columns=[...])`                    | `get_top_stocks(fields=[...])`                         |
-| Raises `ValueError` on invalid input               | Returns error response (`status="failed"`)             |
-| Response: `{"status", "data", "total", "totalCount"}` | Response: `{"status", "data", "metadata", "error"}`  |
-| No `sort_order` parameter                          | `sort_order="desc"` (or `"asc"`) parameter added       |

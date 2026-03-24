@@ -198,14 +198,3 @@ result = screener.get_screener(
 )
 # File saved automatically
 ```
-
-## Migration from Old API
-
-| Old (`tradingview_scraper`)              | New (`tv_scraper`)                       |
-|------------------------------------------|------------------------------------------|
-| `from tradingview_scraper.symbols.screener import Screener` | `from tv_scraper.scrapers.screening import Screener` |
-| `screener.get_data(columns=[...])`         | `screener.get_screener(fields=[...])`          |
-| Raises `ValueError` on invalid market    | Returns error response envelope          |
-| `result["totalCount"]`                   | `result["metadata"]["total_available"]`  |
-| `result["total"]`                        | `result["metadata"]["total"]`            |
-| `result["status"] == "failed"`           | Same, but envelope always has all 4 keys |

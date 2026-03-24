@@ -107,19 +107,3 @@ print(f"Retrieved {result['metadata']['total']} discussions")
 scraper = Minds(export_result=True, export_type="csv")
 result = scraper.get_minds(exchange="NYSE", symbol="TSLA")
 ```
-
-## Migration from `tradingview_scraper`
-
-| Old (`tradingview_scraper`)                          | New (`tv_scraper`)                                   |
-|------------------------------------------------------|------------------------------------------------------|
-| `from tradingview_scraper.symbols.minds import Minds` | `from tv_scraper.scrapers.social import Minds`       |
-| `minds.get_data(symbol="NASDAQ:AAPL")`              | `minds.get_minds(exchange="NASDAQ", symbol="AAPL")`  |
-| Response: `{"status", "data", "total", "pages", ...}` | Response: `{"status", "data", "metadata", "error"}`  |
-| Empty results → `{"status": "failed"}`                | Empty results → `{"status": "success", "data": []}`  |
-
-### Key Changes
-
-1. **Separate `exchange` and `symbol` parameters** — no more combined `"EXCHANGE:SYMBOL"` strings.
-2. **Standard response envelope** — all responses have `status`, `data`, `metadata`, `error`.
-3. **Empty results are success** — an empty list is valid data, not an error.
-4. **Exchange validation** — invalid exchanges are caught before making HTTP calls.

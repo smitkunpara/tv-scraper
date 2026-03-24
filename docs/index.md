@@ -89,10 +89,6 @@ All methods return a **standardized response envelope**:
 
 See the [Architecture Guide](architecture.md) for details on the modular design, base classes, and data flow.
 
-## Migration from tradingview_scraper
-
-If you're upgrading from the legacy `tradingview_scraper` package, see the [Migration Guide](migration-guide.md).
-
 ## API Conventions
 
 See [API Conventions](api-conventions.md) for details on response formats, error handling, and export options.

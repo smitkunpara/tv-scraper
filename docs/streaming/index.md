@@ -69,12 +69,3 @@ print(result["data"]["ohlcv"])
 for tick in s.stream_realtime_price(exchange="BINANCE", symbol="BTCUSDT"):
     print(tick["price"], tick["change_percent"])
 ```
-
-## Migration from `tradingview_scraper`
-
-| Old API | New API |
-|---|---|
-| `Streamer().stream(exchange, symbol, ...)` | `Streamer().get_candles(exchange, symbol, ...)` |
-| Combined `exchange:symbol` params | Separate `exchange` and `symbol` args |
-| Raises exceptions on errors | Returns `{"status": "failed", ...}` |
-| `from tradingview_scraper.symbols.stream import Streamer` | `from tv_scraper.streaming import Streamer` |

@@ -96,14 +96,3 @@ sm = SymbolMarkets(export_result=True, export_type="csv")
 result = sm.get_symbol_markets(symbol="AAPL")
 # File saved to export/ directory
 ```
-
-## Migration from `tradingview_scraper`
-
-| Old (`tradingview_scraper`)             | New (`tv_scraper`)                          |
-|-----------------------------------------|---------------------------------------------|
-| `from tradingview_scraper.symbols.symbol_markets import SymbolMarkets` | `from tv_scraper.scrapers.screening import SymbolMarkets` |
-| `scrape(symbol, columns=...)` | `scrape(symbol, fields=...)` |
-| `scanner='global'` (same) | `scanner="global"` (same) |
-| Returns `{"status", "data", "total", "totalCount"}` | Returns `{"status", "data", "metadata", "error"}` |
-| `SCANNER_ENDPOINTS` dict | Uses `SCANNER_URL` constant + `SUPPORTED_SCANNERS` set |
-| `DEFAULT_COLUMNS` | `DEFAULT_FIELDS` |

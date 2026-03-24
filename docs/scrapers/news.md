@@ -4,32 +4,12 @@
 
 Scrape headlines and full article content from TradingView news providers.
 
-## Quick Start
-
-```python
-from tv_scraper.scrapers.social import News
-
-scraper = News()
-
-# Get news
-result = scraper.get_news_headlines(exchange="BINANCE", symbol="BTCUSD")
-if result["status"] == "success":
-    for item in result["data"]:
-        print(item["title"])
-
-# Get full article content using the 'id' from news
-if result["status"] == "success" and result["data"]:
-    article_id = result["data"][0]["id"]
-    content = scraper.get_news_content(story_id=article_id)
-    print(content["data"]["title"])
-```
-
 ## API Reference
 
 ### Constructor
 
 ```python
-News(export_result=False, export_type="json", timeout=10, cookie=None)
+scraper = News(export_result=False, export_type="json", timeout=10, cookie=None)
 ```
 
 | Parameter       | Type   | Default  | Description                        |
@@ -63,6 +43,47 @@ get_news_headlines(
 | `section`  | str          | `"all"`    | `all`, `esg`, `press_release`, `financial_statement` |
 | `language` | str          | `"en"`     | Language code (e.g. `"en"`, `"fr"`, `"ja"`)       |
 
+Code:
+
+```python
+result = scraper.get_news_headlines(
+    exchange="NASDAQ",
+    symbol="AAPL",
+    provider="reuters",
+    sort_by="latest",
+)
+
+print(result)
+```
+
+Output:
+
+```json
+{
+  "status": "success",
+  "data": [
+    {
+      "id": "tag:reuters.com,2026:newsml_L4N3Z9104:0",
+      "title": "Apple shares rise on strong guidance",
+      "shortDescription": "Apple reported stronger than expected guidance...",
+      "published": 1705350000,
+      "storyPath": "/news/story_12345-apple-shares-rise/"
+    }
+  ],
+  "metadata": {
+    "exchange": "NASDAQ",
+    "symbol": "AAPL",
+    "total": 1
+  },
+  "error": null
+}
+```
+
+Other details:
+
+- `metadata.total` reflects the number of returned items in this response.
+- Use the headline `id` with `get_news_content()`.
+
 ### `get_news_content()`
 
 ```python
@@ -77,47 +98,16 @@ get_news_content(
 | `story_id`   | str          | —       | Story ID from news API (e.g. `"tag:reuters.com,2026:newsml_L4N3Z9104:0"`) |
 | `language`   | str          | `"en"`  | Language code (e.g. `"en"`, `"fr"`)            |
 
-## Response Format
+Code:
 
-All methods return a standardized response envelope:
-
-```json
-{
-  "status": "success",
-  "data": [
-    {
-      "id": "tag:reuters.com,2026:newsml_L4N3Z9104:0",
-      "title": "Bitcoin Surges as Institutional Interest Grows",
-      "shortDescription": "Bitcoin reached new highs today as institutional investors...",
-      "published": 1705350000,
-      "storyPath": "/news/story_12345-bitcoin-surges/"
-    },
-    ...
-  ],
-  "metadata": {
-    "exchange": "BINANCE",
-    "symbol": "BTCUSD",
-    "total": 25
-  },
-  "error": null
-}
+```python
+result = scraper.get_news_content(
+    story_id="tag:reuters.com,2026:newsml_L4N3Z9104:0",
+    language="en",
+)
 ```
 
-### News Schema
-
-Each item in the `data` array contains:
-
-```json
-{
-  "id": "tag:reuters.com,2026:newsml_L4N3Z9104:0",
-  "title": "Bitcoin Hits New High",
-  "shortDescription": "Brief summary of the news article...",
-  "published": 1678900000,
-  "storyPath": "/news/story/12345"
-}
-```
-
-### Article Content Response
+Output:
 
 ```json
 {
@@ -134,25 +124,3 @@ Each item in the `data` array contains:
   "error": null
 }
 ```
-
-## Migration from `NewsScraper`
-
-| Old (`tradingview_scraper`)                    | New (`tv_scraper`)                            |
-|------------------------------------------------|-----------------------------------------------|
-| `from tradingview_scraper.symbols.news import NewsScraper` | `from tv_scraper.scrapers.social import News` |
-| `NewsScraper(cookie=cookie)`                   | `News(cookie=cookie)`                         |
-| `scraper.get_headlines(symbol=..., exchange=...)` | `scraper.get_news_headlines(exchange=..., symbol=...)` |
-| `sort="latest"`                                | `sort_by="latest"`                            |
-| `scraper.scrape_news_content(story_path)`      | `scraper.get_news_content(story_id)`          |
-| Returns `list` of headlines                    | Returns `{"status", "data", "metadata", "error"}` |
-| Raises `ValueError` / `RuntimeError`           | Returns error response, never raises          |
-
-### Key Changes
-
-1. **Class rename**: `NewsScraper` → `News`
-2. **Parameter order**: `exchange` before `symbol` (was `symbol` first)
-3. **Parameter rename**: `sort` → `sort_by`
-4. **Method rename**: `scrape_news_content()` → `get_news_content()`
-5. **Response format**: All methods return a standardized envelope dict instead of raw lists/dicts
-6. **Error handling**: Never raises — always returns `{"status": "failed", ...}` on error
-7. **Inherits**: `BaseScraper` for shared functionality (export, validation, HTTP)
