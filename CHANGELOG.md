@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- Pine script management scraper (`tv_scraper.scrapers.scripts.Pine`) with endpoints:
+  - `list_saved_scripts()` (GET /pine-facade/list?filter=saved)
+  - `validate_script(source)` (POST /pine-facade/translate_light?v=3)
+  - `create_script(name, source)` (POST /pine-facade/save/new)
+  - `edit_script(pine_id, name, source)` (POST /pine-facade/save/next/{pine_id})
+  - `delete_script(pine_id)` (POST /pine-facade/delete/{pine_id})
+
+### Changed
+- Pine response format:
+  - `create_script` and `edit_script` now return `data.warnings` when compiler warnings exist.
+  - `list_saved_scripts` keeps `modified` in list entries.
+  - `metadata` is empty when no context is returned.
+
+### Fixed
+- Unified Pine API metadata handling to align with existing scraper conventions.
+
 ## [1.1.0] - 2026-02-20
 
 ### ✨ API Standardization & Strict Typing
