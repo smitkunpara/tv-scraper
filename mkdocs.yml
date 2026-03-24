@@ -56,6 +56,7 @@ nav:
   - API Conventions: api-conventions.md
   - Scrapers:
     - Overview: scrapers/overview.md
+    - Pine: scrapers/pine.md
     - Technicals: scrapers/technicals.md
     - Fundamentals: scrapers/fundamentals.md
     - Markets: scrapers/markets.md

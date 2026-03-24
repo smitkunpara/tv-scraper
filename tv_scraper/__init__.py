@@ -15,6 +15,7 @@ from tv_scraper.scrapers.screening.market_movers import MarketMovers
 # Screening
 from tv_scraper.scrapers.screening.screener import Screener
 from tv_scraper.scrapers.screening.symbol_markets import SymbolMarkets
+from tv_scraper.scrapers.scripts.pine import Pine
 
 # Social
 from tv_scraper.scrapers.social.ideas import Ideas
@@ -35,6 +36,7 @@ __all__ = [
     "News",
     "Options",
     "Overview",
+    "Pine",
     "RealTimeData",
     "Screener",
     "Streamer",
