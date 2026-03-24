@@ -158,6 +158,7 @@ class TestValidateScript:
         assert result["status"] == STATUS_SUCCESS
         assert result["error"] is None
         assert result["metadata"]["warnings"] == [{"message": "sample warning"}]
+        assert result["metadata"]["source"] == "indicator('x')\nplot(close)"
 
 
 class TestCreateScript:
@@ -197,7 +198,8 @@ class TestCreateScript:
         assert result["data"]["id"] == "USER;new123"
         assert result["data"]["name"] == "My Script"
         assert result["data"]["warnings"] == []
-        assert result["metadata"] == {}
+        assert result["metadata"]["name"] == "My Script"
+        assert result["metadata"]["source"] == "indicator('My Script')"
 
     @patch("tv_scraper.scrapers.scripts.pine.Pine.validate_script")
     def test_create_script_stops_when_validation_fails(
@@ -264,7 +266,9 @@ class TestEditScript:
         assert result["data"]["id"] == "USER;abc123"
         assert result["data"]["name"] == "My Script Updated"
         assert result["data"]["warnings"] == []
-        assert result["metadata"] == {}
+        assert result["metadata"]["pine_id"] == "USER;abc123"
+        assert result["metadata"]["name"] == "My Script Updated"
+        assert result["metadata"]["source"] == "indicator('My Script Updated')"
 
     @patch("tv_scraper.scrapers.scripts.pine.Pine.validate_script")
     def test_edit_script_stops_on_validation_error(
@@ -289,47 +293,6 @@ class TestEditScript:
         assert result["error"] == "Pine script validation failed."
 
 
-class TestCreateFromFile:
-    """Tests for file-based create flow."""
-
-    @patch("tv_scraper.scrapers.scripts.pine.Pine.create_script")
-    def test_create_script_from_file_success(
-        self,
-        mock_create_script: MagicMock,
-        tmp_path: Any,
-        pine: Pine,
-    ) -> None:
-        source_file = tmp_path / "sample.pine"
-        source_file.write_text("//@version=6\nindicator('x')\nplot(close)\n")
-
-        mock_create_script.return_value = {
-            "status": STATUS_SUCCESS,
-            "data": {"id": "USER;abc123", "name": "x"},
-            "metadata": {},
-            "error": None,
-        }
-
-        result = pine.create_script_from_file(str(source_file), name="x")
-
-        assert result["status"] == STATUS_SUCCESS
-        mock_create_script.assert_called_once()
-
-    def test_create_script_from_file_rejects_binary(
-        self,
-        tmp_path: Any,
-        pine: Pine,
-    ) -> None:
-        binary_file = tmp_path / "sample.o"
-        binary_file.write_bytes(b"\x00\x01\x02")
-
-        result = pine.create_script_from_file(str(binary_file), name="x")
-
-        assert result["status"] == STATUS_FAILED
-        assert (
-            "binary/object files are not supported" in (result["error"] or "").lower()
-        )
-
-
 class TestDeleteScript:
     """Tests for deleting Pine scripts."""
 
@@ -349,7 +312,7 @@ class TestDeleteScript:
         assert result["status"] == STATUS_SUCCESS
         assert result["error"] is None
         assert result["data"] == {"id": "USER;abc123", "deleted": True}
-        assert result["metadata"] == {}
+        assert result["metadata"]["pine_id"] == "USER;abc123"
 
     def test_delete_script_empty_id_returns_error(self, pine: Pine) -> None:
         result = pine.delete_script("   ")
