@@ -20,7 +20,7 @@ The project follows a modular architecture under the `tv_scraper` package:
     - `social/`: Ideas, Minds, News.
     - `screening/`: Screener, Market Movers, Symbol Markets.
     - `events/`: Calendar (dividends, earnings).
-- `tv_scraper/streaming/`: WebSocket implementations for live data (`Streamer`, `RealTimeData`).
+- `tv_scraper/streaming/`: WebSocket implementations for live data (`Streamer`).
     - `Streamer` includes `get_available_indicators()` to retrieve valid indicator IDs and versions.
     - **Performance optimizations (v1.0.2+)**: TCP_NODELAY socket option, dual session subscriptions (quote + chart), and enhanced message processing for low-latency streaming (~3-4 second update frequency).
 - `tv_scraper/utils/`: HTTP wrappers, I/O utilities, and general helpers.

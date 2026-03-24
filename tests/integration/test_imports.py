@@ -75,11 +75,6 @@ class TestTopLevelImports:
 
         assert Streamer is not None
 
-    def test_import_realtime_data(self) -> None:
-        from tv_scraper import RealTimeData
-
-        assert RealTimeData is not None
-
     def test_import_pine(self) -> None:
         from tv_scraper import Pine
 
@@ -124,9 +119,9 @@ class TestSubpackageImports:
         assert Pine is not None
 
     def test_import_from_streaming(self) -> None:
-        from tv_scraper.streaming import RealTimeData, Streamer
+        from tv_scraper.streaming import Streamer
 
-        assert all(cls is not None for cls in [Streamer, RealTimeData])
+        assert Streamer is not None
 
 
 class TestCoreImports:
@@ -190,10 +185,10 @@ class TestVersionAndAll:
             )
 
     def test_all_count(self) -> None:
-        """__all__ should have exactly 15 entries."""
+        """__all__ should have exactly 14 entries."""
         import tv_scraper
 
-        assert len(tv_scraper.__all__) == 15
+        assert len(tv_scraper.__all__) == 14
 
     def test_module_is_importable(self) -> None:
         """tv_scraper should be importable as a module."""

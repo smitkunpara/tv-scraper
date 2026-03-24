@@ -71,7 +71,6 @@ nav:
   - Streaming:
     - Overview: streaming/index.md
     - Streamer: streaming/streamer.md
-    - Real-time Price: streaming/realtime-price.md
   - Reference:
     - Supported Data: supported_data.md
     - Getting Cookies: getting_cookies.md

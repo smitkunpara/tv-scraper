@@ -84,7 +84,6 @@ All methods return a **standardized response envelope**:
 | Module | Description |
 |--------|-------------|
 | [Streamer](streaming/streamer.md) | Real-time OHLCV + indicator streaming |
-| [RealTimeData](streaming/realtime-price.md) | Simple OHLCV and watchlist streaming |
 
 ## Architecture
 

@@ -109,7 +109,7 @@ print(result["data"])
 ### Streaming
 
 ```python
-from tv_scraper import Streamer, RealTimeData
+from tv_scraper import Streamer
 
 # Get historical candles with indicators
 streamer = Streamer(export_result=True, export_type="json")
@@ -120,9 +120,8 @@ result = streamer.get_candles(
 )
 
 # Real-time price streaming
-rt = RealTimeData()
-for packet in rt.get_ohlcv(exchange="BINANCE", symbol="BTCUSDT"):
-    print(packet)
+for tick in streamer.stream_realtime_price(exchange="BINANCE", symbol="BTCUSDT"):
+    print(tick["price"])
 ```
 
 ## Response Format

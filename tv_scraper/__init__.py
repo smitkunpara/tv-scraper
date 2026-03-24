@@ -21,7 +21,6 @@ from tv_scraper.scrapers.scripts.pine import Pine
 from tv_scraper.scrapers.social.ideas import Ideas
 from tv_scraper.scrapers.social.minds import Minds
 from tv_scraper.scrapers.social.news import News
-from tv_scraper.streaming.price import RealTimeData
 
 # Streaming
 from tv_scraper.streaming.streamer import Streamer
@@ -37,7 +36,6 @@ __all__ = [
     "Options",
     "Overview",
     "Pine",
-    "RealTimeData",
     "Screener",
     "Streamer",
     "SymbolMarkets",

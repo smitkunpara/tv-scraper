@@ -23,6 +23,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Unified Pine API metadata handling to align with existing scraper conventions.
+- `Streamer.get_available_indicators()` now returns standardized response envelope (`status`, `data`, `metadata`, `error`) and propagates upstream fetch errors appropriately.
+
+### Removed
+- Removed low-level `RealTimeData` streaming API (`tv_scraper.streaming.price.RealTimeData`).
+- Removed RealTimeData public exports from `tv_scraper` and `tv_scraper.streaming`.
+- Removed RealTimeData documentation page (`docs/streaming/realtime-price.md`) and related navigation links.
 
 ## [1.1.0] - 2026-02-20
 

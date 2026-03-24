@@ -33,7 +33,6 @@ from tv_scraper.scrapers.market_data.technicals import Technicals
 | `tradingview_scraper.symbols.market_movers.MarketMovers` | `tv_scraper.scrapers.screening.market_movers.MarketMovers` |
 | `tradingview_scraper.symbols.symbol_markets.SymbolMarkets` | `tv_scraper.scrapers.screening.symbol_markets.SymbolMarkets` |
 | `tradingview_scraper.symbols.cal.Calendar` | `tv_scraper.scrapers.events.calendar.Calendar` |
-| `tradingview_scraper.symbols.stream.price.RealTimeData` | `tv_scraper.streaming.price.RealTimeData` |
 | `tradingview_scraper.symbols.stream.streamer.Streamer` | `tv_scraper.streaming.streamer.Streamer` |
 
 ### Convenience Imports
@@ -46,7 +45,7 @@ from tv_scraper import (
     Ideas, Minds, News,
     Screener, MarketMovers, SymbolMarkets,
     Calendar,
-    Streamer, RealTimeData,
+    Streamer,
 )
 ```
 
@@ -84,7 +83,6 @@ from tv_scraper import (
 | Minds | `Minds.get_minds()` | `Minds.get_minds()` |
 | Markets | `Markets.get_markets()` | `Markets.get_markets()` |
 | Streamer | `Streamer.stream()` | `Streamer.get_candles()` |
-| RealTimeData | `RealTimeData.get_ohlcv()` | `RealTimeData.get_ohlcv()` |
 
 ## Parameter Changes
 
