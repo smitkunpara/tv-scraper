@@ -217,3 +217,108 @@ class TestCreateScript:
         result = pine.create_script(name="   ", source="indicator('x')")
         assert result["status"] == STATUS_FAILED
         assert "name cannot be empty" in (result["error"] or "").lower()
+
+
+class TestEditScript:
+    """Tests for editing existing Pine scripts."""
+
+    @patch("tv_scraper.scrapers.scripts.pine.Pine.validate_script")
+    @patch("tv_scraper.core.base.BaseScraper._make_request")
+    def test_edit_script_success(
+        self,
+        mock_request: MagicMock,
+        mock_validate: MagicMock,
+        pine: Pine,
+    ) -> None:
+        mock_validate.return_value = {
+            "status": STATUS_SUCCESS,
+            "data": None,
+            "metadata": {"warnings": []},
+            "error": None,
+        }
+        mock_request.return_value = _mock_response(
+            {
+                "success": True,
+                "result": {
+                    "metaInfo": {
+                        "scriptIdPart": "USER;abc123",
+                        "description": "My Script Updated",
+                        "shortDescription": "My Script Updated",
+                    }
+                },
+            }
+        )
+
+        result = pine.edit_script(
+            pine_id="USER;abc123",
+            name="My Script Updated",
+            source="indicator('My Script Updated')",
+        )
+
+        assert result["status"] == STATUS_SUCCESS
+        assert result["error"] is None
+        assert result["data"]["id"] == "USER;abc123"
+        assert result["data"]["name"] == "My Script Updated"
+
+    @patch("tv_scraper.scrapers.scripts.pine.Pine.validate_script")
+    def test_edit_script_stops_on_validation_error(
+        self,
+        mock_validate: MagicMock,
+        pine: Pine,
+    ) -> None:
+        mock_validate.return_value = {
+            "status": STATUS_FAILED,
+            "data": None,
+            "metadata": {"errors": [{"message": "invalid"}]},
+            "error": "Pine script validation failed.",
+        }
+
+        result = pine.edit_script(
+            pine_id="USER;abc123",
+            name="My Script",
+            source="bad",
+        )
+
+        assert result["status"] == STATUS_FAILED
+        assert result["error"] == "Pine script validation failed."
+
+
+class TestCreateFromFile:
+    """Tests for file-based create flow."""
+
+    @patch("tv_scraper.scrapers.scripts.pine.Pine.create_script")
+    def test_create_script_from_file_success(
+        self,
+        mock_create_script: MagicMock,
+        tmp_path: Any,
+        pine: Pine,
+    ) -> None:
+        source_file = tmp_path / "sample.pine"
+        source_file.write_text("//@version=6\nindicator('x')\nplot(close)\n")
+
+        mock_create_script.return_value = {
+            "status": STATUS_SUCCESS,
+            "data": {"id": "USER;abc123", "name": "x", "modified": 0},
+            "metadata": {},
+            "error": None,
+        }
+
+        result = pine.create_script_from_file(str(source_file), name="x")
+
+        assert result["status"] == STATUS_SUCCESS
+        mock_create_script.assert_called_once()
+
+    def test_create_script_from_file_rejects_binary(
+        self,
+        tmp_path: Any,
+        pine: Pine,
+    ) -> None:
+        binary_file = tmp_path / "sample.o"
+        binary_file.write_bytes(b"\x00\x01\x02")
+
+        result = pine.create_script_from_file(str(binary_file), name="x")
+
+        assert result["status"] == STATUS_FAILED
+        assert (
+            "binary/object files are not supported" in (result["error"] or "").lower()
+        )

@@ -7,6 +7,8 @@ The Pine scraper provides authenticated access to TradingView Pine endpoints. It
 - Listing your saved Pine scripts
 - Validating Pine source code
 - Creating new Pine scripts
+- Editing existing Pine scripts
+- Creating scripts from a local file path
 
 Cookie authentication is mandatory for all Pine operations.
 
@@ -70,6 +72,37 @@ Create flow:
 2. Stop if validation has errors
 3. Continue with create request when warnings or no warnings
 
+### `edit_script`
+
+```python
+edit_script(pine_id: str, name: str, source: str) -> dict[str, Any]
+```
+
+Edits an existing script using `save/next/{pine_id}` with query params:
+
+- `allow_create_new=false`
+- `name=<script-name>`
+
+Edit flow:
+
+1. Validate source (`validate_script`)
+2. Stop if validation has errors
+3. Continue with edit request when warnings or no warnings
+
+### `create_script_from_file`
+
+```python
+create_script_from_file(
+    file_path: str,
+    name: str,
+    allow_overwrite: bool = True,
+) -> dict[str, Any]
+```
+
+Reads a UTF-8 text file from disk, validates it, then creates a new Pine script.
+
+Binary/object files are rejected.
+
 ### Output Fields
 
 Each item in `data` contains only:
@@ -125,6 +158,26 @@ print("Warnings:", validation["metadata"].get("warnings", []))
 if validation["status"] == "success":
     created = pine.create_script(name="My Script", source=source_code)
     print(created)
+
+edited = pine.edit_script(
+    pine_id="USER;cf7b5c71264f45ccb4d298d9ec1eaf88",
+    name="My Script v2",
+    source=source_code,
+)
+print(edited)
+
+created_from_file = pine.create_script_from_file(
+    file_path="./my_script.pine",
+    name="My Script From File",
+)
+print(created_from_file)
+
+# Optional interactive flow
+file_path = input("Enter source file path: ").strip()
+script_name = input("Enter script name: ").strip()
+script_type = input("Enter type (indicator/strategy/library): ").strip()
+print("Script type selected:", script_type)
+print(pine.create_script_from_file(file_path=file_path, name=script_name))
 ```
 
 ## Errors

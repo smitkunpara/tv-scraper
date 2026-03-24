@@ -3,6 +3,7 @@
 import logging
 import os
 import re
+from pathlib import Path
 from typing import Any
 
 from tv_scraper.core.base import BaseScraper
@@ -220,6 +221,102 @@ class Pine(BaseScraper):
             warnings=validation.get("metadata", {}).get("warnings", []),
         )
 
+    def edit_script(self, pine_id: str, name: str, source: str) -> dict[str, Any]:
+        """Edit an existing Pine script by script ID.
+
+        Args:
+            pine_id: Script identifier (for example, ``USER;abc123``).
+            name: Updated script name.
+            source: Updated Pine source code.
+
+        Returns:
+            Standardized response dict.
+        """
+        cookie_error = self._validate_cookie_required()
+        if cookie_error:
+            return cookie_error
+
+        if not pine_id.strip():
+            return self._error_response("Pine script ID cannot be empty.")
+        if not name.strip():
+            return self._error_response("Script name cannot be empty.")
+        if not source.strip():
+            return self._error_response("Source code cannot be empty.")
+
+        validation = self.validate_script(source)
+        if validation["status"] != "success":
+            return self._error_response(
+                validation["error"] or "Pine script validation failed.",
+                **validation.get("metadata", {}),
+            )
+
+        headers = dict(self._headers)
+        headers["cookie"] = self._cookie or ""
+
+        url = f"{PINE_FACADE_BASE_URL}/save/next/{pine_id}"
+        params = {
+            "allow_create_new": "false",
+            "name": name,
+        }
+
+        try:
+            response = self._make_request(
+                url,
+                method="POST",
+                headers=headers,
+                params=params,
+                files={"source": (None, source)},
+            )
+            payload = response.json()
+        except Exception as exc:
+            logger.error("Failed to edit Pine script '%s': %s", pine_id, exc)
+            return self._error_response(self._map_request_error(exc))
+
+        script_result = self._extract_save_result(payload)
+        if script_result is None:
+            return self._error_response(
+                "Unexpected response format from Pine edit endpoint."
+            )
+
+        data = {
+            "id": script_result.get("scriptIdPart", "") or pine_id,
+            "name": script_result.get("shortDescription")
+            or script_result.get("description")
+            or name,
+            "modified": script_result.get("modified", 0),
+        }
+        return self._success_response(
+            data,
+            warnings=validation.get("metadata", {}).get("warnings", []),
+        )
+
+    def create_script_from_file(
+        self,
+        file_path: str,
+        name: str,
+        allow_overwrite: bool = True,
+    ) -> dict[str, Any]:
+        """Create a new Pine script from a local text file.
+
+        This helper reads local source code, validates it, then calls
+        :meth:`create_script`.
+        """
+        if not file_path.strip():
+            return self._error_response("File path cannot be empty.")
+
+        try:
+            source = self._read_source_file(file_path)
+        except ValueError as exc:
+            return self._error_response(str(exc))
+        except OSError as exc:
+            return self._error_response(f"Failed to read file '{file_path}': {exc}")
+
+        return self.create_script(
+            name=name,
+            source=source,
+            allow_overwrite=allow_overwrite,
+        )
+
     def _validate_cookie_required(self) -> dict[str, Any] | None:
         if self._cookie:
             return None
@@ -253,6 +350,29 @@ class Pine(BaseScraper):
             "shortDescription": meta_info.get("shortDescription", ""),
             "modified": result_obj.get("modified", 0),
         }
+
+    @staticmethod
+    def _read_source_file(file_path: str) -> str:
+        path = Path(file_path)
+        if not path.exists() or not path.is_file():
+            raise ValueError(f"File does not exist: {file_path}")
+
+        if path.suffix.lower() in {".o", ".obj", ".so", ".a", ".pyc"}:
+            raise ValueError("Binary/object files are not supported for Pine source.")
+
+        content = path.read_bytes()
+        if b"\x00" in content[:1024]:
+            raise ValueError("Binary/object files are not supported for Pine source.")
+
+        try:
+            text = content.decode("utf-8")
+        except UnicodeDecodeError as exc:
+            raise ValueError("Source file must be UTF-8 text.") from exc
+
+        if not text.strip():
+            raise ValueError("Source file is empty.")
+
+        return text
 
     @staticmethod
     def _map_request_error(exc: Exception) -> str:
