@@ -36,7 +36,9 @@ class TestInheritance:
 class TestCookieValidation:
     """Ensure cookie is required for Pine operations."""
 
-    def test_missing_cookie_returns_error(self) -> None:
+    def test_missing_cookie_returns_error(self, monkeypatch: Any) -> None:
+        monkeypatch.delenv("TRADINGVIEW_COOKIE", raising=False)
+        monkeypatch.delenv("TV_COOKIE", raising=False)
         pine = Pine(cookie=None)
 
         result = pine.list_saved_scripts()

@@ -11,6 +11,7 @@ from tv_scraper.core.base import BaseScraper
 logger = logging.getLogger(__name__)
 
 PINE_FACADE_BASE_URL = "https://pine-facade.tradingview.com/pine-facade"
+PINE_ORIGIN = "https://in.tradingview.com"
 
 
 class Pine(BaseScraper):
@@ -51,8 +52,7 @@ class Pine(BaseScraper):
         if cookie_error:
             return cookie_error
 
-        headers = dict(self._headers)
-        headers["cookie"] = self._cookie or ""
+        headers = self._build_pine_headers()
 
         url = f"{PINE_FACADE_BASE_URL}/list"
         params = {"filter": "saved"}
@@ -100,8 +100,7 @@ class Pine(BaseScraper):
         if not source.strip():
             return self._error_response("Source code cannot be empty.")
 
-        headers = dict(self._headers)
-        headers["cookie"] = self._cookie or ""
+        headers = self._build_pine_headers()
 
         url = f"{PINE_FACADE_BASE_URL}/translate_light"
         params = {"v": "3"}
@@ -181,8 +180,7 @@ class Pine(BaseScraper):
                 **validation.get("metadata", {}),
             )
 
-        headers = dict(self._headers)
-        headers["cookie"] = self._cookie or ""
+        headers = self._build_pine_headers()
 
         url = f"{PINE_FACADE_BASE_URL}/save/new"
         params = {
@@ -250,8 +248,7 @@ class Pine(BaseScraper):
                 **validation.get("metadata", {}),
             )
 
-        headers = dict(self._headers)
-        headers["cookie"] = self._cookie or ""
+        headers = self._build_pine_headers()
 
         url = f"{PINE_FACADE_BASE_URL}/save/next/{pine_id}"
         params = {
@@ -324,6 +321,15 @@ class Pine(BaseScraper):
             "TradingView cookie is required for Pine Script operations. "
             "Provide it via the cookie argument or TRADINGVIEW_COOKIE environment variable."
         )
+
+    def _build_pine_headers(self) -> dict[str, str]:
+        """Build headers expected by Pine facade endpoints."""
+        headers = dict(self._headers)
+        headers["cookie"] = self._cookie or ""
+        headers["accept"] = "*/*"
+        headers["origin"] = PINE_ORIGIN
+        headers["referer"] = f"{PINE_ORIGIN}/"
+        return headers
 
     @staticmethod
     def _map_script_item(item: dict[str, Any]) -> dict[str, Any]:
