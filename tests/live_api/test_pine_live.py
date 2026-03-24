@@ -61,8 +61,8 @@ class TestLivePine:
 
         assert result["status"] == STATUS_SUCCESS, result.get("error")
         metadata = result.get("metadata", {})
-        assert "warnings" in metadata
-        assert isinstance(metadata["warnings"], list)
+        warnings = metadata.get("warnings", [])
+        assert isinstance(warnings, list)
 
     def test_live_create_edit_list_delete_workflow(self, _require_cookie: str) -> None:
         """Verify create, edit, list, and delete workflow end-to-end."""

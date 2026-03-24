@@ -72,7 +72,7 @@ class TestListSavedScripts:
 
         assert result["status"] == STATUS_SUCCESS
         assert result["error"] is None
-        assert result["metadata"]["total"] == 1
+        assert result["metadata"] == {}
         assert result["data"] == [
             {"id": "USER;abc123", "name": "My Script", "modified": 1774357749}
         ]
@@ -196,6 +196,8 @@ class TestCreateScript:
         assert result["error"] is None
         assert result["data"]["id"] == "USER;new123"
         assert result["data"]["name"] == "My Script"
+        assert result["data"]["warnings"] == []
+        assert result["metadata"] == {}
 
     @patch("tv_scraper.scrapers.scripts.pine.Pine.validate_script")
     def test_create_script_stops_when_validation_fails(
@@ -261,6 +263,8 @@ class TestEditScript:
         assert result["error"] is None
         assert result["data"]["id"] == "USER;abc123"
         assert result["data"]["name"] == "My Script Updated"
+        assert result["data"]["warnings"] == []
+        assert result["metadata"] == {}
 
     @patch("tv_scraper.scrapers.scripts.pine.Pine.validate_script")
     def test_edit_script_stops_on_validation_error(
@@ -300,7 +304,7 @@ class TestCreateFromFile:
 
         mock_create_script.return_value = {
             "status": STATUS_SUCCESS,
-            "data": {"id": "USER;abc123", "name": "x", "modified": 0},
+            "data": {"id": "USER;abc123", "name": "x"},
             "metadata": {},
             "error": None,
         }
@@ -345,6 +349,7 @@ class TestDeleteScript:
         assert result["status"] == STATUS_SUCCESS
         assert result["error"] is None
         assert result["data"] == {"id": "USER;abc123", "deleted": True}
+        assert result["metadata"] == {}
 
     def test_delete_script_empty_id_returns_error(self, pine: Pine) -> None:
         result = pine.delete_script("   ")

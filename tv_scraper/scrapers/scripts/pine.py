@@ -82,7 +82,7 @@ class Pine(BaseScraper):
                 data=scripts, symbol="pine_saved_scripts", data_category="pine"
             )
 
-        return self._success_response(scripts, total=len(scripts), filter="saved")
+        return self._success_response(scripts)
 
     def validate_script(self, source: str) -> dict[str, Any]:
         """Validate Pine source code using TradingView translate_light endpoint.
@@ -143,11 +143,9 @@ class Pine(BaseScraper):
                 warnings=warnings,
             )
 
-        return self._success_response(
-            None,
-            errors=[],
-            warnings=warnings,
-        )
+        if warnings:
+            return self._success_response(None, warnings=warnings)
+        return self._success_response(None)
 
     def create_script(
         self,
@@ -213,12 +211,9 @@ class Pine(BaseScraper):
             "name": script_result.get("shortDescription")
             or script_result.get("description")
             or name,
-            "modified": script_result.get("modified", 0),
+            "warnings": validation.get("metadata", {}).get("warnings", []),
         }
-        return self._success_response(
-            data,
-            warnings=validation.get("metadata", {}).get("warnings", []),
-        )
+        return self._success_response(data)
 
     def edit_script(self, pine_id: str, name: str, source: str) -> dict[str, Any]:
         """Edit an existing Pine script by script ID.
@@ -282,12 +277,9 @@ class Pine(BaseScraper):
             "name": script_result.get("shortDescription")
             or script_result.get("description")
             or name,
-            "modified": script_result.get("modified", 0),
+            "warnings": validation.get("metadata", {}).get("warnings", []),
         }
-        return self._success_response(
-            data,
-            warnings=validation.get("metadata", {}).get("warnings", []),
-        )
+        return self._success_response(data)
 
     def delete_script(self, pine_id: str) -> dict[str, Any]:
         """Delete an existing Pine script by script ID.
@@ -326,10 +318,7 @@ class Pine(BaseScraper):
                 response=response.text,
             )
 
-        return self._success_response(
-            {"id": pine_id, "deleted": True},
-            response="ok",
-        )
+        return self._success_response({"id": pine_id, "deleted": True})
 
     def create_script_from_file(
         self,

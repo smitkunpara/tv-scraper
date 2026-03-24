@@ -73,6 +73,10 @@ Create flow:
 2. Stop if validation has errors
 3. Continue with create request when warnings or no warnings
 
+For `create_script` and `edit_script`, compiler warnings are returned in the success `data` under `data["warnings"]`.
+These responses return `id`, `name`, and `warnings` in `data`.
+The `modified` field is returned by `list_saved_scripts` items.
+
 ### `edit_script`
 
 ```python
@@ -141,6 +145,8 @@ Each item in `data` contains only:
     "error": None,
 }
 ```
+
+For create/edit success, metadata echoes input values (for example `name`, `pine_id`, `allow_overwrite`) and warnings are returned in `data["warnings"]`.
 
 ## Example
 
