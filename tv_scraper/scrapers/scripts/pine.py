@@ -5,6 +5,7 @@ import os
 import re
 from pathlib import Path
 from typing import Any
+from urllib.parse import quote
 
 from tv_scraper.core.base import BaseScraper
 
@@ -250,7 +251,8 @@ class Pine(BaseScraper):
 
         headers = self._build_pine_headers()
 
-        url = f"{PINE_FACADE_BASE_URL}/save/next/{pine_id}"
+        encoded_pine_id = quote(pine_id, safe="")
+        url = f"{PINE_FACADE_BASE_URL}/save/next/{encoded_pine_id}"
         params = {
             "allow_create_new": "false",
             "name": name,
@@ -285,6 +287,48 @@ class Pine(BaseScraper):
         return self._success_response(
             data,
             warnings=validation.get("metadata", {}).get("warnings", []),
+        )
+
+    def delete_script(self, pine_id: str) -> dict[str, Any]:
+        """Delete an existing Pine script by script ID.
+
+        Args:
+            pine_id: Script identifier (for example, ``USER;abc123``).
+
+        Returns:
+            Standardized response dict.
+        """
+        cookie_error = self._validate_cookie_required()
+        if cookie_error:
+            return cookie_error
+
+        if not pine_id.strip():
+            return self._error_response("Pine script ID cannot be empty.")
+
+        headers = self._build_pine_headers()
+        encoded_pine_id = quote(pine_id, safe="")
+        url = f"{PINE_FACADE_BASE_URL}/delete/{encoded_pine_id}"
+
+        try:
+            response = self._make_request(
+                url,
+                method="POST",
+                headers=headers,
+            )
+            response_text = response.text.strip().strip('"').lower()
+        except Exception as exc:
+            logger.error("Failed to delete Pine script '%s': %s", pine_id, exc)
+            return self._error_response(self._map_request_error(exc))
+
+        if response_text != "ok":
+            return self._error_response(
+                "Unexpected response from Pine delete endpoint.",
+                response=response.text,
+            )
+
+        return self._success_response(
+            {"id": pine_id, "deleted": True},
+            response="ok",
         )
 
     def create_script_from_file(

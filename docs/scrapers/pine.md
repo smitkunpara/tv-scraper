@@ -8,6 +8,7 @@ The Pine scraper provides authenticated access to TradingView Pine endpoints. It
 - Validating Pine source code
 - Creating new Pine scripts
 - Editing existing Pine scripts
+- Deleting existing Pine scripts
 - Creating scripts from a local file path
 
 Cookie authentication is mandatory for all Pine operations.
@@ -103,6 +104,16 @@ Reads a UTF-8 text file from disk, validates it, then creates a new Pine script.
 
 Binary/object files are rejected.
 
+### `delete_script`
+
+```python
+delete_script(pine_id: str) -> dict[str, Any]
+```
+
+Deletes an existing script using `POST /pine-facade/delete/{pine_id}`.
+
+The endpoint has no request payload. Successful response body is the string `"ok"`.
+
 ### Output Fields
 
 Each item in `data` contains only:
@@ -165,6 +176,9 @@ edited = pine.edit_script(
     source=source_code,
 )
 print(edited)
+
+deleted = pine.delete_script("USER;cf7b5c71264f45ccb4d298d9ec1eaf88")
+print(deleted)
 
 created_from_file = pine.create_script_from_file(
     file_path="./my_script.pine",

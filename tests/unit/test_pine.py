@@ -324,3 +324,46 @@ class TestCreateFromFile:
         assert (
             "binary/object files are not supported" in (result["error"] or "").lower()
         )
+
+
+class TestDeleteScript:
+    """Tests for deleting Pine scripts."""
+
+    @patch("tv_scraper.core.base.BaseScraper._make_request")
+    def test_delete_script_success(
+        self,
+        mock_request: MagicMock,
+        pine: Pine,
+    ) -> None:
+        response = MagicMock()
+        response.status_code = 200
+        response.text = '"ok"'
+        mock_request.return_value = response
+
+        result = pine.delete_script("USER;abc123")
+
+        assert result["status"] == STATUS_SUCCESS
+        assert result["error"] is None
+        assert result["data"] == {"id": "USER;abc123", "deleted": True}
+
+    def test_delete_script_empty_id_returns_error(self, pine: Pine) -> None:
+        result = pine.delete_script("   ")
+
+        assert result["status"] == STATUS_FAILED
+        assert "id cannot be empty" in (result["error"] or "").lower()
+
+    @patch("tv_scraper.core.base.BaseScraper._make_request")
+    def test_delete_script_unexpected_response_returns_error(
+        self,
+        mock_request: MagicMock,
+        pine: Pine,
+    ) -> None:
+        response = MagicMock()
+        response.status_code = 200
+        response.text = '"not-ok"'
+        mock_request.return_value = response
+
+        result = pine.delete_script("USER;abc123")
+
+        assert result["status"] == STATUS_FAILED
+        assert "unexpected response" in (result["error"] or "").lower()
