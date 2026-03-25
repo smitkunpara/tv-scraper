@@ -3,15 +3,22 @@
 The `Streamer` class provides OHLCV candle retrieval, indicator data, and
 continuous realtime price streaming via TradingView's WebSocket API.
 
-## Performance Optimizations (v1.0.2+)
+## 🌲 New in v1.2.0: Custom Pine Indicators in Streamer
 
-The WebSocket connection includes several optimizations for low-latency streaming:
+Streamer can now be used as the consumption layer for custom Pine indicators managed by `tv_scraper.scrapers.scripts.Pine`.
 
-- **TCP_NODELAY Socket Option**: Disables Nagle's algorithm for immediate packet transmission
-- **Dual Session Subscription**: Subscribes to both quote session (QSD) and chart session (DU) for maximum update frequency
-- **Enhanced Message Processing**: Handles both QSD (quote data) and DU (chart data updates) message types
+Core workflow:
 
-These optimizations deliver update frequencies of approximately 1 update every 3-4 seconds, matching browser performance for real-time price streaming.
+1. Build and maintain your Pine script from Python.
+2. Merge multiple indicator formulas into one Pine script when needed.
+3. Fetch that custom indicator in `get_candles()` using its TradingView indicator id/version.
+
+This is ideal when you want one script to emit multiple related signals and retrieve them in one pipeline.
+
+Why this is useful:
+
+- If your TradingView plan limits simultaneous indicator usage (for example, 2 on free usage), this approach helps you pack multiple calculations into one Pine script.
+- Streamer can then fetch that merged script output as one custom indicator target.
 
 ## Constructor
 
@@ -119,6 +126,38 @@ result = s.get_candles(
     "error": null
 }
 ```
+
+### Example: Use a Custom Pine Indicator
+
+```python
+from tv_scraper.scrapers.scripts import Pine
+from tv_scraper.streaming import Streamer
+
+pine = Pine(cookie="<TRADINGVIEW_COOKIE>")
+s = Streamer()
+
+source_code = """
+//@version=6
+indicator("Merged Momentum Pack", overlay=false)
+
+rsi = ta.rsi(close, 14)
+macd = ta.macd(close, 12, 26, 9)
+plot(rsi, title="RSI")
+plot(macd[0], title="MACD")
+"""
+
+pine.create_script(name="Merged Momentum Pack", source=source_code)
+
+result = s.get_candles(
+    exchange="BINANCE",
+    symbol="BTCUSDT",
+    timeframe="1h",
+    numb_candles=50,
+    indicators=[("<YOUR_CUSTOM_INDICATOR_ID>", "<VERSION>")],
+)
+```
+
+> Tip: If your strategy uses many indicator formulas, combine them in one Pine script and fetch them together instead of managing many separate indicator subscriptions.
 
 ### `stream_realtime_price()`
 

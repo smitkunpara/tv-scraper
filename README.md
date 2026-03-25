@@ -6,7 +6,7 @@
 
 **A powerful, real-time Python library for extracting financial data, indicators, and ideas from TradingView.com.**
 
-> 🔥 New in v1.2.0: use Python to manage Pine Script workflows directly in this library.
+> 🔥 New in v1.2.0: use Python to manage Pine Script workflows and use your custom Pine indicators inside Streamer.
 
 ---
 
@@ -113,7 +113,19 @@ if result["status"] == "success":
 - **📋 Structured Output**: All data returned as clean JSON/Python dictionaries
 - **🌍 Multi-Market Support**: 260+ exchanges across stocks, crypto, forex, and commodities
 - **⚡ Fast & Reliable**: Built with async support and robust error handling
-- **🌲 Pine Script Workflow**: List, validate, create, edit, and delete Pine scripts from Python
+- **🌲 Pine + Streamer Workflow**: Manage Pine scripts and stream merged multi-indicator output through one custom indicator
+
+## 🌲 Pine + Streamer Highlight
+
+### Goal
+
+Use one custom Pine script to combine multiple indicator calculations, then fetch that merged output with Streamer.
+
+This keeps strategy logic in a single Pine file and helps avoid plan-based indicator slot limits.
+
+### Why this matters
+
+Some TradingView plans limit how many indicators you can stream at once (commonly 2 for free usage). By combining multiple calculations into one custom Pine script, you can stream a richer multi-signal output through a single indicator slot.
 
 ## 📋 What's Included
 

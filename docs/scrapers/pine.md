@@ -4,6 +4,21 @@
 
 The Pine scraper provides authenticated TradingView Pine script management APIs.
 
+## ✨ Highlight: Pine -> Streamer Custom Indicator Workflow
+
+The primary purpose of Pine support is to power custom indicator workflows in Streamer:
+
+- Create and maintain your own Pine indicator scripts from Python.
+- Merge multiple indicator calculations into one Pine script.
+- Fetch the merged output through Streamer as a single custom indicator feed.
+
+This lets you centralize strategy logic in one Pine script while consuming the values in your market-data pipeline.
+
+Why teams use this pattern:
+
+- Some TradingView plans cap concurrent indicator usage (for example, 2 indicators on free usage).
+- A merged custom Pine script can expose multiple signals while occupying one custom indicator stream target.
+
 Current support includes:
 
 - View your saved Pine scripts
@@ -13,6 +28,45 @@ Current support includes:
 - Delete scripts
 
 Cookie authentication is required for all Pine operations.
+
+## Common Workflow (Merged Indicators)
+
+Use Pine methods to maintain a script that combines multiple indicator calculations (for example, RSI + EMA + ATR in one script), then fetch that custom indicator through Streamer.
+
+```python
+from tv_scraper.scrapers.scripts import Pine
+from tv_scraper.streaming import Streamer
+
+pine = Pine(cookie="<TRADINGVIEW_COOKIE>")
+streamer = Streamer()
+
+source_code = """
+//@version=6
+indicator("My Multi Indicator", overlay=false)
+
+rsi = ta.rsi(close, 14)
+ema = ta.ema(close, 21)
+atr = ta.atr(14)
+
+plot(rsi, title="RSI")
+plot(ema, title="EMA")
+plot(atr, title="ATR")
+"""
+
+# Create or update your script in TradingView
+pine.create_script(name="My Multi Indicator", source=source_code)
+
+# Then use the corresponding custom indicator id/version in Streamer
+result = streamer.get_candles(
+    exchange="BINANCE",
+    symbol="BTCUSDT",
+    timeframe="1h",
+    numb_candles=100,
+    indicators=[("<YOUR_CUSTOM_INDICATOR_ID>", "<VERSION>")],
+)
+```
+
+> Note: Custom indicator IDs/versions are provided by TradingView for your script. Pass that exact pair into `indicators` when calling `Streamer.get_candles()`.
 
 ## Import and Constructor
 
