@@ -9,6 +9,7 @@ import socket
 from unittest.mock import MagicMock, patch
 
 import pytest
+import requests
 
 from tv_scraper.core.exceptions import ValidationError
 
@@ -471,107 +472,40 @@ class TestStreamer:
         assert result["data"] is None
         assert "Invalid symbol" in result["error"]
 
-
-# ---------------------------------------------------------------------------
-# RealTimeData tests
-# ---------------------------------------------------------------------------
-
-
-class TestRealTimeData:
-    """Tests for simple OHLCV + watchlist streaming."""
-
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
-    def test_get_ohlcv_returns_generator(self, mock_cc):
-        """get_ohlcv returns a generator."""
-        mock_ws = MagicMock()
-        mock_cc.return_value = mock_ws
-
-        # Feed a data packet then close
-        pkt = {"m": "timescale_update", "p": ["cs_test", {"sds_1": {"s": []}}]}
-        raw = json.dumps(pkt)
-        framed = f"~m~{len(raw)}~m~{raw}"
-
-        from websocket import WebSocketConnectionClosedException
-
-        mock_ws.recv.side_effect = [
-            framed,
-            WebSocketConnectionClosedException("closed"),
+    @patch("tv_scraper.streaming.streamer.fetch_available_indicators")
+    def test_get_available_indicators_returns_success_response(self, mock_fetch):
+        """get_available_indicators returns standardized success envelope."""
+        mock_fetch.return_value = [
+            {
+                "name": "Relative Strength Index",
+                "id": "STD;RSI",
+                "version": "45.0",
+            }
         ]
 
-        from tv_scraper.streaming.price import RealTimeData
+        from tv_scraper.streaming.streamer import Streamer
 
-        rt = RealTimeData()
-        gen = rt.get_ohlcv(exchange="BINANCE", symbol="BTCUSDT")
+        result = Streamer.get_available_indicators()
 
-        import types
+        assert result["status"] == "success"
+        assert isinstance(result["data"], list)
+        assert result["data"][0]["id"] == "STD;RSI"
+        assert result["metadata"] == {}
+        assert result["error"] is None
 
-        assert isinstance(gen, types.GeneratorType)
+    @patch("tv_scraper.streaming.streamer.fetch_available_indicators")
+    def test_get_available_indicators_returns_failed_response(self, mock_fetch):
+        """get_available_indicators returns standardized failed envelope on errors."""
+        mock_fetch.side_effect = RuntimeError("upstream failed")
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
-    def test_get_latest_trade_info_returns_generator(self, mock_cc):
-        """get_latest_trade_info returns a generator for multiple symbols."""
-        mock_ws = MagicMock()
-        mock_cc.return_value = mock_ws
+        from tv_scraper.streaming.streamer import Streamer
 
-        qsd_pkt = {
-            "m": "qsd",
-            "p": ["qs_test", {"n": "BINANCE:BTCUSDT", "v": {"lp": 100}}],
-        }
-        raw = json.dumps(qsd_pkt)
-        framed = f"~m~{len(raw)}~m~{raw}"
+        result = Streamer.get_available_indicators()
 
-        from websocket import WebSocketConnectionClosedException
-
-        mock_ws.recv.side_effect = [
-            framed,
-            WebSocketConnectionClosedException("closed"),
-        ]
-
-        from tv_scraper.streaming.price import RealTimeData
-
-        rt = RealTimeData()
-        gen = rt.get_latest_trade_info(
-            exchanges=["BINANCE", "NASDAQ"],
-            symbols=["BTCUSDT", "AAPL"],
-        )
-
-        import types
-
-        assert isinstance(gen, types.GeneratorType)
-
-    @patch(
-        "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
-        return_value=True,
-    )
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
-    def test_heartbeat_handling(self, mock_cc, mock_validate):
-        """Heartbeat messages are echoed back, not yielded."""
-        mock_ws = MagicMock()
-        mock_cc.return_value = mock_ws
-
-        heartbeat = "~m~4~m~~h~99"
-        pkt = {"m": "qsd", "p": ["qs_test", {"n": "BINANCE:BTCUSDT", "v": {"lp": 50}}]}
-        raw = json.dumps(pkt)
-        framed = f"~m~{len(raw)}~m~{raw}"
-
-        from websocket import WebSocketConnectionClosedException
-
-        mock_ws.recv.side_effect = [
-            heartbeat,
-            framed,
-            WebSocketConnectionClosedException("closed"),
-        ]
-
-        from tv_scraper.streaming.price import RealTimeData
-
-        rt = RealTimeData()
-        gen = rt.get_ohlcv(exchange="BINANCE", symbol="BTCUSDT")
-        data = next(gen)
-
-        # Heartbeat should be echoed
-        mock_ws.send.assert_any_call(heartbeat)
-        # Data should be the qsd packet
-        assert data["m"] == "qsd"
+        assert result["status"] == "failed"
+        assert result["data"] is None
+        assert result["metadata"] == {}
+        assert "upstream failed" in result["error"]
 
 
 # ---------------------------------------------------------------------------
@@ -727,6 +661,16 @@ class TestStreamingUtils:
         assert results[0]["name"] == "Relative Strength Index"
         assert results[0]["id"] == "STD;RSI"
         assert results[0]["version"] == "45.0"
+
+    @patch("tv_scraper.streaming.utils.requests.get")
+    def test_fetch_available_indicators_request_error_raises(self, mock_get):
+        """fetch_available_indicators raises RuntimeError on request failures."""
+        mock_get.side_effect = requests.RequestException("network down")
+
+        from tv_scraper.streaming.utils import fetch_available_indicators
+
+        with pytest.raises(RuntimeError, match="Failed to fetch available indicators"):
+            fetch_available_indicators()
 
 
 # ---------------------------------------------------------------------------

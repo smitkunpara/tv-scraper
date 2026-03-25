@@ -34,8 +34,41 @@ Fetch the list of available standard built-in indicators.
 > **Note:** This is specifically for use with candle and indicator streaming. Use these IDs and versions with `get_candles()`.
 
 ```python
-indicators = Streamer.get_available_indicators()
-# Returns: [{"name": "Relative Strength Index", "id": "STD;RSI", "version": "45.0"}, ...]
+result = s.get_available_indicators()
+```
+
+**Response:**
+
+```python
+{
+    "status": "success",
+    "data": [
+        {
+            "name": "Relative Strength Index",
+            "id": "STD;RSI",
+            "version": "45.0"
+        },
+        {
+            "name": "Average True Range",
+            "id": "STD;ATR",
+            "version": "12.0"
+        }
+        ...(other indicators)
+    ],
+    "metadata": {},
+    "error": null
+}
+```
+
+**Error response:**
+
+```python
+{
+    "status": "failed",
+    "data": null,
+    "metadata": {},
+    "error": "Failed to fetch available indicators: 503 Server Error"
+}
 ```
 
 ### `get_candles()`
@@ -115,20 +148,6 @@ for tick in s.stream_realtime_price(exchange="BINANCE", symbol="BTCUSDT"):
 }
 ```
 
-## Timeframe Mapping
-
-| Input | TradingView value |
-|-------|------------------|
-| `1m`  | `1`              |
-| `5m`  | `5`              |
-| `15m` | `15`             |
-| `30m` | `30`             |
-| `1h`  | `60`             |
-| `2h`  | `120`            |
-| `4h`  | `240`            |
-| `1d`  | `1D`             |
-| `1w`  | `1W`             |
-| `1M`  | `1M`             |
 
 ## Export
 

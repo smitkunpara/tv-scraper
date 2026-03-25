@@ -1,12 +1,11 @@
 # Streaming Overview
 
 The `tv_scraper.streaming` package provides real-time and historical market data
-via TradingView's WebSocket API. There are two main entry points:
+via TradingView's WebSocket API.
 
 | Class | Use case |
 |---|---|
 | [`Streamer`](streamer.md) | Fetch OHLCV candles, indicators, and continuous price updates |
-| [`RealTimeData`](realtime-price.md) | Simple generators for raw OHLCV and watchlist packets |
 
 ## Performance Optimizations
 
@@ -25,7 +24,6 @@ tv_scraper/streaming/
 ├── __init__.py          # Package exports
 ├── stream_handler.py    # Low-level WebSocket protocol handler
 ├── streamer.py          # Streamer class (candles + indicators + realtime)
-├── price.py             # RealTimeData class (simple OHLCV + watchlist)
 └── utils.py             # Symbol validation, indicator metadata fetching
 ```
 
@@ -39,8 +37,8 @@ tv_scraper/streaming/
 - Initialises sessions (auth, locale, chart/quote creation, field setup)
 - Applies TCP_NODELAY socket option for low-latency streaming
 
-You rarely need to use `StreamHandler` directly — `Streamer` and `RealTimeData`
-compose it internally.
+You rarely need to use `StreamHandler` directly — `Streamer` composes it
+internally.
 
 ### Response Format
 
@@ -71,12 +69,3 @@ print(result["data"]["ohlcv"])
 for tick in s.stream_realtime_price(exchange="BINANCE", symbol="BTCUSDT"):
     print(tick["price"], tick["change_percent"])
 ```
-
-## Migration from `tradingview_scraper`
-
-| Old API | New API |
-|---|---|
-| `Streamer().stream(exchange, symbol, ...)` | `Streamer().get_candles(exchange, symbol, ...)` |
-| Combined `exchange:symbol` params | Separate `exchange` and `symbol` args |
-| Raises exceptions on errors | Returns `{"status": "failed", ...}` |
-| `from tradingview_scraper.symbols.stream import Streamer` | `from tv_scraper.streaming import Streamer` |

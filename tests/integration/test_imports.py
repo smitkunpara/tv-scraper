@@ -75,10 +75,10 @@ class TestTopLevelImports:
 
         assert Streamer is not None
 
-    def test_import_realtime_data(self) -> None:
-        from tv_scraper import RealTimeData
+    def test_import_pine(self) -> None:
+        from tv_scraper import Pine
 
-        assert RealTimeData is not None
+        assert Pine is not None
 
 
 class TestSubpackageImports:
@@ -113,10 +113,15 @@ class TestSubpackageImports:
 
         assert Calendar is not None
 
-    def test_import_from_streaming(self) -> None:
-        from tv_scraper.streaming import RealTimeData, Streamer
+    def test_import_from_scripts(self) -> None:
+        from tv_scraper.scrapers.scripts import Pine
 
-        assert all(cls is not None for cls in [Streamer, RealTimeData])
+        assert Pine is not None
+
+    def test_import_from_streaming(self) -> None:
+        from tv_scraper.streaming import Streamer
+
+        assert Streamer is not None
 
 
 class TestCoreImports:
@@ -165,10 +170,10 @@ class TestCoreImports:
 class TestVersionAndAll:
     """Version string and __all__ list should be correct."""
 
-    def test_version_is_1_1_0(self) -> None:
+    def test_version_is_1_2_0(self) -> None:
         import tv_scraper
 
-        assert tv_scraper.__version__ == "1.1.0"
+        assert tv_scraper.__version__ == "1.2.0"
 
     def test_all_exports_match(self) -> None:
         """Every name in __all__ must be importable from tv_scraper."""

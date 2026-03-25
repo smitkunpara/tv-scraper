@@ -1,4 +1,4 @@
-site_name: tv-scraper v1.1.0
+site_name: tv-scraper v1.2.0
 site_description: Documentation for the refactored TradingView Scraper library
 site_url: https://smitkunpara.github.io/tv-scraper/
 repo_name: smitkunpara/tv-scraper
@@ -51,11 +51,14 @@ theme:
 nav:
   - Home: index.md
   - Getting Started: getting-started.md
-  - Migration Guide: migration-guide.md
   - Architecture: architecture.md
   - API Conventions: api-conventions.md
+  - Streaming:
+    - Overview: streaming/index.md
+    - Streamer: streaming/streamer.md
   - Scrapers:
     - Overview: scrapers/overview.md
+    - Pine: scrapers/pine.md
     - Technicals: scrapers/technicals.md
     - Fundamentals: scrapers/fundamentals.md
     - Markets: scrapers/markets.md
@@ -67,10 +70,6 @@ nav:
     - Market Movers: scrapers/market_movers.md
     - Symbol Markets: scrapers/symbol_markets.md
     - Calendar: scrapers/calendar.md
-  - Streaming:
-    - Overview: streaming/index.md
-    - Streamer: streaming/streamer.md
-    - Real-time Price: streaming/realtime-price.md
   - Reference:
     - Supported Data: supported_data.md
     - Getting Cookies: getting_cookies.md

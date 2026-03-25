@@ -66,16 +66,31 @@ class Streamer:
     # ------------------------------------------------------------------
 
     @staticmethod
-    def get_available_indicators() -> list[dict[str, Any]]:
-        """Fetch the list of available built-in indicators.
+    def get_available_indicators() -> dict[str, Any]:
+        """Fetch available built-in indicators with standardized response envelope.
 
         Use this to find the correct `id` (e.g. ``"STD;RSI"``) and `version`
         to use with :meth:`get_candles`.
 
         Returns:
-            List of indicator dicts with: name, id, version.
+            Standardized response dict with
+            ``{"status", "data", "metadata", "error"}``.
         """
-        return fetch_available_indicators()
+        try:
+            return {
+                "status": STATUS_SUCCESS,
+                "data": fetch_available_indicators(),
+                "metadata": {},
+                "error": None,
+            }
+        except Exception as exc:
+            logger.error("get_available_indicators error: %s", exc)
+            return {
+                "status": STATUS_FAILED,
+                "data": None,
+                "metadata": {},
+                "error": str(exc),
+            }
 
     def get_candles(
         self,

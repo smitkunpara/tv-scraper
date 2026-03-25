@@ -134,14 +134,3 @@ Or set the `TRADINGVIEW_COOKIE` environment variable and omit the `cookie` param
 scraper = Ideas(export_result=True, export_type="csv")
 result = scraper.get_ideas(exchange="CRYPTO", symbol="ETHUSD", end_page=3)
 ```
-
-## Migration from `tradingview_scraper`
-
-| Old (`tradingview_scraper`) | New (`tv_scraper`) |
-|---|---|
-| `from tradingview_scraper.symbols.ideas import Ideas` | `from tv_scraper.scrapers.social import Ideas` |
-| `Ideas(cookie=...)` | `Ideas(cookie=..., timeout=10)` |
-| `.get_data(symbol=..., startPage=1, endPage=5, sort="popular")` | `.get_ideas(exchange=..., symbol=..., start_page=1, end_page=5, sort_by="popular")` |
-| Returns `List[Dict]` | Returns `Dict` with `status/data/metadata/error` envelope |
-| Returns `[]` on error | Returns `{"status": "failed", "data": None, "error": "..."}` |
-| Raises on invalid args | Never raises from public methods |

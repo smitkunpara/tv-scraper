@@ -84,15 +84,10 @@ All methods return a **standardized response envelope**:
 | Module | Description |
 |--------|-------------|
 | [Streamer](streaming/streamer.md) | Real-time OHLCV + indicator streaming |
-| [RealTimeData](streaming/realtime-price.md) | Simple OHLCV and watchlist streaming |
 
 ## Architecture
 
 See the [Architecture Guide](architecture.md) for details on the modular design, base classes, and data flow.
-
-## Migration from tradingview_scraper
-
-If you're upgrading from the legacy `tradingview_scraper` package, see the [Migration Guide](migration-guide.md).
 
 ## API Conventions
 

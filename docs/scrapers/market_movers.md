@@ -139,13 +139,3 @@ movers = MarketMovers(export_result=True, export_type="csv")
 movers.get_market_movers(market="stocks-usa", category="gainers")
 # File saved to export/ directory
 ```
-
-## Migration from `tradingview_scraper`
-
-| Old (`tradingview_scraper`)                         | New (`tv_scraper`)                                |
-|-----------------------------------------------------|---------------------------------------------------|
-| `from tradingview_scraper.symbols.market_movers import MarketMovers` | `from tv_scraper.scrapers.screening import MarketMovers` |
-| Raises `ValueError` on invalid market/category      | Returns error response (never raises)             |
-| Response: `{"status", "data", "total"}`             | Response: `{"status", "data", "metadata", "error"}` |
-| `result["total"]`                                   | `result["metadata"]["total"]`                     |
-| No `timeout` parameter                              | Constructor accepts `timeout`                     |

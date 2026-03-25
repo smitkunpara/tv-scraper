@@ -5,6 +5,37 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+## [1.2.0] - 2026-03-25
+
+### Added
+- Pine script management scraper (`tv_scraper.scrapers.scripts.Pine`) with endpoints:
+  - `list_saved_scripts()` (GET /pine-facade/list?filter=saved)
+  - `validate_script(source)` (POST /pine-facade/translate_light?v=3)
+  - `create_script(name, source)` (POST /pine-facade/save/new)
+  - `edit_script(pine_id, name, source)` (POST /pine-facade/save/next/{pine_id})
+  - `delete_script(pine_id)` (POST /pine-facade/delete/{pine_id})
+
+### Changed
+- Pine response format:
+  - `create_script` and `edit_script` now return `data.warnings` when compiler warnings exist.
+  - `list_saved_scripts` keeps `modified` in list entries.
+  - `metadata` is empty when no context is returned.
+- Documentation updates:
+  - Reordered docs navigation to place Streaming above Scrapers.
+  - Standardized `News` scraper docs examples to per-example `code -> output -> details` structure.
+
+### Fixed
+- Unified Pine API metadata handling to align with existing scraper conventions.
+- `Streamer.get_available_indicators()` now returns standardized response envelope (`status`, `data`, `metadata`, `error`) and propagates upstream fetch errors appropriately.
+
+### Removed
+- Removed low-level `RealTimeData` streaming API (`tv_scraper.streaming.price.RealTimeData`).
+- Removed RealTimeData public exports from `tv_scraper` and `tv_scraper.streaming`.
+- Removed RealTimeData documentation page (`docs/streaming/realtime-price.md`) and related navigation links.
+- Removed migration documentation across docs pages, including the standalone `docs/migration-guide.md` page.
+
 ## [1.1.0] - 2026-02-20
 
 ### ✨ API Standardization & Strict Typing

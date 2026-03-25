@@ -1,6 +1,6 @@
 """tv_scraper - A Python library for scraping TradingView data."""
 
-__version__ = "1.1.0"
+__version__ = "1.2.0"
 
 # Market Data
 # Events
@@ -15,12 +15,12 @@ from tv_scraper.scrapers.screening.market_movers import MarketMovers
 # Screening
 from tv_scraper.scrapers.screening.screener import Screener
 from tv_scraper.scrapers.screening.symbol_markets import SymbolMarkets
+from tv_scraper.scrapers.scripts.pine import Pine
 
 # Social
 from tv_scraper.scrapers.social.ideas import Ideas
 from tv_scraper.scrapers.social.minds import Minds
 from tv_scraper.scrapers.social.news import News
-from tv_scraper.streaming.price import RealTimeData
 
 # Streaming
 from tv_scraper.streaming.streamer import Streamer
@@ -35,7 +35,7 @@ __all__ = [
     "News",
     "Options",
     "Overview",
-    "RealTimeData",
+    "Pine",
     "Screener",
     "Streamer",
     "SymbolMarkets",

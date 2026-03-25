@@ -145,22 +145,3 @@ data = scraper.get_technicals(
     fields=["RSI", "EMA50"],  # Only include these in output
 )
 ```
-
-## Migration from Old API
-
-| Old (`tradingview_scraper`)                          | New (`tv_scraper`)                                    |
-|------------------------------------------------------|-------------------------------------------------------|
-| `from tradingview_scraper import Indicators`         | `from tv_scraper.scrapers.market_data import Technicals` |
-| `Indicators()`                                       | `Technicals()`                                        |
-| `scrape(indicators=["RSI"])`                         | `get_technicals(technical_indicators=["RSI"])`        |
-| `scrape(allIndicators=True)`                         | `get_technicals(all_indicators=True)`                 |
-| Raises `ValueError` on invalid input                | Returns `{"status": "failed", "error": "..."}` |
-| Response: `{"status": "success", "data": {...}}`    | Response: `{"status": "success", "data": {...}, "metadata": {...}, "error": None}` |
-
-### Key Differences
-
-1. **Class name**: `Indicators` → `Technicals`
-2. **Parameter naming**: `allIndicators` → `all_indicators`, `indicators` → `technical_indicators` (snake_case)
-3. **Error handling**: No more `ValueError` raises — all errors are returned in the response envelope
-4. **Response format**: Standardized 4-key envelope (`status`, `data`, `metadata`, `error`)
-5. **New features**: `fields` parameter for output filtering, `timeout` parameter, `metadata` in response

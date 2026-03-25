@@ -9,7 +9,7 @@ from typing import Any
 
 import pytest
 
-from tv_scraper import RealTimeData, Streamer
+from tv_scraper import Streamer
 from tv_scraper.core.constants import STATUS_SUCCESS
 
 
@@ -239,51 +239,6 @@ class TestLiveStreamer:
         # All updates should have valid prices
         for update in updates:
             assert update["price"] > 0, "Invalid price in update"
-
-
-@pytest.mark.live
-class TestLiveRealTimeData:
-    """Live tests for RealTimeData class."""
-
-    def test_live_get_ohlcv_basic(self) -> None:
-        """Verify RealTimeData.get_ohlcv() works."""
-        rt = RealTimeData()
-        gen = rt.get_ohlcv(exchange="BINANCE", symbol="BTCUSDT")
-
-        # Get first packet or timeout
-        packet_found = False
-        start_time = time.time()
-        timeout = 20
-
-        for packet in gen:
-            if packet and isinstance(packet, dict):
-                packet_found = True
-                break
-            if time.time() - start_time > timeout:
-                break
-
-        assert packet_found, "No packets received from get_ohlcv"
-
-    def test_live_get_latest_trade_info_basic(self) -> None:
-        """Verify RealTimeData.get_latest_trade_info() works for multiple symbols (24/7 markets)."""
-        rt = RealTimeData()
-        gen = rt.get_latest_trade_info(
-            exchanges=["BINANCE", "BINANCE"], symbols=["BTCUSDT", "ETHUSDT"]
-        )
-
-        # Get first packet or timeout
-        packet_found = False
-        start_time = time.time()
-        timeout = 20
-
-        for packet in gen:
-            if packet and isinstance(packet, dict):
-                packet_found = True
-                break
-            if time.time() - start_time > timeout:
-                break
-
-        assert packet_found, "No packets received from get_latest_trade_info"
 
 
 @pytest.mark.live
