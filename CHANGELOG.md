@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.1] - 2026-03-26
+
 ### Changed
 - Pine list response now preserves script `version` in each `list_saved_scripts()` item, alongside `id`, `name`, and `modified`.
 
