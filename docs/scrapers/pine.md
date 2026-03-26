@@ -56,17 +56,21 @@ plot(atr, title="ATR")
 # Create or update your script in TradingView
 pine.create_script(name="My Multi Indicator", source=source_code)
 
-# Then use the corresponding custom indicator id/version in Streamer
+# Then fetch your saved script id/version pair
+saved = pine.list_saved_scripts()
+first_script = saved["data"][0]
+
+# Use the corresponding custom indicator id/version in Streamer
 result = streamer.get_candles(
     exchange="BINANCE",
     symbol="BTCUSDT",
     timeframe="1h",
     numb_candles=100,
-    indicators=[("<YOUR_CUSTOM_INDICATOR_ID>", "<VERSION>")],
+    indicators=[(first_script["id"], str(first_script["version"]))],
 )
 ```
 
-> Note: Custom indicator IDs/versions are provided by TradingView for your script. Pass that exact pair into `indicators` when calling `Streamer.get_candles()`.
+> Note: For custom scripts, use `pine.list_saved_scripts()` and pass that exact `id` + `version` pair into `indicators` when calling `Streamer.get_candles()`.
 
 ## Import and Constructor
 
@@ -108,6 +112,7 @@ Output example:
         {
             "id": "USER;cf7b5c71264f45ccb4d298d9ec1eaf88",
             "name": "My script",
+            "version": "7.0",
             "modified": 1774357749,
         }
         ...(other scripts)
@@ -327,4 +332,5 @@ All Pine methods use the standard envelope for failures:
 Metadata behavior summary:
 
 - `list_saved_scripts()` returns empty metadata.
+- `list_saved_scripts()` `data` items include `id`, `name`, `version`, and `modified`.
 - All other Pine methods return input parameters inside metadata.

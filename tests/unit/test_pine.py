@@ -63,6 +63,7 @@ class TestListSavedScripts:
                     "scriptIdPart": "USER;abc123",
                     "scriptName": "My Script",
                     "scriptTitle": "My Script",
+                    "version": "7.0",
                     "modified": 1774357749,
                 }
             ]
@@ -74,7 +75,12 @@ class TestListSavedScripts:
         assert result["error"] is None
         assert result["metadata"] == {}
         assert result["data"] == [
-            {"id": "USER;abc123", "name": "My Script", "modified": 1774357749}
+            {
+                "id": "USER;abc123",
+                "name": "My Script",
+                "version": "7.0",
+                "modified": 1774357749,
+            }
         ]
 
     @patch("tv_scraper.core.base.BaseScraper._make_request")

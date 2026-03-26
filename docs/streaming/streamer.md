@@ -148,12 +148,15 @@ plot(macd[0], title="MACD")
 
 pine.create_script(name="Merged Momentum Pack", source=source_code)
 
+saved = pine.list_saved_scripts()
+script = saved["data"][0]
+
 result = s.get_candles(
     exchange="BINANCE",
     symbol="BTCUSDT",
     timeframe="1h",
     numb_candles=50,
-    indicators=[("<YOUR_CUSTOM_INDICATOR_ID>", "<VERSION>")],
+    indicators=[(script["id"], str(script["version"]))],
 )
 ```
 

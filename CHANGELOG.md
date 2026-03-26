@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Pine list response now preserves script `version` in each `list_saved_scripts()` item, alongside `id`, `name`, and `modified`.
+
+### Documentation
+- Updated Pine scraper docs output examples to include `version` for `list_saved_scripts()`.
+- Updated Pine + Streamer workflow docs to explicitly show `list_saved_scripts()` as a source of custom indicator `id` + `version` pairs for `Streamer.get_candles()`.
+
 ## [1.2.0] - 2026-03-25
 
 ### Added

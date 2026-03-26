@@ -123,6 +123,8 @@ Use one custom Pine script to combine multiple indicator calculations, then fetc
 
 This keeps strategy logic in a single Pine file and helps avoid plan-based indicator slot limits.
 
+Use `Pine.list_saved_scripts()` to retrieve your custom script `id` and `version`, then pass that pair to `Streamer.get_candles(..., indicators=[(id, version)])`.
+
 ### Why this matters
 
 Some TradingView plans limit how many indicators you can stream at once (commonly 2 for free usage). By combining multiple calculations into one custom Pine script, you can stream a richer multi-signal output through a single indicator slot.

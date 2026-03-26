@@ -353,6 +353,7 @@ class Pine(BaseScraper):
         return {
             "id": item.get("scriptIdPart", ""),
             "name": item.get("scriptName") or item.get("scriptTitle", ""),
+            "version": item.get("version") or item.get("scriptVersion"),
             "modified": item.get("modified", 0),
         }
 
