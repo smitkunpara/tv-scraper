@@ -37,11 +37,11 @@ _TIMEFRAME_MAP = {
 
 # Forecast-focused fields for WebSocket quote session capture
 _FORECAST_CAPTURE_FIELDS = [
-    "name",
-    "description",
     "currency",
     "currency_code",
     "fundamental_currency_code",
+    "regular_close",
+    "prev_close_price",
     "price_target_average",
     "price_target_high",
     "price_target_low",
@@ -395,12 +395,15 @@ class Streamer:
                     break
 
             cleaned_data = {
-                "company_name": snapshot.get("name"),
-                "company_description": snapshot.get("description"),
                 "revenue_currency": (
                     snapshot.get("fundamental_currency_code")
                     or snapshot.get("currency_code")
                     or snapshot.get("currency")
+                ),
+                "previous_close_price": (
+                    snapshot.get("regular_close")
+                    if snapshot.get("regular_close") is not None
+                    else snapshot.get("prev_close_price")
                 ),
                 "average_price_target": snapshot.get("price_target_average"),
                 "highest_price_target": snapshot.get("price_target_high"),
