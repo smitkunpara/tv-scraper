@@ -60,6 +60,7 @@ def fetch_indicator_metadata(
     script_id: str,
     script_version: str,
     chart_session: str,
+    cookie: str | None = None,
 ) -> dict[str, Any]:
     """Fetch and prepare indicator metadata from the pine-facade API.
 
@@ -67,14 +68,18 @@ def fetch_indicator_metadata(
         script_id: Unique indicator script identifier (e.g. ``"STD;RSI"``).
         script_version: Script version string (e.g. ``"37.0"``).
         chart_session: Chart session identifier.
+        cookie: Optional TradingView session cookies.
 
     Returns:
         Prepared ``create_study`` payload dict, or empty dict on failure.
     """
     url = _PINE_FACADE_URL.format(script_id=script_id, script_version=script_version)
+    headers = {}
+    if cookie:
+        headers["cookie"] = cookie
 
     try:
-        resp = requests.get(url, timeout=5)
+        resp = requests.get(url, timeout=5, headers=headers)
         resp.raise_for_status()
         json_data = resp.json()
 

@@ -15,7 +15,7 @@ from typing import Any
 
 from websocket import WebSocketConnectionClosedException, create_connection
 
-from tv_scraper.core.constants import WEBSOCKET_URL
+from tv_scraper.core.constants import DEFAULT_USER_AGENT, WEBSOCKET_URL
 
 logger = logging.getLogger(__name__)
 
@@ -23,8 +23,6 @@ logger = logging.getLogger(__name__)
 _DEFAULT_WS_URL = WEBSOCKET_URL + "?from=chart%2F&type=chart"
 
 # HTTP headers for WebSocket handshake
-# NOTE: User-Agent should be kept updated to avoid potential blocks from TradingView.
-# Current version: Chrome 107. Consider updating periodically or making configurable.
 _REQUEST_HEADERS = {
     "Accept-Encoding": "gzip, deflate, br, zstd",
     "Accept-Language": "en-US,en;q=0.9",
@@ -35,10 +33,7 @@ _REQUEST_HEADERS = {
     "Pragma": "no-cache",
     "Sec-WebSocket-Extensions": "permessage-deflate; client_max_window_bits",
     "Upgrade": "websocket",
-    "User-Agent": (
-        "Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 "
-        "(KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36"
-    ),
+    "User-Agent": DEFAULT_USER_AGENT,
 }
 
 _QUOTE_FIELDS = [

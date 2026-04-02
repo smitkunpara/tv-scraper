@@ -56,14 +56,15 @@ class Streamer:
     Args:
         export_result: Whether to export data to file after retrieval.
         export_type: Export format — ``"json"`` or ``"csv"``.
-        websocket_jwt_token: JWT token for authenticated indicator access.
+        cookie: TradingView session cookies for session authentication and
+            indicator access. If not provided, unauthenticated access is used.
     """
 
     def __init__(
         self,
         export_result: bool = False,
         export_type: str = "json",
-        websocket_jwt_token: str = "unauthorized_user_token",
+        cookie: str | None = None,
     ) -> None:
         if export_type not in EXPORT_TYPES:
             raise ValueError(
@@ -72,7 +73,21 @@ class Streamer:
             )
         self.export_result = export_result
         self.export_type = export_type
+        self.cookie = cookie
         self.study_id_to_name_map: dict[str, str] = {}
+
+        # Resolve JWT token: use cookie if provided, otherwise default to "unauthorized_user_token".
+        websocket_jwt_token = "unauthorized_user_token"
+        if cookie:
+            from tv_scraper.streaming.auth import get_valid_jwt_token
+
+            try:
+                websocket_jwt_token = get_valid_jwt_token(cookie)
+                logger.info("JWT token resolved successfully using provided cookie.")
+            except Exception as exc:
+                logger.error("Failed to resolve JWT token from cookie: %s", exc)
+                raise
+
         self._handler = StreamHandler(jwt_token=websocket_jwt_token)
 
     # ------------------------------------------------------------------
@@ -517,6 +532,7 @@ class Streamer:
                 script_id=script_id,
                 script_version=script_version,
                 chart_session=self._handler.chart_session,
+                cookie=self.cookie,
             )
             if not ind_study or "p" not in ind_study:
                 logger.error(

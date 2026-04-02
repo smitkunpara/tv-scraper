@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Authenticated Streaming**: Implemented fully automated JWT extraction and caching via TradingView session cookies.
+- **Auth Module**: New `tv_scraper.streaming.auth` module for secure token resolution.
+- **Thread-safe Token Caching**: In-memory caching for resolved JWT tokens with automatic expiry management.
+
+### Changed
+- **Removed Parameter**: Deprecated and removed the `websocket_jwt_token` argument from `Streamer.__init__`.
+- **Required Option**: Authentication for indicators now exclusively uses the `cookie` parameter which internally resolves the necessary tokens.
+- **Utility Refactor**: `fetch_indicator_metadata` now uses the provided session cookies for personal Pine script validation, removing all previously hardcoded placeholders.
+
 ## [1.3.1] - 2026-04-02
 
 ### Changed
