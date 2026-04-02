@@ -245,7 +245,7 @@ class TestLiveStreamer:
     def test_live_get_forecast_stock(self) -> None:
         """Verify get_forecast works for stock symbols."""
         streamer = Streamer()
-        result = streamer.get_forecast(exchange="NYSE", symbol="A", max_packets=30)
+        result = streamer.get_forecast(exchange="NYSE", symbol="A")
 
         assert result["status"] == STATUS_SUCCESS
         assert result["error"] is None
@@ -257,9 +257,7 @@ class TestLiveStreamer:
     def test_live_get_forecast_non_stock_rejected(self) -> None:
         """Verify get_forecast rejects non-stock symbols with clear type error."""
         streamer = Streamer()
-        result = streamer.get_forecast(
-            exchange="BINANCE", symbol="BTCUSDT", max_packets=10
-        )
+        result = streamer.get_forecast(exchange="BINANCE", symbol="BTCUSDT")
 
         assert result["status"] == "failed"
         assert result["data"] is None

@@ -171,7 +171,6 @@ Fetch analyst forecast data for stock symbols only.
 result = s.get_forecast(
     exchange="NYSE",
     symbol="A",
-    max_packets=30,  # Max number of WebSocket packets to inspect
 )
 ```
 
@@ -187,10 +186,22 @@ result = s.get_forecast(
         "highest_price_target": 185,
         "lowest_price_target": 145,
         "median_price_target": 160,
-        "yearly_eps_data": [{"FiscalPeriod": "2026", "Estimate": 5.9}],
-        "quarterly_eps_data": [{"FiscalPeriod": "2026-Q1", "Estimate": 1.36}],
-        "yearly_revenue_data": [{"FiscalPeriod": "2026", "Estimate": 7395056494}],
-        "quarterly_revenue_data": [{"FiscalPeriod": "2026-Q1", "Estimate": 1807792308}]
+        "yearly_eps_data": [
+            {"FiscalPeriod": "2026", "Estimate": 5.9}
+            ...
+        ],
+        "quarterly_eps_data": [
+            {"FiscalPeriod": "2026-Q1", "Estimate": 1.36}
+            ...
+        ],
+        "yearly_revenue_data": [{
+            "FiscalPeriod": "2026", "Estimate": 7395056494}
+            ...
+        ],
+        "quarterly_revenue_data": [{
+            "FiscalPeriod": "2026-Q1", "Estimate": 1807792308}
+            ...
+        ]
     },
     "metadata": {
         "exchange": "NYSE",
@@ -222,7 +233,7 @@ result = s.get_forecast(
         "exchange": "BINANCE",
         "symbol": "BTCUSDT"
     },
-    "error": "forecast is not available for this symbol because it is type: spot"
+    "error": "forecast is not available for this symbol because it is type: crypto"
 }
 ```
 

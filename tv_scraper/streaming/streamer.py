@@ -316,18 +316,20 @@ class Streamer:
         self,
         exchange: str,
         symbol: str,
-        max_packets: int = 25,
     ) -> dict[str, Any]:
         """Capture forecast data via TradingView WebSocket quote stream.
 
-        This method prioritizes raw packet capture first, then provides a merged
-        snapshot from received ``qsd`` updates. It mirrors the persistent
-        WebSocket approach used by candle/price streaming rather than scanner API.
+        This method captures qsd packets until all required forecast fields are
+        received, then provides a merged snapshot. It mirrors the persistent
+        WebSocket approach used by candle/price streaming.
+
+        The method runs until:
+        - All required forecast fields are received (success), OR
+        - WebSocket connection closes (returns partial data if any).
 
         Args:
             exchange: Exchange name (e.g. ``"NYSE"``).
             symbol: Symbol name (e.g. ``"A"``).
-            max_packets: Maximum packets to capture before stopping.
 
         Returns:
             Standardized response dict with
@@ -387,11 +389,10 @@ class Streamer:
             snapshot: dict[str, Any] = {}
             required_output_keys = set(_FORECAST_SOURCE_KEY_MAP.keys())
             found_output_keys: set[str] = set()
+            packet_count = 0
 
-            for i, pkt in enumerate(self._handler.receive_packets()):
-                if i >= max_packets:
-                    break
-
+            for pkt in self._handler.receive_packets():
+                packet_count += 1
                 raw_packets.append(pkt)
 
                 if pkt.get("m") != "qsd":
@@ -413,6 +414,13 @@ class Streamer:
                         found_output_keys.add(out_key)
 
                 if required_output_keys.issubset(found_output_keys):
+                    break
+                if packet_count > 15:
+                    logger.warning(
+                        "get_forecast timeout after %d packets. Found keys: %s",
+                        packet_count,
+                        sorted(found_output_keys),
+                    )
                     break
 
             cleaned_data = {
@@ -440,13 +448,7 @@ class Streamer:
                 }
 
             if self.export_result:
-                # Keep clean output as default export; raw capture saved separately for debug.
                 self._export(cleaned_data, symbol, "forecast")
-                self._export(
-                    {"raw_packets": raw_packets, "raw_snapshot": snapshot},
-                    symbol,
-                    "forecast_raw",
-                )
 
             return {
                 "status": STATUS_SUCCESS,

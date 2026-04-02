@@ -565,7 +565,7 @@ class TestStreamer:
         from tv_scraper.streaming.streamer import Streamer
 
         s = Streamer()
-        result = s.get_forecast(exchange="NYSE", symbol="A", max_packets=10)
+        result = s.get_forecast(exchange="NYSE", symbol="A")
 
         assert result["status"] == "success"
         assert result["error"] is None
@@ -655,7 +655,7 @@ class TestStreamer:
         from tv_scraper.streaming.streamer import Streamer
 
         s = Streamer()
-        result = s.get_forecast(exchange="NYSE", symbol="A", max_packets=10)
+        result = s.get_forecast(exchange="NYSE", symbol="A")
 
         assert result["status"] == "failed"
         assert isinstance(result["data"], dict)

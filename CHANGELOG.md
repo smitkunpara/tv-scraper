@@ -12,11 +12,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Live API tests for forecast support and non-stock rejection in [tests/live_api/test_streaming.py](tests/live_api/test_streaming.py).
 - Unit tests for forecast success, non-stock validation, and missing-key behavior in [tests/unit/test_streaming.py](tests/unit/test_streaming.py).
 
-### Changed
-- Forecast output is standardized with clean keys (price targets, quarterly/yearly EPS and revenue, currency, and previous close).
-- Forecast key extraction now uses hardcoded source mappings for predictable output behavior.
-- Forecast requests are restricted to symbols where TradingView reports `type=stock` via scanner symbol metadata.
-
 ### Error Handling
 - `get_forecast` now returns partial data with a clear missing-keys error when required forecast fields are not fully available within the capture window.
 
