@@ -185,6 +185,53 @@ class TestScreenSuccess:
         assert payload["sort"]["sortBy"] == "volume"
         assert payload["sort"]["sortOrder"] == "asc"
 
+    def test_markets_auto_derived_from_market(self, screener: Screener) -> None:
+        """markets is always set to [market] regardless of input."""
+        mock_resp = _mock_response({"data": [], "totalCount": 0})
+
+        with mock.patch.object(
+            screener, "_make_request", return_value=mock_resp
+        ) as mock_req:
+            screener.get_screener(market="uk")
+
+        payload = mock_req.call_args[1]["json_data"]
+        assert payload["markets"] == ["uk"]
+
+    def test_get_data_with_symbols_markets_and_filter2(
+        self, screener: Screener
+    ) -> None:
+        """New passthrough payload keys are included when provided."""
+        mock_resp = _mock_response({"data": [], "totalCount": 0})
+        symbols = {"tickers": ["NASDAQ:AAPL", "NASDAQ:MSFT"]}
+        filter2 = {
+            "operator": "and",
+            "operands": [
+                {
+                    "expression": {
+                        "left": "type",
+                        "operation": "equal",
+                        "right": "stock",
+                    }
+                }
+            ],
+        }
+
+        with mock.patch.object(
+            screener, "_make_request", return_value=mock_resp
+        ) as mock_req:
+            result = screener.get_screener(
+                market="america",
+                symbols=symbols,
+                filter2=filter2,
+            )
+
+        assert result["status"] == STATUS_SUCCESS
+        call_kwargs = mock_req.call_args[1]
+        payload = call_kwargs["json_data"]
+        assert payload["symbols"] == symbols
+        assert payload["markets"] == ["america"]
+        assert payload["filter2"] == filter2
+
     def test_get_data_with_limit(self, screener: Screener) -> None:
         """Limit param controls the range in the API payload."""
         mock_resp = _mock_response(

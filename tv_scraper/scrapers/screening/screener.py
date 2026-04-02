@@ -119,17 +119,19 @@ class Screener(BaseScraper):
     def _build_payload(
         self,
         fields: list[str],
-        market: str,
+        market: str = "america",
         filters: list[dict[str, Any]] | None = None,
         sort_by: str | None = None,
         sort_order: str = "desc",
         limit: int = 50,
+        symbols: dict[str, Any] | None = None,
+        filter2: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         """Build the scanner API request payload.
 
         Args:
             fields: Columns to retrieve.
-            market: Market identifier.
+            market: Market identifier, auto-derived into the ``markets`` body field.
             filters: Optional list of filter condition dicts.
             sort_by: Optional field to sort by.
             sort_order: Sort direction (``"asc"`` or ``"desc"``).
@@ -142,6 +144,7 @@ class Screener(BaseScraper):
             "columns": fields,
             "options": {"lang": "en"},
             "range": [0, limit],
+            "markets": [market],
         }
         if filters:
             payload["filter"] = filters
@@ -150,6 +153,10 @@ class Screener(BaseScraper):
                 "sortBy": sort_by,
                 "sortOrder": sort_order,
             }
+        if symbols:
+            payload["symbols"] = symbols
+        if filter2:
+            payload["filter2"] = filter2
         return payload
 
     def get_screener(
@@ -160,6 +167,8 @@ class Screener(BaseScraper):
         sort_by: str | None = None,
         sort_order: str = "desc",
         limit: int = 50,
+        symbols: dict[str, Any] | None = None,
+        filter2: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         """Screen financial instruments based on custom filters.
 
@@ -171,6 +180,13 @@ class Screener(BaseScraper):
             sort_by: Field to sort by.
             sort_order: Sort direction, ``"asc"`` or ``"desc"``.
             limit: Maximum number of results (default 50).
+            symbols: Optional symbols filter for index-based filtering.
+                Use ``{"symbolset": ["SYML:SP;SPX"]}`` for S&P 500,
+                ``{"symbolset": ["SYML:NASDAQ;NDX"]}`` for NASDAQ 100, etc.
+                Can also use ``{"tickers": ["NASDAQ:AAPL", "NYSE:JPM"]}`` for
+                explicit symbol lists.
+            filter2: Optional complex filter with boolean logic using
+                ``operator``, ``operands``, and ``expression`` keys.
 
         Returns:
             Standardized response envelope with ``status``, ``data``,
@@ -196,6 +212,8 @@ class Screener(BaseScraper):
             sort_by=sort_by,
             sort_order=sort_order,
             limit=limit,
+            symbols=symbols,
+            filter2=filter2,
         )
 
         url = f"{SCANNER_URL}/{market}/scan"
