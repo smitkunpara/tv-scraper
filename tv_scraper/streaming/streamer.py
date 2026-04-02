@@ -335,8 +335,39 @@ class Streamer:
             ``data`` contains ``raw_packets`` and merged ``snapshot``.
         """
         try:
+            from tv_scraper.core.constants import SCANNER_URL
+            from tv_scraper.utils.http import make_request
+
             exchange_symbol = format_symbol(exchange, symbol)
             DataValidator().verify_symbol_exchange(exchange, symbol)
+
+            # Match scanner behavior: forecast endpoint is stock-oriented.
+            stock_check = make_request(
+                url=f"{SCANNER_URL}/symbol",
+                method="GET",
+                params={
+                    "symbol": exchange_symbol,
+                    "fields": "type",
+                    "no_404": "false",
+                },
+                timeout=10,
+            )
+            stock_payload = stock_check.json() if stock_check is not None else {}
+            type_value = stock_payload.get("type")
+
+            if type_value != "stock":
+                return {
+                    "status": STATUS_FAILED,
+                    "data": None,
+                    "metadata": {
+                        "exchange": exchange,
+                        "symbol": symbol,
+                    },
+                    "error": (
+                        "forecast is not available for this symbol because it is type: "
+                        f"{type_value}"
+                    ),
+                }
 
             qs = self._handler.quote_session
             resolve_symbol = json.dumps(
