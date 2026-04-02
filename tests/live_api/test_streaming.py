@@ -240,6 +240,33 @@ class TestLiveStreamer:
         for update in updates:
             assert update["price"] > 0, "Invalid price in update"
 
+    # --- Forecast (WebSocket) ---
+
+    def test_live_get_forecast_stock(self) -> None:
+        """Verify get_forecast works for stock symbols."""
+        streamer = Streamer()
+        result = streamer.get_forecast(exchange="NYSE", symbol="A", max_packets=30)
+
+        assert result["status"] == STATUS_SUCCESS
+        assert result["error"] is None
+        assert "data" in result
+        assert "average_price_target" in result["data"]
+        assert "quarterly_eps_data" in result["data"]
+        assert "quarterly_revenue_data" in result["data"]
+
+    def test_live_get_forecast_non_stock_rejected(self) -> None:
+        """Verify get_forecast rejects non-stock symbols with clear type error."""
+        streamer = Streamer()
+        result = streamer.get_forecast(
+            exchange="BINANCE", symbol="BTCUSDT", max_packets=10
+        )
+
+        assert result["status"] == "failed"
+        assert result["data"] is None
+        assert "forecast is not available for this symbol because it is type:" in (
+            result["error"] or ""
+        )
+
 
 @pytest.mark.live
 class TestLiveStreamingCombinations:

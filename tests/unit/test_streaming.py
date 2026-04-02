@@ -507,6 +507,162 @@ class TestStreamer:
         assert result["metadata"] == {}
         assert "upstream failed" in result["error"]
 
+    @patch("tv_scraper.utils.http.make_request")
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
+        return_value=True,
+    )
+    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    def test_get_forecast_success(self, mock_cc, mock_validate, mock_make_request):
+        """get_forecast returns cleaned data for stock symbols."""
+        mock_ws = MagicMock()
+        mock_cc.return_value = mock_ws
+        mock_validate.return_value = True
+
+        # Scanner symbol type check -> stock
+        mock_resp = MagicMock()
+        mock_resp.json.return_value = {"type": "stock"}
+        mock_make_request.return_value = mock_resp
+
+        qsd_pkt = {
+            "m": "qsd",
+            "p": [
+                "qs_test",
+                {
+                    "n": "NYSE:A",
+                    "s": "ok",
+                    "v": {
+                        "fundamental_currency_code": "USD",
+                        "regular_close": 114.5,
+                        "price_target_average": 162.8,
+                        "price_target_high": 185,
+                        "price_target_low": 145,
+                        "price_target_median": 160,
+                        "earnings_fy_h": [{"FiscalPeriod": "2026", "Estimate": 5.9}],
+                        "earnings_fq_h": [
+                            {"FiscalPeriod": "2026-Q1", "Estimate": 1.36}
+                        ],
+                        "revenues_fy_h": [
+                            {"FiscalPeriod": "2026", "Estimate": 7395056494}
+                        ],
+                        "revenues_fq_h": [
+                            {"FiscalPeriod": "2026-Q1", "Estimate": 1807792308}
+                        ],
+                    },
+                },
+            ],
+        }
+        qsd_raw = json.dumps(qsd_pkt)
+        framed = f"~m~{len(qsd_raw)}~m~{qsd_raw}"
+
+        from websocket import WebSocketConnectionClosedException
+
+        mock_ws.recv.side_effect = [
+            framed,
+            WebSocketConnectionClosedException("closed"),
+        ]
+
+        from tv_scraper.streaming.streamer import Streamer
+
+        s = Streamer()
+        result = s.get_forecast(exchange="NYSE", symbol="A", max_packets=10)
+
+        assert result["status"] == "success"
+        assert result["error"] is None
+        assert result["data"]["revenue_currency"] == "USD"
+        assert result["data"]["previous_close_price"] == 114.5
+        assert isinstance(result["data"]["yearly_eps_data"], list)
+        assert isinstance(result["data"]["yearly_revenue_data"], list)
+
+    @patch("tv_scraper.utils.http.make_request")
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
+        return_value=True,
+    )
+    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    def test_get_forecast_non_stock_rejected(
+        self, mock_cc, mock_validate, mock_make_request
+    ):
+        """get_forecast rejects non-stock symbols using scanner type check."""
+        mock_cc.return_value = MagicMock()
+        mock_validate.return_value = True
+
+        mock_resp = MagicMock()
+        mock_resp.json.return_value = {"type": "spot"}
+        mock_make_request.return_value = mock_resp
+
+        from tv_scraper.streaming.streamer import Streamer
+
+        s = Streamer()
+        result = s.get_forecast(exchange="BINANCE", symbol="BTCUSDT")
+
+        assert result["status"] == "failed"
+        assert result["data"] is None
+        assert "type: spot" in result["error"]
+
+    @patch("tv_scraper.utils.http.make_request")
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
+        return_value=True,
+    )
+    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    def test_get_forecast_missing_keys_returns_partial_data(
+        self, mock_cc, mock_validate, mock_make_request
+    ):
+        """When some keys are missing, get_forecast fails with partial data + error."""
+        mock_ws = MagicMock()
+        mock_cc.return_value = mock_ws
+        mock_validate.return_value = True
+
+        mock_resp = MagicMock()
+        mock_resp.json.return_value = {"type": "stock"}
+        mock_make_request.return_value = mock_resp
+
+        # Deliberately omit yearly fields and previous close.
+        qsd_pkt = {
+            "m": "qsd",
+            "p": [
+                "qs_test",
+                {
+                    "n": "NYSE:A",
+                    "s": "ok",
+                    "v": {
+                        "fundamental_currency_code": "USD",
+                        "price_target_average": 162.8,
+                        "price_target_high": 185,
+                        "price_target_low": 145,
+                        "price_target_median": 160,
+                        "earnings_fq_h": [
+                            {"FiscalPeriod": "2026-Q1", "Estimate": 1.36}
+                        ],
+                        "revenues_fq_h": [
+                            {"FiscalPeriod": "2026-Q1", "Estimate": 1807792308}
+                        ],
+                    },
+                },
+            ],
+        }
+        qsd_raw = json.dumps(qsd_pkt)
+        framed = f"~m~{len(qsd_raw)}~m~{qsd_raw}"
+
+        from websocket import WebSocketConnectionClosedException
+
+        mock_ws.recv.side_effect = [
+            framed,
+            WebSocketConnectionClosedException("closed"),
+        ]
+
+        from tv_scraper.streaming.streamer import Streamer
+
+        s = Streamer()
+        result = s.get_forecast(exchange="NYSE", symbol="A", max_packets=10)
+
+        assert result["status"] == "failed"
+        assert isinstance(result["data"], dict)
+        assert result["data"]["average_price_target"] == 162.8
+        assert result["data"]["yearly_eps_data"] is None
+        assert "failed to fetch keys:" in result["error"]
+
 
 # ---------------------------------------------------------------------------
 # Utils tests
