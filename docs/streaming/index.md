@@ -5,7 +5,7 @@ via TradingView's WebSocket API.
 
 | Class | Use case |
 |---|---|
-| [`Streamer`](streamer.md) | Fetch OHLCV candles, indicators, and continuous price updates |
+| [`Streamer`](streamer.md) | Fetch OHLCV candles, indicators, forecast snapshots, and continuous price updates |
 
 ## Performance Optimizations
 
@@ -23,7 +23,7 @@ These optimizations deliver approximately 1 update every 3-4 seconds for active 
 tv_scraper/streaming/
 ├── __init__.py          # Package exports
 ├── stream_handler.py    # Low-level WebSocket protocol handler
-├── streamer.py          # Streamer class (candles + indicators + realtime)
+├── streamer.py          # Streamer class (candles + indicators + forecast + realtime)
 └── utils.py             # Symbol validation, indicator metadata fetching
 ```
 

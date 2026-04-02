@@ -83,7 +83,7 @@ All methods return a **standardized response envelope**:
 
 | Module | Description |
 |--------|-------------|
-| [Streamer](streaming/streamer.md) | Real-time OHLCV + indicator streaming |
+| [Streamer](streaming/streamer.md) | Real-time OHLCV + indicator + forecast streaming |
 
 ## Architecture
 

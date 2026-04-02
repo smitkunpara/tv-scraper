@@ -1,7 +1,8 @@
 # Streamer API
 
-The `Streamer` class provides OHLCV candle retrieval, indicator data, and
-continuous realtime price streaming via TradingView's WebSocket API.
+The `Streamer` class provides OHLCV candle retrieval, indicator data,
+analyst forecast snapshots, and continuous realtime price streaming via
+TradingView's WebSocket API.
 
 ## 🌲 New in v1.2.0: Custom Pine Indicators in Streamer
 
@@ -161,6 +162,109 @@ result = s.get_candles(
 ```
 
 > Tip: If your strategy uses many indicator formulas, combine them in one Pine script and fetch them together instead of managing many separate indicator subscriptions.
+
+### `get_forecast()`
+
+Fetch analyst forecast data for stock symbols only.
+
+```python
+result = s.get_forecast(
+    exchange="NYSE",
+    symbol="A",
+    max_packets=30,  # Max number of WebSocket packets to inspect
+)
+```
+
+**Success response:**
+
+```python
+{
+    "status": "success",
+    "data": {
+        "revenue_currency": "USD",
+        "previous_close_price": 114.5,
+        "average_price_target": 162.8,
+        "highest_price_target": 185,
+        "lowest_price_target": 145,
+        "median_price_target": 160,
+        "yearly_eps_data": [{"FiscalPeriod": "2026", "Estimate": 5.9}],
+        "quarterly_eps_data": [{"FiscalPeriod": "2026-Q1", "Estimate": 1.36}],
+        "yearly_revenue_data": [{"FiscalPeriod": "2026", "Estimate": 7395056494}],
+        "quarterly_revenue_data": [{"FiscalPeriod": "2026-Q1", "Estimate": 1807792308}]
+    },
+    "metadata": {
+        "exchange": "NYSE",
+        "symbol": "A",
+        "available_output_keys": [
+            "average_price_target",
+            "highest_price_target",
+            "lowest_price_target",
+            "median_price_target",
+            "previous_close_price",
+            "quarterly_eps_data",
+            "quarterly_revenue_data",
+            "revenue_currency",
+            "yearly_eps_data",
+            "yearly_revenue_data"
+        ]
+    },
+    "error": null
+}
+```
+
+**Failed response (non-stock symbol):**
+
+```python
+{
+    "status": "failed",
+    "data": null,
+    "metadata": {
+        "exchange": "BINANCE",
+        "symbol": "BTCUSDT"
+    },
+    "error": "forecast is not available for this symbol because it is type: spot"
+}
+```
+
+**Failed response (partial data / missing keys):**
+
+```python
+{
+    "status": "failed",
+    "data": {
+        "revenue_currency": "USD",
+        "previous_close_price": null,
+        "average_price_target": 162.8,
+        "highest_price_target": 185,
+        "lowest_price_target": 145,
+        "median_price_target": 160,
+        "yearly_eps_data": null,
+        "quarterly_eps_data": [{"FiscalPeriod": "2026-Q1", "Estimate": 1.36}],
+        "yearly_revenue_data": null,
+        "quarterly_revenue_data": [{"FiscalPeriod": "2026-Q1", "Estimate": 1807792308}]
+    },
+    "metadata": {
+        "exchange": "NYSE",
+        "symbol": "A",
+        "available_output_keys": [
+            "average_price_target",
+            "highest_price_target",
+            "lowest_price_target",
+            "median_price_target",
+            "quarterly_eps_data",
+            "quarterly_revenue_data",
+            "revenue_currency"
+        ]
+    },
+    "error": "failed to fetch keys: previous_close_price, yearly_eps_data, yearly_revenue_data"
+}
+```
+
+Notes:
+
+- Uses WebSocket quote updates as the source of forecast data.
+- Output key mappings are fixed and deterministic.
+- Public API follows the standard envelope: `status`, `data`, `metadata`, `error`.
 
 ### `stream_realtime_price()`
 
