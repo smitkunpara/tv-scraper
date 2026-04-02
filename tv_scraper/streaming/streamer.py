@@ -35,22 +35,19 @@ _TIMEFRAME_MAP = {
     "1M": "1M",
 }
 
-# Forecast-focused fields for WebSocket quote session capture
-_FORECAST_CAPTURE_FIELDS = [
-    "currency",
-    "currency_code",
-    "fundamental_currency_code",
-    "regular_close",
-    "prev_close_price",
-    "price_target_average",
-    "price_target_high",
-    "price_target_low",
-    "price_target_median",
-    "earnings_fy_h",
-    "earnings_fq_h",
-    "revenues_fy_h",
-    "revenues_fq_h",
-]
+# Fixed source-key mapping from qsd.v payload -> clean output fields.
+_FORECAST_SOURCE_KEY_MAP = {
+    "revenue_currency": "fundamental_currency_code",
+    "previous_close_price": "regular_close",
+    "average_price_target": "price_target_average",
+    "highest_price_target": "price_target_high",
+    "lowest_price_target": "price_target_low",
+    "median_price_target": "price_target_median",
+    "yearly_eps_data": "earnings_fy_h",
+    "quarterly_eps_data": "earnings_fq_h",
+    "yearly_revenue_data": "revenues_fy_h",
+    "quarterly_revenue_data": "revenues_fq_h",
+}
 
 
 class Streamer:
@@ -348,24 +345,17 @@ class Streamer:
 
             # Keep same connection lifecycle as candle streaming and only update
             # quote session subscriptions/fields for this symbol.
+            capture_fields = sorted(set(_FORECAST_SOURCE_KEY_MAP.values()))
             self._handler.send_message("set_data_quality", ["low"])
-            self._handler.send_message(
-                "quote_set_fields", [qs, *_FORECAST_CAPTURE_FIELDS]
-            )
+            self._handler.send_message("quote_set_fields", [qs, *capture_fields])
             self._handler.send_message("quote_hibernate_all", [qs])
             self._handler.send_message("quote_add_symbols", [qs, f"={resolve_symbol}"])
             self._handler.send_message("quote_fast_symbols", [qs, exchange_symbol])
 
             raw_packets: list[dict[str, Any]] = []
             snapshot: dict[str, Any] = {}
-            found_keys: set[str] = set()
-            required_keys = {
-                "price_target_average",
-                "price_target_high",
-                "price_target_low",
-                "earnings_fq_h",
-                "revenues_fq_h",
-            }
+            required_output_keys = set(_FORECAST_SOURCE_KEY_MAP.keys())
+            found_output_keys: set[str] = set()
 
             for i, pkt in enumerate(self._handler.receive_packets()):
                 if i >= max_packets:
@@ -387,51 +377,53 @@ class Streamer:
 
                 # Merge incremental qsd updates into one final snapshot.
                 snapshot.update(values)
-                found_keys.update(
-                    k for k in required_keys if k in values and values[k] is not None
-                )
+                for out_key, src_key in _FORECAST_SOURCE_KEY_MAP.items():
+                    if src_key in snapshot and snapshot[src_key] is not None:
+                        found_output_keys.add(out_key)
 
-                if found_keys == required_keys:
+                if required_output_keys.issubset(found_output_keys):
                     break
 
             cleaned_data = {
-                "revenue_currency": (
-                    snapshot.get("fundamental_currency_code")
-                    or snapshot.get("currency_code")
-                    or snapshot.get("currency")
-                ),
-                "previous_close_price": (
-                    snapshot.get("regular_close")
-                    if snapshot.get("regular_close") is not None
-                    else snapshot.get("prev_close_price")
-                ),
-                "average_price_target": snapshot.get("price_target_average"),
-                "highest_price_target": snapshot.get("price_target_high"),
-                "lowest_price_target": snapshot.get("price_target_low"),
-                "median_price_target": snapshot.get("price_target_median"),
-                "yearly_eps_data": snapshot.get("earnings_fy_h"),
-                "quarterly_eps_data": snapshot.get("earnings_fq_h"),
-                "yearly_revenue_data": snapshot.get("revenues_fy_h"),
-                "quarterly_revenue_data": snapshot.get("revenues_fq_h"),
+                out_key: snapshot.get(src_key)
+                for out_key, src_key in _FORECAST_SOURCE_KEY_MAP.items()
             }
+            available_output_keys = [
+                k for k, v in cleaned_data.items() if v is not None
+            ]
 
-            result_data = {
-                "raw_packets": raw_packets,
-                "raw_snapshot": snapshot,
-                "cleaned_forecast": cleaned_data,
-            }
+            missing_output_keys = sorted(
+                required_output_keys.difference(available_output_keys)
+            )
+
+            if missing_output_keys:
+                return {
+                    "status": STATUS_FAILED,
+                    "data": cleaned_data,
+                    "metadata": {
+                        "exchange": exchange,
+                        "symbol": symbol,
+                        "available_output_keys": sorted(available_output_keys),
+                    },
+                    "error": "failed to fetch keys: " + ", ".join(missing_output_keys),
+                }
 
             if self.export_result:
-                self._export(result_data, symbol, "forecast")
+                # Keep clean output as default export; raw capture saved separately for debug.
+                self._export(cleaned_data, symbol, "forecast")
+                self._export(
+                    {"raw_packets": raw_packets, "raw_snapshot": snapshot},
+                    symbol,
+                    "forecast_raw",
+                )
 
             return {
                 "status": STATUS_SUCCESS,
-                "data": result_data,
+                "data": cleaned_data,
                 "metadata": {
                     "exchange": exchange,
                     "symbol": symbol,
-                    "packets_captured": len(raw_packets),
-                    "required_keys_found": sorted(found_keys),
+                    "available_output_keys": sorted(available_output_keys),
                 },
                 "error": None,
             }
