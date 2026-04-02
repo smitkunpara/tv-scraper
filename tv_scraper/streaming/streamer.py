@@ -35,6 +35,23 @@ _TIMEFRAME_MAP = {
     "1M": "1M",
 }
 
+# Forecast-focused fields for WebSocket quote session capture
+_FORECAST_CAPTURE_FIELDS = [
+    "name",
+    "description",
+    "currency",
+    "currency_code",
+    "fundamental_currency_code",
+    "price_target_average",
+    "price_target_high",
+    "price_target_low",
+    "price_target_median",
+    "earnings_fy_h",
+    "earnings_fq_h",
+    "revenues_fy_h",
+    "revenues_fq_h",
+]
+
 
 class Streamer:
     """Stream OHLCV candles, indicators, and realtime prices from TradingView.
@@ -297,6 +314,136 @@ class Streamer:
                                 "bid": None,
                                 "ask": None,
                             }
+
+    def get_forecast(
+        self,
+        exchange: str,
+        symbol: str,
+        max_packets: int = 25,
+    ) -> dict[str, Any]:
+        """Capture forecast data via TradingView WebSocket quote stream.
+
+        This method prioritizes raw packet capture first, then provides a merged
+        snapshot from received ``qsd`` updates. It mirrors the persistent
+        WebSocket approach used by candle/price streaming rather than scanner API.
+
+        Args:
+            exchange: Exchange name (e.g. ``"NYSE"``).
+            symbol: Symbol name (e.g. ``"A"``).
+            max_packets: Maximum packets to capture before stopping.
+
+        Returns:
+            Standardized response dict with
+            ``{"status", "data", "metadata", "error"}``.
+            ``data`` contains ``raw_packets`` and merged ``snapshot``.
+        """
+        try:
+            exchange_symbol = format_symbol(exchange, symbol)
+            DataValidator().verify_symbol_exchange(exchange, symbol)
+
+            qs = self._handler.quote_session
+            resolve_symbol = json.dumps(
+                {"adjustment": "splits", "symbol": exchange_symbol}
+            )
+
+            # Keep same connection lifecycle as candle streaming and only update
+            # quote session subscriptions/fields for this symbol.
+            self._handler.send_message("set_data_quality", ["low"])
+            self._handler.send_message(
+                "quote_set_fields", [qs, *_FORECAST_CAPTURE_FIELDS]
+            )
+            self._handler.send_message("quote_hibernate_all", [qs])
+            self._handler.send_message("quote_add_symbols", [qs, f"={resolve_symbol}"])
+            self._handler.send_message("quote_fast_symbols", [qs, exchange_symbol])
+
+            raw_packets: list[dict[str, Any]] = []
+            snapshot: dict[str, Any] = {}
+            found_keys: set[str] = set()
+            required_keys = {
+                "price_target_average",
+                "price_target_high",
+                "price_target_low",
+                "earnings_fq_h",
+                "revenues_fq_h",
+            }
+
+            for i, pkt in enumerate(self._handler.receive_packets()):
+                if i >= max_packets:
+                    break
+
+                raw_packets.append(pkt)
+
+                if pkt.get("m") != "qsd":
+                    continue
+
+                p_data = pkt.get("p", [])
+                if len(p_data) < 2 or not isinstance(p_data[1], dict):
+                    continue
+
+                block = p_data[1]
+                values = block.get("v", {})
+                if not isinstance(values, dict):
+                    continue
+
+                # Merge incremental qsd updates into one final snapshot.
+                snapshot.update(values)
+                found_keys.update(
+                    k for k in required_keys if k in values and values[k] is not None
+                )
+
+                if found_keys == required_keys:
+                    break
+
+            cleaned_data = {
+                "company_name": snapshot.get("name"),
+                "company_description": snapshot.get("description"),
+                "revenue_currency": (
+                    snapshot.get("fundamental_currency_code")
+                    or snapshot.get("currency_code")
+                    or snapshot.get("currency")
+                ),
+                "average_price_target": snapshot.get("price_target_average"),
+                "highest_price_target": snapshot.get("price_target_high"),
+                "lowest_price_target": snapshot.get("price_target_low"),
+                "median_price_target": snapshot.get("price_target_median"),
+                "yearly_eps_data": snapshot.get("earnings_fy_h"),
+                "quarterly_eps_data": snapshot.get("earnings_fq_h"),
+                "yearly_revenue_data": snapshot.get("revenues_fy_h"),
+                "quarterly_revenue_data": snapshot.get("revenues_fq_h"),
+            }
+
+            result_data = {
+                "raw_packets": raw_packets,
+                "raw_snapshot": snapshot,
+                "cleaned_forecast": cleaned_data,
+            }
+
+            if self.export_result:
+                self._export(result_data, symbol, "forecast")
+
+            return {
+                "status": STATUS_SUCCESS,
+                "data": result_data,
+                "metadata": {
+                    "exchange": exchange,
+                    "symbol": symbol,
+                    "packets_captured": len(raw_packets),
+                    "required_keys_found": sorted(found_keys),
+                },
+                "error": None,
+            }
+
+        except Exception as exc:
+            logger.error("get_forecast error: %s", exc)
+            return {
+                "status": STATUS_FAILED,
+                "data": None,
+                "metadata": {
+                    "exchange": exchange,
+                    "symbol": symbol,
+                },
+                "error": str(exc),
+            }
 
     # ------------------------------------------------------------------
     # Internal helpers
