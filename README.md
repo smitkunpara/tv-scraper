@@ -1,4 +1,3 @@
-
 # TV Scraper
 
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
@@ -36,6 +35,7 @@ For complete documentation, installation guides, API references, and examples, v
 - **💡 Ideas**: Scrape community trading ideas with [`Ideas`](https://smitkunpara.github.io/tv-scraper/scrapers/ideas/).
 - **🧠 Minds**: Access TradingView discussions with [`Minds`](https://smitkunpara.github.io/tv-scraper/scrapers/minds/).
 - **📰 News**: Fetch market headlines and filters with [`News`](https://smitkunpara.github.io/tv-scraper/scrapers/news/).
+- **📉 Options Data**: Retrieve option chains, Greeks, implied volatility, and theoretical prices via [`Options`](https://smitkunpara.github.io/tv-scraper/scrapers/options/).
 - **🔎 Screener**: Run market scans with custom fields/filters via [`Screener`](https://smitkunpara.github.io/tv-scraper/scrapers/screener/).
 - **🏁 Market Movers**: Track top gainers/losers and actives via [`Market Movers`](https://smitkunpara.github.io/tv-scraper/scrapers/market_movers/).
 - **📊 Fundamentals**: Get financial statements and ratios via [`Fundamentals`](https://smitkunpara.github.io/tv-scraper/scrapers/fundamentals/).
