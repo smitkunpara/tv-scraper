@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.1] - 2026-04-02
+
 ### Changed
 - Related to [#5](https://github.com/smitkunpara/tv-scraper/issues/5): Add index-based filtering support (`symbols`, `filter2` parameters).
 
@@ -14,8 +16,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - `Streamer.get_forecast(exchange, symbol, max_packets=...)` for WebSocket-based analyst forecast data on stock symbols.
-- Live API tests for forecast support and non-stock rejection in [tests/live_api/test_streaming.py](tests/live_api/test_streaming.py).
-- Unit tests for forecast success, non-stock validation, and missing-key behavior in [tests/unit/test_streaming.py](tests/unit/test_streaming.py).
 
 ### Error Handling
 - `get_forecast` now returns partial data with a clear missing-keys error when required forecast fields are not fully available within the capture window.
