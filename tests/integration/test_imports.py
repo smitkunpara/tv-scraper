@@ -170,10 +170,10 @@ class TestCoreImports:
 class TestVersionAndAll:
     """Version string and __all__ list should be correct."""
 
-    def test_version_is_1_2_1(self) -> None:
+    def test_version_is_1_3_1(self) -> None:
         import tv_scraper
 
-        assert tv_scraper.__version__ == "1.3.0"
+        assert tv_scraper.__version__ == "1.3.1"
 
     def test_all_exports_match(self) -> None:
         """Every name in __all__ must be importable from tv_scraper."""

@@ -6,7 +6,7 @@
 
 **A powerful, real-time Python library for extracting financial data, indicators, and ideas from TradingView.com.**
 
-> 🔥 New in v1.3.0: Streamer now supports analyst forecast data (price targets, EPS, revenue estimates) for stock symbols via WebSocket.
+> 🔥 New in v1.3.1: Streamer now supports analyst forecast data (price targets, EPS, revenue estimates) for stock symbols via WebSocket.
 
 ---
 

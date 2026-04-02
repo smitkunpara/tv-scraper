@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Related to [#5](https://github.com/smitkunpara/tv-scraper/issues/5): Add index-based filtering support (`symbols`, `filter2` parameters).
+
+## [1.3.0] - 2026-04-02
+
 ### Added
 - `Streamer.get_forecast(exchange, symbol, max_packets=...)` for WebSocket-based analyst forecast data on stock symbols.
 - Live API tests for forecast support and non-stock rejection in [tests/live_api/test_streaming.py](tests/live_api/test_streaming.py).
