@@ -1,6 +1,6 @@
 """tv_scraper - A Python library for scraping TradingView data."""
 
-__version__ = "1.2.1"
+__version__ = "1.3.0"
 
 # Market Data
 # Events

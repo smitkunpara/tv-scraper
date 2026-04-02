@@ -173,7 +173,7 @@ class TestVersionAndAll:
     def test_version_is_1_2_1(self) -> None:
         import tv_scraper
 
-        assert tv_scraper.__version__ == "1.2.1"
+        assert tv_scraper.__version__ == "1.3.0"
 
     def test_all_exports_match(self) -> None:
         """Every name in __all__ must be importable from tv_scraper."""
