@@ -4,9 +4,11 @@ import datetime
 import logging
 from typing import Any
 
+import requests
+
 from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.constants import SCANNER_URL
-from tv_scraper.core.exceptions import NetworkError, ValidationError
+from tv_scraper.core.exceptions import ValidationError
 
 logger = logging.getLogger(__name__)
 
@@ -224,10 +226,18 @@ class Calendar(BaseScraper):
 
         # Execute request
         try:
-            response = self._make_request(url, method="POST", json_data=payload)
-            json_response: dict[str, Any] = response.json()
-        except NetworkError as exc:
-            return self._error_response(str(exc))
+            response = requests.post(
+                url,
+                headers=self._headers,
+                json=payload,
+                timeout=self.timeout,
+            )
+            response.raise_for_status()
+            json_response = response.json()
+        except requests.RequestException as exc:
+            return self._error_response(f"Network error: {exc}")
+        except Exception as exc:
+            return self._error_response(f"Request failed: {exc}")
         except (ValueError, KeyError) as exc:
             return self._error_response(f"Failed to parse API response: {exc}")
 

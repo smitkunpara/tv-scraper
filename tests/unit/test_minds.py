@@ -1,10 +1,9 @@
-"""Tests for Minds scraper module."""
-
 from collections.abc import Iterator
 from typing import Any
 from unittest.mock import MagicMock, patch
 
 import pytest
+import requests
 
 from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.constants import STATUS_FAILED, STATUS_SUCCESS
@@ -76,6 +75,10 @@ def _mock_response(
     resp.status_code = status_code
     resp.text = str(json_data)
     resp.json.return_value = json_data
+    if status_code >= 400:
+        resp.raise_for_status.side_effect = requests.HTTPError(f"Error {status_code}")
+    else:
+        resp.raise_for_status.return_value = None
     return resp
 
 
@@ -96,7 +99,7 @@ class TestInheritance:
 class TestGetMindsSuccess:
     """Tests for successful minds retrieval."""
 
-    @patch("tv_scraper.core.base.BaseScraper._make_request")
+    @patch("requests.get")
     def test_get_data_success(self, mock_get: MagicMock, minds: Minds) -> None:
         """Single page success returns standard envelope with parsed data."""
         mock_get.return_value = _mock_response(_make_page_response([_sample_mind()]))
@@ -119,7 +122,7 @@ class TestGetMindsSuccess:
         assert "modified" not in mind
         assert "hidden" not in mind
 
-    @patch("tv_scraper.core.base.BaseScraper._make_request")
+    @patch("requests.get")
     def test_get_data_with_limit(self, mock_get: MagicMock, minds: Minds) -> None:
         """Limit parameter truncates results to at most that many items."""
         items = [_sample_mind(uid=f"m{i}") for i in range(5)]
@@ -130,8 +133,14 @@ class TestGetMindsSuccess:
         assert result["status"] == STATUS_SUCCESS
         assert len(result["data"]) == 3
 
-    @patch("tv_scraper.core.base.BaseScraper._make_request")
-    def test_get_data_pagination(self, mock_get: MagicMock, minds: Minds) -> None:
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
+        return_value=True,
+    )
+    @patch("requests.get")
+    def test_get_data_pagination(
+        self, mock_get: MagicMock, mock_verify: MagicMock, minds: Minds
+    ) -> None:
         """Multi-page cursor-based pagination follows next URL."""
         page1 = _make_page_response(
             [_sample_mind(uid="m1")],
@@ -152,9 +161,10 @@ class TestGetMindsSuccess:
         assert result["status"] == STATUS_SUCCESS
         assert len(result["data"]) == 2
         assert result["metadata"]["pages"] == 2
+        # Direct requests.get calls
         assert mock_get.call_count == 2
 
-    @patch("tv_scraper.core.base.BaseScraper._make_request")
+    @patch("requests.get")
     def test_get_data_no_data(self, mock_get: MagicMock, minds: Minds) -> None:
         """Empty results returns success with empty list."""
         mock_get.return_value = _mock_response(_make_page_response([]))
@@ -189,10 +199,10 @@ class TestGetMindsErrors:
         assert result["data"] is None
         assert result["error"] is not None
 
-    @patch("tv_scraper.core.base.BaseScraper._make_request")
+    @patch("requests.get")
     def test_get_data_network_error(self, mock_get: MagicMock, minds: Minds) -> None:
         """Network failure returns error response, does not raise."""
-        mock_get.side_effect = Exception("Connection refused")
+        mock_get.side_effect = requests.RequestException("Connection refused")
 
         result = minds.get_minds(exchange="NASDAQ", symbol="AAPL")
 
@@ -250,7 +260,7 @@ class TestParseMind:
 class TestResponseFormat:
     """Tests for response envelope structure."""
 
-    @patch("tv_scraper.core.base.BaseScraper._make_request")
+    @patch("requests.get")
     def test_response_has_standard_envelope(
         self, mock_get: MagicMock, minds: Minds
     ) -> None:
@@ -265,7 +275,7 @@ class TestResponseFormat:
         "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
         return_value=True,
     )
-    @patch("tv_scraper.core.base.BaseScraper._make_request")
+    @patch("requests.get")
     def test_separate_exchange_symbol_params(
         self, mock_get: MagicMock, mock_verify: MagicMock, minds: Minds
     ) -> None:
@@ -282,6 +292,6 @@ class TestResponseFormat:
         assert result["status"] == STATUS_SUCCESS
 
         # Verify the API was called with the combined symbol
-        call_kwargs = mock_get.call_args
-        params = call_kwargs.kwargs.get("params") or call_kwargs[1].get("params", {})
+        call_kwargs = mock_get.call_args[1]
+        params = call_kwargs.get("params", {})
         assert params.get("symbol") == "NYSE:TSLA"

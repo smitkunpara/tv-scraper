@@ -1,15 +1,13 @@
 """Base scraper class for tv_scraper."""
 
 import logging
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
-if TYPE_CHECKING:
-    import requests
+import requests
 
 from tv_scraper.core.constants import DEFAULT_TIMEOUT, STATUS_FAILED, STATUS_SUCCESS
 from tv_scraper.core.validators import DataValidator
 from tv_scraper.utils.helpers import generate_user_agent
-from tv_scraper.utils.http import make_request
 from tv_scraper.utils.io import generate_export_filepath, save_csv_file, save_json_file
 
 logger = logging.getLogger(__name__)
@@ -32,6 +30,7 @@ class BaseScraper:
         export_result: bool = False,
         export_type: str = "json",
         timeout: int = DEFAULT_TIMEOUT,
+        cookie: str | None = None,
     ) -> None:
         from tv_scraper.core.constants import EXPORT_TYPES
 
@@ -43,8 +42,13 @@ class BaseScraper:
         self.export_result = export_result
         self.export_type = export_type
         self.timeout = timeout
+        import os
+
+        self.cookie = cookie or os.environ.get("TRADINGVIEW_COOKIE")
         self.validator = DataValidator()
         self._headers: dict[str, str] = {"User-Agent": generate_user_agent()}
+        if self.cookie:
+            self._headers["cookie"] = self.cookie
 
     def _success_response(self, data: Any, **metadata: Any) -> dict[str, Any]:
         """Build a standardized success response.
@@ -79,32 +83,6 @@ class BaseScraper:
             "metadata": metadata,
             "error": error,
         }
-
-    def _make_request(
-        self, url: str, method: str = "GET", **kwargs: Any
-    ) -> "requests.Response":
-        """Make an HTTP request with default headers and timeout.
-
-        Args:
-            url: The URL to request.
-            method: HTTP method.
-            **kwargs: Additional keyword arguments passed to ``make_request``.
-
-        Returns:
-            The HTTP response.
-
-        Raises:
-            NetworkError: If the request fails.
-        """
-        # Set defaults if not in kwargs
-        kwargs.setdefault("headers", self._headers)
-        kwargs.setdefault("timeout", self.timeout)
-
-        return make_request(
-            url,
-            method=method,
-            **kwargs,
-        )
 
     def _export(
         self,
@@ -154,7 +132,7 @@ class BaseScraper:
             Standardized response dict.
         """
         from tv_scraper.core.constants import SCANNER_URL
-        from tv_scraper.core.exceptions import NetworkError, ValidationError
+        from tv_scraper.core.exceptions import ValidationError
 
         try:
             self.validator.verify_symbol_exchange(exchange, symbol)
@@ -169,10 +147,13 @@ class BaseScraper:
         }
 
         try:
-            response = self._make_request(url, method="GET", params=params)
+            response = requests.get(
+                url, headers=self._headers, params=params, timeout=self.timeout
+            )
+            response.raise_for_status()
             json_response: dict[str, Any] = response.json()
-        except NetworkError as exc:
-            return self._error_response(str(exc))
+        except requests.RequestException as exc:
+            return self._error_response(f"Network error: {exc}")
         except (ValueError, KeyError) as exc:
             return self._error_response(f"Failed to parse API response: {exc}")
 

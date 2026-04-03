@@ -6,6 +6,8 @@ import os
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Any
 
+import requests
+
 from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.constants import BASE_URL
 from tv_scraper.core.exceptions import ValidationError
@@ -160,9 +162,10 @@ class Ideas(BaseScraper):
             params["sort"] = "recent"
 
         try:
-            response = self._make_request(
-                url, method="GET", headers=headers, params=params
+            response = requests.get(
+                url, headers=headers, params=params, timeout=self.timeout
             )
+            # Do NOT call raise_for_status here because we check status_code manually below
 
             if response.status_code != 200:
                 logger.error(

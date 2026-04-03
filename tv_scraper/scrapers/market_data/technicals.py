@@ -4,9 +4,11 @@ import logging
 import re
 from typing import Any
 
+import requests
+
 from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.constants import SCANNER_URL
-from tv_scraper.core.exceptions import NetworkError, ValidationError
+from tv_scraper.core.exceptions import ValidationError
 
 logger = logging.getLogger(__name__)
 
@@ -105,10 +107,16 @@ class Technicals(BaseScraper):
 
         # --- Execute request ---
         try:
-            response = self._make_request(url, method="GET", params=params)
+            response = requests.get(
+                url,
+                headers=self._headers,
+                params=params,
+                timeout=self.timeout,
+            )
+            response.raise_for_status()
             json_response: dict[str, Any] = response.json()
-        except NetworkError as exc:
-            return self._error_response(str(exc))
+        except requests.RequestException as exc:
+            return self._error_response(f"Network error: {exc}")
         except (ValueError, KeyError) as exc:
             return self._error_response(f"Failed to parse API response: {exc}")
 

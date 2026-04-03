@@ -2,13 +2,13 @@
 
 from collections.abc import Iterator
 from unittest import mock
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 import pytest
+import requests
 
 from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.constants import STATUS_FAILED, STATUS_SUCCESS
-from tv_scraper.core.exceptions import NetworkError
 from tv_scraper.scrapers.screening.screener import Screener
 
 
@@ -18,11 +18,17 @@ def screener() -> Iterator[Screener]:
     yield Screener()
 
 
-def _mock_response(data: dict) -> MagicMock:
+def _mock_response(data: dict, status_code: int = 200) -> MagicMock:
     """Create a mock requests.Response with a .json() method."""
     response = MagicMock()
     response.json.return_value = data
-    response.status_code = 200
+    response.status_code = status_code
+    if status_code >= 400:
+        response.raise_for_status.side_effect = requests.HTTPError(
+            f"Error {status_code}"
+        )
+    else:
+        response.raise_for_status.return_value = None
     return response
 
 
@@ -37,9 +43,10 @@ class TestScreenerInheritance:
 class TestScreenSuccess:
     """Tests for successful screening scenarios."""
 
-    def test_get_data_success(self, screener: Screener) -> None:
+    @patch("requests.post")
+    def test_get_data_success(self, mock_post: MagicMock, screener: Screener) -> None:
         """Default params return success envelope with data list."""
-        mock_resp = _mock_response(
+        mock_post.return_value = _mock_response(
             {
                 "data": [
                     {
@@ -74,8 +81,7 @@ class TestScreenSuccess:
                 "totalCount": 500,
             }
         )
-        with mock.patch.object(screener, "_make_request", return_value=mock_resp):
-            result = screener.get_screener(market="america", limit=10)
+        result = screener.get_screener(market="america", limit=10)
 
         assert result["status"] == STATUS_SUCCESS
         assert len(result["data"]) == 2
@@ -83,11 +89,15 @@ class TestScreenSuccess:
         assert result["data"][0]["name"] == "Apple Inc."
         assert result["data"][0]["close"] == 150.25
         assert result["error"] is None
+        mock_post.assert_called_once()
 
-    def test_get_data_custom_fields(self, screener: Screener) -> None:
+    @patch("requests.post")
+    def test_get_data_custom_fields(
+        self, mock_post: MagicMock, screener: Screener
+    ) -> None:
         """Custom fields list is used instead of defaults."""
         custom_fields = ["name", "close", "volume"]
-        mock_resp = _mock_response(
+        mock_post.return_value = _mock_response(
             {
                 "data": [
                     {"s": "NASDAQ:AAPL", "d": ["Apple Inc.", 150.0, 50000000]},
@@ -95,12 +105,7 @@ class TestScreenSuccess:
                 "totalCount": 1,
             }
         )
-        with mock.patch.object(
-            screener, "_make_request", return_value=mock_resp
-        ) as mock_req:
-            result = screener.get_screener(
-                market="america", fields=custom_fields, limit=5
-            )
+        result = screener.get_screener(market="america", fields=custom_fields, limit=5)
 
         assert result["status"] == STATUS_SUCCESS
         assert result["data"][0]["name"] == "Apple Inc."
@@ -108,17 +113,20 @@ class TestScreenSuccess:
         assert result["data"][0]["volume"] == 50000000
 
         # Verify the payload sent to the API used custom fields
-        call_kwargs = mock_req.call_args[1]
-        payload = call_kwargs["json_data"]
+        call_kwargs = mock_post.call_args[1]
+        payload = call_kwargs["json"]
         assert payload["columns"] == custom_fields
 
-    def test_get_data_with_filters(self, screener: Screener) -> None:
+    @patch("requests.post")
+    def test_get_data_with_filters(
+        self, mock_post: MagicMock, screener: Screener
+    ) -> None:
         """Filter objects are included in the API payload."""
         filters = [
             {"left": "close", "operation": "greater", "right": 100},
             {"left": "volume", "operation": "greater", "right": 1000000},
         ]
-        mock_resp = _mock_response(
+        mock_post.return_value = _mock_response(
             {
                 "data": [
                     {
@@ -139,19 +147,17 @@ class TestScreenSuccess:
                 "totalCount": 1,
             }
         )
-        with mock.patch.object(
-            screener, "_make_request", return_value=mock_resp
-        ) as mock_req:
-            result = screener.get_screener(market="america", filters=filters)
+        result = screener.get_screener(market="america", filters=filters)
 
         assert result["status"] == STATUS_SUCCESS
-        call_kwargs = mock_req.call_args[1]
-        payload = call_kwargs["json_data"]
+        call_kwargs = mock_post.call_args[1]
+        payload = call_kwargs["json"]
         assert payload["filter"] == filters
 
-    def test_get_data_with_sort(self, screener: Screener) -> None:
+    @patch("requests.post")
+    def test_get_data_with_sort(self, mock_post: MagicMock, screener: Screener) -> None:
         """sort_by and sort_order are included in the API payload."""
-        mock_resp = _mock_response(
+        mock_post.return_value = _mock_response(
             {
                 "data": [
                     {
@@ -172,36 +178,34 @@ class TestScreenSuccess:
                 "totalCount": 1,
             }
         )
-        with mock.patch.object(
-            screener, "_make_request", return_value=mock_resp
-        ) as mock_req:
-            result = screener.get_screener(
-                market="america", sort_by="volume", sort_order="asc"
-            )
+        result = screener.get_screener(
+            market="america", sort_by="volume", sort_order="asc"
+        )
 
         assert result["status"] == STATUS_SUCCESS
-        call_kwargs = mock_req.call_args[1]
-        payload = call_kwargs["json_data"]
+        call_kwargs = mock_post.call_args[1]
+        payload = call_kwargs["json"]
         assert payload["sort"]["sortBy"] == "volume"
         assert payload["sort"]["sortOrder"] == "asc"
 
-    def test_markets_auto_derived_from_market(self, screener: Screener) -> None:
+    @patch("requests.post")
+    def test_markets_auto_derived_from_market(
+        self, mock_post: MagicMock, screener: Screener
+    ) -> None:
         """markets is always set to [market] regardless of input."""
-        mock_resp = _mock_response({"data": [], "totalCount": 0})
+        mock_post.return_value = _mock_response({"data": [], "totalCount": 0})
 
-        with mock.patch.object(
-            screener, "_make_request", return_value=mock_resp
-        ) as mock_req:
-            screener.get_screener(market="uk")
+        screener.get_screener(market="uk")
 
-        payload = mock_req.call_args[1]["json_data"]
+        payload = mock_post.call_args[1]["json"]
         assert payload["markets"] == ["uk"]
 
+    @patch("requests.post")
     def test_get_data_with_symbols_markets_and_filter2(
-        self, screener: Screener
+        self, mock_post: MagicMock, screener: Screener
     ) -> None:
         """New passthrough payload keys are included when provided."""
-        mock_resp = _mock_response({"data": [], "totalCount": 0})
+        mock_post.return_value = _mock_response({"data": [], "totalCount": 0})
         symbols = {"tickers": ["NASDAQ:AAPL", "NASDAQ:MSFT"]}
         filter2 = {
             "operator": "and",
@@ -216,25 +220,25 @@ class TestScreenSuccess:
             ],
         }
 
-        with mock.patch.object(
-            screener, "_make_request", return_value=mock_resp
-        ) as mock_req:
-            result = screener.get_screener(
-                market="america",
-                symbols=symbols,
-                filter2=filter2,
-            )
+        result = screener.get_screener(
+            market="america",
+            symbols=symbols,
+            filter2=filter2,
+        )
 
         assert result["status"] == STATUS_SUCCESS
-        call_kwargs = mock_req.call_args[1]
-        payload = call_kwargs["json_data"]
+        call_kwargs = mock_post.call_args[1]
+        payload = call_kwargs["json"]
         assert payload["symbols"] == symbols
         assert payload["markets"] == ["america"]
         assert payload["filter2"] == filter2
 
-    def test_get_data_with_limit(self, screener: Screener) -> None:
+    @patch("requests.post")
+    def test_get_data_with_limit(
+        self, mock_post: MagicMock, screener: Screener
+    ) -> None:
         """Limit param controls the range in the API payload."""
-        mock_resp = _mock_response(
+        mock_post.return_value = _mock_response(
             {
                 "data": [
                     {
@@ -255,14 +259,11 @@ class TestScreenSuccess:
                 "totalCount": 100,
             }
         )
-        with mock.patch.object(
-            screener, "_make_request", return_value=mock_resp
-        ) as mock_req:
-            result = screener.get_screener(market="america", limit=25)
+        result = screener.get_screener(market="america", limit=25)
 
         assert result["status"] == STATUS_SUCCESS
-        call_kwargs = mock_req.call_args[1]
-        payload = call_kwargs["json_data"]
+        call_kwargs = mock_post.call_args[1]
+        payload = call_kwargs["json"]
         assert payload["range"] == [0, 25]
 
 
@@ -276,14 +277,13 @@ class TestScreenErrors:
         assert result["data"] is None
         assert "market" in result["error"].lower()
 
-    def test_get_data_network_error(self, screener: Screener) -> None:
+    @patch("requests.post")
+    def test_get_data_network_error(
+        self, mock_post: MagicMock, screener: Screener
+    ) -> None:
         """Network error returns error response, does not raise."""
-        with mock.patch.object(
-            screener,
-            "_make_request",
-            side_effect=NetworkError("Connection refused"),
-        ):
-            result = screener.get_screener(market="america")
+        mock_post.side_effect = requests.RequestException("Connection refused")
+        result = screener.get_screener(market="america")
 
         assert result["status"] == STATUS_FAILED
         assert result["data"] is None
@@ -293,9 +293,12 @@ class TestScreenErrors:
 class TestResponseFormat:
     """Tests for response envelope structure."""
 
-    def test_response_has_standard_envelope(self, screener: Screener) -> None:
+    @patch("requests.post")
+    def test_response_has_standard_envelope(
+        self, mock_post: MagicMock, screener: Screener
+    ) -> None:
         """Success response contains exactly status/data/metadata/error keys."""
-        mock_resp = _mock_response(
+        mock_post.return_value = _mock_response(
             {
                 "data": [
                     {
@@ -316,8 +319,7 @@ class TestResponseFormat:
                 "totalCount": 1,
             }
         )
-        with mock.patch.object(screener, "_make_request", return_value=mock_resp):
-            result = screener.get_screener(market="america")
+        result = screener.get_screener(market="america")
 
         assert set(result.keys()) == {"status", "data", "metadata", "error"}
         assert result["metadata"]["market"] == "america"
@@ -336,25 +338,27 @@ class TestResponseFormat:
 class TestUsesMapScannerRows:
     """Verify Screener delegates row mapping to _map_scanner_rows."""
 
-    def test_uses_map_scanner_rows(self, screener: Screener) -> None:
+    @patch("requests.post")
+    def test_uses_map_scanner_rows(
+        self, mock_post: MagicMock, screener: Screener
+    ) -> None:
         """get_data() calls _map_scanner_rows to transform API data."""
         raw_items = [
             {"s": "NASDAQ:AAPL", "d": ["Apple", 150.0]},
         ]
-        mock_resp = _mock_response(
+        mock_post.return_value = _mock_response(
             {
                 "data": raw_items,
                 "totalCount": 1,
             }
         )
         fields = ["name", "close"]
-        with mock.patch.object(screener, "_make_request", return_value=mock_resp):
-            with mock.patch.object(
-                screener,
-                "_map_scanner_rows",
-                wraps=screener._map_scanner_rows,
-            ) as mock_map:
-                result = screener.get_screener(market="america", fields=fields)
+        with mock.patch.object(
+            screener,
+            "_map_scanner_rows",
+            wraps=screener._map_scanner_rows,
+        ) as mock_map:
+            result = screener.get_screener(market="america", fields=fields)
 
         mock_map.assert_called_once_with(raw_items, fields)
         assert result["status"] == STATUS_SUCCESS
@@ -365,9 +369,12 @@ class TestUsesMapScannerRows:
 class TestDefaultFields:
     """Tests for market-specific default fields."""
 
-    def test_crypto_default_fields(self, screener: Screener) -> None:
+    @patch("requests.post")
+    def test_crypto_default_fields(
+        self, mock_post: MagicMock, screener: Screener
+    ) -> None:
         """Crypto market uses crypto-specific default fields."""
-        mock_resp = _mock_response(
+        mock_post.return_value = _mock_response(
             {
                 "data": [
                     {
@@ -386,19 +393,18 @@ class TestDefaultFields:
                 "totalCount": 1,
             }
         )
-        with mock.patch.object(
-            screener, "_make_request", return_value=mock_resp
-        ) as mock_req:
-            result = screener.get_screener(market="crypto")
+        screener.get_screener(market="crypto")
 
-        assert result["status"] == STATUS_SUCCESS
-        call_kwargs = mock_req.call_args[1]
-        payload = call_kwargs["json_data"]
+        call_kwargs = mock_post.call_args[1]
+        payload = call_kwargs["json"]
         assert "market_cap_calc" in payload["columns"]
 
-    def test_forex_default_fields(self, screener: Screener) -> None:
+    @patch("requests.post")
+    def test_forex_default_fields(
+        self, mock_post: MagicMock, screener: Screener
+    ) -> None:
         """Forex market uses forex-specific default fields."""
-        mock_resp = _mock_response(
+        mock_post.return_value = _mock_response(
             {
                 "data": [
                     {"s": "FX:EURUSD", "d": ["EUR/USD", 1.10, 0.5, 0.005, 0.7]},
@@ -406,14 +412,10 @@ class TestDefaultFields:
                 "totalCount": 1,
             }
         )
-        with mock.patch.object(
-            screener, "_make_request", return_value=mock_resp
-        ) as mock_req:
-            result = screener.get_screener(market="forex")
+        screener.get_screener(market="forex")
 
-        assert result["status"] == STATUS_SUCCESS
-        call_kwargs = mock_req.call_args[1]
-        payload = call_kwargs["json_data"]
+        call_kwargs = mock_post.call_args[1]
+        payload = call_kwargs["json"]
         assert "Recommend.All" in payload["columns"]
         # Forex defaults should NOT have volume
         assert "volume" not in payload["columns"]

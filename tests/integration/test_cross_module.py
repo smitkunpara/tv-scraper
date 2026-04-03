@@ -108,13 +108,3 @@ class TestDataValidatorSingleton:
         # All validators should be the same object
         assert t.validator is o.validator
         assert o.validator is m.validator
-
-
-class TestMakeRequestAvailable:
-    """All scrapers should have _make_request method from BaseScraper."""
-
-    @pytest.mark.parametrize("cls", ALL_SCRAPER_CLASSES, ids=lambda c: c.__name__)
-    def test_has_make_request(self, cls) -> None:
-        instance = cls()
-        assert hasattr(instance, "_make_request")
-        assert callable(instance._make_request)

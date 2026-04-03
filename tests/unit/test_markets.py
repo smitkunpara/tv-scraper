@@ -1,15 +1,13 @@
-"""Tests for Markets scraper module."""
-
 from collections.abc import Iterator
 from typing import Any
 from unittest import mock
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 import pytest
+import requests
 
 from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.constants import STATUS_FAILED, STATUS_SUCCESS
-from tv_scraper.core.exceptions import NetworkError
 from tv_scraper.scrapers.market_data.markets import Markets
 
 
@@ -19,11 +17,17 @@ def markets() -> Iterator[Markets]:
     yield Markets()
 
 
-def _mock_response(data: dict[str, Any]) -> MagicMock:
+def _mock_response(data: dict[str, Any], status_code: int = 200) -> MagicMock:
     """Create a mock requests.Response with a .json() method."""
     response = MagicMock()
     response.json.return_value = data
-    response.status_code = 200
+    response.status_code = status_code
+    if status_code >= 400:
+        response.raise_for_status.side_effect = requests.HTTPError(
+            f"Error {status_code}"
+        )
+    else:
+        response.raise_for_status.return_value = None
     return response
 
 
@@ -80,11 +84,11 @@ class TestInheritance:
 class TestGetTopStocksSuccess:
     """Tests for successful get_data calls."""
 
-    def test_get_data_success(self, markets: Markets) -> None:
+    @patch("requests.post")
+    def test_get_data_success(self, mock_post: MagicMock, markets: Markets) -> None:
         """Default params return success envelope with mapped data."""
-        mock_resp = _mock_response(SAMPLE_API_RESPONSE)
-        with mock.patch.object(markets, "_make_request", return_value=mock_resp):
-            result = markets.get_markets()
+        mock_post.return_value = _mock_response(SAMPLE_API_RESPONSE)
+        result = markets.get_markets()
 
         assert result["status"] == STATUS_SUCCESS
         assert result["error"] is None
@@ -103,8 +107,12 @@ class TestGetTopStocksSuccess:
         assert result["metadata"]["sort_by"] == "market_cap"
         assert result["metadata"]["total"] == 2
         assert result["metadata"]["total_count"] == 5000
+        mock_post.assert_called_once()
 
-    def test_get_data_custom_fields(self, markets: Markets) -> None:
+    @patch("requests.post")
+    def test_get_data_custom_fields(
+        self, mock_post: MagicMock, markets: Markets
+    ) -> None:
         """Custom fields list is sent in the request and mapped correctly."""
         custom_fields = ["name", "close", "volume"]
         api_resp: dict[str, Any] = {
@@ -113,12 +121,9 @@ class TestGetTopStocksSuccess:
             ],
             "totalCount": 100,
         }
-        mock_resp = _mock_response(api_resp)
+        mock_post.return_value = _mock_response(api_resp)
 
-        with mock.patch.object(
-            markets, "_make_request", return_value=mock_resp
-        ) as mock_req:
-            result = markets.get_markets(fields=custom_fields)
+        result = markets.get_markets(fields=custom_fields)
 
         assert result["status"] == STATUS_SUCCESS
         assert result["data"][0]["name"] == "GE"
@@ -126,50 +131,44 @@ class TestGetTopStocksSuccess:
         assert result["data"][0]["volume"] == 8000000
 
         # Verify the request body used custom fields
-        call_kwargs = mock_req.call_args[1]
-        payload = call_kwargs["json_data"]
+        call_kwargs = mock_post.call_args[1]
+        payload = call_kwargs["json"]
         assert payload["columns"] == custom_fields
 
-    def test_get_data_custom_sort(self, markets: Markets) -> None:
+    @patch("requests.post")
+    def test_get_data_custom_sort(self, mock_post: MagicMock, markets: Markets) -> None:
         """sort_by parameter maps to the correct scanner sort field."""
-        mock_resp = _mock_response(SAMPLE_API_RESPONSE)
+        mock_post.return_value = _mock_response(SAMPLE_API_RESPONSE)
 
-        with mock.patch.object(
-            markets, "_make_request", return_value=mock_resp
-        ) as mock_req:
-            result = markets.get_markets(sort_by="volume")
+        result = markets.get_markets(sort_by="volume")
 
         assert result["status"] == STATUS_SUCCESS
-        call_kwargs = mock_req.call_args[1]
-        payload = call_kwargs["json_data"]
+        call_kwargs = mock_post.call_args[1]
+        payload = call_kwargs["json"]
         assert payload["sort"]["sortBy"] == "volume"
 
-    def test_get_data_sort_order(self, markets: Markets) -> None:
+    @patch("requests.post")
+    def test_get_data_sort_order(self, mock_post: MagicMock, markets: Markets) -> None:
         """sort_order parameter (asc/desc) is forwarded to API."""
-        mock_resp = _mock_response(SAMPLE_API_RESPONSE)
+        mock_post.return_value = _mock_response(SAMPLE_API_RESPONSE)
 
-        with mock.patch.object(
-            markets, "_make_request", return_value=mock_resp
-        ) as mock_req:
-            result = markets.get_markets(sort_order="asc")
+        result = markets.get_markets(sort_order="asc")
 
         assert result["status"] == STATUS_SUCCESS
-        call_kwargs = mock_req.call_args[1]
-        payload = call_kwargs["json_data"]
+        call_kwargs = mock_post.call_args[1]
+        payload = call_kwargs["json"]
         assert payload["sort"]["sortOrder"] == "asc"
 
-    def test_get_data_with_limit(self, markets: Markets) -> None:
+    @patch("requests.post")
+    def test_get_data_with_limit(self, mock_post: MagicMock, markets: Markets) -> None:
         """limit param is used in the range field of the payload."""
-        mock_resp = _mock_response(SAMPLE_API_RESPONSE)
+        mock_post.return_value = _mock_response(SAMPLE_API_RESPONSE)
 
-        with mock.patch.object(
-            markets, "_make_request", return_value=mock_resp
-        ) as mock_req:
-            result = markets.get_markets(limit=10)
+        result = markets.get_markets(limit=10)
 
         assert result["status"] == STATUS_SUCCESS
-        call_kwargs = mock_req.call_args[1]
-        payload = call_kwargs["json_data"]
+        call_kwargs = mock_post.call_args[1]
+        payload = call_kwargs["json"]
         assert payload["range"] == [0, 10]
 
 
@@ -192,14 +191,13 @@ class TestGetTopStocksErrors:
         assert result["data"] is None
         assert "sort" in result["error"].lower()
 
-    def test_get_data_network_error(self, markets: Markets) -> None:
+    @patch("requests.post")
+    def test_get_data_network_error(
+        self, mock_post: MagicMock, markets: Markets
+    ) -> None:
         """Network error returns error response, does not raise."""
-        with mock.patch.object(
-            markets,
-            "_make_request",
-            side_effect=NetworkError("Connection refused"),
-        ):
-            result = markets.get_markets()
+        mock_post.side_effect = requests.RequestException("Connection refused")
+        result = markets.get_markets()
 
         assert result["status"] == STATUS_FAILED
         assert result["data"] is None
@@ -209,11 +207,13 @@ class TestGetTopStocksErrors:
 class TestResponseFormat:
     """Tests for response envelope structure."""
 
-    def test_response_has_standard_envelope(self, markets: Markets) -> None:
+    @patch("requests.post")
+    def test_response_has_standard_envelope(
+        self, mock_post: MagicMock, markets: Markets
+    ) -> None:
         """Success response contains exactly status/data/metadata/error keys."""
-        mock_resp = _mock_response(SAMPLE_API_RESPONSE)
-        with mock.patch.object(markets, "_make_request", return_value=mock_resp):
-            result = markets.get_markets()
+        mock_post.return_value = _mock_response(SAMPLE_API_RESPONSE)
+        result = markets.get_markets()
 
         assert set(result.keys()) == {"status", "data", "metadata", "error"}
 
@@ -226,15 +226,15 @@ class TestResponseFormat:
 class TestUsesMapScannerRows:
     """Verify Markets delegates row mapping to BaseScraper._map_scanner_rows."""
 
-    def test_uses_map_scanner_rows(self, markets: Markets) -> None:
+    @patch("requests.post")
+    def test_uses_map_scanner_rows(
+        self, mock_post: MagicMock, markets: Markets
+    ) -> None:
         """get_data must call _map_scanner_rows for data mapping."""
-        mock_resp = _mock_response(SAMPLE_API_RESPONSE)
-        with (
-            mock.patch.object(markets, "_make_request", return_value=mock_resp),
-            mock.patch.object(
-                markets, "_map_scanner_rows", wraps=markets._map_scanner_rows
-            ) as spy,
-        ):
+        mock_post.return_value = _mock_response(SAMPLE_API_RESPONSE)
+        with mock.patch.object(
+            markets, "_map_scanner_rows", wraps=markets._map_scanner_rows
+        ) as spy:
             result = markets.get_markets()
 
         spy.assert_called_once()

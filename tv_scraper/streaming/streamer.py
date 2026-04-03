@@ -9,6 +9,8 @@ import logging
 from collections.abc import Generator
 from typing import Any
 
+import requests
+
 from tv_scraper.core.constants import EXPORT_TYPES, STATUS_FAILED, STATUS_SUCCESS
 from tv_scraper.core.validators import DataValidator
 from tv_scraper.streaming.stream_handler import StreamHandler
@@ -93,21 +95,7 @@ class Streamer:
             Standardized response dict with
             ``{"status", "data", "metadata", "error"}``.
         """
-        try:
-            return {
-                "status": STATUS_SUCCESS,
-                "data": fetch_available_indicators(),
-                "metadata": {},
-                "error": None,
-            }
-        except Exception as exc:
-            logger.error("get_available_indicators error: %s", exc)
-            return {
-                "status": STATUS_FAILED,
-                "data": None,
-                "metadata": {},
-                "error": str(exc),
-            }
+        return fetch_available_indicators()
 
     def get_candles(
         self,
@@ -507,18 +495,22 @@ class Streamer:
                 script_version,
             )
 
-            ind_study = fetch_indicator_metadata(
+            res = fetch_indicator_metadata(
                 script_id=script_id,
                 script_version=script_version,
                 chart_session=handler.chart_session,
                 cookie=self.cookie,
             )
-            if not ind_study or "p" not in ind_study:
+            if res["status"] != STATUS_SUCCESS or not res["data"]:
                 logger.error(
-                    "Failed to fetch metadata for %s v%s", script_id, script_version
+                    "Failed to fetch metadata for %s v%s: %s",
+                    script_id,
+                    script_version,
+                    res.get("error"),
                 )
                 continue
 
+            ind_study = res["data"]
             study_id = f"st{9 + idx}"
             ind_study["p"][1] = study_id
             self.study_id_to_name_map[study_id] = script_id
@@ -587,18 +579,15 @@ class Streamer:
     def _get_symbol_type(self, exchange_symbol: str) -> str | None:
         """Fetch the symbol type (e.g. 'stock', 'crypto', 'spot') from TradingView scanner."""
         from tv_scraper.core.constants import DEFAULT_USER_AGENT, SCANNER_URL
-        from tv_scraper.utils.http import make_request
 
         try:
-            resp = make_request(
+            resp = requests.get(
                 url=f"{SCANNER_URL}/symbol",
-                method="GET",
                 params={"symbol": exchange_symbol, "fields": "type", "no_404": "false"},
                 headers={"User-Agent": DEFAULT_USER_AGENT},
                 timeout=10,
             )
-            if resp is None:
-                return None
+            resp.raise_for_status()
             return str(resp.json().get("type"))
         except Exception:
             return None

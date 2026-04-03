@@ -3,8 +3,11 @@
 import json
 from unittest import mock
 
+import requests
+
 from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.constants import DEFAULT_TIMEOUT, STATUS_FAILED, STATUS_SUCCESS
+from tv_scraper.core.exceptions import ValidationError
 
 
 class TestBaseScraperInit:
@@ -100,6 +103,7 @@ class TestErrorResponse:
 
     def test_metadata_from_kwargs(self) -> None:
         scraper = BaseScraper()
+        # Ensure exchange exists as key
         response = scraper._error_response(error="err", symbol="AAPL", exchange="NYSE")
         assert response["metadata"]["symbol"] == "AAPL"
         assert response["metadata"]["exchange"] == "NYSE"
@@ -187,27 +191,43 @@ class TestExport:
             mock_save.assert_called_once_with({"key": "val"}, "/tmp/test.csv")
 
 
-class TestMakeRequest:
-    """Tests for BaseScraper._make_request()."""
+class TestFetchSymbolFields:
+    """Tests for BaseScraper._fetch_symbol_fields()."""
 
-    def test_passes_headers_and_timeout(self) -> None:
-        scraper = BaseScraper(timeout=15)
-        with mock.patch("tv_scraper.core.base.make_request") as mock_req:
-            mock_req.return_value = mock.MagicMock()
-            scraper._make_request("https://example.com")
-            mock_req.assert_called_once()
-            call_kwargs = mock_req.call_args
-            assert (
-                call_kwargs[1]["headers"]["User-Agent"]
-                == scraper._headers["User-Agent"]
-            )
-            assert call_kwargs[1]["timeout"] == 15
-
-    def test_passes_method(self) -> None:
+    @mock.patch("tv_scraper.core.validators.DataValidator.verify_symbol_exchange")
+    @mock.patch("requests.get")
+    def test_success(self, mock_get, mock_verify) -> None:
+        mock_verify.return_value = True
         scraper = BaseScraper()
-        with mock.patch("tv_scraper.core.base.make_request") as mock_req:
-            mock_req.return_value = mock.MagicMock()
-            scraper._make_request("https://example.com", method="POST")
-            call_args = mock_req.call_args
-            assert call_args[0][0] == "https://example.com"
-            assert call_args[1]["method"] == "POST"
+        mock_resp = mock.MagicMock()
+        mock_resp.json.return_value = {"close": 150.0}
+        mock_get.return_value = mock_resp
+
+        result = scraper._fetch_symbol_fields("NASDAQ", "AAPL", ["close"], "test")
+
+        assert result["status"] == STATUS_SUCCESS
+        assert result["data"]["close"] == 150.0
+        assert result["metadata"]["symbol"] == "AAPL"
+        mock_get.assert_called_once()
+
+    @mock.patch("tv_scraper.core.validators.DataValidator.verify_symbol_exchange")
+    @mock.patch("requests.get")
+    def test_network_error(self, mock_get, mock_verify) -> None:
+        mock_verify.return_value = True
+        scraper = BaseScraper()
+        mock_get.side_effect = requests.RequestException("Conn error")
+
+        result = scraper._fetch_symbol_fields("NASDAQ", "AAPL", ["close"], "test")
+
+        assert result["status"] == STATUS_FAILED
+        assert "Network error" in result["error"]
+
+    def test_validation_error(self) -> None:
+        scraper = BaseScraper()
+        with mock.patch.object(
+            scraper.validator, "verify_symbol_exchange"
+        ) as mock_verify:
+            mock_verify.side_effect = ValidationError("Invalid symbol")
+            result = scraper._fetch_symbol_fields("INVALID", "AAPL", ["close"], "test")
+            assert result["status"] == STATUS_FAILED
+            assert "Invalid symbol" in result["error"]

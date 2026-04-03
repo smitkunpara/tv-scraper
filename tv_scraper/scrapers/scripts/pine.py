@@ -2,9 +2,10 @@
 
 import logging
 import os
-import re
 from typing import Any
 from urllib.parse import quote
+
+import requests
 
 from tv_scraper.core.base import BaseScraper
 
@@ -58,11 +59,12 @@ class Pine(BaseScraper):
         params = {"filter": "saved"}
 
         try:
-            response = self._make_request(
-                url, method="GET", headers=headers, params=params
+            response = requests.get(
+                url, headers=headers, params=params, timeout=self.timeout
             )
+            response.raise_for_status()
             payload = response.json()
-        except Exception as exc:
+        except requests.RequestException as exc:
             logger.error("Failed to list Pine scripts: %s", exc)
             return self._error_response(self._map_request_error(exc))
 
@@ -106,15 +108,16 @@ class Pine(BaseScraper):
         params = {"v": "3"}
 
         try:
-            response = self._make_request(
+            response = requests.post(
                 url,
-                method="POST",
                 headers=headers,
                 params=params,
                 files={"source": (None, source)},
+                timeout=self.timeout,
             )
+            response.raise_for_status()
             payload = response.json()
-        except Exception as exc:
+        except requests.RequestException as exc:
             logger.error("Failed to validate Pine source: %s", exc)
             return self._error_response(self._map_request_error(exc))
 
@@ -186,15 +189,16 @@ class Pine(BaseScraper):
         }
 
         try:
-            response = self._make_request(
+            response = requests.post(
                 url,
-                method="POST",
                 headers=headers,
                 params=params,
                 files={"source": (None, source)},
+                timeout=self.timeout,
             )
+            response.raise_for_status()
             payload = response.json()
-        except Exception as exc:
+        except requests.RequestException as exc:
             logger.error("Failed to create Pine script '%s': %s", name, exc)
             return self._error_response(self._map_request_error(exc))
 
@@ -256,15 +260,16 @@ class Pine(BaseScraper):
         }
 
         try:
-            response = self._make_request(
+            response = requests.post(
                 url,
-                method="POST",
                 headers=headers,
                 params=params,
                 files={"source": (None, source)},
+                timeout=self.timeout,
             )
+            response.raise_for_status()
             payload = response.json()
-        except Exception as exc:
+        except requests.RequestException as exc:
             logger.error("Failed to edit Pine script '%s': %s", pine_id, exc)
             return self._error_response(self._map_request_error(exc))
 
@@ -309,13 +314,14 @@ class Pine(BaseScraper):
         url = f"{PINE_FACADE_BASE_URL}/delete/{encoded_pine_id}"
 
         try:
-            response = self._make_request(
+            response = requests.post(
                 url,
-                method="POST",
                 headers=headers,
+                timeout=self.timeout,
             )
+            response.raise_for_status()
             response_text = response.text.strip().strip('"').lower()
-        except Exception as exc:
+        except requests.RequestException as exc:
             logger.error("Failed to delete Pine script '%s': %s", pine_id, exc)
             return self._error_response(self._map_request_error(exc))
 
@@ -375,11 +381,10 @@ class Pine(BaseScraper):
             "modified": result_obj.get("modified", 0),
         }
 
-    @staticmethod
-    def _map_request_error(exc: Exception) -> str:
-        message = str(exc)
-        status_match = re.search(r"HTTP error\s+(\d+)", message)
-        status_code = int(status_match.group(1)) if status_match else None
+    def _map_request_error(self, exc: Exception) -> str:
+        status_code = None
+        if isinstance(exc, requests.HTTPError) and exc.response is not None:
+            status_code = exc.response.status_code
 
         if status_code in {401, 403}:
             return "Invalid TradingView cookie. Please provide a valid authenticated cookie."
@@ -390,4 +395,4 @@ class Pine(BaseScraper):
         if status_code:
             return f"Pine API request failed with status {status_code}."
 
-        return message or "Failed to complete Pine API request."
+        return str(exc) or "Failed to complete Pine API request."

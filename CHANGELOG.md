@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- **BaseScraper Enhancements**: Added native cookie support and automatically load the `TRADINGVIEW_COOKIE` environment variable in `BaseScraper.__init__`. All subclasses now benefit from this shared authentication logic.
+- **Standardized Exports**: `tv_scraper.core` now correctly exports the base `TvScraperError` exception.
+
+### Changed
+- **Network Layer Refactoring**: Successfully migrated all scrapers from the legacy `make_request` utility to direct `requests` library calls (`requests.get`, `requests.post`).
+- **Standardized Error Handling**: Improved network robustness by wrapping all API calls in `try...except requests.RequestException` blocks, ensuring failures always return a valid error envelope rather than raising unhandled exceptions.
+- **Metadata Management**: Standardized the inclusion of request parameters and filters (e.g., `sort_by`, `section`, `limit`) in the `metadata` field of all response envelopes.
+- **Test Suite Modernization**: Refactored over 350 unit and integration tests to mock `requests` directly and verify the new standardized response formats.
+
+### Removed
+- **Legacy Utility**: Removed the deprecated `make_request` internal utility.
+- **Deprecated Exceptions**: Removed `NetworkError` from `tv_scraper.core.exceptions`, as the library now relies on official `requests` exceptions for internal handling.
+
 ## [1.3.2] - 2026-04-03
 
 ### Added

@@ -3,9 +3,10 @@
 import logging
 from typing import Any
 
+import requests
+
 from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.constants import SCANNER_URL
-from tv_scraper.core.exceptions import NetworkError
 
 logger = logging.getLogger(__name__)
 
@@ -232,7 +233,13 @@ class MarketMovers(BaseScraper):
         url = self._get_scanner_url(market)
 
         try:
-            response = self._make_request(url, method="POST", json_data=payload)
+            response = requests.post(
+                url,
+                headers=self._headers,
+                json=payload,
+                timeout=self.timeout,
+            )
+            response.raise_for_status()
             json_response = response.json()
 
             raw_items = json_response.get("data", [])
@@ -251,7 +258,7 @@ class MarketMovers(BaseScraper):
                 category=category,
                 total=len(formatted_data),
             )
-        except NetworkError as exc:
-            return self._error_response(str(exc))
+        except requests.RequestException as exc:
+            return self._error_response(f"Network error: {exc}")
         except Exception as exc:
             return self._error_response(f"Request failed: {exc}")

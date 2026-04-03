@@ -1,13 +1,11 @@
-"""Unit tests for tv_scraper.scrapers.screening.market_movers.MarketMovers."""
-
 from collections.abc import Iterator
 from typing import Any
-from unittest import mock
+from unittest.mock import MagicMock, patch
 
 import pytest
+import requests
 
 from tv_scraper.core.base import BaseScraper
-from tv_scraper.core.exceptions import NetworkError
 from tv_scraper.scrapers.screening.market_movers import MarketMovers
 
 
@@ -21,14 +19,19 @@ def _mock_scanner_response(
     symbols: list[str],
     fields: list[str],
     values: list[list[Any]],
-) -> mock.Mock:
+    status_code: int = 200,
+) -> MagicMock:
     """Build a mock response matching the TradingView scanner format."""
     data = []
     for sym, vals in zip(symbols, values, strict=True):
         data.append({"s": sym, "d": vals})
-    resp = mock.Mock()
-    resp.status_code = 200
+    resp = MagicMock()
+    resp.status_code = status_code
     resp.json.return_value = {"data": data, "totalCount": len(data)}
+    if status_code >= 400:
+        resp.raise_for_status.side_effect = requests.HTTPError(f"Error {status_code}")
+    else:
+        resp.raise_for_status.return_value = None
     return resp
 
 
@@ -45,13 +48,13 @@ class TestInheritance:
 
 
 class TestScrapeSuccess:
-    @mock.patch("tv_scraper.core.base.make_request")
+    @patch("requests.post")
     def test_get_data_success_gainers(
-        self, mock_req: mock.Mock, scraper: MarketMovers
+        self, mock_post: MagicMock, scraper: MarketMovers
     ) -> None:
         """Default category (gainers) returns success envelope with data."""
         fields = MarketMovers.DEFAULT_FIELDS
-        mock_req.return_value = _mock_scanner_response(
+        mock_post.return_value = _mock_scanner_response(
             symbols=["NASDAQ:AAPL", "NASDAQ:MSFT"],
             fields=fields,
             values=[
@@ -91,13 +94,13 @@ class TestScrapeSuccess:
         assert result["data"][0]["name"] == "Apple Inc."
         assert result["data"][1]["symbol"] == "NASDAQ:MSFT"
 
-    @mock.patch("tv_scraper.core.base.make_request")
+    @patch("requests.post")
     def test_get_data_success_losers(
-        self, mock_req: mock.Mock, scraper: MarketMovers
+        self, mock_post: MagicMock, scraper: MarketMovers
     ) -> None:
         """Losers category returns properly sorted data."""
         fields = MarketMovers.DEFAULT_FIELDS
-        mock_req.return_value = _mock_scanner_response(
+        mock_post.return_value = _mock_scanner_response(
             symbols=["NYSE:BAC"],
             fields=fields,
             values=[
@@ -123,17 +126,17 @@ class TestScrapeSuccess:
         assert result["data"][0]["change"] == -4.5
 
         # Verify the payload sort order was "asc" for losers
-        call_kwargs = mock_req.call_args
-        payload = call_kwargs.kwargs.get("json_data") or call_kwargs[1].get("json_data")
+        call_kwargs = mock_post.call_args[1]
+        payload = call_kwargs.get("json")
         assert payload["sort"]["sortOrder"] == "asc"
 
-    @mock.patch("tv_scraper.core.base.make_request")
+    @patch("requests.post")
     def test_get_data_success_active(
-        self, mock_req: mock.Mock, scraper: MarketMovers
+        self, mock_post: MagicMock, scraper: MarketMovers
     ) -> None:
         """Most-active category sorts by volume desc."""
         fields = MarketMovers.DEFAULT_FIELDS
-        mock_req.return_value = _mock_scanner_response(
+        mock_post.return_value = _mock_scanner_response(
             symbols=["NASDAQ:TSLA"],
             fields=fields,
             values=[
@@ -157,8 +160,8 @@ class TestScrapeSuccess:
         assert result["status"] == "success"
 
         # Verify sort config
-        call_kwargs = mock_req.call_args
-        payload = call_kwargs.kwargs.get("json_data") or call_kwargs[1].get("json_data")
+        call_kwargs = mock_post.call_args[1]
+        payload = call_kwargs.get("json")
         assert payload["sort"]["sortBy"] == "volume"
         assert payload["sort"]["sortOrder"] == "desc"
 
@@ -167,13 +170,13 @@ class TestScrapeSuccess:
 
 
 class TestCustomFieldsAndLimit:
-    @mock.patch("tv_scraper.core.base.make_request")
+    @patch("requests.post")
     def test_get_data_custom_fields(
-        self, mock_req: mock.Mock, scraper: MarketMovers
+        self, mock_post: MagicMock, scraper: MarketMovers
     ) -> None:
         """Custom fields list is used instead of defaults."""
         custom_fields = ["name", "close", "change"]
-        mock_req.return_value = _mock_scanner_response(
+        mock_post.return_value = _mock_scanner_response(
             symbols=["NYSE:IBM"],
             fields=custom_fields,
             values=[["IBM Corp", 180.0, 1.1]],
@@ -188,16 +191,16 @@ class TestCustomFieldsAndLimit:
         assert result["status"] == "success"
         assert result["data"][0]["name"] == "IBM Corp"
         # Verify the payload used custom fields
-        call_kwargs = mock_req.call_args
-        payload = call_kwargs.kwargs.get("json_data") or call_kwargs[1].get("json_data")
+        call_kwargs = mock_post.call_args[1]
+        payload = call_kwargs.get("json")
         assert payload["columns"] == custom_fields
 
-    @mock.patch("tv_scraper.core.base.make_request")
+    @patch("requests.post")
     def test_get_data_with_limit(
-        self, mock_req: mock.Mock, scraper: MarketMovers
+        self, mock_post: MagicMock, scraper: MarketMovers
     ) -> None:
         """Limit parameter is passed to the scanner payload."""
-        mock_req.return_value = _mock_scanner_response(
+        mock_post.return_value = _mock_scanner_response(
             symbols=["NASDAQ:GOOG"],
             fields=MarketMovers.DEFAULT_FIELDS,
             values=[
@@ -218,8 +221,8 @@ class TestCustomFieldsAndLimit:
 
         scraper.get_market_movers(market="stocks-usa", category="gainers", limit=10)
 
-        call_kwargs = mock_req.call_args
-        payload = call_kwargs.kwargs.get("json_data") or call_kwargs[1].get("json_data")
+        call_kwargs = mock_post.call_args[1]
+        payload = call_kwargs.get("json")
         assert payload["range"] == [0, 10]
 
 
@@ -248,12 +251,12 @@ class TestValidationErrors:
 
 
 class TestNetworkError:
-    @mock.patch("tv_scraper.core.base.make_request")
+    @patch("requests.post")
     def test_get_data_network_error(
-        self, mock_req: mock.Mock, scraper: MarketMovers
+        self, mock_post: MagicMock, scraper: MarketMovers
     ) -> None:
         """Network failure returns error response."""
-        mock_req.side_effect = NetworkError("Connection refused")
+        mock_post.side_effect = requests.RequestException("Connection refused")
 
         result = scraper.get_market_movers(market="stocks-usa", category="gainers")
 
@@ -266,12 +269,12 @@ class TestNetworkError:
 
 
 class TestResponseEnvelope:
-    @mock.patch("tv_scraper.core.base.make_request")
+    @patch("requests.post")
     def test_response_has_standard_envelope(
-        self, mock_req: mock.Mock, scraper: MarketMovers
+        self, mock_post: MagicMock, scraper: MarketMovers
     ) -> None:
         """Response has status, data, metadata, error keys."""
-        mock_req.return_value = _mock_scanner_response(
+        mock_post.return_value = _mock_scanner_response(
             symbols=["NASDAQ:AAPL"],
             fields=MarketMovers.DEFAULT_FIELDS,
             values=[
@@ -307,17 +310,17 @@ class TestCategoryDeterminesSort:
             ("after-hours-losers", "change", "asc"),
         ],
     )
-    @mock.patch("tv_scraper.core.base.make_request")
+    @patch("requests.post")
     def test_category_determines_sort(
         self,
-        mock_req: mock.Mock,
+        mock_post: MagicMock,
         scraper: MarketMovers,
         category: str,
         expected_sort_by: str,
         expected_order: str,
     ) -> None:
         """Each category maps to the correct sort configuration."""
-        mock_req.return_value = _mock_scanner_response(
+        mock_post.return_value = _mock_scanner_response(
             symbols=["NASDAQ:TEST"],
             fields=MarketMovers.DEFAULT_FIELDS,
             values=[
@@ -327,7 +330,7 @@ class TestCategoryDeterminesSort:
 
         scraper.get_market_movers(market="stocks-usa", category=category)
 
-        call_kwargs = mock_req.call_args
-        payload = call_kwargs.kwargs.get("json_data") or call_kwargs[1].get("json_data")
+        call_kwargs = mock_post.call_args[1]
+        payload = call_kwargs.get("json")
         assert payload["sort"]["sortBy"] == expected_sort_by
         assert payload["sort"]["sortOrder"] == expected_order

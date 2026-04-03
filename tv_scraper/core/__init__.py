@@ -13,7 +13,6 @@ from tv_scraper.core.constants import (
 from tv_scraper.core.exceptions import (
     DataNotFoundError,
     ExportError,
-    NetworkError,
     TvScraperError,
     ValidationError,
 )
@@ -31,7 +30,6 @@ __all__ = [
     "DataNotFoundError",
     "DataValidator",
     "ExportError",
-    "NetworkError",
     "TvScraperError",
     "ValidationError",
 ]

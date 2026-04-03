@@ -1,10 +1,9 @@
-"""Tests for Ideas scraper module."""
-
 from collections.abc import Iterator
 from typing import Any
 from unittest.mock import MagicMock, patch
 
 import pytest
+import requests
 
 from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.constants import STATUS_FAILED, STATUS_SUCCESS
@@ -57,6 +56,11 @@ def _mock_response(
     resp.status_code = status_code
     resp.text = text
     resp.json.return_value = json_data
+    # Success responses should not raise for status
+    if status_code >= 400:
+        resp.raise_for_status.side_effect = requests.HTTPError(f"Error {status_code}")
+    else:
+        resp.raise_for_status.return_value = None
     return resp
 
 
@@ -77,7 +81,7 @@ class TestInheritance:
 class TestScrapeSuccess:
     """Tests for successful idea scraping."""
 
-    @patch("tv_scraper.core.base.BaseScraper._make_request")
+    @patch("requests.get")
     def test_get_data_success_popular(self, mock_get: MagicMock, ideas: Ideas) -> None:
         """Scrape popular ideas returns success envelope with mapped fields."""
         mock_get.return_value = _mock_response(
@@ -101,7 +105,7 @@ class TestScrapeSuccess:
         assert idea["chart_url"] == "https://www.tradingview.com/chart/BTCUSD/abc123"
         assert idea["preview_image"] == ["https://example.com/logo.png"]
 
-    @patch("tv_scraper.core.base.BaseScraper._make_request")
+    @patch("requests.get")
     def test_get_data_success_recent(self, mock_get: MagicMock, ideas: Ideas) -> None:
         """Scrape recent ideas passes sort=recent to API and returns data."""
         mock_get.return_value = _mock_response(
@@ -115,12 +119,18 @@ class TestScrapeSuccess:
         assert result["data"][0]["title"] == "Latest Analysis"
 
         # Verify 'sort=recent' was included in the API call params
-        call_kwargs = mock_get.call_args
-        params = call_kwargs[1].get("params", call_kwargs.kwargs.get("params", {}))
+        call_kwargs = mock_get.call_args[1]
+        params = call_kwargs.get("params", {})
         assert params.get("sort") == "recent"
 
-    @patch("tv_scraper.core.base.BaseScraper._make_request")
-    def test_get_data_multiple_pages(self, mock_get: MagicMock, ideas: Ideas) -> None:
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
+        return_value=True,
+    )
+    @patch("requests.get")
+    def test_get_data_multiple_pages(
+        self, mock_get: MagicMock, mock_verify: MagicMock, ideas: Ideas
+    ) -> None:
         """Multi-page get_data with ThreadPoolExecutor returns combined results."""
         mock_get.return_value = _mock_response(_make_api_response([_sample_idea()]))
 
@@ -135,10 +145,11 @@ class TestScrapeSuccess:
         assert result["status"] == STATUS_SUCCESS
         # 3 pages x 1 idea each = 3 ideas
         assert len(result["data"]) == 3
+        # Direct requests.get called in concurrent threads
         assert mock_get.call_count == 3
         assert result["metadata"]["pages"] == 3
 
-    @patch("tv_scraper.core.base.BaseScraper._make_request")
+    @patch("requests.get")
     def test_get_data_no_data(self, mock_get: MagicMock, ideas: Ideas) -> None:
         """Empty items list returns success with empty data list."""
         mock_get.return_value = _mock_response(_make_api_response([]))
@@ -171,10 +182,10 @@ class TestScrapeErrors:
         assert result["data"] is None
         assert result["error"] is not None
 
-    @patch("tv_scraper.core.base.BaseScraper._make_request")
+    @patch("requests.get")
     def test_get_data_network_error(self, mock_get: MagicMock, ideas: Ideas) -> None:
         """Network/request failure returns error response, does not raise."""
-        mock_get.side_effect = Exception("Connection refused")
+        mock_get.side_effect = requests.RequestException("Connection refused")
 
         result = ideas.get_ideas(exchange="CRYPTO", symbol="BTCUSD")
 
@@ -182,7 +193,7 @@ class TestScrapeErrors:
         assert result["data"] is None
         assert result["error"] is not None
 
-    @patch("tv_scraper.core.base.BaseScraper._make_request")
+    @patch("requests.get")
     def test_get_data_captcha_detected(self, mock_get: MagicMock, ideas: Ideas) -> None:
         """Captcha challenge in response returns error response."""
         captcha_resp = _mock_response(
@@ -201,7 +212,7 @@ class TestScrapeErrors:
 class TestResponseFormat:
     """Tests for response envelope structure."""
 
-    @patch("tv_scraper.core.base.BaseScraper._make_request")
+    @patch("requests.get")
     def test_response_has_standard_envelope(
         self, mock_get: MagicMock, ideas: Ideas
     ) -> None:
@@ -215,7 +226,7 @@ class TestResponseFormat:
         assert result["metadata"]["exchange"] == "CRYPTO"
         assert "total" in result["metadata"]
 
-    @patch("tv_scraper.core.base.BaseScraper._make_request")
+    @patch("requests.get")
     def test_snake_case_params(self, mock_get: MagicMock, ideas: Ideas) -> None:
         """Verify snake_case parameter names are accepted."""
         mock_get.return_value = _mock_response(_make_api_response([_sample_idea()]))
@@ -235,7 +246,7 @@ class TestResponseFormat:
 class TestCookieHandling:
     """Tests for cookie authentication."""
 
-    @patch("tv_scraper.core.base.BaseScraper._make_request")
+    @patch("requests.get")
     def test_cookie_header_applied(self, mock_get: MagicMock) -> None:
         """Cookie passed in constructor is sent as request header."""
         cookie_value = "sessionid=abc123; _sp_id=xyz789"
@@ -244,12 +255,13 @@ class TestCookieHandling:
 
         scraper.get_ideas(exchange="CRYPTO", symbol="BTCUSD")
 
-        call_kwargs = mock_get.call_args
-        headers = call_kwargs[1].get("headers", call_kwargs.kwargs.get("headers", {}))
+        # Direct requests.get call should have headers with cookie
+        call_kwargs = mock_get.call_args[1]
+        headers = call_kwargs.get("headers", {})
         assert headers.get("cookie") == cookie_value
 
     @patch.dict("os.environ", {"TRADINGVIEW_COOKIE": "env_cookie_value"})
-    @patch("tv_scraper.core.base.BaseScraper._make_request")
+    @patch("requests.get")
     def test_cookie_from_env_var(self, mock_get: MagicMock) -> None:
         """Cookie loaded from TRADINGVIEW_COOKIE env var when not passed directly."""
         scraper = Ideas()
@@ -257,6 +269,6 @@ class TestCookieHandling:
 
         scraper.get_ideas(exchange="CRYPTO", symbol="BTCUSD")
 
-        call_kwargs = mock_get.call_args
-        headers = call_kwargs[1].get("headers", call_kwargs.kwargs.get("headers", {}))
+        call_kwargs = mock_get.call_args[1]
+        headers = call_kwargs.get("headers", {})
         assert headers.get("cookie") == "env_cookie_value"

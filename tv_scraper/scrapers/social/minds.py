@@ -4,6 +4,8 @@ import logging
 from datetime import datetime
 from typing import Any
 
+import requests
+
 from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.exceptions import ValidationError
 
@@ -68,10 +70,11 @@ class Minds(BaseScraper):
                 if next_cursor:
                     params["c"] = next_cursor
 
-                response = self._make_request(
+                response = requests.get(
                     MINDS_API_URL,
-                    method="GET",
+                    headers=self._headers,
                     params=params,
+                    timeout=self.timeout,
                 )
 
                 if response.status_code != 200:

@@ -13,9 +13,5 @@ class DataNotFoundError(TvScraperError):
     """Raised when expected data is not found."""
 
 
-class NetworkError(TvScraperError):
-    """Raised for network/HTTP failures."""
-
-
 class ExportError(TvScraperError):
     """Raised for export failures."""

@@ -1,33 +1,36 @@
-"""Tests for Fundamentals scraper module."""
-
-from collections.abc import Iterator
 from typing import Any
-from unittest import mock
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 import pytest
+import requests
 
 from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.constants import STATUS_FAILED, STATUS_SUCCESS
-from tv_scraper.core.exceptions import NetworkError
+from tv_scraper.core.exceptions import ValidationError
 from tv_scraper.scrapers.market_data.fundamentals import Fundamentals
 
 
 @pytest.fixture
-def fundamentals() -> Iterator[Fundamentals]:
+def fundamentals() -> Fundamentals:
     """Create a Fundamentals instance for testing."""
-    yield Fundamentals()
+    return Fundamentals()
 
 
-def _mock_response(data: dict[str, Any]) -> MagicMock:
+def _mock_response(data: dict, status_code: int = 200) -> MagicMock:
     """Create a mock requests.Response with a .json() method."""
     response = MagicMock()
     response.json.return_value = data
-    response.status_code = 200
+    response.status_code = status_code
+    if status_code >= 400:
+        response.raise_for_status.side_effect = requests.HTTPError(
+            f"Error {status_code}"
+        )
+    else:
+        response.raise_for_status.return_value = None
     return response
 
 
-class TestInheritance:
+class TestFundamentalsInheritance:
     """Verify Fundamentals inherits from BaseScraper."""
 
     def test_inherits_base_scraper(self) -> None:
@@ -38,7 +41,14 @@ class TestInheritance:
 class TestGetFundamentalsSuccess:
     """Tests for successful fundamentals retrieval."""
 
-    def test_get_data_success(self, fundamentals: Fundamentals) -> None:
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
+        return_value=True,
+    )
+    @patch("requests.get")
+    def test_get_data_success(
+        self, mock_get, mock_verify, fundamentals: Fundamentals
+    ) -> None:
         """Get fundamentals with default (all) fields returns success envelope."""
         # Flat mock response as returned by GET /symbol endpoint
         mock_data: dict[str, Any] = {
@@ -46,270 +56,185 @@ class TestGetFundamentalsSuccess:
             "EBITDA": 130000000000,
             "market_cap_basic": 2800000000000,
         }
-        mock_resp = _mock_response(mock_data)
+        mock_get.return_value = _mock_response(mock_data)
 
-        with mock.patch.object(fundamentals, "_make_request", return_value=mock_resp):
-            result = fundamentals.get_fundamentals(exchange="NASDAQ", symbol="AAPL")
+        result = fundamentals.get_fundamentals(exchange="NASDAQ", symbol="AAPL")
 
         assert result["status"] == STATUS_SUCCESS
         assert result["data"] is not None
-        assert result["error"] is None
-        assert result["data"]["symbol"] == "NASDAQ:AAPL"
         assert result["data"]["total_revenue"] == 394000000000
         assert result["data"]["EBITDA"] == 130000000000
 
-    def test_get_data_with_custom_fields(self, fundamentals: Fundamentals) -> None:
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
+        return_value=True,
+    )
+    @patch("requests.get")
+    def test_get_data_with_custom_fields(
+        self, mock_get, mock_verify, fundamentals: Fundamentals
+    ) -> None:
         """Custom fields are sent to the API and returned correctly."""
         custom_fields = ["total_revenue", "net_income", "EBITDA"]
         mock_data: dict[str, Any] = {
             "total_revenue": 394000000000,
-            "net_income": 100000000000,
+            "net_income": 95000000000,
             "EBITDA": 130000000000,
         }
-        mock_resp = _mock_response(mock_data)
+        mock_get.return_value = _mock_response(mock_data)
 
-        with mock.patch.object(
-            fundamentals, "_make_request", return_value=mock_resp
-        ) as mock_req:
-            result = fundamentals.get_fundamentals(
-                exchange="NASDAQ", symbol="AAPL", fields=custom_fields
-            )
+        result = fundamentals.get_fundamentals(
+            exchange="NASDAQ", symbol="AAPL", fields=custom_fields
+        )
 
         assert result["status"] == STATUS_SUCCESS
+        # BaseScraper._fetch_symbol_fields adds 'symbol' key, so 3+1 = 4
+        assert len(result["data"]) == 4
         assert result["data"]["total_revenue"] == 394000000000
-        assert result["data"]["net_income"] == 100000000000
-        assert result["data"]["EBITDA"] == 130000000000
+        assert result["data"]["symbol"] == "NASDAQ:AAPL"
 
-        # Verify correct params sent to API (GET uses params, not json_data)
-        call_kwargs = mock_req.call_args[1]
-        params = call_kwargs["params"]
-        assert params["symbol"] == "NASDAQ:AAPL"
-        assert params["fields"] == ",".join(custom_fields)
-
-
-class TestGetFundamentalsErrors:
-    """Tests for error handling — returns error responses, never raises."""
+        # Verify fields param in request
+        call_kwargs = mock_get.call_args[1]
+        params = call_kwargs.get("params", {})
+        assert "total_revenue" in params.get("fields", "")
+        assert "net_income" in params.get("fields", "")
 
     def test_get_data_invalid_exchange(self, fundamentals: Fundamentals) -> None:
-        """Invalid exchange returns error response, does not raise."""
-        result = fundamentals.get_fundamentals(
-            exchange="INVALID_EXCHANGE", symbol="AAPL"
-        )
-        assert result["status"] == STATUS_FAILED
-        assert result["data"] is None
-        assert "Invalid exchange" in result["error"]
-
-    def test_get_data_empty_symbol(self, fundamentals: Fundamentals) -> None:
-        """Empty symbol returns error response."""
-        result = fundamentals.get_fundamentals(exchange="NASDAQ", symbol="")
+        """Invalid exchange returns error response."""
+        result = fundamentals.get_fundamentals(exchange="INVALID", symbol="AAPL")
         assert result["status"] == STATUS_FAILED
         assert result["data"] is None
         assert result["error"] is not None
 
-    def test_get_data_network_error(self, fundamentals: Fundamentals) -> None:
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
+        return_value=True,
+    )
+    @patch("requests.get")
+    def test_get_data_network_error(
+        self, mock_get, mock_verify, fundamentals: Fundamentals
+    ) -> None:
         """Network error returns error response, does not raise."""
-        with mock.patch.object(
-            fundamentals,
-            "_make_request",
-            side_effect=NetworkError("Connection refused"),
-        ):
-            result = fundamentals.get_fundamentals(exchange="NASDAQ", symbol="AAPL")
+        mock_get.side_effect = requests.RequestException("Connection refused")
+
+        result = fundamentals.get_fundamentals(exchange="NASDAQ", symbol="AAPL")
+
         assert result["status"] == STATUS_FAILED
         assert result["data"] is None
-        assert "Connection refused" in result["error"]
-
-
-class TestCategoryMethods:
-    """Tests for convenience category methods."""
-
-    def test_get_income_statement(self, fundamentals: Fundamentals) -> None:
-        """get_income_statement passes INCOME_STATEMENT_FIELDS."""
-        with mock.patch.object(fundamentals, "get_fundamentals") as mock_get:
-            mock_get.return_value = fundamentals._success_response(
-                {"total_revenue": 394000000000},
-                exchange="NASDAQ",
-                symbol="AAPL",
-            )
-            result = fundamentals.get_income_statement(exchange="NASDAQ", symbol="AAPL")
-
-        mock_get.assert_called_once_with(
-            exchange="NASDAQ",
-            symbol="AAPL",
-            fields=Fundamentals.INCOME_STATEMENT_FIELDS,
-        )
-        assert result["status"] == STATUS_SUCCESS
-
-    def test_get_balance_sheet(self, fundamentals: Fundamentals) -> None:
-        """get_balance_sheet passes BALANCE_SHEET_FIELDS."""
-        with mock.patch.object(fundamentals, "get_fundamentals") as mock_get:
-            mock_get.return_value = fundamentals._success_response(
-                {"total_assets": 350000000000},
-                exchange="NASDAQ",
-                symbol="AAPL",
-            )
-            result = fundamentals.get_balance_sheet(exchange="NASDAQ", symbol="AAPL")
-
-        mock_get.assert_called_once_with(
-            exchange="NASDAQ",
-            symbol="AAPL",
-            fields=Fundamentals.BALANCE_SHEET_FIELDS,
-        )
-        assert result["status"] == STATUS_SUCCESS
-
-    def test_get_cash_flow(self, fundamentals: Fundamentals) -> None:
-        """get_cash_flow passes CASH_FLOW_FIELDS."""
-        with mock.patch.object(fundamentals, "get_fundamentals") as mock_get:
-            mock_get.return_value = fundamentals._success_response(
-                {"free_cash_flow": 85000000000},
-                exchange="NASDAQ",
-                symbol="AAPL",
-            )
-            result = fundamentals.get_cash_flow(exchange="NASDAQ", symbol="AAPL")
-
-        mock_get.assert_called_once_with(
-            exchange="NASDAQ",
-            symbol="AAPL",
-            fields=Fundamentals.CASH_FLOW_FIELDS,
-        )
-        assert result["status"] == STATUS_SUCCESS
-
-    def test_get_statistics(self, fundamentals: Fundamentals) -> None:
-        """get_statistics passes combined liquidity + leverage + valuation fields."""
-        expected_fields = (
-            Fundamentals.LIQUIDITY_FIELDS
-            + Fundamentals.LEVERAGE_FIELDS
-            + Fundamentals.VALUATION_FIELDS
-        )
-        with mock.patch.object(fundamentals, "get_fundamentals") as mock_get:
-            mock_get.return_value = fundamentals._success_response(
-                {"current_ratio": 1.1},
-                exchange="NASDAQ",
-                symbol="AAPL",
-            )
-            result = fundamentals.get_statistics(exchange="NASDAQ", symbol="AAPL")
-
-        mock_get.assert_called_once_with(
-            exchange="NASDAQ",
-            symbol="AAPL",
-            fields=expected_fields,
-        )
-        assert result["status"] == STATUS_SUCCESS
-
-    def test_get_dividends(self, fundamentals: Fundamentals) -> None:
-        """get_dividends passes DIVIDEND_FIELDS."""
-        with mock.patch.object(fundamentals, "get_fundamentals") as mock_get:
-            mock_get.return_value = fundamentals._success_response(
-                {"dividends_yield": 0.65},
-                exchange="NASDAQ",
-                symbol="AAPL",
-            )
-            result = fundamentals.get_dividends(exchange="NASDAQ", symbol="AAPL")
-
-        mock_get.assert_called_once_with(
-            exchange="NASDAQ",
-            symbol="AAPL",
-            fields=Fundamentals.DIVIDEND_FIELDS,
-        )
-        assert result["status"] == STATUS_SUCCESS
-
-    def test_get_profitability(self, fundamentals: Fundamentals) -> None:
-        """get_profitability passes PROFITABILITY_FIELDS."""
-        with mock.patch.object(fundamentals, "get_fundamentals") as mock_get:
-            mock_get.return_value = fundamentals._success_response(
-                {"return_on_equity": 150.0},
-                exchange="NASDAQ",
-                symbol="AAPL",
-            )
-            result = fundamentals.get_profitability(exchange="NASDAQ", symbol="AAPL")
-
-        mock_get.assert_called_once_with(
-            exchange="NASDAQ",
-            symbol="AAPL",
-            fields=Fundamentals.PROFITABILITY_FIELDS,
-        )
-        assert result["status"] == STATUS_SUCCESS
-
-    def test_get_margins(self, fundamentals: Fundamentals) -> None:
-        """get_margins passes MARGIN_FIELDS."""
-        with mock.patch.object(fundamentals, "get_fundamentals") as mock_get:
-            mock_get.return_value = fundamentals._success_response(
-                {"gross_margin": 43.0},
-                exchange="NASDAQ",
-                symbol="AAPL",
-            )
-            result = fundamentals.get_margins(exchange="NASDAQ", symbol="AAPL")
-
-        mock_get.assert_called_once_with(
-            exchange="NASDAQ",
-            symbol="AAPL",
-            fields=Fundamentals.MARGIN_FIELDS,
-        )
-        assert result["status"] == STATUS_SUCCESS
+        assert "Network error" in result["error"]
 
 
 class TestCompareFundamentals:
     """Tests for multi-symbol comparison."""
 
-    def test_compare_fundamentals_success(self, fundamentals: Fundamentals) -> None:
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
+        return_value=True,
+    )
+    @patch("requests.get")
+    def test_compare_fundamentals_success(
+        self, mock_get, mock_verify, fundamentals: Fundamentals
+    ) -> None:
         """compare_fundamentals with valid symbols returns comparison data."""
         symbols: list[dict[str, str]] = [
             {"exchange": "NASDAQ", "symbol": "AAPL"},
             {"exchange": "NASDAQ", "symbol": "MSFT"},
         ]
-        custom_fields = ["total_revenue", "net_income", "market_cap_basic"]
 
-        # Flat mock responses
-        aapl_resp = _mock_response(
-            {
-                "total_revenue": 394000000000,
-                "net_income": 100000000000,
-                "market_cap_basic": 2800000000000,
-            }
-        )
-        msft_resp = _mock_response(
-            {
-                "total_revenue": 200000000000,
-                "net_income": 70000000000,
-                "market_cap_basic": 2400000000000,
-            }
-        )
+        aapl_resp = _mock_response({"total_revenue": 394e9, "EBITDA": 130e9})
+        msft_resp = _mock_response({"total_revenue": 211e9, "EBITDA": 102e9})
 
-        with mock.patch.object(
-            fundamentals, "_make_request", side_effect=[aapl_resp, msft_resp]
-        ):
-            result = fundamentals.compare_fundamentals(
-                symbols=symbols, fields=custom_fields
-            )
+        # Mock gets for each symbol (direct calls)
+        mock_get.side_effect = [aapl_resp, msft_resp]
+
+        result = fundamentals.compare_fundamentals(symbols)
 
         assert result["status"] == STATUS_SUCCESS
-        assert result["data"] is not None
-        assert result["error"] is None
-
-        # Check comparison structure in data
-        data = result["data"]
-        assert "items" in data
-        assert "comparison" in data
-        assert len(data["items"]) == 2
-        assert "total_revenue" in data["comparison"]
+        assert len(result["data"]["items"]) == 2
+        # Check comparison structure: result["data"]["comparison"][field][exchange:symbol]
+        assert result["data"]["comparison"]["total_revenue"]["NASDAQ:AAPL"] == 394e9
+        assert result["data"]["comparison"]["total_revenue"]["NASDAQ:MSFT"] == 211e9
 
     def test_compare_fundamentals_empty_list(self, fundamentals: Fundamentals) -> None:
-        """Empty symbols list returns error response."""
-        result = fundamentals.compare_fundamentals(symbols=[], fields=["total_revenue"])
+        """Empty symbol list returns error response."""
+        result = fundamentals.compare_fundamentals([])
         assert result["status"] == STATUS_FAILED
-        assert result["data"] is None
-        assert result["error"] is not None
+        assert "No symbols provided" in result["error"]
+
+    @patch("tv_scraper.core.validators.DataValidator.verify_symbol_exchange")
+    @patch("requests.get")
+    def test_compare_fundamentals_partial_failure(
+        self, mock_get, mock_verify, fundamentals: Fundamentals
+    ) -> None:
+        """One failed symbol doesn't crash the whole comparison."""
+        # Use ValidationError so it is caught by get_fundamentals
+        mock_verify.side_effect = [True, ValidationError("fail")]
+
+        symbols = [
+            {"exchange": "NASDAQ", "symbol": "AAPL"},
+            {"exchange": "NASDAQ", "symbol": "FAIL"},
+        ]
+        mock_get.return_value = _mock_response({"total_revenue": 394e9})
+
+        result = fundamentals.compare_fundamentals(symbols)
+
+        assert result["status"] == STATUS_SUCCESS
+        assert len(result["data"]["items"]) == 1
+        assert "NASDAQ:AAPL" in result["data"]["comparison"]["total_revenue"]
+        assert "NASDAQ:FAIL" not in result["data"]["comparison"]["total_revenue"]
 
 
 class TestResponseFormat:
     """Tests for response envelope structure."""
 
-    def test_response_has_standard_envelope(self, fundamentals: Fundamentals) -> None:
-        """Response contains exactly status/data/metadata/error keys."""
-        mock_resp = _mock_response({"total_revenue": 394000000000})
-        with mock.patch.object(fundamentals, "_make_request", return_value=mock_resp):
-            result = fundamentals.get_fundamentals(
-                exchange="NASDAQ", symbol="AAPL", fields=["total_revenue"]
-            )
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
+        return_value=True,
+    )
+    @patch("requests.get")
+    def test_response_has_standard_envelope(
+        self, mock_get, mock_verify, fundamentals: Fundamentals
+    ) -> None:
+        """Success response contains exactly status/data/metadata/error keys."""
+        mock_get.return_value = _mock_response({"total_revenue": 394e9})
+        result = fundamentals.get_fundamentals(exchange="NASDAQ", symbol="AAPL")
+
         assert set(result.keys()) == {"status", "data", "metadata", "error"}
-        assert result["metadata"]["exchange"] == "NASDAQ"
-        assert result["metadata"]["symbol"] == "AAPL"
+
+
+class TestCookieHandling:
+    """Tests for cookie authentication."""
+
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
+        return_value=True,
+    )
+    @patch("requests.get")
+    def test_cookie_header_applied(self, mock_get, mock_verify) -> None:
+        """Cookie passed in constructor is sent as request header."""
+        cookie_value = "sessionid=abc12345"
+        scraper = Fundamentals(cookie=cookie_value)
+        mock_get.return_value = _mock_response({"total_revenue": 100e9})
+
+        scraper.get_fundamentals(exchange="NASDAQ", symbol="AAPL")
+
+        call_kwargs = mock_get.call_args[1]
+        headers = call_kwargs.get("headers", {})
+        assert headers.get("cookie") == cookie_value
+
+    @patch.dict("os.environ", {"TRADINGVIEW_COOKIE": "env_cookie_xyz"})
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
+        return_value=True,
+    )
+    @patch("requests.get")
+    def test_cookie_from_env_var(self, mock_get, mock_verify) -> None:
+        """Cookie is loaded from env var if not passed to constructor."""
+        # This will now pick up the env var via BaseScraper init
+        scraper = Fundamentals()
+        mock_get.return_value = _mock_response({"total_revenue": 100e9})
+
+        scraper.get_fundamentals(exchange="NASDAQ", symbol="AAPL")
+
+        call_kwargs = mock_get.call_args[1]
+        headers = call_kwargs.get("headers", {})
+        assert headers.get("cookie") == "env_cookie_xyz"

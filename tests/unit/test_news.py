@@ -1,10 +1,9 @@
-"""Tests for News scraper module."""
-
 from collections.abc import Iterator
 from typing import Any
 from unittest.mock import MagicMock, patch
 
 import pytest
+import requests
 
 from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.constants import STATUS_FAILED, STATUS_SUCCESS
@@ -72,7 +71,12 @@ def _mock_response(
     resp.text = text
     if json_data is not None:
         resp.json.return_value = json_data
-    resp.raise_for_status.return_value = None
+
+    if status_code >= 400:
+        resp.raise_for_status.side_effect = requests.HTTPError(f"Error {status_code}")
+    else:
+        resp.raise_for_status.return_value = None
+
     return resp
 
 
@@ -109,37 +113,6 @@ _STORY_JSON = {
 }
 
 
-_ARTICLE_HTML = """
-<html>
-<body>
-<article>
-  <nav aria-label="Breadcrumbs">
-    <span class="breadcrumb-content-cZAS4vtj">Markets</span>
-    <span class="breadcrumb-content-cZAS4vtj">Crypto</span>
-  </nav>
-  <h1 class="title-KX2tCBZq">Bitcoin Hits New High</h1>
-  <time datetime="2025-01-15T10:00:00Z">Jan 15</time>
-  <div class="symbolsContainer-cBh_FN2P">
-    <a href="/symbols/BTCUSD">
-      <span class="description-cBh_FN2P">BTCUSD</span>
-      <img src="https://logo.com/btc.png" alt="BTC" />
-    </a>
-  </div>
-  <div class="body-KX2tCBZq">
-    <p>Bitcoin surged to a new all-time high today.</p>
-    <img src="https://img.com/chart.png" alt="Chart" />
-    <p>Market analysts are optimistic.</p>
-  </div>
-</article>
-<div class="rowTags-XYZ">
-  <span>Bitcoin</span>
-  <span>Crypto</span>
-</div>
-</body>
-</html>
-"""
-
-
 # ---------------------------------------------------------------------------
 # Fixtures
 # ---------------------------------------------------------------------------
@@ -172,8 +145,14 @@ class TestInheritance:
 class TestScrapeHeadlinesSuccess:
     """Tests for successful headline scraping."""
 
-    @patch("tv_scraper.core.base.BaseScraper._make_request")
-    def test_scrape_headlines_success(self, mock_get: MagicMock, news: News) -> None:
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
+        return_value=True,
+    )
+    @patch("requests.get")
+    def test_scrape_headlines_success(
+        self, mock_get: MagicMock, mock_verify: MagicMock, news: News
+    ) -> None:
         """Standard headline retrieval returns success envelope."""
         mock_get.return_value = _mock_response(
             json_data=_make_headlines_response([_sample_headline()]),
@@ -200,11 +179,15 @@ class TestScrapeHeadlinesSuccess:
         assert "permission" not in item
         assert "sourceLogoid" not in item
 
-    @patch("tv_scraper.core.base.BaseScraper._make_request")
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
+        return_value=True,
+    )
+    @patch("requests.get")
     def test_scrape_headlines_with_provider(
-        self, mock_get: MagicMock, news: News
+        self, mock_get: MagicMock, mock_verify: MagicMock, news: News
     ) -> None:
-        """Provider filter is passed through to the API URL."""
+        """Provider filter is passed through to the API via params."""
         mock_get.return_value = _mock_response(
             json_data=_make_headlines_response([_sample_headline()]),
         )
@@ -216,13 +199,20 @@ class TestScrapeHeadlinesSuccess:
         )
 
         assert result["status"] == STATUS_SUCCESS
-        # Verify provider appears in the request URL
-        call_url = mock_get.call_args[0][0]
-        assert "provider=cointelegraph" in call_url
+        # Verify provider appears in req params
+        call_kwargs = mock_get.call_args[1]
+        params = call_kwargs.get("params", {})
+        assert params.get("provider") == "cointelegraph"
 
-    @patch("tv_scraper.core.base.BaseScraper._make_request")
-    def test_scrape_headlines_with_area(self, mock_get: MagicMock, news: News) -> None:
-        """Area filter is converted to area code and passed through."""
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
+        return_value=True,
+    )
+    @patch("requests.get")
+    def test_scrape_headlines_with_area(
+        self, mock_get: MagicMock, mock_verify: MagicMock, news: News
+    ) -> None:
+        """Area filter is converted to area code and passed through via params."""
         mock_get.return_value = _mock_response(
             json_data=_make_headlines_response([_sample_headline()]),
         )
@@ -234,14 +224,20 @@ class TestScrapeHeadlinesSuccess:
         )
 
         assert result["status"] == STATUS_SUCCESS
-        call_url = mock_get.call_args[0][0]
-        assert "area=AME" in call_url
+        assert result["metadata"]["area"] == "americas"
+        call_kwargs = mock_get.call_args[1]
+        params = call_kwargs.get("params", {})
+        assert params.get("area") == "AME"
 
-    @patch("tv_scraper.core.base.BaseScraper._make_request")
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
+        return_value=True,
+    )
+    @patch("requests.get")
     def test_scrape_headlines_with_language(
-        self, mock_get: MagicMock, news: News
+        self, mock_get: MagicMock, mock_verify: MagicMock, news: News
     ) -> None:
-        """Language filter is passed through to the API URL."""
+        """Language filter is passed through to the API via params."""
         mock_get.return_value = _mock_response(
             json_data=_make_headlines_response([_sample_headline()]),
         )
@@ -253,12 +249,18 @@ class TestScrapeHeadlinesSuccess:
         )
 
         assert result["status"] == STATUS_SUCCESS
-        call_url = mock_get.call_args[0][0]
-        assert "lang=fr" in call_url
+        assert result["metadata"]["language"] == "fr"
+        call_kwargs = mock_get.call_args[1]
+        params = call_kwargs.get("params", {})
+        assert params.get("lang") == "fr"
 
-    @patch("tv_scraper.core.base.BaseScraper._make_request")
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
+        return_value=True,
+    )
+    @patch("requests.get")
     def test_scrape_headlines_empty_result(
-        self, mock_get: MagicMock, news: News
+        self, mock_get: MagicMock, mock_verify: MagicMock, news: News
     ) -> None:
         """No headlines returns success with empty list."""
         mock_get.return_value = _mock_response(
@@ -335,12 +337,16 @@ class TestScrapeHeadlinesValidation:
 class TestScrapeHeadlinesErrors:
     """Runtime errors return error responses."""
 
-    @patch("tv_scraper.core.base.BaseScraper._make_request")
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
+        return_value=True,
+    )
+    @patch("requests.get")
     def test_scrape_headlines_network_error(
-        self, mock_get: MagicMock, news: News
+        self, mock_get: MagicMock, mock_verify: MagicMock, news: News
     ) -> None:
         """Network failure returns error response, does not raise."""
-        mock_get.side_effect = Exception("Connection refused")
+        mock_get.side_effect = requests.RequestException("Connection refused")
 
         result = news.get_news_headlines(exchange="BINANCE", symbol="BTCUSD")
 
@@ -348,8 +354,14 @@ class TestScrapeHeadlinesErrors:
         assert result["data"] is None
         assert result["error"] is not None
 
-    @patch("tv_scraper.core.base.BaseScraper._make_request")
-    def test_scrape_headlines_captcha(self, mock_get: MagicMock, news: News) -> None:
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
+        return_value=True,
+    )
+    @patch("requests.get")
+    def test_scrape_headlines_captcha(
+        self, mock_get: MagicMock, mock_verify: MagicMock, news: News
+    ) -> None:
         """Captcha challenge returns error response."""
         mock_get.return_value = _mock_response(
             text="<title>Captcha Challenge</title>",
@@ -370,7 +382,7 @@ class TestScrapeHeadlinesErrors:
 class TestScrapeContentSuccess:
     """Tests for article content scraping using JSON API."""
 
-    @patch("tv_scraper.core.base.BaseScraper._make_request")
+    @patch("requests.get")
     def test_scrape_content_success(self, mock_get: MagicMock, news: News) -> None:
         """Successfully parse article JSON into structured content."""
         mock_get.return_value = _mock_response(json_data=_STORY_JSON)
@@ -395,7 +407,7 @@ class TestScrapeContentSuccess:
         # Paragraphs should be separated by newlines
         assert "\n" in description
 
-    @patch("tv_scraper.core.base.BaseScraper._make_request")
+    @patch("requests.get")
     def test_scrape_content_story_path_without_slash(
         self, mock_get: MagicMock, news: News
     ) -> None:
@@ -421,12 +433,12 @@ class TestScrapeContentSuccess:
 class TestScrapeContentErrors:
     """Error handling for content scraping."""
 
-    @patch("tv_scraper.core.base.BaseScraper._make_request")
+    @patch("requests.get")
     def test_scrape_content_network_error(
         self, mock_get: MagicMock, news: News
     ) -> None:
         """Network failure returns error response."""
-        mock_get.side_effect = Exception("Connection refused")
+        mock_get.side_effect = requests.RequestException("Connection refused")
 
         result = news.get_news_content(
             story_id="tag:reuters.com,2026:newsml_L4N3Z9104:0"
@@ -445,9 +457,13 @@ class TestScrapeContentErrors:
 class TestResponseFormat:
     """Verify the standardized response envelope."""
 
-    @patch("tv_scraper.core.base.BaseScraper._make_request")
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
+        return_value=True,
+    )
+    @patch("requests.get")
     def test_response_has_standard_envelope(
-        self, mock_get: MagicMock, news: News
+        self, mock_get: MagicMock, mock_verify: MagicMock, news: News
     ) -> None:
         """Response contains exactly status/data/metadata/error keys."""
         mock_get.return_value = _mock_response(

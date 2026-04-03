@@ -1,14 +1,12 @@
-"""Tests for SymbolMarkets scraper module."""
-
 from collections.abc import Iterator
 from unittest import mock
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 import pytest
+import requests
 
 from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.constants import STATUS_FAILED, STATUS_SUCCESS
-from tv_scraper.core.exceptions import NetworkError
 from tv_scraper.scrapers.screening.symbol_markets import SymbolMarkets
 
 
@@ -18,11 +16,17 @@ def symbol_markets() -> Iterator[SymbolMarkets]:
     yield SymbolMarkets()
 
 
-def _mock_response(data: dict) -> MagicMock:
+def _mock_response(data: dict, status_code: int = 200) -> MagicMock:
     """Create a mock requests.Response with a .json() method."""
     response = MagicMock()
     response.json.return_value = data
-    response.status_code = 200
+    response.status_code = status_code
+    if status_code >= 400:
+        response.raise_for_status.side_effect = requests.HTTPError(
+            f"Error {status_code}"
+        )
+    else:
+        response.raise_for_status.return_value = None
     return response
 
 
@@ -37,9 +41,12 @@ class TestInheritance:
 class TestScrapeSuccess:
     """Tests for successful scraping scenarios."""
 
-    def test_get_data_success(self, symbol_markets: SymbolMarkets) -> None:
+    @patch("requests.post")
+    def test_get_data_success(
+        self, mock_post: MagicMock, symbol_markets: SymbolMarkets
+    ) -> None:
         """Default params return success envelope with data list."""
-        mock_resp = _mock_response(
+        mock_post.return_value = _mock_response(
             {
                 "data": [
                     {
@@ -76,8 +83,7 @@ class TestScrapeSuccess:
                 "totalCount": 2,
             }
         )
-        with mock.patch.object(symbol_markets, "_make_request", return_value=mock_resp):
-            result = symbol_markets.get_symbol_markets(symbol="AAPL")
+        result = symbol_markets.get_symbol_markets(symbol="AAPL")
 
         assert result["status"] == STATUS_SUCCESS
         assert len(result["data"]) == 2
@@ -86,11 +92,15 @@ class TestScrapeSuccess:
         assert result["data"][0]["close"] == 150.25
         assert result["data"][1]["symbol"] == "GPW:AAPL"
         assert result["error"] is None
+        mock_post.assert_called_once()
 
-    def test_get_data_custom_fields(self, symbol_markets: SymbolMarkets) -> None:
+    @patch("requests.post")
+    def test_get_data_custom_fields(
+        self, mock_post: MagicMock, symbol_markets: SymbolMarkets
+    ) -> None:
         """Custom fields list is used instead of defaults."""
         custom_fields = ["name", "close", "volume", "exchange"]
-        mock_resp = _mock_response(
+        mock_post.return_value = _mock_response(
             {
                 "data": [
                     {"s": "NASDAQ:AAPL", "d": ["AAPL", 150.0, 50000000, "NASDAQ"]},
@@ -98,12 +108,7 @@ class TestScrapeSuccess:
                 "totalCount": 1,
             }
         )
-        with mock.patch.object(
-            symbol_markets, "_make_request", return_value=mock_resp
-        ) as mock_req:
-            result = symbol_markets.get_symbol_markets(
-                symbol="AAPL", fields=custom_fields
-            )
+        result = symbol_markets.get_symbol_markets(symbol="AAPL", fields=custom_fields)
 
         assert result["status"] == STATUS_SUCCESS
         assert result["data"][0]["name"] == "AAPL"
@@ -112,13 +117,16 @@ class TestScrapeSuccess:
         assert result["data"][0]["exchange"] == "NASDAQ"
 
         # Verify the payload sent to the API used custom fields
-        call_kwargs = mock_req.call_args[1]
-        payload = call_kwargs["json_data"]
+        call_kwargs = mock_post.call_args[1]
+        payload = call_kwargs["json"]
         assert payload["columns"] == custom_fields
 
-    def test_get_data_custom_scanner(self, symbol_markets: SymbolMarkets) -> None:
+    @patch("requests.post")
+    def test_get_data_custom_scanner(
+        self, mock_post: MagicMock, symbol_markets: SymbolMarkets
+    ) -> None:
         """Custom scanner is used in the URL."""
-        mock_resp = _mock_response(
+        mock_post.return_value = _mock_response(
             {
                 "data": [
                     {
@@ -140,22 +148,20 @@ class TestScrapeSuccess:
                 "totalCount": 1,
             }
         )
-        with mock.patch.object(
-            symbol_markets, "_make_request", return_value=mock_resp
-        ) as mock_req:
-            result = symbol_markets.get_symbol_markets(
-                symbol="BTCUSD", scanner="crypto"
-            )
+        result = symbol_markets.get_symbol_markets(symbol="BTCUSD", scanner="crypto")
 
         assert result["status"] == STATUS_SUCCESS
         # Verify the scanner-specific URL was used
-        call_args = mock_req.call_args
+        call_args = mock_post.call_args
         url = call_args[0][0]
         assert "crypto" in url
 
-    def test_get_data_with_limit(self, symbol_markets: SymbolMarkets) -> None:
+    @patch("requests.post")
+    def test_get_data_with_limit(
+        self, mock_post: MagicMock, symbol_markets: SymbolMarkets
+    ) -> None:
         """Limit param controls the range in the API payload."""
-        mock_resp = _mock_response(
+        mock_post.return_value = _mock_response(
             {
                 "data": [
                     {
@@ -177,14 +183,11 @@ class TestScrapeSuccess:
                 "totalCount": 100,
             }
         )
-        with mock.patch.object(
-            symbol_markets, "_make_request", return_value=mock_resp
-        ) as mock_req:
-            result = symbol_markets.get_symbol_markets(symbol="AAPL", limit=25)
+        result = symbol_markets.get_symbol_markets(symbol="AAPL", limit=25)
 
         assert result["status"] == STATUS_SUCCESS
-        call_kwargs = mock_req.call_args[1]
-        payload = call_kwargs["json_data"]
+        call_kwargs = mock_post.call_args[1]
+        payload = call_kwargs["json"]
         assert payload["range"] == [0, 25]
 
 
@@ -209,14 +212,13 @@ class TestScrapeErrors:
         assert result["data"] is None
         assert "symbol" in result["error"].lower()
 
-    def test_get_data_network_error(self, symbol_markets: SymbolMarkets) -> None:
+    @patch("requests.post")
+    def test_get_data_network_error(
+        self, mock_post: MagicMock, symbol_markets: SymbolMarkets
+    ) -> None:
         """Network error returns error response, does not raise."""
-        with mock.patch.object(
-            symbol_markets,
-            "_make_request",
-            side_effect=NetworkError("Connection refused"),
-        ):
-            result = symbol_markets.get_symbol_markets(symbol="AAPL")
+        mock_post.side_effect = requests.RequestException("Connection refused")
+        result = symbol_markets.get_symbol_markets(symbol="AAPL")
 
         assert result["status"] == STATUS_FAILED
         assert result["data"] is None
@@ -226,11 +228,12 @@ class TestScrapeErrors:
 class TestResponseFormat:
     """Tests for response envelope structure."""
 
+    @patch("requests.post")
     def test_response_has_standard_envelope(
-        self, symbol_markets: SymbolMarkets
+        self, mock_post: MagicMock, symbol_markets: SymbolMarkets
     ) -> None:
         """Success response contains exactly status/data/metadata/error keys."""
-        mock_resp = _mock_response(
+        mock_post.return_value = _mock_response(
             {
                 "data": [
                     {
@@ -252,8 +255,7 @@ class TestResponseFormat:
                 "totalCount": 50,
             }
         )
-        with mock.patch.object(symbol_markets, "_make_request", return_value=mock_resp):
-            result = symbol_markets.get_symbol_markets(symbol="AAPL")
+        result = symbol_markets.get_symbol_markets(symbol="AAPL")
 
         assert set(result.keys()) == {"status", "data", "metadata", "error"}
         assert result["metadata"]["total"] == 1
@@ -274,7 +276,10 @@ class TestResponseFormat:
 class TestUsesMapScannerRows:
     """Verify SymbolMarkets delegates row mapping to _map_scanner_rows."""
 
-    def test_uses_map_scanner_rows(self, symbol_markets: SymbolMarkets) -> None:
+    @patch("requests.post")
+    def test_uses_map_scanner_rows(
+        self, mock_post: MagicMock, symbol_markets: SymbolMarkets
+    ) -> None:
         """get_data() calls _map_scanner_rows to transform API data."""
         raw_items = [
             {
@@ -293,19 +298,18 @@ class TestUsesMapScannerRows:
                 ],
             },
         ]
-        mock_resp = _mock_response(
+        mock_post.return_value = _mock_response(
             {
                 "data": raw_items,
                 "totalCount": 1,
             }
         )
-        with mock.patch.object(symbol_markets, "_make_request", return_value=mock_resp):
-            with mock.patch.object(
-                symbol_markets,
-                "_map_scanner_rows",
-                wraps=symbol_markets._map_scanner_rows,
-            ) as mock_map:
-                result = symbol_markets.get_symbol_markets(symbol="AAPL")
+        with mock.patch.object(
+            symbol_markets,
+            "_map_scanner_rows",
+            wraps=symbol_markets._map_scanner_rows,
+        ) as mock_map:
+            result = symbol_markets.get_symbol_markets(symbol="AAPL")
 
         mock_map.assert_called_once_with(raw_items, symbol_markets.DEFAULT_FIELDS)
         assert result["status"] == STATUS_SUCCESS

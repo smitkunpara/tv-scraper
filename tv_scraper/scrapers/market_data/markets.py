@@ -6,6 +6,8 @@ across supported markets, sorted by market cap, volume, change, etc.
 
 from typing import Any
 
+import requests
+
 from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.constants import SCANNER_URL
 
@@ -123,7 +125,13 @@ class Markets(BaseScraper):
 
         # --- request ---------------------------------------------------
         try:
-            response = self._make_request(url, method="POST", json_data=payload)
+            response = requests.post(
+                url,
+                headers=self._headers,
+                json=payload,
+                timeout=self.timeout,
+            )
+            response.raise_for_status()
             json_data = response.json()
         except Exception as exc:
             return self._error_response(str(exc))

@@ -1,22 +1,27 @@
-"""Tests for Pine scraper module."""
-
 from collections.abc import Iterator
 from typing import Any
 from unittest.mock import MagicMock, patch
 
 import pytest
+import requests
 
 from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.constants import STATUS_FAILED, STATUS_SUCCESS
 from tv_scraper.scrapers.scripts.pine import Pine
 
 
-def _mock_response(json_data: Any, status_code: int = 200) -> MagicMock:
+def _mock_response(json_data: Any, status_code: int = 200, text: str = "") -> MagicMock:
     """Create a mock requests.Response with JSON payload."""
     response = MagicMock()
     response.status_code = status_code
     response.json.return_value = json_data
-    response.raise_for_status.return_value = None
+    response.text = text or str(json_data)
+    if status_code >= 400:
+        response.raise_for_status.side_effect = requests.HTTPError(
+            f"Error {status_code}"
+        )
+    else:
+        response.raise_for_status.return_value = None
     return response
 
 
@@ -51,13 +56,13 @@ class TestCookieValidation:
 class TestListSavedScripts:
     """Tests for listing saved scripts."""
 
-    @patch("tv_scraper.core.base.BaseScraper._make_request")
+    @patch("requests.get")
     def test_list_saved_scripts_success(
         self,
-        mock_request: MagicMock,
+        mock_get: MagicMock,
         pine: Pine,
     ) -> None:
-        mock_request.return_value = _mock_response(
+        mock_get.return_value = _mock_response(
             [
                 {
                     "scriptIdPart": "USER;abc123",
@@ -82,15 +87,17 @@ class TestListSavedScripts:
                 "modified": 1774357749,
             }
         ]
+        mock_get.assert_called_once()
 
-    @patch("tv_scraper.core.base.BaseScraper._make_request")
+    @patch("requests.get")
     def test_list_saved_scripts_invalid_cookie_maps_error(
         self,
-        mock_request: MagicMock,
+        mock_get: MagicMock,
         pine: Pine,
     ) -> None:
-        mock_request.side_effect = Exception(
-            "HTTP error 401 for https://pine-facade.tradingview.com/pine-facade/list"
+        mock_get.side_effect = requests.HTTPError(
+            "HTTP error 401 for https://pine-facade.tradingview.com/pine-facade/list",
+            response=_mock_response({}, status_code=401),
         )
 
         result = pine.list_saved_scripts()
@@ -98,13 +105,13 @@ class TestListSavedScripts:
         assert result["status"] == STATUS_FAILED
         assert "invalid tradingview cookie" in (result["error"] or "").lower()
 
-    @patch("tv_scraper.core.base.BaseScraper._make_request")
+    @patch("requests.get")
     def test_list_saved_scripts_unexpected_payload_returns_error(
         self,
-        mock_request: MagicMock,
+        mock_get: MagicMock,
         pine: Pine,
     ) -> None:
-        mock_request.return_value = _mock_response({"not": "a-list"})
+        mock_get.return_value = _mock_response({"not": "a-list"})
 
         result = pine.list_saved_scripts()
 
@@ -115,13 +122,13 @@ class TestListSavedScripts:
 class TestValidateScript:
     """Tests for Pine source validation."""
 
-    @patch("tv_scraper.core.base.BaseScraper._make_request")
+    @patch("requests.post")
     def test_validate_script_with_errors_returns_failed(
         self,
-        mock_request: MagicMock,
+        mock_post: MagicMock,
         pine: Pine,
     ) -> None:
-        mock_request.return_value = _mock_response(
+        mock_post.return_value = _mock_response(
             {
                 "success": True,
                 "result": {
@@ -143,13 +150,13 @@ class TestValidateScript:
         assert result["error"] == "Pine script validation failed."
         assert len(result["metadata"]["errors"]) == 1
 
-    @patch("tv_scraper.core.base.BaseScraper._make_request")
+    @patch("requests.post")
     def test_validate_script_with_warning_returns_success(
         self,
-        mock_request: MagicMock,
+        mock_post: MagicMock,
         pine: Pine,
     ) -> None:
-        mock_request.return_value = _mock_response(
+        mock_post.return_value = _mock_response(
             {
                 "success": True,
                 "result": {
@@ -171,10 +178,10 @@ class TestCreateScript:
     """Tests for creating new Pine scripts."""
 
     @patch("tv_scraper.scrapers.scripts.pine.Pine.validate_script")
-    @patch("tv_scraper.core.base.BaseScraper._make_request")
+    @patch("requests.post")
     def test_create_script_success(
         self,
-        mock_request: MagicMock,
+        mock_post: MagicMock,
         mock_validate: MagicMock,
         pine: Pine,
     ) -> None:
@@ -184,7 +191,7 @@ class TestCreateScript:
             "metadata": {"warnings": []},
             "error": None,
         }
-        mock_request.return_value = _mock_response(
+        mock_post.return_value = _mock_response(
             {
                 "success": True,
                 "result": {
@@ -235,10 +242,10 @@ class TestEditScript:
     """Tests for editing existing Pine scripts."""
 
     @patch("tv_scraper.scrapers.scripts.pine.Pine.validate_script")
-    @patch("tv_scraper.core.base.BaseScraper._make_request")
+    @patch("requests.post")
     def test_edit_script_success(
         self,
-        mock_request: MagicMock,
+        mock_post: MagicMock,
         mock_validate: MagicMock,
         pine: Pine,
     ) -> None:
@@ -248,7 +255,7 @@ class TestEditScript:
             "metadata": {"warnings": []},
             "error": None,
         }
-        mock_request.return_value = _mock_response(
+        mock_post.return_value = _mock_response(
             {
                 "success": True,
                 "result": {
@@ -302,16 +309,13 @@ class TestEditScript:
 class TestDeleteScript:
     """Tests for deleting Pine scripts."""
 
-    @patch("tv_scraper.core.base.BaseScraper._make_request")
+    @patch("requests.post")
     def test_delete_script_success(
         self,
-        mock_request: MagicMock,
+        mock_post: MagicMock,
         pine: Pine,
     ) -> None:
-        response = MagicMock()
-        response.status_code = 200
-        response.text = '"ok"'
-        mock_request.return_value = response
+        mock_post.return_value = _mock_response({}, status_code=200, text='"ok"')
 
         result = pine.delete_script("USER;abc123")
 
@@ -326,16 +330,13 @@ class TestDeleteScript:
         assert result["status"] == STATUS_FAILED
         assert "id cannot be empty" in (result["error"] or "").lower()
 
-    @patch("tv_scraper.core.base.BaseScraper._make_request")
+    @patch("requests.post")
     def test_delete_script_unexpected_response_returns_error(
         self,
-        mock_request: MagicMock,
+        mock_post: MagicMock,
         pine: Pine,
     ) -> None:
-        response = MagicMock()
-        response.status_code = 200
-        response.text = '"not-ok"'
-        mock_request.return_value = response
+        mock_post.return_value = _mock_response({}, status_code=200, text='"not-ok"')
 
         result = pine.delete_script("USER;abc123")
 

@@ -1,13 +1,10 @@
-"""Tests for Technicals scraper module."""
-
-from unittest import mock
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 import pytest
+import requests
 
 from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.constants import STATUS_FAILED, STATUS_SUCCESS
-from tv_scraper.core.exceptions import NetworkError
 from tv_scraper.scrapers.market_data.technicals import Technicals
 
 
@@ -17,11 +14,17 @@ def technicals() -> Technicals:
     return Technicals()
 
 
-def _mock_response(data: dict) -> MagicMock:
+def _mock_response(data: dict, status_code: int = 200) -> MagicMock:
     """Create a mock requests.Response with a .json() method."""
     response = MagicMock()
     response.json.return_value = data
-    response.status_code = 200
+    response.status_code = status_code
+    if status_code >= 400:
+        response.raise_for_status.side_effect = requests.HTTPError(
+            f"Error {status_code}"
+        )
+    else:
+        response.raise_for_status.return_value = None
     return response
 
 
@@ -36,67 +39,92 @@ class TestTechnicalsInheritance:
 class TestScrapeSuccess:
     """Tests for successful scraping scenarios."""
 
-    def test_get_data_success_default_indicators(self, technicals: Technicals) -> None:
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
+        return_value=True,
+    )
+    @patch("requests.get")
+    def test_get_data_success_default_indicators(
+        self, mock_get: MagicMock, mock_verify: MagicMock, technicals: Technicals
+    ) -> None:
         """Scrape with a few indicators and verify envelope format."""
-        mock_resp = _mock_response({"RSI": 55.0, "Recommend.All": 0.7, "CCI20": 45.0})
-        with mock.patch.object(technicals, "_make_request", return_value=mock_resp):
-            result = technicals.get_technicals(
-                exchange="BITSTAMP",
-                symbol="BTCUSD",
-                technical_indicators=["RSI", "Recommend.All", "CCI20"],
-            )
+        mock_get.return_value = _mock_response(
+            {"RSI": 55.0, "Recommend.All": 0.7, "CCI20": 45.0}
+        )
+        result = technicals.get_technicals(
+            exchange="BITSTAMP",
+            symbol="BTCUSD",
+            technical_indicators=["RSI", "Recommend.All", "CCI20"],
+        )
         assert result["status"] == STATUS_SUCCESS
         assert result["data"]["RSI"] == 55.0
         assert result["data"]["Recommend.All"] == 0.7
         assert result["data"]["CCI20"] == 45.0
         assert result["error"] is None
         assert "metadata" in result
+        mock_get.assert_called_once()
 
-    def test_get_data_success_specific_indicators(self, technicals: Technicals) -> None:
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
+        return_value=True,
+    )
+    @patch("requests.get")
+    def test_get_data_success_specific_indicators(
+        self, mock_get: MagicMock, mock_verify: MagicMock, technicals: Technicals
+    ) -> None:
         """Scrape with specific indicators returns correct mapped data."""
-        mock_resp = _mock_response({"RSI": 50.0, "Stoch.K": 80.0})
-        with mock.patch.object(technicals, "_make_request", return_value=mock_resp):
-            result = technicals.get_technicals(
-                exchange="BINANCE",
-                symbol="BTCUSD",
-                timeframe="1d",
-                technical_indicators=["RSI", "Stoch.K"],
-            )
+        mock_get.return_value = _mock_response({"RSI": 50.0, "Stoch.K": 80.0})
+        result = technicals.get_technicals(
+            exchange="BINANCE",
+            symbol="BTCUSD",
+            timeframe="1d",
+            technical_indicators=["RSI", "Stoch.K"],
+        )
         assert result["status"] == STATUS_SUCCESS
         assert result["data"]["RSI"] == 50.0
         assert result["data"]["Stoch.K"] == 80.0
         assert result["error"] is None
 
-    def test_get_data_all_indicators(self, technicals: Technicals) -> None:
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
+        return_value=True,
+    )
+    @patch("requests.get")
+    def test_get_data_all_indicators(
+        self, mock_get: MagicMock, mock_verify: MagicMock, technicals: Technicals
+    ) -> None:
         """all_indicators=True loads every indicator from the data file."""
         all_inds = technicals.validator.get_indicators()
         mock_data = {ind: float(i) for i, ind in enumerate(all_inds)}
-        mock_resp = _mock_response(mock_data)
-        with mock.patch.object(technicals, "_make_request", return_value=mock_resp):
-            result = technicals.get_technicals(
-                exchange="BINANCE",
-                symbol="BTCUSD",
-                all_indicators=True,
-            )
+        mock_get.return_value = _mock_response(mock_data)
+        result = technicals.get_technicals(
+            exchange="BINANCE",
+            symbol="BTCUSD",
+            all_indicators=True,
+        )
         assert result["status"] == STATUS_SUCCESS
         for ind in all_inds:
             assert ind in result["data"]
 
-    def test_get_data_with_timeframe(self, technicals: Technicals) -> None:
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
+        return_value=True,
+    )
+    @patch("requests.get")
+    def test_get_data_with_timeframe(
+        self, mock_get: MagicMock, mock_verify: MagicMock, technicals: Technicals
+    ) -> None:
         """Non-daily timeframe appends |{value} suffix to indicator names."""
-        mock_resp = _mock_response({"RSI|240": 60.0})
-        with mock.patch.object(
-            technicals, "_make_request", return_value=mock_resp
-        ) as mock_req:
-            result = technicals.get_technicals(
-                exchange="BINANCE",
-                symbol="BTCUSD",
-                timeframe="4h",
-                technical_indicators=["RSI"],
-            )
+        mock_get.return_value = _mock_response({"RSI|240": 60.0})
+        result = technicals.get_technicals(
+            exchange="BINANCE",
+            symbol="BTCUSD",
+            timeframe="4h",
+            technical_indicators=["RSI"],
+        )
 
         # Verify the API request is GET with timeframe-suffixed indicator in params
-        call_kwargs = mock_req.call_args[1]
+        call_kwargs = mock_get.call_args[1]
         params = call_kwargs["params"]
         assert "RSI|240" in params["fields"]
         assert params["symbol"] == "BINANCE:BTCUSD"
@@ -108,36 +136,36 @@ class TestScrapeSuccess:
         assert "RSI|240" not in result["data"]
         assert result["data"]["RSI"] == 60.0
 
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
+        return_value=True,
+    )
+    @patch("requests.get")
     def test_get_data_with_weekly_monthly_timeframe(
-        self, technicals: Technicals
+        self, mock_get: MagicMock, mock_verify: MagicMock, technicals: Technicals
     ) -> None:
         """Weekly and Monthly timeframes use |1W and |1M suffixes."""
         # Test Weekly
-        mock_resp_w = _mock_response({"RSI|1W": 70.0})
-        with mock.patch.object(
-            technicals, "_make_request", return_value=mock_resp_w
-        ) as mock_req_w:
-            result_w = technicals.get_technicals(
-                exchange="BINANCE",
-                symbol="BTCUSD",
-                timeframe="1w",
-                technical_indicators=["RSI"],
-            )
-        assert "RSI|1W" in mock_req_w.call_args[1]["params"]["fields"]
+        mock_get.return_value = _mock_response({"RSI|1W": 70.0})
+        result_w = technicals.get_technicals(
+            exchange="BINANCE",
+            symbol="BTCUSD",
+            timeframe="1w",
+            technical_indicators=["RSI"],
+        )
+        assert "RSI|1W" in mock_get.call_args[1]["params"]["fields"]
         assert result_w["data"]["RSI"] == 70.0
 
         # Test Monthly
-        mock_resp_m = _mock_response({"RSI|1M": 75.0})
-        with mock.patch.object(
-            technicals, "_make_request", return_value=mock_resp_m
-        ) as mock_req_m:
-            result_m = technicals.get_technicals(
-                exchange="BINANCE",
-                symbol="BTCUSD",
-                timeframe="1M",
-                technical_indicators=["RSI"],
-            )
-        assert "RSI|1M" in mock_req_m.call_args[1]["params"]["fields"]
+        mock_get.reset_mock()
+        mock_get.return_value = _mock_response({"RSI|1M": 75.0})
+        result_m = technicals.get_technicals(
+            exchange="BINANCE",
+            symbol="BTCUSD",
+            timeframe="1M",
+            technical_indicators=["RSI"],
+        )
+        assert "RSI|1M" in mock_get.call_args[1]["params"]["fields"]
         assert result_m["data"]["RSI"] == 75.0
 
 
@@ -189,18 +217,21 @@ class TestScrapeErrors:
         assert result["data"] is None
         assert result["error"] is not None
 
-    def test_get_data_network_error(self, technicals: Technicals) -> None:
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
+        return_value=True,
+    )
+    @patch("requests.get")
+    def test_get_data_network_error(
+        self, mock_get: MagicMock, mock_verify: MagicMock, technicals: Technicals
+    ) -> None:
         """Network error returns error response, does not raise."""
-        with mock.patch.object(
-            technicals,
-            "_make_request",
-            side_effect=NetworkError("Connection refused"),
-        ):
-            result = technicals.get_technicals(
-                exchange="BINANCE",
-                symbol="BTCUSD",
-                technical_indicators=["RSI"],
-            )
+        mock_get.side_effect = requests.RequestException("Connection refused")
+        result = technicals.get_technicals(
+            exchange="BINANCE",
+            symbol="BTCUSD",
+            technical_indicators=["RSI"],
+        )
         assert result["status"] == STATUS_FAILED
         assert result["data"] is None
         assert "Connection refused" in result["error"]
@@ -219,15 +250,21 @@ class TestScrapeErrors:
 class TestResponseFormat:
     """Tests for response envelope structure."""
 
-    def test_response_has_standard_envelope(self, technicals: Technicals) -> None:
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
+        return_value=True,
+    )
+    @patch("requests.get")
+    def test_response_has_standard_envelope(
+        self, mock_get: MagicMock, mock_verify: MagicMock, technicals: Technicals
+    ) -> None:
         """Success response contains exactly status/data/metadata/error keys."""
-        mock_resp = _mock_response({"data": [{"s": "BINANCE:BTCUSD", "d": [50.0]}]})
-        with mock.patch.object(technicals, "_make_request", return_value=mock_resp):
-            result = technicals.get_technicals(
-                exchange="BINANCE",
-                symbol="BTCUSD",
-                technical_indicators=["RSI"],
-            )
+        mock_get.return_value = _mock_response({"RSI": 50.0})
+        result = technicals.get_technicals(
+            exchange="BINANCE",
+            symbol="BTCUSD",
+            technical_indicators=["RSI"],
+        )
         assert set(result.keys()) == {"status", "data", "metadata", "error"}
         assert result["metadata"]["exchange"] == "BINANCE"
         assert result["metadata"]["symbol"] == "BTCUSD"

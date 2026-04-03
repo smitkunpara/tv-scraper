@@ -1,14 +1,12 @@
-"""Unit tests for tv_scraper.scrapers.events.calendar.Calendar."""
-
 import datetime
 from collections.abc import Iterator
 from typing import Any
-from unittest import mock
+from unittest.mock import MagicMock, patch
 
 import pytest
+import requests
 
 from tv_scraper.core.base import BaseScraper
-from tv_scraper.core.exceptions import NetworkError
 from tv_scraper.scrapers.events.calendar import Calendar
 
 # ---- Helpers ----
@@ -17,14 +15,19 @@ from tv_scraper.scrapers.events.calendar import Calendar
 def _mock_calendar_response(
     symbols: list[str],
     values: list[list[Any]],
-) -> mock.Mock:
+    status_code: int = 200,
+) -> MagicMock:
     """Build a mock response matching the TradingView calendar scanner format."""
     data = []
     for sym, vals in zip(symbols, values, strict=True):
         data.append({"s": sym, "d": vals})
-    resp = mock.Mock()
-    resp.status_code = 200
+    resp = MagicMock()
+    resp.status_code = status_code
     resp.json.return_value = {"data": data, "totalCount": len(data)}
+    if status_code >= 400:
+        resp.raise_for_status.side_effect = requests.HTTPError(f"Error {status_code}")
+    else:
+        resp.raise_for_status.return_value = None
     return resp
 
 
@@ -50,12 +53,12 @@ class TestInheritance:
 
 
 class TestGetDividends:
-    @mock.patch("tv_scraper.core.base.make_request")
+    @patch("requests.post")
     def test_get_dividends_success(
-        self, mock_req: mock.Mock, scraper: Calendar
+        self, mock_post: MagicMock, scraper: Calendar
     ) -> None:
         """Default call returns success envelope with dividend data."""
-        mock_req.return_value = _mock_calendar_response(
+        mock_post.return_value = _mock_calendar_response(
             symbols=["NASDAQ:AAPL", "NYSE:KO"],
             values=[
                 [
@@ -99,14 +102,15 @@ class TestGetDividends:
         assert result["data"][1]["symbol"] == "NYSE:KO"
         # Fields mapped correctly
         assert result["data"][0]["name"] == "Apple Inc."
+        mock_post.assert_called_once()
 
-    @mock.patch("tv_scraper.core.base.make_request")
+    @patch("requests.post")
     def test_get_dividends_custom_fields(
-        self, mock_req: mock.Mock, scraper: Calendar
+        self, mock_post: MagicMock, scraper: Calendar
     ) -> None:
         """Custom fields returns only requested fields in data."""
         fields = ["logoid", "name", "dividends_yield"]
-        mock_req.return_value = _mock_calendar_response(
+        mock_post.return_value = _mock_calendar_response(
             symbols=["NASDAQ:AAPL"],
             values=[["apple", "Apple Inc.", 0.55]],
         )
@@ -119,12 +123,12 @@ class TestGetDividends:
         assert result["data"][0]["name"] == "Apple Inc."
         assert result["data"][0]["dividends_yield"] == 0.55
 
-    @mock.patch("tv_scraper.core.base.make_request")
+    @patch("requests.post")
     def test_get_dividends_custom_markets(
-        self, mock_req: mock.Mock, scraper: Calendar
+        self, mock_post: MagicMock, scraper: Calendar
     ) -> None:
         """Markets parameter is included in the API payload."""
-        mock_req.return_value = _mock_calendar_response(
+        mock_post.return_value = _mock_calendar_response(
             symbols=["LSE:SHEL"],
             values=[
                 [
@@ -148,25 +152,25 @@ class TestGetDividends:
 
         assert result["status"] == "success"
         # Verify markets was passed in the payload
-        call_kwargs = mock_req.call_args
-        payload = call_kwargs.kwargs.get("json_data") or call_kwargs[1].get("json_data")
+        call_kwargs = mock_post.call_args[1]
+        payload = call_kwargs.get("json")
         assert "markets" in payload
         assert payload["markets"] == ["uk"]
 
-    @mock.patch("tv_scraper.core.base.make_request")
+    @patch("requests.post")
     def test_get_dividends_custom_timestamps(
-        self, mock_req: mock.Mock, scraper: Calendar
+        self, mock_post: MagicMock, scraper: Calendar
     ) -> None:
         """Custom timestamps are used in the filter payload."""
-        mock_req.return_value = _mock_calendar_response(symbols=[], values=[])
+        mock_post.return_value = _mock_calendar_response(symbols=[], values=[])
 
         ts_from = 1700000000
         ts_to = 1700600000
         result = scraper.get_dividends(timestamp_from=ts_from, timestamp_to=ts_to)
 
         assert result["status"] == "success"
-        call_kwargs = mock_req.call_args
-        payload = call_kwargs.kwargs.get("json_data") or call_kwargs[1].get("json_data")
+        call_kwargs = mock_post.call_args[1]
+        payload = call_kwargs.get("json")
         filter_right = payload["filter"][0]["right"]
         assert filter_right == [ts_from, ts_to]
 
@@ -178,12 +182,12 @@ class TestGetDividends:
         assert result["data"] is None
         assert "Invalid" in result["error"]
 
-    @mock.patch("tv_scraper.core.base.make_request")
+    @patch("requests.post")
     def test_get_dividends_network_error(
-        self, mock_req: mock.Mock, scraper: Calendar
+        self, mock_post: MagicMock, scraper: Calendar
     ) -> None:
         """Network errors produce error response, never raise."""
-        mock_req.side_effect = NetworkError("Connection refused")
+        mock_post.side_effect = requests.RequestException("Connection refused")
 
         result = scraper.get_dividends()
 
@@ -196,10 +200,12 @@ class TestGetDividends:
 
 
 class TestGetEarnings:
-    @mock.patch("tv_scraper.core.base.make_request")
-    def test_get_earnings_success(self, mock_req: mock.Mock, scraper: Calendar) -> None:
+    @patch("requests.post")
+    def test_get_earnings_success(
+        self, mock_post: MagicMock, scraper: Calendar
+    ) -> None:
         """Default call returns success envelope with earnings data."""
-        mock_req.return_value = _mock_calendar_response(
+        mock_post.return_value = _mock_calendar_response(
             symbols=["NASDAQ:AAPL"],
             values=[
                 [
@@ -238,13 +244,13 @@ class TestGetEarnings:
         assert result["data"][0]["symbol"] == "NASDAQ:AAPL"
         assert result["data"][0]["name"] == "Apple Inc."
 
-    @mock.patch("tv_scraper.core.base.make_request")
+    @patch("requests.post")
     def test_get_earnings_custom_fields(
-        self, mock_req: mock.Mock, scraper: Calendar
+        self, mock_post: MagicMock, scraper: Calendar
     ) -> None:
         """Custom fields returns only requested fields."""
         fields = ["logoid", "name", "earnings_per_share_fq"]
-        mock_req.return_value = _mock_calendar_response(
+        mock_post.return_value = _mock_calendar_response(
             symbols=["NASDAQ:MSFT"],
             values=[["microsoft", "Microsoft", 2.93]],
         )
@@ -255,12 +261,12 @@ class TestGetEarnings:
         assert result["data"][0]["logoid"] == "microsoft"
         assert result["data"][0]["earnings_per_share_fq"] == 2.93
 
-    @mock.patch("tv_scraper.core.base.make_request")
+    @patch("requests.post")
     def test_get_earnings_network_error(
-        self, mock_req: mock.Mock, scraper: Calendar
+        self, mock_post: MagicMock, scraper: Calendar
     ) -> None:
         """Network errors produce error response, never raise."""
-        mock_req.side_effect = NetworkError("Timeout")
+        mock_post.side_effect = requests.RequestException("Timeout")
 
         result = scraper.get_earnings()
 
@@ -273,12 +279,12 @@ class TestGetEarnings:
 
 
 class TestResponseEnvelope:
-    @mock.patch("tv_scraper.core.base.make_request")
+    @patch("requests.post")
     def test_response_has_standard_envelope(
-        self, mock_req: mock.Mock, scraper: Calendar
+        self, mock_post: MagicMock, scraper: Calendar
     ) -> None:
         """All responses must have status, data, metadata, error keys."""
-        mock_req.return_value = _mock_calendar_response(
+        mock_post.return_value = _mock_calendar_response(
             symbols=["NASDAQ:AAPL"],
             values=[
                 [
@@ -310,17 +316,17 @@ class TestResponseEnvelope:
 
 
 class TestDefaultTimestampRange:
-    @mock.patch("tv_scraper.core.base.make_request")
+    @patch("requests.post")
     def test_default_timestamp_range(
-        self, mock_req: mock.Mock, scraper: Calendar
+        self, mock_post: MagicMock, scraper: Calendar
     ) -> None:
         """Default timestamps should be ±3 days from now (midnight-aligned)."""
-        mock_req.return_value = _mock_calendar_response(symbols=[], values=[])
+        mock_post.return_value = _mock_calendar_response(symbols=[], values=[])
 
         scraper.get_dividends()
 
-        call_kwargs = mock_req.call_args
-        payload = call_kwargs.kwargs.get("json_data") or call_kwargs[1].get("json_data")
+        call_kwargs = mock_post.call_args[1]
+        payload = call_kwargs.get("json")
         ts_from = payload["filter"][0]["right"][0]
         ts_to = payload["filter"][0]["right"][1]
 

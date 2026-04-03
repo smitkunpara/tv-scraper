@@ -250,10 +250,13 @@ class TestStreamer:
         mock_cc.return_value = mock_ws
         mock_validate.return_value = True
 
-        # Mock indicator metadata
+        # Mock indicator metadata envelope
         mock_fetch_meta.return_value = {
-            "m": "create_study",
-            "p": ["cs_test", "st9", "st1", "sds_1", "Script@tv-scripting-101!", {}],
+            "status": "success",
+            "data": {
+                "m": "create_study",
+                "p": ["cs_test", "st9", "st1", "sds_1", "Script@tv-scripting-101!", {}],
+            },
         }
 
         # OHLCV packet
@@ -475,13 +478,18 @@ class TestStreamer:
     @patch("tv_scraper.streaming.streamer.fetch_available_indicators")
     def test_get_available_indicators_returns_success_response(self, mock_fetch):
         """get_available_indicators returns standardized success envelope."""
-        mock_fetch.return_value = [
-            {
-                "name": "Relative Strength Index",
-                "id": "STD;RSI",
-                "version": "45.0",
-            }
-        ]
+        mock_fetch.return_value = {
+            "status": "success",
+            "data": [
+                {
+                    "name": "Relative Strength Index",
+                    "id": "STD;RSI",
+                    "version": "45.0",
+                }
+            ],
+            "metadata": {},
+            "error": None,
+        }
 
         from tv_scraper.streaming.streamer import Streamer
 
@@ -496,7 +504,12 @@ class TestStreamer:
     @patch("tv_scraper.streaming.streamer.fetch_available_indicators")
     def test_get_available_indicators_returns_failed_response(self, mock_fetch):
         """get_available_indicators returns standardized failed envelope on errors."""
-        mock_fetch.side_effect = RuntimeError("upstream failed")
+        mock_fetch.return_value = {
+            "status": "failed",
+            "data": None,
+            "metadata": {},
+            "error": "upstream failed",
+        }
 
         from tv_scraper.streaming.streamer import Streamer
 
@@ -507,13 +520,13 @@ class TestStreamer:
         assert result["metadata"] == {}
         assert "upstream failed" in result["error"]
 
-    @patch("tv_scraper.utils.http.make_request")
+    @patch("requests.get")
     @patch(
         "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
         return_value=True,
     )
     @patch("tv_scraper.streaming.stream_handler.create_connection")
-    def test_get_forecast_success(self, mock_cc, mock_validate, mock_make_request):
+    def test_get_forecast_success(self, mock_cc, mock_validate, mock_get):
         """get_forecast returns cleaned data for stock symbols."""
         mock_ws = MagicMock()
         mock_cc.return_value = mock_ws
@@ -521,8 +534,10 @@ class TestStreamer:
 
         # Scanner symbol type check -> stock
         mock_resp = MagicMock()
+        mock_resp.status_code = 200
         mock_resp.json.return_value = {"type": "stock"}
-        mock_make_request.return_value = mock_resp
+        mock_resp.raise_for_status.return_value = None
+        mock_get.return_value = mock_resp
 
         qsd_pkt = {
             "m": "qsd",
@@ -574,22 +589,22 @@ class TestStreamer:
         assert isinstance(result["data"]["yearly_eps_data"], list)
         assert isinstance(result["data"]["yearly_revenue_data"], list)
 
-    @patch("tv_scraper.utils.http.make_request")
+    @patch("requests.get")
     @patch(
         "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
         return_value=True,
     )
     @patch("tv_scraper.streaming.stream_handler.create_connection")
-    def test_get_forecast_non_stock_rejected(
-        self, mock_cc, mock_validate, mock_make_request
-    ):
+    def test_get_forecast_non_stock_rejected(self, mock_cc, mock_validate, mock_get):
         """get_forecast rejects non-stock symbols using scanner type check."""
         mock_cc.return_value = MagicMock()
         mock_validate.return_value = True
 
         mock_resp = MagicMock()
+        mock_resp.status_code = 200
         mock_resp.json.return_value = {"type": "spot"}
-        mock_make_request.return_value = mock_resp
+        mock_resp.raise_for_status.return_value = None
+        mock_get.return_value = mock_resp
 
         from tv_scraper.streaming.streamer import Streamer
 
@@ -600,14 +615,14 @@ class TestStreamer:
         assert result["data"] is None
         assert "type: spot" in result["error"]
 
-    @patch("tv_scraper.utils.http.make_request")
+    @patch("requests.get")
     @patch(
         "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
         return_value=True,
     )
     @patch("tv_scraper.streaming.stream_handler.create_connection")
     def test_get_forecast_missing_keys_returns_partial_data(
-        self, mock_cc, mock_validate, mock_make_request
+        self, mock_cc, mock_validate, mock_get
     ):
         """When some keys are missing, get_forecast fails with partial data + error."""
         mock_ws = MagicMock()
@@ -615,8 +630,10 @@ class TestStreamer:
         mock_validate.return_value = True
 
         mock_resp = MagicMock()
+        mock_resp.status_code = 200
         mock_resp.json.return_value = {"type": "stock"}
-        mock_make_request.return_value = mock_resp
+        mock_resp.raise_for_status.return_value = None
+        mock_get.return_value = mock_resp
 
         # Deliberately omit yearly fields and previous close.
         qsd_pkt = {
@@ -672,7 +689,7 @@ class TestStreamer:
 class TestStreamingUtils:
     """Tests for streaming utility functions."""
 
-    @patch("tv_scraper.core.validators.requests.get")
+    @patch("requests.get")
     def test_validate_symbols_valid(self, mock_get):
         """verify_symbol_exchange returns True for a valid combination."""
         from tv_scraper.core.validators import DataValidator
@@ -688,7 +705,7 @@ class TestStreamingUtils:
         assert result is True
         DataValidator.reset()
 
-    @patch("tv_scraper.core.validators.requests.get")
+    @patch("requests.get")
     def test_validate_symbols_invalid(self, mock_get):
         """verify_symbol_exchange raises ValidationError for invalid combo."""
         import requests as req_lib
@@ -699,8 +716,7 @@ class TestStreamingUtils:
         DataValidator.reset()
         mock_resp = MagicMock()
         mock_resp.status_code = 404
-        exc = req_lib.exceptions.HTTPError(response=mock_resp)
-        exc.response = mock_resp
+        exc = req_lib.exceptions.HTTPError("404 Error", response=mock_resp)
         mock_resp.raise_for_status.side_effect = exc
         mock_get.return_value = mock_resp
 
@@ -709,7 +725,7 @@ class TestStreamingUtils:
             validator.verify_symbol_exchange("BINANCE", "XXXYYY")
         DataValidator.reset()
 
-    @patch("tv_scraper.streaming.utils.requests.get")
+    @patch("requests.get")
     def test_fetch_indicator_metadata(self, mock_get):
         """fetch_indicator_metadata returns prepared payload on success."""
         mock_resp = MagicMock()
@@ -728,8 +744,9 @@ class TestStreamingUtils:
         from tv_scraper.streaming.utils import fetch_indicator_metadata
 
         result = fetch_indicator_metadata("STD;RSI", "37.0", "cs_test123")
-        assert result["m"] == "create_study"
-        assert result["p"][0] == "cs_test123"
+        assert result["status"] == "success"
+        assert result["data"]["m"] == "create_study"
+        assert result["data"]["p"][0] == "cs_test123"
 
     def test_prepare_indicator_metadata_structure(self):
         """prepare_indicator_metadata builds correct payload structure."""
@@ -753,7 +770,7 @@ class TestStreamingUtils:
         assert "in_0" in dict_param
         assert dict_param["in_0"]["v"] == 14
 
-    @patch("tv_scraper.streaming.utils.requests.get")
+    @patch("requests.get")
     def test_fetch_tradingview_indicators(self, mock_get):
         """fetch_tradingview_indicators returns filtered indicator list."""
         mock_resp = MagicMock()
@@ -785,12 +802,14 @@ class TestStreamingUtils:
 
         from tv_scraper.streaming.utils import fetch_tradingview_indicators
 
-        results = fetch_tradingview_indicators("RSI")
+        result = fetch_tradingview_indicators("RSI")
+        assert result["status"] == "success"
+        results = result["data"]
         assert len(results) == 1
         assert results[0]["scriptName"] == "RSI Strategy"
         assert results[0]["scriptIdPart"] == "STD;RSI"
 
-    @patch("tv_scraper.streaming.utils.requests.get")
+    @patch("requests.get")
     def test_fetch_available_indicators(self, mock_get):
         """fetch_available_indicators returns parsed list of built-in indicators."""
         mock_resp = MagicMock()
@@ -812,21 +831,23 @@ class TestStreamingUtils:
 
         from tv_scraper.streaming.utils import fetch_available_indicators
 
-        results = fetch_available_indicators()
-        assert len(results) == 2
-        assert results[0]["name"] == "Relative Strength Index"
-        assert results[0]["id"] == "STD;RSI"
-        assert results[0]["version"] == "45.0"
+        result = fetch_available_indicators()
+        assert result["status"] == "success"
+        assert len(result["data"]) == 2
+        assert result["data"][0]["name"] == "Relative Strength Index"
+        assert result["data"][0]["id"] == "STD;RSI"
+        assert result["data"][0]["version"] == "45.0"
 
     @patch("tv_scraper.streaming.utils.requests.get")
-    def test_fetch_available_indicators_request_error_raises(self, mock_get):
-        """fetch_available_indicators raises RuntimeError on request failures."""
+    def test_fetch_available_indicators_request_error_returns_failed(self, mock_get):
+        """fetch_available_indicators returns failed response on request failures."""
         mock_get.side_effect = requests.RequestException("network down")
 
         from tv_scraper.streaming.utils import fetch_available_indicators
 
-        with pytest.raises(RuntimeError, match="Failed to fetch available indicators"):
-            fetch_available_indicators()
+        result = fetch_available_indicators()
+        assert result["status"] == "failed"
+        assert "network down" in result["error"]
 
 
 # ---------------------------------------------------------------------------

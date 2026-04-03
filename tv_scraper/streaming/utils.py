@@ -5,6 +5,8 @@ from typing import Any
 
 import requests
 
+from tv_scraper.core.constants import STATUS_FAILED, STATUS_SUCCESS
+
 logger = logging.getLogger(__name__)
 
 _INDICATOR_SEARCH_URL = "https://www.tradingview.com/pubscripts-suggest-json/?search="
@@ -14,15 +16,15 @@ _PINE_FACADE_URL = "https://pine-facade.tradingview.com/pine-facade/translate/{s
 _PINE_LIST_URL = "https://pine-facade.tradingview.com/pine-facade/list?filter=standard"
 
 
-def fetch_tradingview_indicators(query: str) -> list[dict[str, Any]]:
+def fetch_tradingview_indicators(query: str) -> dict[str, Any]:
     """Search public TradingView indicators by name or author.
 
     Args:
         query: Search term to filter indicators.
 
     Returns:
-        List of indicator dicts with keys: ``scriptName``, ``imageUrl``,
-        ``author``, ``agreeCount``, ``isRecommended``, ``scriptIdPart``, ``version``.
+        Standardized response dict with keys: ``status``, ``data``,
+        ``metadata``, ``error``. ``data`` contains list of indicator dicts.
     """
     url = _INDICATOR_SEARCH_URL + query
 
@@ -49,11 +51,21 @@ def fetch_tradingview_indicators(query: str) -> list[dict[str, Any]]:
                         "version": indicator.get("version"),
                     }
                 )
-        return filtered
+        return {
+            "status": STATUS_SUCCESS,
+            "data": filtered,
+            "metadata": {"query": query},
+            "error": None,
+        }
 
     except requests.RequestException as exc:
         logger.error("Error fetching TradingView indicators: %s", exc)
-        return []
+        return {
+            "status": STATUS_FAILED,
+            "data": None,
+            "metadata": {"query": query},
+            "error": str(exc),
+        }
 
 
 def fetch_indicator_metadata(
@@ -71,7 +83,7 @@ def fetch_indicator_metadata(
         cookie: Optional TradingView session cookies.
 
     Returns:
-        Prepared ``create_study`` payload dict, or empty dict on failure.
+        Standardized response dict with status and metadata payload.
     """
     url = _PINE_FACADE_URL.format(script_id=script_id, script_version=script_version)
     headers = {}
@@ -85,12 +97,28 @@ def fetch_indicator_metadata(
 
         metainfo = json_data.get("result", {}).get("metaInfo")
         if metainfo:
-            return prepare_indicator_metadata(script_id, metainfo, chart_session)
-        return {}
+            data = prepare_indicator_metadata(script_id, metainfo, chart_session)
+            return {
+                "status": STATUS_SUCCESS,
+                "data": data,
+                "metadata": {"script_id": script_id, "script_version": script_version},
+                "error": None,
+            }
+        return {
+            "status": STATUS_FAILED,
+            "data": None,
+            "metadata": {"script_id": script_id, "script_version": script_version},
+            "error": "No metaInfo found in response",
+        }
 
     except requests.RequestException as exc:
         logger.error("Error fetching indicator metadata: %s", exc)
-        return {}
+        return {
+            "status": STATUS_FAILED,
+            "data": None,
+            "metadata": {"script_id": script_id, "script_version": script_version},
+            "error": str(exc),
+        }
 
 
 def prepare_indicator_metadata(
@@ -155,14 +183,15 @@ def prepare_indicator_metadata(
     return output_data
 
 
-def fetch_available_indicators() -> list[dict[str, Any]]:
+def fetch_available_indicators() -> dict[str, Any]:
     """Fetch the list of standard built-in indicators from TradingView.
 
     Note:
         These IDs and versions are specifically for use with candle streaming.
 
     Returns:
-        List of indicator dicts with: name, id, version.
+        Standardized response dict with keys: ``status``, ``data``,
+        ``metadata``, ``error``.
 
     Raises:
         RuntimeError: If request or JSON parsing fails.
@@ -172,24 +201,44 @@ def fetch_available_indicators() -> list[dict[str, Any]]:
         resp = requests.get(_PINE_LIST_URL, timeout=10)
         resp.raise_for_status()
         data = resp.json()
+
+        if not isinstance(data, list):
+            return {
+                "status": STATUS_FAILED,
+                "data": None,
+                "metadata": {},
+                "error": "Unexpected available indicators response format",
+            }
+
+        indicators = [
+            {
+                "name": item.get("scriptName"),
+                "id": item.get("scriptIdPart"),
+                "version": item.get("version"),
+            }
+            for item in data
+            if isinstance(item, dict)
+        ]
+        return {
+            "status": STATUS_SUCCESS,
+            "data": indicators,
+            "metadata": {},
+            "error": None,
+        }
+
     except requests.RequestException as exc:
         logger.error("Error fetching available indicators: %s", exc)
-        raise RuntimeError(f"Failed to fetch available indicators: {exc}") from exc
+        return {
+            "status": STATUS_FAILED,
+            "data": None,
+            "metadata": {},
+            "error": str(exc),
+        }
     except ValueError as exc:
         logger.error("Error parsing available indicators response: %s", exc)
-        raise RuntimeError(
-            "Failed to parse available indicators response as JSON"
-        ) from exc
-
-    if not isinstance(data, list):
-        raise ValueError("Unexpected available indicators response format")
-
-    return [
-        {
-            "name": item.get("scriptName"),
-            "id": item.get("scriptIdPart"),
-            "version": item.get("version"),
+        return {
+            "status": STATUS_FAILED,
+            "data": None,
+            "metadata": {},
+            "error": f"Failed to parse available indicators response as JSON: {exc}",
         }
-        for item in data
-        if isinstance(item, dict)
-    ]

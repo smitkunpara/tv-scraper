@@ -3,9 +3,11 @@
 import logging
 from typing import Any
 
+import requests
+
 from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.constants import SCANNER_URL
-from tv_scraper.core.exceptions import NetworkError, ValidationError
+from tv_scraper.core.exceptions import ValidationError
 
 logger = logging.getLogger(__name__)
 
@@ -159,8 +161,11 @@ class Options(BaseScraper):
     ) -> dict[str, Any]:
         """Internal helper to execute the POST request and format response."""
         try:
-            response = self._make_request(
-                OPTIONS_SCANNER_URL, method="POST", json_data=payload
+            response = requests.post(
+                OPTIONS_SCANNER_URL,
+                json=payload,
+                headers=self._headers,
+                timeout=self.timeout,
             )
 
             if response.status_code == 404:
@@ -171,8 +176,8 @@ class Options(BaseScraper):
 
             response.raise_for_status()
             json_response = response.json()
-        except NetworkError as exc:
-            return self._error_response(str(exc))
+        except requests.RequestException as exc:
+            return self._error_response(f"Network error: {exc}")
         except (ValueError, KeyError) as exc:
             return self._error_response(f"Failed to parse API response: {exc}")
         except Exception as exc:

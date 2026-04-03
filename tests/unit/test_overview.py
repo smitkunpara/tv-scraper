@@ -1,14 +1,12 @@
-"""Tests for Overview scraper module."""
-
 from collections.abc import Iterator
 from unittest import mock
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 import pytest
+import requests
 
 from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.constants import STATUS_FAILED, STATUS_SUCCESS
-from tv_scraper.core.exceptions import NetworkError
 from tv_scraper.scrapers.market_data.overview import Overview
 
 
@@ -18,11 +16,17 @@ def overview() -> Iterator[Overview]:
     yield Overview()
 
 
-def _mock_response(data: dict) -> MagicMock:
+def _mock_response(data: dict, status_code: int = 200) -> MagicMock:
     """Create a mock requests.Response with a .json() method."""
     response = MagicMock()
     response.json.return_value = data
-    response.status_code = 200
+    response.status_code = status_code
+    if status_code >= 400:
+        response.raise_for_status.side_effect = requests.HTTPError(
+            f"Error {status_code}"
+        )
+    else:
+        response.raise_for_status.return_value = None
     return response
 
 
@@ -37,18 +41,22 @@ class TestOverviewInheritance:
 class TestGetOverviewSuccess:
     """Tests for successful overview retrieval."""
 
-    def test_get_data_success(self, overview: Overview) -> None:
+    @patch("tv_scraper.core.validators.DataValidator.verify_symbol_exchange")
+    @patch("requests.get")
+    def test_get_data_success(
+        self, mock_get: MagicMock, mock_verify: MagicMock, overview: Overview
+    ) -> None:
         """Get overview with default (all) fields returns success envelope."""
+        mock_verify.return_value = True
         # Flat mock response as returned by GET /symbol endpoint
         mock_data = {
             "name": "AAPL",
             "close": 150.25,
             "market_cap_basic": 2500000000000,
         }
-        mock_resp = _mock_response(mock_data)
+        mock_get.return_value = _mock_response(mock_data)
 
-        with mock.patch.object(overview, "_make_request", return_value=mock_resp):
-            result = overview.get_overview(exchange="NASDAQ", symbol="AAPL")
+        result = overview.get_overview(exchange="NASDAQ", symbol="AAPL")
 
         assert result["status"] == STATUS_SUCCESS
         assert result["data"] is not None
@@ -56,31 +64,34 @@ class TestGetOverviewSuccess:
         assert result["data"]["symbol"] == "NASDAQ:AAPL"
         assert result["data"]["name"] == "AAPL"
         assert result["data"]["close"] == 150.25
+        mock_get.assert_called_once()
 
-    def test_get_data_with_custom_fields(self, overview: Overview) -> None:
+    @patch("tv_scraper.core.validators.DataValidator.verify_symbol_exchange")
+    @patch("requests.get")
+    def test_get_data_with_custom_fields(
+        self, mock_get: MagicMock, mock_verify: MagicMock, overview: Overview
+    ) -> None:
         """Custom fields are sent to the API and returned correctly."""
+        mock_verify.return_value = True
         custom_fields = ["close", "volume", "market_cap_basic"]
         mock_data = {
             "close": 150.25,
             "volume": 1000000,
             "market_cap_basic": 2500000000000,
         }
-        mock_resp = _mock_response(mock_data)
+        mock_get.return_value = _mock_response(mock_data)
 
-        with mock.patch.object(
-            overview, "_make_request", return_value=mock_resp
-        ) as mock_req:
-            result = overview.get_overview(
-                exchange="NASDAQ", symbol="AAPL", fields=custom_fields
-            )
+        result = overview.get_overview(
+            exchange="NASDAQ", symbol="AAPL", fields=custom_fields
+        )
 
         assert result["status"] == STATUS_SUCCESS
         assert result["data"]["close"] == 150.25
         assert result["data"]["volume"] == 1000000
         assert result["data"]["market_cap_basic"] == 2500000000000
 
-        # Verify correct params sent to API (GET uses params, not json_data)
-        call_kwargs = mock_req.call_args[1]
+        # Verify correct params sent to API
+        call_kwargs = mock_get.call_args[1]
         params = call_kwargs["params"]
         assert params["symbol"] == "NASDAQ:AAPL"
         assert params["fields"] == ",".join(custom_fields)
@@ -103,14 +114,14 @@ class TestGetOverviewErrors:
         assert result["data"] is None
         assert result["error"] is not None
 
-    def test_get_data_network_error(self, overview: Overview) -> None:
+    @patch("requests.get")
+    def test_get_data_network_error(
+        self, mock_get: MagicMock, overview: Overview
+    ) -> None:
         """Network error returns error response, does not raise."""
-        with mock.patch.object(
-            overview,
-            "_make_request",
-            side_effect=NetworkError("Connection refused"),
-        ):
-            result = overview.get_overview(exchange="NASDAQ", symbol="AAPL")
+        mock_get.side_effect = requests.RequestException("Connection refused")
+
+        result = overview.get_overview(exchange="NASDAQ", symbol="AAPL")
         assert result["status"] == STATUS_FAILED
         assert result["data"] is None
         assert "Connection refused" in result["error"]
@@ -200,27 +211,31 @@ class TestCategoryMethods:
 class TestResponseFormat:
     """Tests for response envelope structure."""
 
-    def test_response_has_standard_envelope(self, overview: Overview) -> None:
+    @patch("requests.get")
+    def test_response_has_standard_envelope(
+        self, mock_get: MagicMock, overview: Overview
+    ) -> None:
         """Response contains exactly status/data/metadata/error keys."""
         mock_data = {"close": 150.25}
-        mock_resp = _mock_response(mock_data)
-        with mock.patch.object(overview, "_make_request", return_value=mock_resp):
-            result = overview.get_overview(
-                exchange="NASDAQ", symbol="AAPL", fields=["close"]
-            )
+        mock_get.return_value = _mock_response(mock_data)
+        result = overview.get_overview(
+            exchange="NASDAQ", symbol="AAPL", fields=["close"]
+        )
         assert set(result.keys()) == {"status", "data", "metadata", "error"}
         assert result["metadata"]["exchange"] == "NASDAQ"
         assert result["metadata"]["symbol"] == "AAPL"
 
-    def test_combines_exchange_symbol_for_api(self, overview: Overview) -> None:
+    @patch("tv_scraper.core.validators.DataValidator.verify_symbol_exchange")
+    @patch("requests.get")
+    def test_combines_exchange_symbol_for_api(
+        self, mock_get: MagicMock, mock_verify: MagicMock, overview: Overview
+    ) -> None:
         """Verify EXCHANGE:SYMBOL is combined internally for the API call."""
+        mock_verify.return_value = True
         mock_data = {"close": 150.25}
-        mock_resp = _mock_response(mock_data)
-        with mock.patch.object(
-            overview, "_make_request", return_value=mock_resp
-        ) as mock_req:
-            overview.get_overview(exchange="NASDAQ", symbol="AAPL", fields=["close"])
+        mock_get.return_value = _mock_response(mock_data)
+        overview.get_overview(exchange="NASDAQ", symbol="AAPL", fields=["close"])
 
-        call_kwargs = mock_req.call_args[1]
+        call_kwargs = mock_get.call_args[1]
         params = call_kwargs["params"]
         assert params["symbol"] == "NASDAQ:AAPL"

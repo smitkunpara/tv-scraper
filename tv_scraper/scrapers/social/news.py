@@ -3,6 +3,8 @@
 import logging
 from typing import Any
 
+import requests
+
 from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.exceptions import ValidationError
 
@@ -118,25 +120,22 @@ class News(BaseScraper):
             return self._error_response(str(exc))
 
         # Build URL parameters
-        area_code = self._areas[area] if area else ""
-        provider_param = provider.replace(".", "_") if provider else ""
-        section_param = "" if section == "all" else section
-
-        url = (
-            f"{NEWS_HEADLINES_URL}"
-            f"?client=web"
-            f"&lang={language}"
-            f"&area={area_code}"
-            f"&provider={provider_param}"
-            f"&section={section_param}"
-            f"&streaming="
-            f"&symbol={exchange}:{symbol}"
-        )
+        params: dict[str, Any] = {
+            "client": "web",
+            "lang": language,
+            "area": self._areas[area] if area else "",
+            "provider": provider.replace(".", "_") if provider else "",
+            "section": "" if section == "all" else section,
+            "streaming": "",
+            "symbol": f"{exchange}:{symbol}",
+        }
 
         try:
-            response = self._make_request(
-                url,
-                method="GET",
+            response = requests.get(
+                NEWS_HEADLINES_URL,
+                headers=self._headers,
+                params=params,
+                timeout=self.timeout,
             )
             response.raise_for_status()
 
@@ -182,6 +181,11 @@ class News(BaseScraper):
                 symbol=symbol,
                 exchange=exchange,
                 total=len(cleaned_items),
+                language=language,
+                area=area,
+                provider=provider,
+                sort_by=sort_by,
+                section=section,
             )
 
         except Exception as exc:
@@ -210,10 +214,11 @@ class News(BaseScraper):
                 "user_prostatus": "non_pro",
             }
 
-            response = self._make_request(
+            response = requests.get(
                 NEWS_STORY_URL,
-                method="GET",
+                headers=self._headers,
                 params=params,
+                timeout=self.timeout,
             )
             response.raise_for_status()
 

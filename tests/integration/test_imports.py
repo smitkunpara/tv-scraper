@@ -156,14 +156,12 @@ class TestCoreImports:
         from tv_scraper.core import (
             DataNotFoundError,
             ExportError,
-            NetworkError,
             TvScraperError,
             ValidationError,
         )
 
         assert issubclass(ValidationError, TvScraperError)
         assert issubclass(DataNotFoundError, TvScraperError)
-        assert issubclass(NetworkError, TvScraperError)
         assert issubclass(ExportError, TvScraperError)
 
 
