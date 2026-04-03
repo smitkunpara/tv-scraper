@@ -16,6 +16,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Removed Parameter**: Deprecated and removed the `websocket_jwt_token` argument from `Streamer.__init__`.
 - **Required Option**: Authentication for indicators now exclusively uses the `cookie` parameter which internally resolves the necessary tokens.
 - **Utility Refactor**: `fetch_indicator_metadata` now uses the provided session cookies for personal Pine script validation, removing all previously hardcoded placeholders.
+- **Streamer**: `get_candles()` now guarantees exactly the requested number of candles by sorting and slicing the final dataset before returning/exporting.
+- **Export Behavior**: `get_candles()` now exports the unified `result_data` dictionary (containing both OHLCV and indicators) to a single file, rather than exporting them separately.
+
+### Fixed
+- **Indicator Retrieval**: Removed restrictive minimum length check in `Streamer` that prevented capturing indicator data when `numb_candles` was 10 or fewer.
 
 ## [1.3.1] - 2026-04-02
 

@@ -188,12 +188,17 @@ class Streamer:
                     )
                     break
 
+            # Final data slicing to exactly numb_candles
+            ohlcv_data = sorted(ohlcv_data, key=lambda x: x["index"])[-numb_candles:]
+            for name in indicator_data:
+                indicator_data[name] = sorted(
+                    indicator_data[name], key=lambda x: x["index"]
+                )[-numb_candles:]
+
             result_data = {"ohlcv": ohlcv_data, "indicators": indicator_data}
 
             if self.export_result:
-                self._export(ohlcv_data, symbol, "ohlcv")
-                if ind_flag:
-                    self._export(indicator_data, symbol, "indicators")
+                self._export(result_data, symbol, "get_candles")
 
             return {
                 "status": STATUS_SUCCESS,
@@ -588,7 +593,7 @@ class Streamer:
 
         for key, val in p_data[1].items():
             if key.startswith("st") and key in self.study_id_to_name_map:
-                if "st" in val and len(val["st"]) > 10:
+                if val.get("st"):
                     indicator_name = self.study_id_to_name_map[key]
                     json_data = []
                     for item in val["st"]:
