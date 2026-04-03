@@ -351,12 +351,16 @@ class Streamer:
             exchange_symbol = format_symbol(exchange, symbol)
             DataValidator().verify_symbol_exchange(exchange, symbol)
 
-            if not self._is_stock(exchange_symbol):
+            symbol_type = self._get_symbol_type(exchange_symbol)
+            if symbol_type != "stock":
                 return {
                     "status": STATUS_FAILED,
                     "data": None,
                     "metadata": {"exchange": exchange, "symbol": symbol},
-                    "error": "forecast is only available for stock symbols.",
+                    "error": (
+                        "forecast is not available for this symbol because it is type: "
+                        f"{symbol_type}"
+                    ),
                 }
 
             handler = self._get_fresh_handler()
@@ -580,9 +584,9 @@ class Streamer:
         else:
             save_json_file(data, filepath)
 
-    def _is_stock(self, exchange_symbol: str) -> bool:
-        """Check if a symbol is a stock using TradingView scanner API."""
-        from tv_scraper.core.constants import SCANNER_URL
+    def _get_symbol_type(self, exchange_symbol: str) -> str | None:
+        """Fetch the symbol type (e.g. 'stock', 'crypto', 'spot') from TradingView scanner."""
+        from tv_scraper.core.constants import DEFAULT_USER_AGENT, SCANNER_URL
         from tv_scraper.utils.http import make_request
 
         try:
@@ -590,10 +594,11 @@ class Streamer:
                 url=f"{SCANNER_URL}/symbol",
                 method="GET",
                 params={"symbol": exchange_symbol, "fields": "type", "no_404": "false"},
+                headers={"User-Agent": DEFAULT_USER_AGENT},
                 timeout=10,
             )
             if resp is None:
-                return False
-            return resp.json().get("type") == "stock"
+                return None
+            return str(resp.json().get("type"))
         except Exception:
-            return False
+            return None
