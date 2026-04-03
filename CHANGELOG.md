@@ -5,10 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.3.2] - 2026-04-03
 
 ### Added
-- **Authenticated Streaming**: Implemented fully automated JWT extraction and caching via TradingView session cookies.
+- **Authenticated Streaming**: Implemented fully automated JWT extraction and caching via TradingView session cookies. This solves the issue of manual JWT tokens expiring after a few hours and allows for seamless continuous streaming with auto-updating authentication.
 - **Auth Module**: New `tv_scraper.streaming.auth` module for secure token resolution.
 - **Thread-safe Token Caching**: In-memory caching for resolved JWT tokens with automatic expiry management.
 

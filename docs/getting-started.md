@@ -111,8 +111,8 @@ print(result["data"])
 ```python
 from tv_scraper import Streamer
 
-# Get historical candles with indicators
-streamer = Streamer(export_result=True, export_type="json")
+# Get historical candles with indicators (with optional cookies for auth)
+streamer = Streamer(cookie="<TRADINGVIEW_COOKIE>")
 result = streamer.get_candles(
     exchange="BINANCE",
     symbol="BTCUSDT",

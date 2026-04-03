@@ -5,7 +5,7 @@
 
 **A powerful, real-time Python library for extracting financial data, indicators, and ideas from TradingView.com.**
 
-> 🔥 New in v1.3.1: Streamer now supports analyst forecast data (price targets, EPS, revenue estimates) for stock symbols via WebSocket.
+> 🔥 New in v1.3.2: Streamer now uses TradingView session cookies for automated indicator authentication. This ensures continuous streaming by automatically renewing expiring tokens and is required for personal Pine script verification.
 
 ---
 

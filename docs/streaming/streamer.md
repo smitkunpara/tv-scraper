@@ -29,9 +29,17 @@ from tv_scraper.streaming import Streamer
 s = Streamer(
     export_result=False,       # Save results to file
     export_type="json",        # "json" or "csv"
-    websocket_jwt_token="unauthorized_user_token",  # JWT for indicator access
+    cookie="<TRADINGVIEW_COOKIE>",  # Optional: session cookie for indicator access
 )
 ```
+
+### Why Cookies instead of JWT?
+
+The previous manual `websocket_jwt_token` approach was prone to disruptions because TradingView's JWT tokens typically expire after a few hours. By providing a `cookie` instead:
+
+1.  **Continuous Streaming**: The library can automatically detect expired tokens and resolve fresh ones in the background without interrupting your stream.
+2.  **Pine Script Verification**: Cookies are required to verify and access your personal/private Pine scripts when used as indicators in `get_candles()`.
+3.  **Simulated Browser Auth**: It mimics a real browser session, reducing the risk of authentication-related blocks.
 
 ## Methods
 
@@ -135,7 +143,7 @@ from tv_scraper.scrapers.scripts import Pine
 from tv_scraper.streaming import Streamer
 
 pine = Pine(cookie="<TRADINGVIEW_COOKIE>")
-s = Streamer()
+s = Streamer(cookie="<TRADINGVIEW_COOKIE>")
 
 source_code = """
 //@version=6

@@ -63,19 +63,20 @@ class Streamer:
         self.cookie = cookie
         self.study_id_to_name_map: dict[str, str] = {}
 
-        # Resolve JWT token: use cookie if provided, otherwise default to "unauthorized_user_token".
+    def _get_fresh_handler(self) -> StreamHandler:
+        """Resolve a valid JWT token and return a new connected StreamHandler."""
         websocket_jwt_token = "unauthorized_user_token"
-        if cookie:
+        if self.cookie:
             from tv_scraper.streaming.auth import get_valid_jwt_token
 
             try:
-                websocket_jwt_token = get_valid_jwt_token(cookie)
-                logger.info("JWT token resolved successfully using provided cookie.")
+                websocket_jwt_token = get_valid_jwt_token(self.cookie)
+                logger.debug("JWT token resolved successfully.")
             except Exception as exc:
                 logger.error("Failed to resolve JWT token from cookie: %s", exc)
                 raise
 
-        self._handler = StreamHandler(jwt_token=websocket_jwt_token)
+        return StreamHandler(jwt_token=websocket_jwt_token)
 
     # ------------------------------------------------------------------
     # Public API
@@ -134,23 +135,25 @@ class Streamer:
             DataValidator().verify_symbol_exchange(exchange, symbol)
 
             ind_flag = bool(indicators)
+            handler = self._get_fresh_handler()
 
             self._add_symbol_to_sessions(
-                self._handler.quote_session,
-                self._handler.chart_session,
+                handler,
+                handler.quote_session,
+                handler.chart_session,
                 exchange_symbol,
                 timeframe,
                 numb_candles,
             )
 
             if ind_flag and indicators:
-                self._add_indicators(indicators)
+                self._add_indicators(handler, indicators)
 
             ohlcv_data: list[dict[str, Any]] = []
             indicator_data: dict[str, Any] = {}
             expected_ind_count = len(indicators) if ind_flag and indicators else 0
 
-            for i, pkt in enumerate(self._handler.receive_packets()):
+            for i, pkt in enumerate(handler.receive_packets()):
                 # OHLCV extraction
                 received_ohlcv = self._extract_ohlcv_from_stream(pkt)
                 if received_ohlcv:
@@ -234,27 +237,27 @@ class Streamer:
         exchange_symbol = format_symbol(exchange, symbol)
         DataValidator().verify_symbol_exchange(exchange, symbol)
 
+        handler = self._get_fresh_handler()
+
         # Add symbol to both quote and chart sessions for maximum update frequency
         resolve_symbol = json.dumps({"adjustment": "splits", "symbol": exchange_symbol})
-        qs = self._handler.quote_session
-        cs = self._handler.chart_session
+        qs = handler.quote_session
+        cs = handler.chart_session
 
         # Subscribe to quote session for price updates
-        self._handler.send_message("quote_add_symbols", [qs, f"={resolve_symbol}"])
-        self._handler.send_message("quote_fast_symbols", [qs, exchange_symbol])
+        handler.send_message("quote_add_symbols", [qs, f"={resolve_symbol}"])
+        handler.send_message("quote_fast_symbols", [qs, exchange_symbol])
 
         # Subscribe to chart session for real-time OHLCV updates
         mapped_tf = DataValidator().get_timeframes().get("1m", "1")
-        self._handler.send_message(
-            "resolve_symbol", [cs, "sds_sym_1", f"={resolve_symbol}"]
-        )
-        self._handler.send_message(
+        handler.send_message("resolve_symbol", [cs, "sds_sym_1", f"={resolve_symbol}"])
+        handler.send_message(
             "create_series", [cs, "sds_1", "s1", "sds_sym_1", mapped_tf, 1, ""]
         )
 
         last_price = None
 
-        for pkt in self._handler.receive_packets():
+        for pkt in handler.receive_packets():
             # Handle quote session data (qsd)
             if pkt.get("m") == "qsd":
                 p_data = pkt.get("p", [])
@@ -345,41 +348,20 @@ class Streamer:
             ``data`` contains ``raw_packets`` and merged ``snapshot``.
         """
         try:
-            from tv_scraper.core.constants import SCANNER_URL
-            from tv_scraper.utils.http import make_request
-
             exchange_symbol = format_symbol(exchange, symbol)
             DataValidator().verify_symbol_exchange(exchange, symbol)
 
-            # Match scanner behavior: forecast endpoint is stock-oriented.
-            stock_check = make_request(
-                url=f"{SCANNER_URL}/symbol",
-                method="GET",
-                params={
-                    "symbol": exchange_symbol,
-                    "fields": "type",
-                    "no_404": "false",
-                },
-                timeout=10,
-            )
-            stock_payload = stock_check.json() if stock_check is not None else {}
-            type_value = stock_payload.get("type")
-
-            if type_value != "stock":
+            if not self._is_stock(exchange_symbol):
                 return {
                     "status": STATUS_FAILED,
                     "data": None,
-                    "metadata": {
-                        "exchange": exchange,
-                        "symbol": symbol,
-                    },
-                    "error": (
-                        "forecast is not available for this symbol because it is type: "
-                        f"{type_value}"
-                    ),
+                    "metadata": {"exchange": exchange, "symbol": symbol},
+                    "error": "forecast is only available for stock symbols.",
                 }
 
-            qs = self._handler.quote_session
+            handler = self._get_fresh_handler()
+
+            qs = handler.quote_session
             resolve_symbol = json.dumps(
                 {"adjustment": "splits", "symbol": exchange_symbol}
             )
@@ -387,11 +369,11 @@ class Streamer:
             # Keep same connection lifecycle as candle streaming and only update
             # quote session subscriptions/fields for this symbol.
             capture_fields = sorted(set(_FORECAST_SOURCE_KEY_MAP.values()))
-            self._handler.send_message("set_data_quality", ["low"])
-            self._handler.send_message("quote_set_fields", [qs, *capture_fields])
-            self._handler.send_message("quote_hibernate_all", [qs])
-            self._handler.send_message("quote_add_symbols", [qs, f"={resolve_symbol}"])
-            self._handler.send_message("quote_fast_symbols", [qs, exchange_symbol])
+            handler.send_message("set_data_quality", ["low"])
+            handler.send_message("quote_set_fields", [qs, *capture_fields])
+            handler.send_message("quote_hibernate_all", [qs])
+            handler.send_message("quote_add_symbols", [qs, f"={resolve_symbol}"])
+            handler.send_message("quote_fast_symbols", [qs, exchange_symbol])
 
             raw_packets: list[dict[str, Any]] = []
             snapshot: dict[str, Any] = {}
@@ -399,7 +381,7 @@ class Streamer:
             found_output_keys: set[str] = set()
             packet_count = 0
 
-            for pkt in self._handler.receive_packets():
+            for pkt in handler.receive_packets():
                 packet_count += 1
                 raw_packets.append(pkt)
 
@@ -487,6 +469,7 @@ class Streamer:
 
     def _add_symbol_to_sessions(
         self,
+        handler: StreamHandler,
         quote_session: str,
         chart_session: str,
         exchange_symbol: str,
@@ -497,21 +480,19 @@ class Streamer:
         timeframes = DataValidator().get_timeframes()
         mapped_tf = timeframes.get(timeframe, "1")
         resolve_symbol = json.dumps({"adjustment": "splits", "symbol": exchange_symbol})
-        self._handler.send_message(
-            "quote_add_symbols", [quote_session, f"={resolve_symbol}"]
-        )
-        self._handler.send_message(
+        handler.send_message("quote_add_symbols", [quote_session, f"={resolve_symbol}"])
+        handler.send_message(
             "resolve_symbol", [chart_session, "sds_sym_1", f"={resolve_symbol}"]
         )
-        self._handler.send_message(
+        handler.send_message(
             "create_series",
             [chart_session, "sds_1", "s1", "sds_sym_1", mapped_tf, numb_candles, ""],
         )
-        self._handler.send_message(
-            "quote_fast_symbols", [quote_session, exchange_symbol]
-        )
+        handler.send_message("quote_fast_symbols", [quote_session, exchange_symbol])
 
-    def _add_indicators(self, indicators: list[tuple[str, str]]) -> None:
+    def _add_indicators(
+        self, handler: StreamHandler, indicators: list[tuple[str, str]]
+    ) -> None:
         """Add one or more indicator studies to the chart session."""
         for idx, (script_id, script_version) in enumerate(indicators):
             logger.info(
@@ -525,7 +506,7 @@ class Streamer:
             ind_study = fetch_indicator_metadata(
                 script_id=script_id,
                 script_version=script_version,
-                chart_session=self._handler.chart_session,
+                chart_session=handler.chart_session,
                 cookie=self.cookie,
             )
             if not ind_study or "p" not in ind_study:
@@ -539,10 +520,8 @@ class Streamer:
             self.study_id_to_name_map[study_id] = script_id
 
             try:
-                self._handler.send_message("create_study", ind_study["p"])
-                self._handler.send_message(
-                    "quote_hibernate_all", [self._handler.quote_session]
-                )
+                handler.send_message("create_study", ind_study["p"])
+                handler.send_message("quote_hibernate_all", [handler.quote_session])
             except Exception as exc:
                 logger.error("Failed to add indicator %s: %s", script_id, exc)
 
@@ -600,3 +579,21 @@ class Streamer:
             save_csv_file(data, filepath)
         else:
             save_json_file(data, filepath)
+
+    def _is_stock(self, exchange_symbol: str) -> bool:
+        """Check if a symbol is a stock using TradingView scanner API."""
+        from tv_scraper.core.constants import SCANNER_URL
+        from tv_scraper.utils.http import make_request
+
+        try:
+            resp = make_request(
+                url=f"{SCANNER_URL}/symbol",
+                method="GET",
+                params={"symbol": exchange_symbol, "fields": "type", "no_404": "false"},
+                timeout=10,
+            )
+            if resp is None:
+                return False
+            return resp.json().get("type") == "stock"
+        except Exception:
+            return False

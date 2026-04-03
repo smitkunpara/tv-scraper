@@ -1,6 +1,6 @@
 # Getting Cookies
 
-TradingView may present captcha challenges when scraping ideas to prevent automated access. To continue scraping without interruptions, you need to obtain and use a valid session cookie after manually solving the captcha.
+TradingView may present captcha challenges when scraping ideas or requiring authentication for WebSocket-based indicators in the `Streamer` class. To continue scraping without interruptions and access protected indicators, you need to obtain and use a valid session cookie.
 
 !!! note "Captcha Frequency"
     TradingView typically requires captcha verification every 24 hours. When you encounter a captcha error, you'll need to repeat this process to get a fresh cookie.
@@ -27,7 +27,7 @@ Follow these steps to get a valid TradingView session cookie after solving the c
 
 ## Using the Cookie in Code
 
-Once you have the cookie string, you can use it directly in Python
+### With Ideas Scraper
 
 ```python
 from tv_scraper import Ideas
@@ -42,5 +42,21 @@ ideas_scraper = Ideas(cookie=TRADINGVIEW_COOKIE)
 ideas = ideas_scraper.get_ideas(symbol="BTCUSD", exchange="CRYPTO", start_page=1, end_page=5)
 ```
 
+### With Streamer (for Indicators)
+
+```python
+from tv_scraper import Streamer
+
+# Initialize streamer with cookie
+s = Streamer(cookie=TRADINGVIEW_COOKIE)
+
+# Get candles with indicators (requires auth)
+result = s.get_candles(
+    exchange="BINANCE",
+    symbol="BTCUSDT",
+    indicators=[("STD;RSI", "37.0")]
+)
+```
+
 !!! warning "Cookie Expiration"
-    The cookie remains valid for approximately 24 hours. After that, you'll need to repeat the process to get a new cookie when scraping encounters captcha challenges again.
+    The cookie remains valid for approximately 24 hours. After that, you'll need to repeat the process to get a new cookie when scraping encounters captcha challenges or indicator authentication fails.
