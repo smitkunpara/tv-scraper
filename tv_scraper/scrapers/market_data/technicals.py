@@ -86,7 +86,8 @@ class Technicals(BaseScraper):
         timeframes = self.validator.get_timeframes()
         timeframe_value: str = timeframes.get(timeframe, "")
 
-        if timeframe_value:
+        # Scanner API expects no suffix for daily indicators regardless of timeframe mapping
+        if timeframe_value and timeframe_value != "1D":
             api_indicators = [f"{ind}|{timeframe_value}" for ind in indicators]
         else:
             api_indicators = list(indicators)
@@ -157,6 +158,6 @@ class Technicals(BaseScraper):
         Returns:
             Dict with cleaned keys (``|suffix`` removed).
         """
-        if not timeframe_value:
+        if not timeframe_value or timeframe_value == "1D":
             return data
         return {re.sub(r"\|.*", "", k): v for k, v in data.items()}

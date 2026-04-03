@@ -3,6 +3,7 @@
 import json
 import logging
 import re
+import threading
 from difflib import get_close_matches
 from pathlib import Path
 from typing import Any, Optional
@@ -53,11 +54,13 @@ class DataValidator:
     """
 
     _instance: Optional["DataValidator"] = None
+    _lock = threading.RLock()
 
     def __new__(cls) -> "DataValidator":
-        if cls._instance is None:
-            cls._instance = super().__new__(cls)
-            cls._instance._load_data()
+        with cls._lock:
+            if cls._instance is None:
+                cls._instance = super().__new__(cls)
+                cls._instance._load_data()
         return cls._instance
 
     def _load_data(self) -> None:
@@ -65,11 +68,15 @@ class DataValidator:
         self._exchanges: list[str] = self._load_json("exchanges.json").get(
             "exchanges", []
         )
+        self._exchanges_set: set[str] = {e.upper() for e in self._exchanges}
+
         self._indicators: list[str] = self._load_json("indicators.json").get(
             "indicators", []
         )
+        self._indicators_set: set[str] = set(self._indicators)
+
         self._timeframes: dict[str, Any] = self._load_json("timeframes.json").get(
-            "indicators", {}
+            "timeframes", {}
         )
         self._languages: dict[str, str] = self._load_json("languages.json")
         self._areas: dict[str, str] = self._load_json("areas.json")
@@ -108,7 +115,7 @@ class DataValidator:
         Raises:
             ValidationError: If exchange is not found, with suggestions.
         """
-        if exchange.upper() in (e.upper() for e in self._exchanges):
+        if exchange.upper() in self._exchanges_set:
             return True
         suggestions = get_close_matches(
             exchange.upper(), self._exchanges, n=5, cutoff=0.6
@@ -158,7 +165,7 @@ class DataValidator:
                 "No indicators provided. Provide at least one indicator."
             )
         for indicator in indicators:
-            if indicator not in self._indicators:
+            if indicator not in self._indicators_set:
                 suggestions = get_close_matches(
                     indicator, self._indicators, n=3, cutoff=0.5
                 )

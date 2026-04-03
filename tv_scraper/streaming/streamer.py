@@ -21,19 +21,6 @@ from tv_scraper.utils.io import generate_export_filepath, save_csv_file, save_js
 
 logger = logging.getLogger(__name__)
 
-# Timeframe mapping: user-friendly → TradingView protocol value
-_TIMEFRAME_MAP = {
-    "1m": "1",
-    "5m": "5",
-    "15m": "15",
-    "30m": "30",
-    "1h": "60",
-    "2h": "120",
-    "4h": "240",
-    "1d": "1D",
-    "1w": "1W",
-    "1M": "1M",
-}
 
 # Fixed source-key mapping from qsd.v payload -> clean output fields.
 _FORECAST_SOURCE_KEY_MAP = {
@@ -257,11 +244,12 @@ class Streamer:
         self._handler.send_message("quote_fast_symbols", [qs, exchange_symbol])
 
         # Subscribe to chart session for real-time OHLCV updates
+        mapped_tf = DataValidator().get_timeframes().get("1m", "1")
         self._handler.send_message(
             "resolve_symbol", [cs, "sds_sym_1", f"={resolve_symbol}"]
         )
         self._handler.send_message(
-            "create_series", [cs, "sds_1", "s1", "sds_sym_1", "1", 1, ""]
+            "create_series", [cs, "sds_1", "s1", "sds_sym_1", mapped_tf, 1, ""]
         )
 
         last_price = None
@@ -506,7 +494,8 @@ class Streamer:
         numb_candles: int = 10,
     ) -> None:
         """Register symbol in both quote and chart sessions."""
-        mapped_tf = _TIMEFRAME_MAP.get(timeframe, "1")
+        timeframes = DataValidator().get_timeframes()
+        mapped_tf = timeframes.get(timeframe, "1")
         resolve_symbol = json.dumps({"adjustment": "splits", "symbol": exchange_symbol})
         self._handler.send_message(
             "quote_add_symbols", [quote_session, f"={resolve_symbol}"]

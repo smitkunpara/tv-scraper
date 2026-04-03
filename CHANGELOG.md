@@ -21,6 +21,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - **Indicator Retrieval**: Removed restrictive minimum length check in `Streamer` that prevented capturing indicator data when `numb_candles` was 10 or fewer.
+- **Core Validation**: Fixed a bug where `DataValidator` was incorrectly loading timeframe data using the `"indicators"` key.
+- **Robustness**: Resolved a potential `UnboundLocalError` in `DataValidator.verify_symbol_exchange` by ensuring correct exception initialization.
+
+### Performance
+- **Optimized Lookups**: `DataValidator` now utilizes internal sets for exchanges and indicators, improving validation speed from $O(n)$ to $O(1)$.
+- **Thread-Safety**: Implemented `threading.RLock` in `DataValidator` to ensure thread-safe singleton initialization during concurrent access.
+
+### Changed
+- **Data Mapping**: Updated `timeframes.json` to rename the top-level key to `"timeframes"` and modernized the `"1d"` mapping to `"1D"`.
+- **Technicals Scraper**: Refined `get_technicals` to treat the `"1D"` timeframe as suffix-less, maintaining compatibility with the Scanner API while using the updated `"1D"` mapping.
+- **Testing**: Enhanced `test_technicals.py` with specific test cases for Weekly and Monthly timeframe suffixes.
 
 ## [1.3.1] - 2026-04-02
 

@@ -108,6 +108,38 @@ class TestScrapeSuccess:
         assert "RSI|240" not in result["data"]
         assert result["data"]["RSI"] == 60.0
 
+    def test_get_data_with_weekly_monthly_timeframe(
+        self, technicals: Technicals
+    ) -> None:
+        """Weekly and Monthly timeframes use |1W and |1M suffixes."""
+        # Test Weekly
+        mock_resp_w = _mock_response({"RSI|1W": 70.0})
+        with mock.patch.object(
+            technicals, "_make_request", return_value=mock_resp_w
+        ) as mock_req_w:
+            result_w = technicals.get_technicals(
+                exchange="BINANCE",
+                symbol="BTCUSD",
+                timeframe="1w",
+                technical_indicators=["RSI"],
+            )
+        assert "RSI|1W" in mock_req_w.call_args[1]["params"]["fields"]
+        assert result_w["data"]["RSI"] == 70.0
+
+        # Test Monthly
+        mock_resp_m = _mock_response({"RSI|1M": 75.0})
+        with mock.patch.object(
+            technicals, "_make_request", return_value=mock_resp_m
+        ) as mock_req_m:
+            result_m = technicals.get_technicals(
+                exchange="BINANCE",
+                symbol="BTCUSD",
+                timeframe="1M",
+                technical_indicators=["RSI"],
+            )
+        assert "RSI|1M" in mock_req_m.call_args[1]["params"]["fields"]
+        assert result_m["data"]["RSI"] == 75.0
+
 
 class TestScrapeErrors:
     """Tests for error handling — returns error responses, never raises."""
