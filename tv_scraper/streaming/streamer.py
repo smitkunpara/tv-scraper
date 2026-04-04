@@ -159,6 +159,7 @@ class Streamer:
         try:
             exchange_symbol = format_symbol(exchange, symbol)
             DataValidator().verify_symbol_exchange(exchange, symbol)
+            self.study_id_to_name_map = {}
 
             ind_flag = bool(indicators)
             handler = self._get_fresh_handler()
@@ -210,6 +211,33 @@ class Streamer:
                 indicator_data[name] = sorted(
                     indicator_data[name], key=lambda x: x["index"]
                 )[-numb_candles:]
+
+            if not ohlcv_data:
+                return self._error_response(
+                    "No OHLCV data received from stream.",
+                    exchange=exchange,
+                    symbol=symbol,
+                    timeframe=timeframe,
+                    numb_candles=numb_candles,
+                )
+
+            if ind_flag and indicators:
+                requested_ids = [script_id for script_id, _ in indicators]
+                missing_indicators = [
+                    script_id
+                    for script_id in requested_ids
+                    if script_id not in indicator_data
+                ]
+                if missing_indicators:
+                    return self._error_response(
+                        "Failed to fetch indicator data for: "
+                        + ", ".join(missing_indicators),
+                        exchange=exchange,
+                        symbol=symbol,
+                        timeframe=timeframe,
+                        numb_candles=numb_candles,
+                        indicators=[list(t) for t in indicators],
+                    )
 
             result_data = {"ohlcv": ohlcv_data, "indicators": indicator_data}
 
@@ -527,13 +555,17 @@ class Streamer:
                 cookie=self.cookie,
             )
             if res["status"] != STATUS_SUCCESS or not res["data"]:
+                error_text = res.get("error") or "unknown error"
                 logger.error(
                     "Failed to fetch metadata for %s v%s: %s",
                     script_id,
                     script_version,
-                    res.get("error"),
+                    error_text,
                 )
-                continue
+                raise RuntimeError(
+                    f"Failed to fetch metadata for indicator {script_id} v{script_version}: "
+                    f"{error_text}. Check if the script ID and version are correct, or for custom/private indicators, ensure your cookie has access."
+                )
 
             ind_study = res["data"]
             study_id = f"st{9 + idx}"
@@ -545,6 +577,9 @@ class Streamer:
                 handler.send_message("quote_hibernate_all", [handler.quote_session])
             except Exception as exc:
                 logger.error("Failed to add indicator %s: %s", script_id, exc)
+                raise RuntimeError(
+                    f"Failed to add indicator {script_id} v{script_version}: {exc}"
+                ) from exc
 
     def _serialize_ohlcv(self, raw_data: dict[str, Any]) -> list[dict[str, Any]]:
         """Extract OHLCV entries from a timescale_update packet."""
@@ -614,5 +649,7 @@ class Streamer:
             )
             resp.raise_for_status()
             return str(resp.json().get("type"))
-        except Exception:
-            return None
+        except Exception as exc:
+            raise RuntimeError(
+                f"Failed to resolve symbol type for {exchange_symbol}: {exc}"
+            ) from exc

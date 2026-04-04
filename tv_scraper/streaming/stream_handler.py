@@ -174,6 +174,7 @@ class StreamHandler:
             self.ws.send(message)
         except (ConnectionError, TimeoutError) as exc:
             logger.error("Failed to send message: %s", exc)
+            raise RuntimeError(f"Failed to send message '{func}': {exc}") from exc
 
     # -- Initialization ----------------------------------------------------
 

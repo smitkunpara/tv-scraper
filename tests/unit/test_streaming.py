@@ -117,6 +117,18 @@ class TestStreamHandler:
         assert "test_func" in sent
         assert "arg1" in sent
 
+    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    def test_send_message_raises_on_send_error(self, mock_cc):
+        """send_message should raise RuntimeError on transport failures."""
+        mock_ws = MagicMock()
+        mock_cc.return_value = mock_ws
+        from tv_scraper.streaming.stream_handler import StreamHandler
+
+        handler = StreamHandler()
+        mock_ws.send.side_effect = ConnectionError("socket down")
+        with pytest.raises(RuntimeError, match="Failed to send message"):
+            handler.send_message("test_func", ["arg1"])
+
     # -- _initialize_sessions ----------------------------------------------
 
     @patch("tv_scraper.streaming.stream_handler.create_connection")
@@ -519,6 +531,61 @@ class TestStreamer:
         assert result["data"] is None
         assert result["metadata"] == {}
         assert "upstream failed" in result["error"]
+
+    @patch("tv_scraper.streaming.streamer.fetch_indicator_metadata")
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
+        return_value=True,
+    )
+    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    def test_get_candles_indicator_setup_failure_returns_error(
+        self, mock_cc, mock_validate, mock_fetch_meta
+    ):
+        """Indicator metadata failures should stop execution and return failed status."""
+        mock_cc.return_value = MagicMock()
+        mock_validate.return_value = True
+        mock_fetch_meta.return_value = {
+            "status": "failed",
+            "data": None,
+            "error": "upstream metadata error",
+        }
+
+        from tv_scraper.streaming.streamer import Streamer
+
+        s = Streamer()
+        result = s.get_candles(
+            exchange="BINANCE",
+            symbol="BTCUSDT",
+            indicators=[("STD;RSI", "37.0")],
+        )
+
+        assert result["status"] == "failed"
+        assert result["data"] is None
+        assert "upstream metadata error" in result["error"]
+
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
+        return_value=True,
+    )
+    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    def test_get_candles_no_ohlcv_returns_error(self, mock_cc, mock_validate):
+        """Empty stream should return failed response instead of success with empty data."""
+        mock_ws = MagicMock()
+        mock_cc.return_value = mock_ws
+        mock_validate.return_value = True
+
+        from websocket import WebSocketConnectionClosedException
+
+        mock_ws.recv.side_effect = [WebSocketConnectionClosedException("closed")]
+
+        from tv_scraper.streaming.streamer import Streamer
+
+        s = Streamer()
+        result = s.get_candles(exchange="BINANCE", symbol="BTCUSDT")
+
+        assert result["status"] == "failed"
+        assert result["data"] is None
+        assert "No OHLCV data received" in result["error"]
 
     @patch("requests.get")
     @patch(

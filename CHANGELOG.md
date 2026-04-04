@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Test Suite Modernization**: Refactored over 350 unit and integration tests to verify strict metadata requirements and new standardized response formats.
 
 ### Fixed
+- **Streamer error handling**: Updated `Streamer.get_candles()` and indicator setup so failures stop execution and return a standardized failed response instead of logging and continuing.
 - **Forecast Data**: Fixed `Streamer.get_forecast()` to correctly return partial data in the `data` field when a timeout occurs, ensuring compliance with the documented behavior while maintaining a `failed` status.
 - **Pine Metadata**: Removed redundant `source` code from success metadata in `Pine.create_script` and `Pine.edit_script` to reduce response payload size.
 
