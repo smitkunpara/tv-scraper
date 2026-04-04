@@ -190,7 +190,10 @@ class Calendar(BaseScraper):
                     fields, default_fields, field_name="fields"
                 )
             except ValidationError as exc:
-                return self._error_response(str(exc))
+                return self._error_response(
+                    str(exc),
+                    event_type=data_category,
+                )
             use_fields = fields
 
         # Compute default timestamps (±3 days from midnight)
@@ -235,11 +238,17 @@ class Calendar(BaseScraper):
             response.raise_for_status()
             json_response = response.json()
         except requests.RequestException as exc:
-            return self._error_response(f"Network error: {exc}")
+            return self._error_response(
+                f"Network error: {exc}", event_type=data_category
+            )
         except Exception as exc:
-            return self._error_response(f"Request failed: {exc}")
+            return self._error_response(
+                f"Request failed: {exc}", event_type=data_category
+            )
         except (ValueError, KeyError) as exc:
-            return self._error_response(f"Failed to parse API response: {exc}")
+            return self._error_response(
+                f"Failed to parse API response: {exc}", event_type=data_category
+            )
 
         # Parse events
         data_items: list[dict[str, Any]] = json_response.get("data", [])
@@ -257,4 +266,7 @@ class Calendar(BaseScraper):
             events,
             event_type=data_category,
             total=len(events),
+            timestamp_from=timestamp_from,
+            timestamp_to=timestamp_to,
+            **({"markets": markets} if markets is not None else {}),
         )

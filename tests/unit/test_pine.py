@@ -212,7 +212,6 @@ class TestCreateScript:
         assert result["data"]["name"] == "My Script"
         assert result["data"]["warnings"] == []
         assert result["metadata"]["name"] == "My Script"
-        assert result["metadata"]["source"] == "indicator('My Script')"
 
     @patch("tv_scraper.scrapers.scripts.pine.Pine.validate_script")
     def test_create_script_stops_when_validation_fails(
@@ -281,7 +280,6 @@ class TestEditScript:
         assert result["data"]["warnings"] == []
         assert result["metadata"]["pine_id"] == "USER;abc123"
         assert result["metadata"]["name"] == "My Script Updated"
-        assert result["metadata"]["source"] == "indicator('My Script Updated')"
 
     @patch("tv_scraper.scrapers.scripts.pine.Pine.validate_script")
     def test_edit_script_stops_on_validation_error(

@@ -56,14 +56,17 @@ class BaseScraper:
         Args:
             data: The response payload.
             **metadata: Arbitrary metadata key-value pairs.
+                The key is the argument name passed to the function and
+                the value is the data provided by the user.
 
         Returns:
-            Response dict with status, data, metadata, and error fields.
+            Response dict with status, data, metadata (``dict[str, Any]``),
+            and error fields.
         """
         return {
             "status": STATUS_SUCCESS,
             "data": data,
-            "metadata": metadata,
+            "metadata": dict(metadata),
             "error": None,
         }
 
@@ -73,14 +76,17 @@ class BaseScraper:
         Args:
             error: Error message string.
             **metadata: Arbitrary metadata key-value pairs.
+                The key is the argument name passed to the function and
+                the value is the data provided by the user.
 
         Returns:
-            Response dict with status="failed", data=None, and error message.
+            Response dict with status="failed", data=None,
+            metadata (``dict[str, Any]``), and error message.
         """
         return {
             "status": STATUS_FAILED,
             "data": None,
-            "metadata": metadata,
+            "metadata": dict(metadata),
             "error": error,
         }
 
@@ -137,7 +143,7 @@ class BaseScraper:
         try:
             self.validator.verify_symbol_exchange(exchange, symbol)
         except ValidationError as exc:
-            return self._error_response(str(exc))
+            return self._error_response(str(exc), exchange=exchange, symbol=symbol)
 
         url = f"{SCANNER_URL}/symbol"
         params: dict[str, str] = {
@@ -153,12 +159,18 @@ class BaseScraper:
             response.raise_for_status()
             json_response: dict[str, Any] = response.json()
         except requests.RequestException as exc:
-            return self._error_response(f"Network error: {exc}")
+            return self._error_response(
+                f"Network error: {exc}", exchange=exchange, symbol=symbol
+            )
         except (ValueError, KeyError) as exc:
-            return self._error_response(f"Failed to parse API response: {exc}")
+            return self._error_response(
+                f"Failed to parse API response: {exc}", exchange=exchange, symbol=symbol
+            )
 
         if not json_response:
-            return self._error_response("No data returned from API.")
+            return self._error_response(
+                "No data returned from API.", exchange=exchange, symbol=symbol
+            )
 
         result: dict[str, Any] = {"symbol": f"{exchange}:{symbol}"}
         for field in fields:

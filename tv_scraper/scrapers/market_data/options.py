@@ -92,7 +92,13 @@ class Options(BaseScraper):
         try:
             self.validator.verify_options_symbol(exchange, symbol)
         except ValidationError as exc:
-            return self._error_response(str(exc))
+            return self._error_response(
+                str(exc),
+                exchange=exchange,
+                symbol=symbol,
+                expiration=expiration,
+                root=root,
+            )
 
         cols = columns if columns is not None else DEFAULT_OPTION_COLUMNS
         underlying = f"{exchange}:{symbol}"
@@ -134,7 +140,12 @@ class Options(BaseScraper):
         try:
             self.validator.verify_options_symbol(exchange, symbol)
         except ValidationError as exc:
-            return self._error_response(str(exc))
+            return self._error_response(
+                str(exc),
+                exchange=exchange,
+                symbol=symbol,
+                strike=strike,
+            )
 
         cols = columns if columns is not None else DEFAULT_OPTION_COLUMNS
         underlying = f"{exchange}:{symbol}"
@@ -171,17 +182,39 @@ class Options(BaseScraper):
             if response.status_code == 404:
                 return self._error_response(
                     f"Options chain not found for symbol '{exchange}:{symbol}'. "
-                    "This symbol may not have options available on TradingView."
+                    "This symbol may not have options available on TradingView.",
+                    exchange=exchange,
+                    symbol=symbol,
+                    filter_type=filter_type,
+                    filter_value=filter_value,
                 )
 
             response.raise_for_status()
             json_response = response.json()
         except requests.RequestException as exc:
-            return self._error_response(f"Network error: {exc}")
+            return self._error_response(
+                f"Network error: {exc}",
+                exchange=exchange,
+                symbol=symbol,
+                filter_type=filter_type,
+                filter_value=filter_value,
+            )
         except (ValueError, KeyError) as exc:
-            return self._error_response(f"Failed to parse API response: {exc}")
+            return self._error_response(
+                f"Failed to parse API response: {exc}",
+                exchange=exchange,
+                symbol=symbol,
+                filter_type=filter_type,
+                filter_value=filter_value,
+            )
         except Exception as exc:
-            return self._error_response(f"Request failed: {exc}")
+            return self._error_response(
+                f"Request failed: {exc}",
+                exchange=exchange,
+                symbol=symbol,
+                filter_type=filter_type,
+                filter_value=filter_value,
+            )
 
         fields = json_response.get("fields", [])
         raw_symbols = json_response.get("symbols", [])
@@ -189,7 +222,11 @@ class Options(BaseScraper):
         if not raw_symbols:
             return self._error_response(
                 f"No options found for symbol '{exchange}:{symbol}'. "
-                "This symbol may not have options available on TradingView."
+                "This symbol may not have options available on TradingView.",
+                exchange=exchange,
+                symbol=symbol,
+                filter_type=filter_type,
+                filter_value=filter_value,
             )
 
         formatted_data = []

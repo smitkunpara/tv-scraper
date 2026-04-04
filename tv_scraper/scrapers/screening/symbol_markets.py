@@ -105,6 +105,9 @@ class SymbolMarkets(BaseScraper):
         if not search_symbol or not search_symbol.strip():
             return self._error_response(
                 "Symbol must be a non-empty string.",
+                symbol=symbol,
+                scanner=scanner,
+                limit=limit,
             )
 
         # Validate scanner
@@ -112,6 +115,9 @@ class SymbolMarkets(BaseScraper):
             return self._error_response(
                 f"Unsupported scanner: '{scanner}'. "
                 f"Supported scanners: {', '.join(sorted(self.SUPPORTED_SCANNERS))}",
+                symbol=symbol,
+                scanner=scanner,
+                limit=limit,
             )
 
         resolved_fields = fields if fields is not None else list(self.DEFAULT_FIELDS)
@@ -148,11 +154,23 @@ class SymbolMarkets(BaseScraper):
 
             return self._success_response(
                 formatted_data,
+                symbol=symbol,
                 scanner=scanner,
+                limit=limit,
                 total=len(formatted_data),
                 total_available=total_count,
             )
         except requests.RequestException as exc:
-            return self._error_response(f"Network error: {exc}")
+            return self._error_response(
+                f"Network error: {exc}",
+                symbol=symbol,
+                scanner=scanner,
+                limit=limit,
+            )
         except Exception as exc:
-            return self._error_response(f"Request failed: {exc}")
+            return self._error_response(
+                f"Request failed: {exc}",
+                symbol=symbol,
+                scanner=scanner,
+                limit=limit,
+            )

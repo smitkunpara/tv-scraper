@@ -10,16 +10,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - **BaseScraper Enhancements**: Added native cookie support and automatically load the `TRADINGVIEW_COOKIE` environment variable in `BaseScraper.__init__`. All subclasses now benefit from this shared authentication logic.
 - **Standardized Exports**: `tv_scraper.core` now correctly exports the base `TvScraperError` exception.
+- **Streamer Helpers**: Added `_success_response` and `_error_response` helper methods to the `Streamer` class to maintain API consistency with the scraper modules.
 
 ### Changed
 - **Network Layer Refactoring**: Successfully migrated all scrapers from the legacy `make_request` utility to direct `requests` library calls (`requests.get`, `requests.post`).
 - **Standardized Error Handling**: Improved network robustness by wrapping all API calls in `try...except requests.RequestException` blocks, ensuring failures always return a valid error envelope rather than raising unhandled exceptions.
-- **Metadata Management**: Standardized the inclusion of request parameters and filters (e.g., `sort_by`, `section`, `limit`) in the `metadata` field of all response envelopes.
-- **Test Suite Modernization**: Refactored over 350 unit and integration tests to mock `requests` directly and verify the new standardized response formats.
+- **Metadata Standardization**: Extensively refactored every public method in the library (15+ modules) to ensure the `metadata` field is always present.
+  - Enforced `dict[str, Any]` type for all metadata blocks.
+  - Dynamically exclude optional arguments (e.g., `area`, `provider`, `filters`) from metadata when they are not provided by the user.
+  - Ensured metadata is preserved in both `success` and `failed` status responses for better debugging.
+- **Test Suite Modernization**: Refactored over 350 unit and integration tests to verify strict metadata requirements and new standardized response formats.
 
-### Removed
-- **Legacy Utility**: Removed the deprecated `make_request` internal utility.
-- **Deprecated Exceptions**: Removed `NetworkError` from `tv_scraper.core.exceptions`, as the library now relies on official `requests` exceptions for internal handling.
+### Fixed
+- **Forecast Data**: Fixed `Streamer.get_forecast()` to correctly return partial data in the `data` field when a timeout occurs, ensuring compliance with the documented behavior while maintaining a `failed` status.
+- **Pine Metadata**: Removed redundant `source` code from success metadata in `Pine.create_script` and `Pine.edit_script` to reduce response payload size.
 
 ## [1.3.2] - 2026-04-03
 

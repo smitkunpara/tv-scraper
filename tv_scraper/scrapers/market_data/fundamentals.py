@@ -179,7 +179,10 @@ class Fundamentals(BaseScraper):
             symbol → value mapping).
         """
         if not symbols:
-            return self._error_response("No symbols provided for comparison.")
+            return self._error_response(
+                "No symbols provided for comparison.",
+                symbols=symbols,
+            )
 
         field_list = fields if fields else self.DEFAULT_COMPARISON_FIELDS
 
@@ -205,7 +208,13 @@ class Fundamentals(BaseScraper):
                 comparison[field][combined] = item_data.get(field)
 
         if not all_items:
-            return self._error_response("No data retrieved for any symbols.")
+            cmp_meta: dict[str, Any] = {"symbols": symbols}
+            if fields is not None:
+                cmp_meta["fields"] = fields
+            return self._error_response(
+                "No data retrieved for any symbols.",
+                **cmp_meta,
+            )
 
         data: dict[str, Any] = {
             "items": all_items,
@@ -220,7 +229,11 @@ class Fundamentals(BaseScraper):
                 data_category="fundamentals",
             )
 
-        return self._success_response(data)
+        success_meta: dict[str, Any] = {"symbols": symbols}
+        if fields is not None:
+            success_meta["fields"] = fields
+
+        return self._success_response(data, **success_meta)
 
     # ---- Category helpers ------------------------------------------------
 

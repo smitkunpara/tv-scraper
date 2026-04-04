@@ -198,6 +198,9 @@ class Screener(BaseScraper):
             return self._error_response(
                 f"Unsupported market: '{market}'. "
                 f"Supported markets: {', '.join(sorted(self.SUPPORTED_MARKETS))}",
+                market=market,
+                sort_order=sort_order,
+                limit=limit,
             )
 
         # Resolve fields
@@ -241,11 +244,34 @@ class Screener(BaseScraper):
                     data_category="screener",
                 )
 
-            return self._success_response(
-                formatted_data,
-                market=market,
-                total=len(formatted_data),
-                total_available=total_count,
-            )
+            screener_meta: dict[str, Any] = {
+                "market": market,
+                "sort_order": sort_order,
+                "limit": limit,
+                "total": len(formatted_data),
+                "total_available": total_count,
+            }
+            if filters is not None:
+                screener_meta["filters"] = filters
+            if sort_by is not None:
+                screener_meta["sort_by"] = sort_by
+            if symbols is not None:
+                screener_meta["symbols"] = symbols
+            if filter2 is not None:
+                screener_meta["filter2"] = filter2
+            return self._success_response(formatted_data, **screener_meta)
         except Exception as exc:
-            return self._error_response(f"Request failed: {exc}")
+            err_meta: dict[str, Any] = {
+                "market": market,
+                "sort_order": sort_order,
+                "limit": limit,
+            }
+            if filters is not None:
+                err_meta["filters"] = filters
+            if sort_by is not None:
+                err_meta["sort_by"] = sort_by
+            if symbols is not None:
+                err_meta["symbols"] = symbols
+            if filter2 is not None:
+                err_meta["filter2"] = filter2
+            return self._error_response(f"Request failed: {exc}", **err_meta)

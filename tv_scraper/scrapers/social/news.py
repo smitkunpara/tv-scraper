@@ -95,29 +95,14 @@ class News(BaseScraper):
 
         # Validate inputs
         try:
-            self.validator.verify_symbol_exchange(exchange, symbol)
-            self.validator.validate_choice("sort_by", sort_by, VALID_SORT_OPTIONS)
-            self.validator.validate_choice("section", section, VALID_SECTIONS)
-
-            if language not in self._language_codes:
-                raise ValidationError(
-                    f"Invalid language: '{language}'. "
-                    f"Allowed values: {', '.join(sorted(self._language_codes))}"
-                )
-
-            if provider is not None and provider not in self._news_providers:
-                raise ValidationError(
-                    f"Invalid provider: '{provider}'. "
-                    f"Allowed values: {', '.join(sorted(self._news_providers))}"
-                )
-
-            if area is not None and area not in self._areas:
-                raise ValidationError(
-                    f"Invalid area: '{area}'. "
-                    f"Allowed values: {', '.join(sorted(self._areas.keys()))}"
-                )
+            self._validate_headlines_params(
+                exchange, symbol, provider, area, sort_by, section, language
+            )
         except ValidationError as exc:
-            return self._error_response(str(exc))
+            meta = self._build_news_metadata(
+                exchange, symbol, provider, area, sort_by, section, language
+            )
+            return self._error_response(str(exc), **meta)
 
         # Build URL parameters
         params: dict[str, Any] = {
@@ -146,21 +131,30 @@ class News(BaseScraper):
                     symbol,
                     exchange,
                 )
+                captcha_meta = self._build_news_metadata(
+                    exchange, symbol, provider, area, sort_by, section, language
+                )
                 return self._error_response(
                     f"Captcha challenge encountered for {symbol} on {exchange}. "
-                    "Try updating the TRADINGVIEW_COOKIE."
+                    "Try updating the TRADINGVIEW_COOKIE.",
+                    **captcha_meta,
                 )
 
             response_json = response.json()
             items: list[dict[str, Any]] = response_json.get("items", [])
 
             if not items:
-                return self._success_response(
-                    [],
-                    symbol=symbol,
-                    exchange=exchange,
+                success_meta = self._build_news_metadata(
+                    exchange,
+                    symbol,
+                    provider,
+                    area,
+                    sort_by,
+                    section,
+                    language,
                     total=0,
                 )
+                return self._success_response([], **success_meta)
 
             # Apply client-side sorting
             items = self._sort_news(items, sort_by)
@@ -176,20 +170,23 @@ class News(BaseScraper):
                     data_category="news",
                 )
 
-            return self._success_response(
-                cleaned_items,
-                symbol=symbol,
-                exchange=exchange,
+            final_meta = self._build_news_metadata(
+                exchange,
+                symbol,
+                provider,
+                area,
+                sort_by,
+                section,
+                language,
                 total=len(cleaned_items),
-                language=language,
-                area=area,
-                provider=provider,
-                sort_by=sort_by,
-                section=section,
             )
+            return self._success_response(cleaned_items, **final_meta)
 
         except Exception as exc:
-            return self._error_response(f"Request failed: {exc}")
+            exc_meta = self._build_news_metadata(
+                exchange, symbol, provider, area, sort_by, section, language
+            )
+            return self._error_response(f"Request failed: {exc}", **exc_meta)
 
     def get_news_content(
         self,
@@ -230,10 +227,15 @@ class News(BaseScraper):
             return self._success_response(
                 article_data,
                 story_id=story_id,
+                language=language,
             )
 
         except Exception as exc:
-            return self._error_response(f"Request failed: {exc}")
+            return self._error_response(
+                f"Request failed: {exc}",
+                story_id=story_id,
+                language=language,
+            )
 
     def _sort_news(
         self,
@@ -367,3 +369,87 @@ class News(BaseScraper):
                     parts.append(text)
 
         return "".join(parts)
+
+    def _validate_headlines_params(
+        self,
+        exchange: str,
+        symbol: str,
+        provider: str | None,
+        area: str | None,
+        sort_by: str,
+        section: str,
+        language: str,
+    ) -> None:
+        """Validate headlines parameters.
+
+        Args:
+            exchange: Exchange name.
+            symbol: Symbol name.
+            provider: News provider.
+            area: Region area.
+            sort_by: Sort option.
+            section: News section.
+            language: Language code.
+        """
+        self.validator.verify_symbol_exchange(exchange, symbol)
+        self.validator.validate_choice("sort_by", sort_by, VALID_SORT_OPTIONS)
+        self.validator.validate_choice("section", section, VALID_SECTIONS)
+
+        if language not in self._language_codes:
+            raise ValidationError(
+                f"Invalid language: '{language}'. "
+                f"Allowed values: {', '.join(sorted(self._language_codes))}"
+            )
+
+        if provider is not None and provider not in self._news_providers:
+            raise ValidationError(
+                f"Invalid provider: '{provider}'. "
+                f"Allowed values: {', '.join(sorted(self._news_providers))}"
+            )
+
+        if area is not None and area not in self._areas:
+            raise ValidationError(
+                f"Invalid area: '{area}'. "
+                f"Allowed values: {', '.join(sorted(self._areas.keys()))}"
+            )
+
+    def _build_news_metadata(
+        self,
+        exchange: str,
+        symbol: str,
+        provider: str | None,
+        area: str | None,
+        sort_by: str,
+        section: str,
+        language: str,
+        **kwargs: Any,
+    ) -> dict[str, Any]:
+        """Build metadata dictionary for news responses.
+
+        Args:
+            exchange: Exchange name.
+            symbol: Symbol name.
+            provider: News provider.
+            area: Region area.
+            sort_by: Sort option.
+            section: News section.
+            language: Language code.
+            **kwargs: Additional metadata fields.
+
+        Returns:
+            Metadata dictionary.
+        """
+        meta: dict[str, Any] = {
+            "exchange": exchange,
+            "symbol": symbol,
+            "sort_by": sort_by,
+            "section": section,
+            "language": language,
+        }
+        if provider is not None:
+            meta["provider"] = provider
+        if area is not None:
+            meta["area"] = area
+
+        meta.update(kwargs)
+        return meta

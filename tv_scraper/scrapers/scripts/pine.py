@@ -100,7 +100,10 @@ class Pine(BaseScraper):
             return cookie_error
 
         if not source.strip():
-            return self._error_response("Source code cannot be empty.")
+            return self._error_response(
+                "Source code cannot be empty.",
+                source=source,
+            )
 
         headers = self._build_pine_headers()
 
@@ -119,17 +122,19 @@ class Pine(BaseScraper):
             payload = response.json()
         except requests.RequestException as exc:
             logger.error("Failed to validate Pine source: %s", exc)
-            return self._error_response(self._map_request_error(exc))
+            return self._error_response(self._map_request_error(exc), source=source)
 
         if not isinstance(payload, dict):
             return self._error_response(
-                "Unexpected response format from Pine validation endpoint."
+                "Unexpected response format from Pine validation endpoint.",
+                source=source,
             )
 
         result_obj = payload.get("result")
         if not isinstance(result_obj, dict):
             return self._error_response(
-                "Unexpected validation payload from Pine endpoint."
+                "Unexpected validation payload from Pine endpoint.",
+                source=source,
             )
 
         errors = result_obj.get("errors") or []
@@ -169,15 +174,27 @@ class Pine(BaseScraper):
             return cookie_error
 
         if not name.strip():
-            return self._error_response("Script name cannot be empty.")
+            return self._error_response(
+                "Script name cannot be empty.",
+                name=name,
+            )
         if not source.strip():
-            return self._error_response("Source code cannot be empty.")
+            return self._error_response(
+                "Source code cannot be empty.",
+                name=name,
+                source=source,
+            )
 
         validation = self.validate_script(source)
         if validation["status"] != "success":
             return self._error_response(
                 validation["error"] or "Pine script validation failed.",
-                **validation.get("metadata", {}),
+                name=name,
+                **{
+                    k: v
+                    for k, v in validation.get("metadata", {}).items()
+                    if k != "source"
+                },
             )
 
         headers = self._build_pine_headers()
@@ -200,12 +217,13 @@ class Pine(BaseScraper):
             payload = response.json()
         except requests.RequestException as exc:
             logger.error("Failed to create Pine script '%s': %s", name, exc)
-            return self._error_response(self._map_request_error(exc))
+            return self._error_response(self._map_request_error(exc), name=name)
 
         script_result = self._extract_save_result(payload)
         if script_result is None:
             return self._error_response(
-                "Unexpected response format from Pine create endpoint."
+                "Unexpected response format from Pine create endpoint.",
+                name=name,
             )
 
         data = {
@@ -218,7 +236,6 @@ class Pine(BaseScraper):
         return self._success_response(
             data,
             name=name,
-            source=source,
         )
 
     def edit_script(self, pine_id: str, name: str, source: str) -> dict[str, Any]:
@@ -237,17 +254,35 @@ class Pine(BaseScraper):
             return cookie_error
 
         if not pine_id.strip():
-            return self._error_response("Pine script ID cannot be empty.")
+            return self._error_response(
+                "Pine script ID cannot be empty.",
+                pine_id=pine_id,
+            )
         if not name.strip():
-            return self._error_response("Script name cannot be empty.")
+            return self._error_response(
+                "Script name cannot be empty.",
+                pine_id=pine_id,
+                name=name,
+            )
         if not source.strip():
-            return self._error_response("Source code cannot be empty.")
+            return self._error_response(
+                "Source code cannot be empty.",
+                pine_id=pine_id,
+                name=name,
+                source=source,
+            )
 
         validation = self.validate_script(source)
         if validation["status"] != "success":
             return self._error_response(
                 validation["error"] or "Pine script validation failed.",
-                **validation.get("metadata", {}),
+                pine_id=pine_id,
+                name=name,
+                **{
+                    k: v
+                    for k, v in validation.get("metadata", {}).items()
+                    if k != "source"
+                },
             )
 
         headers = self._build_pine_headers()
@@ -271,12 +306,16 @@ class Pine(BaseScraper):
             payload = response.json()
         except requests.RequestException as exc:
             logger.error("Failed to edit Pine script '%s': %s", pine_id, exc)
-            return self._error_response(self._map_request_error(exc))
+            return self._error_response(
+                self._map_request_error(exc), pine_id=pine_id, name=name
+            )
 
         script_result = self._extract_save_result(payload)
         if script_result is None:
             return self._error_response(
-                "Unexpected response format from Pine edit endpoint."
+                "Unexpected response format from Pine edit endpoint.",
+                pine_id=pine_id,
+                name=name,
             )
 
         data = {
@@ -290,7 +329,6 @@ class Pine(BaseScraper):
             data,
             pine_id=pine_id,
             name=name,
-            source=source,
         )
 
     def delete_script(self, pine_id: str) -> dict[str, Any]:
@@ -307,7 +345,10 @@ class Pine(BaseScraper):
             return cookie_error
 
         if not pine_id.strip():
-            return self._error_response("Pine script ID cannot be empty.")
+            return self._error_response(
+                "Pine script ID cannot be empty.",
+                pine_id=pine_id,
+            )
 
         headers = self._build_pine_headers()
         encoded_pine_id = quote(pine_id, safe="")
@@ -323,7 +364,7 @@ class Pine(BaseScraper):
             response_text = response.text.strip().strip('"').lower()
         except requests.RequestException as exc:
             logger.error("Failed to delete Pine script '%s': %s", pine_id, exc)
-            return self._error_response(self._map_request_error(exc))
+            return self._error_response(self._map_request_error(exc), pine_id=pine_id)
 
         if response_text != "ok":
             return self._error_response(

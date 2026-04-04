@@ -80,7 +80,14 @@ class Ideas(BaseScraper):
             self.validator.verify_symbol_exchange(exchange, symbol)
             self.validator.validate_choice("sort_by", sort_by, ALLOWED_SORT_VALUES)
         except ValidationError as exc:
-            return self._error_response(str(exc))
+            return self._error_response(
+                str(exc),
+                exchange=exchange,
+                symbol=symbol,
+                start_page=start_page,
+                end_page=end_page,
+                sort_by=sort_by,
+            )
 
         # Build the URL slug (TV uses HYPHEN for combined symbols in URLs)
         url_slug = f"{exchange}-{symbol}"
@@ -110,12 +117,22 @@ class Ideas(BaseScraper):
                         return self._error_response(
                             f"Captcha challenge encountered on page {page}. "
                             "Try updating the TRADINGVIEW_COOKIE.",
+                            exchange=exchange,
+                            symbol=symbol,
+                            start_page=start_page,
+                            end_page=end_page,
+                            sort_by=sort_by,
                         )
                     articles.extend(result)
                 except Exception as exc:
                     logger.error("Failed to scrape page %d: %s", page, exc)
                     return self._error_response(
                         f"Failed to scrape page {page}: {exc}",
+                        exchange=exchange,
+                        symbol=symbol,
+                        start_page=start_page,
+                        end_page=end_page,
+                        sort_by=sort_by,
                     )
 
         # --- Export ---
@@ -130,6 +147,9 @@ class Ideas(BaseScraper):
             articles,
             exchange=exchange,
             symbol=symbol,
+            start_page=start_page,
+            end_page=end_page,
+            sort_by=sort_by,
             total=len(articles),
             pages=len(page_list),
         )

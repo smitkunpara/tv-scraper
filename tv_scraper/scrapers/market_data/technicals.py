@@ -67,7 +67,12 @@ class Technicals(BaseScraper):
             self.validator.verify_symbol_exchange(exchange, symbol)
             self.validator.validate_timeframe(timeframe)
         except ValidationError as exc:
-            return self._error_response(str(exc))
+            return self._error_response(
+                str(exc),
+                exchange=exchange,
+                symbol=symbol,
+                timeframe=timeframe,
+            )
 
         # Resolve indicator list
         if all_indicators:
@@ -76,12 +81,21 @@ class Technicals(BaseScraper):
             try:
                 self.validator.validate_indicators(technical_indicators)
             except ValidationError as exc:
-                return self._error_response(str(exc))
+                return self._error_response(
+                    str(exc),
+                    exchange=exchange,
+                    symbol=symbol,
+                    timeframe=timeframe,
+                    technical_indicators=technical_indicators,
+                )
             indicators = list(technical_indicators)
         else:
             return self._error_response(
                 "No indicators provided. "
-                "Use technical_indicators or set all_indicators=True."
+                "Use technical_indicators or set all_indicators=True.",
+                exchange=exchange,
+                symbol=symbol,
+                timeframe=timeframe,
             )
 
         # --- Build API request ---
@@ -116,14 +130,29 @@ class Technicals(BaseScraper):
             response.raise_for_status()
             json_response: dict[str, Any] = response.json()
         except requests.RequestException as exc:
-            return self._error_response(f"Network error: {exc}")
+            return self._error_response(
+                f"Network error: {exc}",
+                exchange=exchange,
+                symbol=symbol,
+                timeframe=timeframe,
+            )
         except (ValueError, KeyError) as exc:
-            return self._error_response(f"Failed to parse API response: {exc}")
+            return self._error_response(
+                f"Failed to parse API response: {exc}",
+                exchange=exchange,
+                symbol=symbol,
+                timeframe=timeframe,
+            )
 
         # --- Parse response ---
         # API returns indicators directly as a dict, not wrapped in "data"
         if not json_response:
-            return self._error_response("No data returned from API.")
+            return self._error_response(
+                "No data returned from API.",
+                exchange=exchange,
+                symbol=symbol,
+                timeframe=timeframe,
+            )
 
         result: dict[str, Any] = {}
         # Map requested indicators to response values
@@ -146,12 +175,16 @@ class Technicals(BaseScraper):
                 timeframe=timeframe,
             )
 
-        return self._success_response(
-            result,
-            exchange=exchange,
-            symbol=symbol,
-            timeframe=timeframe,
-        )
+        tech_meta: dict[str, Any] = {
+            "exchange": exchange,
+            "symbol": symbol,
+            "timeframe": timeframe,
+            "all_indicators": all_indicators,
+        }
+        if technical_indicators is not None:
+            tech_meta["technical_indicators"] = technical_indicators
+
+        return self._success_response(result, **tech_meta)
 
     def _revise_response(
         self, data: dict[str, Any], timeframe_value: str

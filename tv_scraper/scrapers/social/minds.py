@@ -55,7 +55,11 @@ class Minds(BaseScraper):
         try:
             self.validator.verify_symbol_exchange(exchange, symbol)
         except ValidationError as exc:
-            return self._error_response(str(exc))
+            return self._error_response(
+                str(exc),
+                exchange=exchange,
+                symbol=symbol,
+            )
 
         combined_symbol = f"{exchange.upper()}:{symbol.upper()}"
 
@@ -79,7 +83,9 @@ class Minds(BaseScraper):
 
                 if response.status_code != 200:
                     return self._error_response(
-                        f"HTTP {response.status_code}: {response.text}"
+                        f"HTTP {response.status_code}: {response.text}",
+                        exchange=exchange,
+                        symbol=symbol,
                     )
 
                 json_response = response.json()
@@ -109,7 +115,11 @@ class Minds(BaseScraper):
                 next_cursor = next_url.split("?c=")[1].split("&")[0]
 
         except Exception as exc:
-            return self._error_response(f"Request failed: {exc}")
+            return self._error_response(
+                f"Request failed: {exc}",
+                exchange=exchange,
+                symbol=symbol,
+            )
 
         # Apply limit
         if limit is not None and len(parsed_data) > limit:
@@ -123,11 +133,19 @@ class Minds(BaseScraper):
                 data_category="minds",
             )
 
+        meta: dict[str, Any] = {
+            "exchange": exchange,
+            "symbol": symbol,
+            "total": len(parsed_data),
+            "pages": pages,
+            "symbol_info": symbol_info,
+        }
+        if limit is not None:
+            meta["limit"] = limit
+
         return self._success_response(
             parsed_data,
-            total=len(parsed_data),
-            pages=pages,
-            symbol_info=symbol_info,
+            **meta,
         )
 
     def _parse_mind(self, item: dict[str, Any]) -> dict[str, Any]:

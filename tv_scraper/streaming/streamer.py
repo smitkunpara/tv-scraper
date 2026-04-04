@@ -81,8 +81,46 @@ class Streamer:
         return StreamHandler(jwt_token=websocket_jwt_token)
 
     # ------------------------------------------------------------------
-    # Public API
+    # Response helpers (mirrors BaseScraper contract)
     # ------------------------------------------------------------------
+
+    @staticmethod
+    def _success_response(data: Any, **metadata: Any) -> dict[str, Any]:
+        """Build a standardized success response.
+
+        Args:
+            data: The response payload.
+            **metadata: Arbitrary metadata key-value pairs.
+
+        Returns:
+            Response dict with status, data, metadata (``dict[str, Any]``),
+            and error fields.
+        """
+        return {
+            "status": STATUS_SUCCESS,
+            "data": data,
+            "metadata": dict(metadata),
+            "error": None,
+        }
+
+    @staticmethod
+    def _error_response(error: str, **metadata: Any) -> dict[str, Any]:
+        """Build a standardized error response.
+
+        Args:
+            error: Error message string.
+            **metadata: Arbitrary metadata key-value pairs.
+
+        Returns:
+            Response dict with status="failed", data=None,
+            metadata (``dict[str, Any]``), and error message.
+        """
+        return {
+            "status": STATUS_FAILED,
+            "data": None,
+            "metadata": dict(metadata),
+            "error": error,
+        }
 
     @staticmethod
     def get_available_indicators() -> dict[str, Any]:
@@ -178,29 +216,27 @@ class Streamer:
             if self.export_result:
                 self._export(result_data, symbol, "get_candles")
 
-            return {
-                "status": STATUS_SUCCESS,
-                "data": result_data,
-                "metadata": {
-                    "exchange": exchange,
-                    "symbol": symbol,
-                    "timeframe": timeframe,
-                    "numb_candles": numb_candles,
-                },
-                "error": None,
+            candle_meta: dict[str, Any] = {
+                "exchange": exchange,
+                "symbol": symbol,
+                "timeframe": timeframe,
+                "numb_candles": numb_candles,
             }
+            if indicators is not None:
+                candle_meta["indicators"] = [list(t) for t in indicators]
+            return self._success_response(result_data, **candle_meta)
 
         except Exception as exc:
             logger.error("get_candles error: %s", exc)
-            return {
-                "status": STATUS_FAILED,
-                "data": None,
-                "metadata": {
-                    "exchange": exchange,
-                    "symbol": symbol,
-                },
-                "error": str(exc),
+            candle_err_meta: dict[str, Any] = {
+                "exchange": exchange,
+                "symbol": symbol,
+                "timeframe": timeframe,
+                "numb_candles": numb_candles,
             }
+            if indicators is not None:
+                candle_err_meta["indicators"] = [list(t) for t in indicators]
+            return self._error_response(str(exc), **candle_err_meta)
 
     def stream_realtime_price(
         self,
@@ -341,15 +377,12 @@ class Streamer:
 
             symbol_type = self._get_symbol_type(exchange_symbol)
             if symbol_type != "stock":
-                return {
-                    "status": STATUS_FAILED,
-                    "data": None,
-                    "metadata": {"exchange": exchange, "symbol": symbol},
-                    "error": (
-                        "forecast is not available for this symbol because it is type: "
-                        f"{symbol_type}"
-                    ),
-                }
+                return self._error_response(
+                    "forecast is not available for this symbol because it is type: "
+                    f"{symbol_type}",
+                    exchange=exchange,
+                    symbol=symbol,
+                )
 
             handler = self._get_fresh_handler()
 
@@ -432,28 +465,20 @@ class Streamer:
             if self.export_result:
                 self._export(cleaned_data, symbol, "forecast")
 
-            return {
-                "status": STATUS_SUCCESS,
-                "data": cleaned_data,
-                "metadata": {
-                    "exchange": exchange,
-                    "symbol": symbol,
-                    "available_output_keys": sorted(available_output_keys),
-                },
-                "error": None,
-            }
+            return self._success_response(
+                cleaned_data,
+                exchange=exchange,
+                symbol=symbol,
+                available_output_keys=sorted(available_output_keys),
+            )
 
         except Exception as exc:
             logger.error("get_forecast error: %s", exc)
-            return {
-                "status": STATUS_FAILED,
-                "data": None,
-                "metadata": {
-                    "exchange": exchange,
-                    "symbol": symbol,
-                },
-                "error": str(exc),
-            }
+            return self._error_response(
+                str(exc),
+                exchange=exchange,
+                symbol=symbol,
+            )
 
     # ------------------------------------------------------------------
     # Internal helpers

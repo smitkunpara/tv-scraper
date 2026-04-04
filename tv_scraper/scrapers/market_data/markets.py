@@ -97,13 +97,21 @@ class Markets(BaseScraper):
         if market not in self.VALID_MARKETS:
             return self._error_response(
                 f"Unsupported market: '{market}'. "
-                f"Valid markets: {', '.join(self.VALID_MARKETS)}"
+                f"Valid markets: {', '.join(self.VALID_MARKETS)}",
+                market=market,
+                sort_by=sort_by,
+                sort_order=sort_order,
+                limit=limit,
             )
 
         if sort_by not in self.SORT_CRITERIA:
             return self._error_response(
                 f"Unsupported sort criterion: '{sort_by}'. "
-                f"Valid sort criteria: {', '.join(self.SORT_CRITERIA.keys())}"
+                f"Valid sort criteria: {', '.join(self.SORT_CRITERIA.keys())}",
+                market=market,
+                sort_by=sort_by,
+                sort_order=sort_order,
+                limit=limit,
             )
 
         # --- build payload ---------------------------------------------
@@ -134,13 +142,25 @@ class Markets(BaseScraper):
             response.raise_for_status()
             json_data = response.json()
         except Exception as exc:
-            return self._error_response(str(exc))
+            return self._error_response(
+                str(exc),
+                market=market,
+                sort_by=sort_by,
+                sort_order=sort_order,
+                limit=limit,
+            )
 
         items: list[dict[str, Any]] = json_data.get("data", [])
         total_count: int = json_data.get("totalCount", len(items))
 
         if not items:
-            return self._error_response(f"No data found for market: {market}")
+            return self._error_response(
+                f"No data found for market: {market}",
+                market=market,
+                sort_by=sort_by,
+                sort_order=sort_order,
+                limit=limit,
+            )
 
         # --- map rows --------------------------------------------------
         mapped = self._map_scanner_rows(items, used_fields)
@@ -157,6 +177,8 @@ class Markets(BaseScraper):
             mapped,
             market=market,
             sort_by=sort_by,
+            sort_order=sort_order,
+            limit=limit,
             total=len(mapped),
             total_count=total_count,
         )

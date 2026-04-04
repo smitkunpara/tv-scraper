@@ -213,7 +213,10 @@ class MarketMovers(BaseScraper):
         if market not in self.SUPPORTED_MARKETS:
             return self._error_response(
                 f"Unsupported market: '{market}'. "
-                f"Supported markets: {', '.join(self.SUPPORTED_MARKETS)}"
+                f"Supported markets: {', '.join(self.SUPPORTED_MARKETS)}",
+                market=market,
+                category=category,
+                limit=limit,
             )
 
         # Validate category
@@ -225,7 +228,10 @@ class MarketMovers(BaseScraper):
         if category not in allowed:
             return self._error_response(
                 f"Unsupported category: '{category}'. "
-                f"Supported categories: {', '.join(allowed)}"
+                f"Supported categories: {', '.join(allowed)}",
+                market=market,
+                category=category,
+                limit=limit,
             )
 
         resolved_fields = fields if fields is not None else list(self.DEFAULT_FIELDS)
@@ -256,9 +262,20 @@ class MarketMovers(BaseScraper):
                 formatted_data,
                 market=market,
                 category=category,
+                limit=limit,
                 total=len(formatted_data),
             )
         except requests.RequestException as exc:
-            return self._error_response(f"Network error: {exc}")
+            return self._error_response(
+                f"Network error: {exc}",
+                market=market,
+                category=category,
+                limit=limit,
+            )
         except Exception as exc:
-            return self._error_response(f"Request failed: {exc}")
+            return self._error_response(
+                f"Request failed: {exc}",
+                market=market,
+                category=category,
+                limit=limit,
+            )
