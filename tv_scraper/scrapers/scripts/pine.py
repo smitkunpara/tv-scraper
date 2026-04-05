@@ -1,7 +1,6 @@
 """Pine scraper for TradingView Pine script operations."""
 
 import logging
-import os
 from typing import Any
 from urllib.parse import quote
 
@@ -40,8 +39,8 @@ class Pine(BaseScraper):
             export_result=export_result,
             export_type=export_type,
             timeout=timeout,
+            cookie=cookie,
         )
-        self._cookie: str | None = cookie or os.environ.get("TRADINGVIEW_COOKIE")
 
     def list_saved_scripts(self) -> dict[str, Any]:
         """List the authenticated user's saved Pine scripts.
@@ -358,7 +357,7 @@ class Pine(BaseScraper):
         )
 
     def _validate_cookie_required(self) -> dict[str, Any] | None:
-        if self._cookie:
+        if self.cookie:
             return None
         return self._error_response(
             "TradingView cookie is required for Pine Script operations. "
@@ -379,7 +378,7 @@ class Pine(BaseScraper):
     def _build_pine_headers(self) -> dict[str, str]:
         """Build headers expected by Pine facade endpoints."""
         headers = dict(self._headers)
-        headers["cookie"] = self._cookie
+        headers["cookie"] = self.cookie
         headers["accept"] = "*/*"
         headers["origin"] = PINE_ORIGIN
         headers["referer"] = f"{PINE_ORIGIN}/"

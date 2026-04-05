@@ -63,7 +63,7 @@ class MarketMovers(BaseScraper):
         "most-active",
     ]
 
-    DEFAULT_FIELDS: list[str] = [
+    DEFAULT_STOCK_FIELDS: list[str] = [
         "name",
         "close",
         "change",
@@ -72,6 +72,35 @@ class MarketMovers(BaseScraper):
         "market_cap_basic",
         "price_earnings_ttm",
         "earnings_per_share_basic_ttm",
+        "logoid",
+        "description",
+    ]
+
+    DEFAULT_CRYPTO_FIELDS: list[str] = [
+        "name",
+        "close",
+        "change",
+        "change_abs",
+        "volume",
+        "market_cap_calc",
+        "logoid",
+        "description",
+    ]
+
+    DEFAULT_FOREX_FIELDS: list[str] = [
+        "name",
+        "close",
+        "change",
+        "change_abs",
+        "logoid",
+        "description",
+    ]
+
+    DEFAULT_BASIC_FIELDS: list[str] = [
+        "name",
+        "close",
+        "change",
+        "change_abs",
         "logoid",
         "description",
     ]
@@ -112,6 +141,16 @@ class MarketMovers(BaseScraper):
         """
         segment = self._MARKET_TO_SCANNER.get(market, "america")
         return f"{SCANNER_URL}/{segment}/scan"
+
+    def _get_default_fields(self, market: str) -> list[str]:
+        """Return the default fields appropriate for the given market."""
+        if market == "crypto":
+            return list(self.DEFAULT_CRYPTO_FIELDS)
+        if market == "forex":
+            return list(self.DEFAULT_FOREX_FIELDS)
+        if market in ("bonds", "futures"):
+            return list(self.DEFAULT_BASIC_FIELDS)
+        return list(self.DEFAULT_STOCK_FIELDS)
 
     def _get_sort_config(self, category: str) -> dict[str, str]:
         """Return sort configuration for the given category.
@@ -260,7 +299,9 @@ class MarketMovers(BaseScraper):
                 limit=limit,
             )
 
-        resolved_fields = fields if fields is not None else self.DEFAULT_FIELDS
+        resolved_fields = (
+            fields if fields is not None else self._get_default_fields(market)
+        )
 
         # Validate fields
         if not isinstance(resolved_fields, list) or not all(

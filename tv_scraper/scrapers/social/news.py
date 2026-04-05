@@ -56,9 +56,8 @@ class News(BaseScraper):
             export_result=export_result,
             export_type=export_type,
             timeout=timeout,
+            cookie=cookie,
         )
-        if cookie:
-            self._headers["cookie"] = cookie
 
         # Cache validation data
         self._news_providers: list[str] = self.validator.get_news_providers()

@@ -55,7 +55,10 @@ nav:
   - API Conventions: api-conventions.md
   - Streaming:
     - Overview: streaming/index.md
-    - Streamer: streaming/streamer.md
+    - Candles: streaming/candle_streamer.md
+    - Forecast: streaming/forecast_streamer.md
+    - Streamer (Convenience Wrapper): streaming/streamer.md
+    - Extending (BaseStreamer): streaming/base_streamer.md
   - Scrapers:
     - Overview: scrapers/overview.md
     - Pine: scrapers/pine.md

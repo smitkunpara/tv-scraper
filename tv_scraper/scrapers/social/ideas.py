@@ -1,7 +1,6 @@
 """Ideas scraper for fetching trading ideas from TradingView."""
 
 import logging
-import os
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Any
 
@@ -51,8 +50,8 @@ class Ideas(BaseScraper):
             export_result=export_result,
             export_type=export_type,
             timeout=timeout,
+            cookie=cookie,
         )
-        self._cookie: str | None = cookie or os.environ.get("TRADINGVIEW_COOKIE")
         self._max_workers: int = max(1, max_workers)
 
     def get_ideas(
@@ -113,8 +112,8 @@ class Ideas(BaseScraper):
         url_slug = f"{exchange}-{symbol}"
 
         headers = dict(self._headers)
-        if self._cookie:
-            headers["cookie"] = self._cookie
+        if self.cookie:
+            headers["cookie"] = self.cookie
 
         page_list = range(start_page, end_page + 1)
         articles: list[dict[str, Any]] = []
