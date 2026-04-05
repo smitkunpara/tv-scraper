@@ -153,7 +153,20 @@ class Fundamentals(BaseScraper):
             Standardized response dict with keys
             ``status``, ``data``, ``metadata``, ``error``.
         """
+        if fields is not None and not isinstance(fields, list):
+            return self._error_response(
+                "Fields must be a list of strings or None.",
+                exchange=exchange,
+                symbol=symbol,
+            )
+
         field_list = fields if fields else self.ALL_FIELDS
+
+        try:
+            self.validator.validate_fields(field_list, self.ALL_FIELDS, "field")
+        except Exception as e:
+            return self._error_response(str(e), exchange=exchange, symbol=symbol)
+
         return self._fetch_symbol_fields(
             exchange=exchange,
             symbol=symbol,
@@ -184,36 +197,63 @@ class Fundamentals(BaseScraper):
                 symbols=symbols,
             )
 
+        for i, sym in enumerate(symbols):
+            if not isinstance(sym, dict):
+                return self._error_response(
+                    f"Symbol at index {i} must be a dict with 'exchange' and 'symbol' keys.",
+                    symbols=symbols,
+                )
+            if "exchange" not in sym or "symbol" not in sym:
+                missing = [k for k in ("exchange", "symbol") if k not in sym]
+                return self._error_response(
+                    f"Symbol dict at index {i} missing required keys: {missing}. "
+                    "Each symbol must have 'exchange' and 'symbol' keys.",
+                    symbols=symbols,
+                )
+
+        if fields is not None and not isinstance(fields, list):
+            return self._error_response(
+                "Fields must be a list of strings or None.",
+                symbols=symbols,
+            )
+
         field_list = fields if fields else self.DEFAULT_COMPARISON_FIELDS
+
+        try:
+            self.validator.validate_fields(field_list, self.ALL_FIELDS, "field")
+        except Exception as e:
+            return self._error_response(str(e), symbols=symbols)
 
         all_items: list[dict[str, Any]] = []
         comparison: dict[str, dict[str, Any]] = {}
+        failed_symbols: list[dict[str, str]] = []
 
         for sym in symbols:
-            exchange = sym.get("exchange", "")
-            symbol_name = sym.get("symbol", "")
+            exchange = sym["exchange"]
+            symbol = sym["symbol"]
             result = self.get_fundamentals(
-                exchange=exchange, symbol=symbol_name, fields=field_list
+                exchange=exchange, symbol=symbol, fields=field_list
             )
             if result["status"] != "success":
+                failed_symbols.append(sym)
                 continue
 
             item_data = result["data"]
             all_items.append(item_data)
 
-            combined = f"{exchange}:{symbol_name}"
+            combined = f"{exchange}:{symbol}"
             for field in field_list:
-                if field not in comparison:
-                    comparison[field] = {}
-                comparison[field][combined] = item_data.get(field)
+                comparison.setdefault(field, {})[combined] = item_data.get(field)
+
+        response_meta: dict[str, Any] = {"symbols": symbols}
+        if fields is not None:
+            response_meta["fields"] = fields
 
         if not all_items:
-            cmp_meta: dict[str, Any] = {"symbols": symbols}
-            if fields is not None:
-                cmp_meta["fields"] = fields
+            response_meta["failed_symbols"] = failed_symbols
             return self._error_response(
                 "No data retrieved for any symbols.",
-                **cmp_meta,
+                **response_meta,
             )
 
         data: dict[str, Any] = {
@@ -221,7 +261,9 @@ class Fundamentals(BaseScraper):
             "comparison": comparison,
         }
 
-        # --- Export ---
+        if failed_symbols:
+            data["failed_symbols"] = failed_symbols
+
         if self.export_result:
             self._export(
                 data=data,
@@ -229,11 +271,7 @@ class Fundamentals(BaseScraper):
                 data_category="fundamentals",
             )
 
-        success_meta: dict[str, Any] = {"symbols": symbols}
-        if fields is not None:
-            success_meta["fields"] = fields
-
-        return self._success_response(data, **success_meta)
+        return self._success_response(data, **response_meta)
 
     # ---- Category helpers ------------------------------------------------
 

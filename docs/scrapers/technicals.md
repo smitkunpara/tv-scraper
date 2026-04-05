@@ -91,6 +91,13 @@ All responses follow the standard envelope format:
 }
 ```
 
+Common error messages include:
+- Invalid exchange or symbol (validation errors)
+- Network connectivity issues
+- Invalid indicator names
+- Empty response (symbol may not have data for requested timeframe)
+- JSON parsing errors
+
 Errors are **never raised** — they are always returned as error responses.
 
 ## Usage Examples
@@ -145,3 +152,5 @@ data = scraper.get_technicals(
     fields=["RSI", "EMA50"],  # Only include these in output
 )
 ```
+
+> **Note:** The `fields` parameter correctly filters indicators regardless of timeframe suffixes (e.g., `"RSI"` matches `"RSI|240"` in the response).

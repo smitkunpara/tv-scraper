@@ -50,6 +50,10 @@ Fetch fundamental data for a single symbol.
 | `symbol` | `str` | — | Trading symbol (e.g. `"AAPL"`) |
 | `fields` | `list[str] \| None` | `None` | Specific fields. `None` → all fields. |
 
+**Validation:**
+- `fields` must be a list of strings or `None`
+- Each field name is validated against known field names
+
 Returns a standardized response envelope:
 
 ```python
@@ -69,6 +73,30 @@ Compare fundamental data across multiple symbols.
 |-----------|------|---------|-------------|
 | `symbols` | `list[dict]` | — | List of `{"exchange": "...", "symbol": "..."}` dicts |
 | `fields` | `list[str] \| None` | `None` | Specific fields. `None` → key comparison metrics. |
+
+**Validation:**
+- `symbols` must be a non-empty list
+- Each symbol must be a dict with `"exchange"` and `"symbol"` keys
+- `fields` must be a list of strings or `None`
+- Each field name is validated against known field names
+
+**Partial Failures:**
+- If some symbols fail to fetch, they are tracked in `failed_symbols`
+- Results include successful items only, with failed symbols listed in metadata
+
+Returns:
+
+```python
+{
+    "status": "success",
+    "data": {
+        "items": [...],                    # Per-symbol data dicts
+        "comparison": {...},                # field -> symbol -> value mapping
+        "failed_symbols": [...]            # Only if some symbols failed
+    },
+    "metadata": {"symbols": [...], "fields": [...]},
+    "error": None,
+}
 
 ### Category Helpers
 

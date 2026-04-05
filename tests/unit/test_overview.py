@@ -126,6 +126,13 @@ class TestGetOverviewErrors:
         assert result["data"] is None
         assert "Connection refused" in result["error"]
 
+    def test_get_data_empty_fields_list(self, overview: Overview) -> None:
+        """Empty fields list returns error response."""
+        result = overview.get_overview(exchange="NASDAQ", symbol="AAPL", fields=[])
+        assert result["status"] == STATUS_FAILED
+        assert result["data"] is None
+        assert "fields" in result["error"].lower()
+
 
 class TestCategoryMethods:
     """Tests for convenience category methods."""

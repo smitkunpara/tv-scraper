@@ -10,6 +10,10 @@ from tv_scraper.core.constants import SCANNER_URL
 
 logger = logging.getLogger(__name__)
 
+SORT_ORDERS: frozenset[str] = frozenset({"asc", "desc"})
+MIN_LIMIT = 1
+MAX_LIMIT = 10000
+
 
 class Screener(BaseScraper):
     """Screen financial instruments across markets with custom filters.
@@ -54,23 +58,25 @@ class Screener(BaseScraper):
         "global",
     }
 
-    OPERATIONS: list[str] = [
-        "greater",
-        "less",
-        "egreater",
-        "eless",
-        "equal",
-        "nequal",
-        "in_range",
-        "not_in_range",
-        "above",
-        "below",
-        "crosses",
-        "crosses_above",
-        "crosses_below",
-        "has",
-        "has_none_of",
-    ]
+    OPERATIONS: frozenset[str] = frozenset(
+        {
+            "greater",
+            "less",
+            "egreater",
+            "eless",
+            "equal",
+            "nequal",
+            "in_range",
+            "not_in_range",
+            "above",
+            "below",
+            "crosses",
+            "crosses_above",
+            "crosses_below",
+            "has",
+            "has_none_of",
+        }
+    )
 
     DEFAULT_STOCK_FIELDS: list[str] = [
         "name",
@@ -117,10 +123,87 @@ class Screener(BaseScraper):
             return list(self.DEFAULT_FOREX_FIELDS)
         return list(self.DEFAULT_STOCK_FIELDS)
 
+    def _validate_filter(self, filters: list[dict[str, Any]]) -> str | None:
+        """Validate filter structure.
+
+        Args:
+            filters: List of filter dicts to validate.
+
+        Returns:
+            Error message if validation fails, None otherwise.
+        """
+        for i, f in enumerate(filters):
+            if not isinstance(f, dict):
+                return f"Filter at index {i} must be a dictionary"
+            if "left" not in f:
+                return f"Filter at index {i} missing required 'left' key"
+            if "operation" not in f:
+                return f"Filter at index {i} missing required 'operation' key"
+            if f["operation"] not in self.OPERATIONS:
+                return (
+                    f"Invalid operation '{f['operation']}' in filter at index {i}. "
+                    f"Valid operations: {', '.join(sorted(self.OPERATIONS))}"
+                )
+        return None
+
+    def _validate_filter2(self, filter2: dict[str, Any]) -> str | None:
+        """Validate filter2 structure.
+
+        Args:
+            filter2: Filter2 dict to validate.
+
+        Returns:
+            Error message if validation fails, None otherwise.
+        """
+        if not isinstance(filter2, dict):
+            return "filter2 must be a dictionary"
+        if "operator" not in filter2:
+            return "filter2 missing required 'operator' key"
+        return None
+
+    def _build_metadata(
+        self,
+        market: str,
+        sort_order: str,
+        limit: int,
+        filters: list[dict[str, Any]] | None = None,
+        sort_by: str | None = None,
+        symbols: dict[str, Any] | None = None,
+        filter2: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        """Build metadata dict for response envelope.
+
+        Args:
+            market: Market identifier.
+            sort_order: Sort direction.
+            limit: Result limit.
+            filters: Optional filters list.
+            sort_by: Optional sort field.
+            symbols: Optional symbols filter.
+            filter2: Optional complex filter.
+
+        Returns:
+            Metadata dict for response envelope.
+        """
+        meta: dict[str, Any] = {
+            "market": market,
+            "sort_order": sort_order,
+            "limit": limit,
+        }
+        if filters is not None:
+            meta["filters"] = filters
+        if sort_by is not None:
+            meta["sort_by"] = sort_by
+        if symbols is not None:
+            meta["symbols"] = symbols
+        if filter2 is not None:
+            meta["filter2"] = filter2
+        return meta
+
     def _build_payload(
         self,
         fields: list[str],
-        market: str = "america",
+        market: str,
         filters: list[dict[str, Any]] | None = None,
         sort_by: str | None = None,
         sort_order: str = "desc",
@@ -141,6 +224,11 @@ class Screener(BaseScraper):
         Returns:
             Payload dict ready for JSON serialization.
         """
+        if market not in self.SUPPORTED_MARKETS:
+            raise ValueError(
+                f"Unsupported market: '{market}'. "
+                f"Supported markets: {', '.join(sorted(self.SUPPORTED_MARKETS))}"
+            )
         payload: dict[str, Any] = {
             "columns": fields,
             "options": {"lang": "en"},
@@ -193,7 +281,6 @@ class Screener(BaseScraper):
             Standardized response envelope with ``status``, ``data``,
             ``metadata``, and ``error`` keys.
         """
-        # Validate market
         if market not in self.SUPPORTED_MARKETS:
             return self._error_response(
                 f"Unsupported market: '{market}'. "
@@ -203,12 +290,40 @@ class Screener(BaseScraper):
                 limit=limit,
             )
 
-        # Resolve fields
+        if sort_order not in SORT_ORDERS:
+            return self._error_response(
+                f"Invalid sort_order: '{sort_order}'. Must be 'asc' or 'desc'.",
+                market=market,
+                sort_order=sort_order,
+                limit=limit,
+            )
+
+        if not isinstance(limit, int) or limit < MIN_LIMIT or limit > MAX_LIMIT:
+            return self._error_response(
+                f"Invalid limit: {limit}. Must be an integer between {MIN_LIMIT} and {MAX_LIMIT}.",
+                market=market,
+                sort_order=sort_order,
+                limit=limit,
+            )
+
+        if filters is not None:
+            filter_error = self._validate_filter(filters)
+            if filter_error:
+                return self._error_response(
+                    filter_error, market=market, sort_order=sort_order, limit=limit
+                )
+
+        if filter2 is not None:
+            filter2_error = self._validate_filter2(filter2)
+            if filter2_error:
+                return self._error_response(
+                    filter2_error, market=market, sort_order=sort_order, limit=limit
+                )
+
         resolved_fields = (
             fields if fields is not None else self._get_default_fields(market)
         )
 
-        # Build payload
         payload = self._build_payload(
             fields=resolved_fields,
             market=market,
@@ -230,48 +345,46 @@ class Screener(BaseScraper):
                 timeout=self.timeout,
             )
             response.raise_for_status()
+        except requests.HTTPError as exc:
+            return self._error_response(
+                f"HTTP error: {exc}",
+                **self._build_metadata(
+                    market, sort_order, limit, filters, sort_by, symbols, filter2
+                ),
+            )
+        except requests.RequestException as exc:
+            return self._error_response(
+                f"Network error: {exc}",
+                **self._build_metadata(
+                    market, sort_order, limit, filters, sort_by, symbols, filter2
+                ),
+            )
+
+        try:
             json_response = response.json()
+        except ValueError as exc:
+            return self._error_response(
+                f"Failed to parse JSON response: {exc}",
+                **self._build_metadata(
+                    market, sort_order, limit, filters, sort_by, symbols, filter2
+                ),
+            )
 
-            raw_items = json_response.get("data", [])
-            formatted_data = self._map_scanner_rows(raw_items, resolved_fields)
+        raw_items = json_response.get("data", [])
+        formatted_data = self._map_scanner_rows(raw_items, resolved_fields)
 
-            total_count = json_response.get("totalCount", len(formatted_data))
+        total_count = json_response.get("totalCount", len(formatted_data))
 
-            if self.export_result:
-                self._export(
-                    data=formatted_data,
-                    symbol=f"{market}_screener",
-                    data_category="screener",
-                )
+        if self.export_result:
+            self._export(
+                data=formatted_data,
+                symbol=f"{market}_screener",
+                data_category="screener",
+            )
 
-            screener_meta: dict[str, Any] = {
-                "market": market,
-                "sort_order": sort_order,
-                "limit": limit,
-                "total": len(formatted_data),
-                "total_available": total_count,
-            }
-            if filters is not None:
-                screener_meta["filters"] = filters
-            if sort_by is not None:
-                screener_meta["sort_by"] = sort_by
-            if symbols is not None:
-                screener_meta["symbols"] = symbols
-            if filter2 is not None:
-                screener_meta["filter2"] = filter2
-            return self._success_response(formatted_data, **screener_meta)
-        except Exception as exc:
-            err_meta: dict[str, Any] = {
-                "market": market,
-                "sort_order": sort_order,
-                "limit": limit,
-            }
-            if filters is not None:
-                err_meta["filters"] = filters
-            if sort_by is not None:
-                err_meta["sort_by"] = sort_by
-            if symbols is not None:
-                err_meta["symbols"] = symbols
-            if filter2 is not None:
-                err_meta["filter2"] = filter2
-            return self._error_response(f"Request failed: {exc}", **err_meta)
+        screener_meta = self._build_metadata(
+            market, sort_order, limit, filters, sort_by, symbols, filter2
+        )
+        screener_meta["total"] = len(formatted_data)
+        screener_meta["total_available"] = total_count
+        return self._success_response(formatted_data, **screener_meta)

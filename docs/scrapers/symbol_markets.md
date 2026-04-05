@@ -24,7 +24,7 @@ for item in result["data"]:
 | `export_type`   | `str`  | `"json"`| Export format: `"json"` / `"csv"` |
 | `timeout`       | `int`  | `10`    | HTTP request timeout (seconds) |
 
-### `scrape(symbol, fields=None, scanner="global", limit=150)`
+### `get_symbol_markets(symbol, fields=None, scanner="global", limit=150)`
 
 | Parameter | Type             | Default          | Description                            |
 |-----------|------------------|------------------|----------------------------------------|

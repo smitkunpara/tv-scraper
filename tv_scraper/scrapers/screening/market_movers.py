@@ -7,6 +7,7 @@ import requests
 
 from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.constants import SCANNER_URL
+from tv_scraper.core.validators import DataValidator
 
 logger = logging.getLogger(__name__)
 
@@ -121,8 +122,8 @@ class MarketMovers(BaseScraper):
         Returns:
             Sort config dict with ``sortBy`` and ``sortOrder`` keys.
         """
-        return dict(
-            self._CATEGORY_SORT.get(category, {"sortBy": "change", "sortOrder": "desc"})
+        return self._CATEGORY_SORT.get(
+            category, {"sortBy": "change", "sortOrder": "desc"}
         )
 
     def _get_filter_conditions(
@@ -170,6 +171,7 @@ class MarketMovers(BaseScraper):
         category: str,
         fields: list[str],
         limit: int,
+        language: str = "en",
     ) -> dict[str, Any]:
         """Build the scanner API request payload.
 
@@ -178,6 +180,7 @@ class MarketMovers(BaseScraper):
             category: Category identifier.
             fields: Columns to retrieve.
             limit: Maximum number of results.
+            language: Language code for the request (default: "en").
 
         Returns:
             Payload dict ready for JSON serialization.
@@ -185,7 +188,7 @@ class MarketMovers(BaseScraper):
         return {
             "columns": fields,
             "filter": self._get_filter_conditions(market, category),
-            "options": {"lang": "en"},
+            "options": {"lang": language},
             "range": [0, limit],
             "sort": self._get_sort_config(category),
         }
@@ -196,6 +199,7 @@ class MarketMovers(BaseScraper):
         category: str = "gainers",
         fields: list[str] | None = None,
         limit: int = 50,
+        language: str = "en",
     ) -> dict[str, Any]:
         """Scrape market movers data from TradingView.
 
@@ -203,12 +207,22 @@ class MarketMovers(BaseScraper):
             market: The market to scrape (e.g. ``"stocks-usa"``, ``"crypto"``).
             category: Category of movers (e.g. ``"gainers"``, ``"losers"``).
             fields: Columns to retrieve. Defaults to ``DEFAULT_FIELDS``.
-            limit: Maximum number of results (default 50).
+            limit: Maximum number of results (default 50, max 1000).
+            language: Language code for the request (default: "en").
 
         Returns:
             Standardized response envelope with ``status``, ``data``,
             ``metadata``, and ``error`` keys.
         """
+        # Validate limit bounds
+        if not isinstance(limit, int) or limit < 1 or limit > 1000:
+            return self._error_response(
+                f"Invalid limit: {limit}. Must be an integer between 1 and 1000.",
+                market=market,
+                category=category,
+                limit=limit,
+            )
+
         # Validate market
         if market not in self.SUPPORTED_MARKETS:
             return self._error_response(
@@ -234,8 +248,34 @@ class MarketMovers(BaseScraper):
                 limit=limit,
             )
 
-        resolved_fields = fields if fields is not None else list(self.DEFAULT_FIELDS)
-        payload = self._build_payload(market, category, resolved_fields, limit)
+        # Validate language
+        valid_languages = DataValidator().get_languages()
+        valid_language_codes = set(valid_languages.values())
+        if language not in valid_language_codes:
+            return self._error_response(
+                f"Unsupported language: '{language}'. "
+                f"Supported language codes: {', '.join(sorted(valid_language_codes))}",
+                market=market,
+                category=category,
+                limit=limit,
+            )
+
+        resolved_fields = fields if fields is not None else self.DEFAULT_FIELDS
+
+        # Validate fields
+        if not isinstance(resolved_fields, list) or not all(
+            isinstance(f, str) for f in resolved_fields
+        ):
+            return self._error_response(
+                "Invalid fields parameter. Must be a list of strings.",
+                market=market,
+                category=category,
+                limit=limit,
+            )
+
+        payload = self._build_payload(
+            market, category, resolved_fields, limit, language
+        )
         url = self._get_scanner_url(market)
 
         try:
@@ -248,7 +288,17 @@ class MarketMovers(BaseScraper):
             response.raise_for_status()
             json_response = response.json()
 
+            # Validate JSON response structure
+            if not isinstance(json_response, dict):
+                return self._error_response(
+                    f"Invalid response format: expected dict, got {type(json_response).__name__}",
+                    market=market,
+                    category=category,
+                    limit=limit,
+                )
+
             raw_items = json_response.get("data", [])
+            total_count = json_response.get("totalCount", 0)
             formatted_data = self._map_scanner_rows(raw_items, resolved_fields)
 
             if self.export_result:
@@ -264,6 +314,14 @@ class MarketMovers(BaseScraper):
                 category=category,
                 limit=limit,
                 total=len(formatted_data),
+                totalCount=total_count,
+            )
+        except requests.HTTPError as exc:
+            return self._error_response(
+                f"HTTP error: {exc}",
+                market=market,
+                category=category,
+                limit=limit,
             )
         except requests.RequestException as exc:
             return self._error_response(
@@ -272,9 +330,9 @@ class MarketMovers(BaseScraper):
                 category=category,
                 limit=limit,
             )
-        except Exception as exc:
+        except (ValueError, KeyError) as exc:
             return self._error_response(
-                f"Request failed: {exc}",
+                f"Failed to parse API response: {exc}",
                 market=market,
                 category=category,
                 limit=limit,

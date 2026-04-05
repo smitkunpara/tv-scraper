@@ -166,13 +166,11 @@ class TestScrapeHeadlinesSuccess:
         assert len(result["data"]) == 1
 
         item = result["data"][0]
-        # Should contain these fields
         assert item["id"] == "h123"
         assert item["title"] == "Bitcoin Hits New High"
         assert item["shortDescription"] == "Bitcoin reached an all-time high today."
         assert item["published"] == 1678900000
         assert item["storyPath"] == "/news/story/h123"
-        # Should NOT contain these fields
         assert "provider" not in item
         assert "urgency" not in item
         assert "relatedSymbols" not in item
@@ -199,7 +197,6 @@ class TestScrapeHeadlinesSuccess:
         )
 
         assert result["status"] == STATUS_SUCCESS
-        # Verify provider appears in req params
         call_kwargs = mock_get.call_args[1]
         params = call_kwargs.get("params", {})
         assert params.get("provider") == "cointelegraph"
@@ -373,6 +370,83 @@ class TestScrapeHeadlinesErrors:
         assert result["data"] is None
         assert "captcha" in result["error"].lower()
 
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
+        return_value=True,
+    )
+    @patch("requests.get")
+    def test_scrape_headlines_timeout(
+        self, mock_get: MagicMock, mock_verify: MagicMock, news: News
+    ) -> None:
+        """Timeout returns error response."""
+        mock_get.side_effect = requests.exceptions.Timeout("Request timed out")
+
+        result = news.get_news_headlines(exchange="BINANCE", symbol="BTCUSD")
+
+        assert result["status"] == STATUS_FAILED
+        assert result["data"] is None
+        assert result["error"] is not None
+        assert "timeout" in result["error"].lower()
+
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
+        return_value=True,
+    )
+    @patch("requests.get")
+    def test_scrape_headlines_connection_error(
+        self, mock_get: MagicMock, mock_verify: MagicMock, news: News
+    ) -> None:
+        """Connection error returns error response."""
+        mock_get.side_effect = requests.exceptions.ConnectionError("Connection refused")
+
+        result = news.get_news_headlines(exchange="BINANCE", symbol="BTCUSD")
+
+        assert result["status"] == STATUS_FAILED
+        assert result["data"] is None
+        assert result["error"] is not None
+        assert "connection" in result["error"].lower()
+
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
+        return_value=True,
+    )
+    @patch("requests.get")
+    def test_scrape_headlines_http_error(
+        self, mock_get: MagicMock, mock_verify: MagicMock, news: News
+    ) -> None:
+        """HTTP error returns error response."""
+        mock_get.side_effect = requests.exceptions.HTTPError("404 Not Found")
+
+        result = news.get_news_headlines(exchange="BINANCE", symbol="BTCUSD")
+
+        assert result["status"] == STATUS_FAILED
+        assert result["data"] is None
+        assert result["error"] is not None
+        assert "http" in result["error"].lower()
+
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
+        return_value=True,
+    )
+    @patch("requests.get")
+    def test_scrape_headlines_invalid_json(
+        self, mock_get: MagicMock, mock_verify: MagicMock, news: News
+    ) -> None:
+        """Invalid JSON response returns error response."""
+        mock_resp = MagicMock()
+        mock_resp.status_code = 200
+        mock_resp.raise_for_status.return_value = None
+        mock_resp.text = "not valid json"
+        mock_resp.json.side_effect = ValueError("Expecting value")
+        mock_get.return_value = mock_resp
+
+        result = news.get_news_headlines(exchange="BINANCE", symbol="BTCUSD")
+
+        assert result["status"] == STATUS_FAILED
+        assert result["data"] is None
+        assert result["error"] is not None
+        assert "json" in result["error"].lower()
+
 
 # ---------------------------------------------------------------------------
 # scrape_content — success
@@ -398,13 +472,12 @@ class TestScrapeContentSuccess:
         assert data["title"] == "Bitcoin Hits New High"
         assert data["published"] == 1643097623
         assert data["storyPath"] == "/news/story/h123"
+        assert data["id"] == "tag:reuters.com,2026:newsml_L4N3Z9104:0"
 
-        # Check description is properly merged from ast_description
         description = data["description"]
         assert "Bitcoin surged to a new all-time high today." in description
         assert "BTCUSD" in description
         assert "Market analysts are optimistic." in description
-        # Paragraphs should be separated by newlines
         assert "\n" in description
 
     @patch("requests.get")
@@ -413,7 +486,7 @@ class TestScrapeContentSuccess:
     ) -> None:
         """Story path without leading slash should be fixed."""
         story_json = _STORY_JSON.copy()
-        story_json["story_path"] = "news/story/h123"  # No leading slash
+        story_json["story_path"] = "news/story/h123"
 
         mock_get.return_value = _mock_response(json_data=story_json)
 
@@ -426,7 +499,43 @@ class TestScrapeContentSuccess:
 
 
 # ---------------------------------------------------------------------------
-# scrape_content — errors
+# scrape_content — validation errors
+# ---------------------------------------------------------------------------
+
+
+class TestScrapeContentValidation:
+    """Validation errors for content scraping."""
+
+    def test_scrape_content_empty_story_id(self, news: News) -> None:
+        """Empty story_id returns error response."""
+        result = news.get_news_content(story_id="")
+
+        assert result["status"] == STATUS_FAILED
+        assert result["data"] is None
+        assert "empty" in result["error"].lower()
+
+    def test_scrape_content_whitespace_story_id(self, news: News) -> None:
+        """Whitespace-only story_id returns error response."""
+        result = news.get_news_content(story_id="   ")
+
+        assert result["status"] == STATUS_FAILED
+        assert result["data"] is None
+        assert "empty" in result["error"].lower()
+
+    def test_scrape_content_invalid_language(self, news: News) -> None:
+        """Invalid language returns error response."""
+        result = news.get_news_content(
+            story_id="tag:reuters.com,2026:newsml_L4N3Z9104:0",
+            language="invalid_lang",
+        )
+
+        assert result["status"] == STATUS_FAILED
+        assert result["data"] is None
+        assert "language" in result["error"].lower()
+
+
+# ---------------------------------------------------------------------------
+# scrape_content — runtime errors
 # ---------------------------------------------------------------------------
 
 
@@ -447,6 +556,65 @@ class TestScrapeContentErrors:
         assert result["status"] == STATUS_FAILED
         assert result["data"] is None
         assert result["error"] is not None
+
+    @patch("requests.get")
+    def test_scrape_content_timeout(self, mock_get: MagicMock, news: News) -> None:
+        """Timeout returns error response."""
+        mock_get.side_effect = requests.exceptions.Timeout("Request timed out")
+
+        result = news.get_news_content(
+            story_id="tag:reuters.com,2026:newsml_L4N3Z9104:0"
+        )
+
+        assert result["status"] == STATUS_FAILED
+        assert result["data"] is None
+        assert "timeout" in result["error"].lower()
+
+    @patch("requests.get")
+    def test_scrape_content_connection_error(
+        self, mock_get: MagicMock, news: News
+    ) -> None:
+        """Connection error returns error response."""
+        mock_get.side_effect = requests.exceptions.ConnectionError("Connection refused")
+
+        result = news.get_news_content(
+            story_id="tag:reuters.com,2026:newsml_L4N3Z9104:0"
+        )
+
+        assert result["status"] == STATUS_FAILED
+        assert result["data"] is None
+        assert "connection" in result["error"].lower()
+
+    @patch("requests.get")
+    def test_scrape_content_http_error(self, mock_get: MagicMock, news: News) -> None:
+        """HTTP error returns error response."""
+        mock_get.side_effect = requests.exceptions.HTTPError("404 Not Found")
+
+        result = news.get_news_content(
+            story_id="tag:reuters.com,2026:newsml_L4N3Z9104:0"
+        )
+
+        assert result["status"] == STATUS_FAILED
+        assert result["data"] is None
+        assert "http" in result["error"].lower()
+
+    @patch("requests.get")
+    def test_scrape_content_invalid_json(self, mock_get: MagicMock, news: News) -> None:
+        """Invalid JSON response returns error response."""
+        mock_resp = MagicMock()
+        mock_resp.status_code = 200
+        mock_resp.raise_for_status.return_value = None
+        mock_resp.text = "not valid json"
+        mock_resp.json.side_effect = ValueError("Expecting value")
+        mock_get.return_value = mock_resp
+
+        result = news.get_news_content(
+            story_id="tag:reuters.com,2026:newsml_L4N3Z9104:0"
+        )
+
+        assert result["status"] == STATUS_FAILED
+        assert result["data"] is None
+        assert "json" in result["error"].lower()
 
 
 # ---------------------------------------------------------------------------
@@ -473,3 +641,67 @@ class TestResponseFormat:
         result = news.get_news_headlines(exchange="BINANCE", symbol="BTCUSD")
 
         assert set(result.keys()) == {"status", "data", "metadata", "error"}
+
+
+# ---------------------------------------------------------------------------
+# Helper method tests
+# ---------------------------------------------------------------------------
+
+
+class TestHelperMethods:
+    """Tests for internal helper methods."""
+
+    def test_normalize_story_path_with_slash(self, news: News) -> None:
+        """Story path with leading slash stays unchanged."""
+        result = news._normalize_story_path("/news/story/123")
+        assert result == "/news/story/123"
+
+    def test_normalize_story_path_without_slash(self, news: News) -> None:
+        """Story path without leading slash gets one added."""
+        result = news._normalize_story_path("news/story/123")
+        assert result == "/news/story/123"
+
+    def test_normalize_story_path_empty(self, news: News) -> None:
+        """Empty story path stays empty."""
+        result = news._normalize_story_path("")
+        assert result == ""
+
+    def test_sort_news_latest(self, news: News) -> None:
+        """Latest sort returns newest first."""
+        items = [
+            _sample_headline(published=1000),
+            _sample_headline(published=3000),
+            _sample_headline(published=2000),
+        ]
+        result = news._sort_news(items, "latest")
+        assert [r["published"] for r in result] == [3000, 2000, 1000]
+
+    def test_sort_news_oldest(self, news: News) -> None:
+        """Oldest sort returns oldest first."""
+        items = [
+            _sample_headline(published=1000),
+            _sample_headline(published=3000),
+            _sample_headline(published=2000),
+        ]
+        result = news._sort_news(items, "oldest")
+        assert [r["published"] for r in result] == [1000, 2000, 3000]
+
+    def test_sort_news_most_urgent(self, news: News) -> None:
+        """Most urgent sort returns highest urgency first."""
+        items = [
+            {"published": 1000, "urgency": 2},
+            {"published": 2000, "urgency": 5},
+            {"published": 3000, "urgency": 1},
+        ]
+        result = news._sort_news(items, "most_urgent")
+        assert [r["urgency"] for r in result] == [5, 2, 1]
+
+    def test_sort_news_least_urgent(self, news: News) -> None:
+        """Least urgent sort returns lowest urgency first."""
+        items = [
+            {"published": 1000, "urgency": 2},
+            {"published": 2000, "urgency": 5},
+            {"published": 3000, "urgency": 1},
+        ]
+        result = news._sort_news(items, "least_urgent")
+        assert [r["urgency"] for r in result] == [1, 2, 5]

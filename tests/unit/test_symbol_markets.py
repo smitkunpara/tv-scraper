@@ -224,6 +224,33 @@ class TestScrapeErrors:
         assert result["data"] is None
         assert "Connection refused" in result["error"]
 
+    @patch("requests.post")
+    def test_get_data_empty_result(
+        self, mock_post: MagicMock, symbol_markets: SymbolMarkets
+    ) -> None:
+        """Empty result returns error response."""
+        mock_post.return_value = _mock_response({"data": [], "totalCount": 0})
+        result = symbol_markets.get_symbol_markets(symbol="AAPL")
+
+        assert result["status"] == STATUS_FAILED
+        assert result["data"] is None
+        assert "no markets" in result["error"].lower()
+
+    @patch("requests.post")
+    def test_get_data_json_parse_error(
+        self, mock_post: MagicMock, symbol_markets: SymbolMarkets
+    ) -> None:
+        """JSON parse error returns error response, does not raise."""
+        mock_response = MagicMock()
+        mock_response.json.side_effect = ValueError("Expecting value")
+        mock_response.raise_for_status.return_value = None
+        mock_post.return_value = mock_response
+        result = symbol_markets.get_symbol_markets(symbol="AAPL")
+
+        assert result["status"] == STATUS_FAILED
+        assert result["data"] is None
+        assert "JSON" in result["error"] or "json" in result["error"]
+
 
 class TestResponseFormat:
     """Tests for response envelope structure."""

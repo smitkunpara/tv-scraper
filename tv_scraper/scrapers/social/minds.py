@@ -14,6 +14,9 @@ logger = logging.getLogger(__name__)
 # TradingView Minds API endpoint
 MINDS_API_URL = "https://www.tradingview.com/api/v1/minds/"
 
+# Maximum pages to fetch to prevent infinite loops
+MAX_PAGES = 100
+
 
 class Minds(BaseScraper):
     """Scraper for TradingView Minds community discussions.
@@ -34,7 +37,7 @@ class Minds(BaseScraper):
         result = scraper.get_minds(exchange="NASDAQ", symbol="AAPL")
     """
 
-    def get_minds(
+    def get_minds(  # noqa: PLR0915
         self,
         exchange: str,
         symbol: str,
@@ -70,6 +73,12 @@ class Minds(BaseScraper):
 
         try:
             while True:
+                if pages >= MAX_PAGES:
+                    logger.warning(
+                        "Max pages (%d) reached for %s:%s", MAX_PAGES, exchange, symbol
+                    )
+                    break
+
                 params: dict[str, str] = {"symbol": combined_symbol}
                 if next_cursor:
                     params["c"] = next_cursor
@@ -81,14 +90,41 @@ class Minds(BaseScraper):
                     timeout=self.timeout,
                 )
 
+                response.raise_for_status()
+
                 if response.status_code != 200:
+                    logger.error(
+                        "HTTP error for %s:%s - Status: %d",
+                        exchange,
+                        symbol,
+                        response.status_code,
+                    )
                     return self._error_response(
                         f"HTTP {response.status_code}: {response.text}",
                         exchange=exchange,
                         symbol=symbol,
                     )
 
-                json_response = response.json()
+                if "<title>Captcha Challenge</title>" in response.text:
+                    logger.error("Captcha detected for %s:%s", exchange, symbol)
+                    return self._error_response(
+                        "Captcha challenge encountered. Try again later.",
+                        exchange=exchange,
+                        symbol=symbol,
+                    )
+
+                try:
+                    json_response = response.json()
+                except ValueError as exc:
+                    logger.error(
+                        "JSON parsing error for %s:%s: %s", exchange, symbol, exc
+                    )
+                    return self._error_response(
+                        f"Failed to parse JSON response: {exc}",
+                        exchange=exchange,
+                        symbol=symbol,
+                    )
+
                 results = json_response.get("results", [])
 
                 if not results:
@@ -103,20 +139,34 @@ class Minds(BaseScraper):
                     meta = json_response.get("meta", {})
                     symbol_info = meta.get("symbols_info", {}).get(combined_symbol, {})
 
-                # Check if limit reached
-                if limit is not None and len(parsed_data) >= limit:
-                    break
-
                 # Check for next page cursor
                 next_url = json_response.get("next", "")
                 if not next_url or "?c=" not in next_url:
                     break
 
-                next_cursor = next_url.split("?c=")[1].split("&")[0]
+                cursor_part = next_url.split("?c=")[1].split("&")[0]
+                if not cursor_part:
+                    break
+                next_cursor = cursor_part
 
-        except Exception as exc:
+        except requests.HTTPError as exc:
+            logger.error("HTTP error for %s:%s: %s", exchange, symbol, exc)
+            return self._error_response(
+                f"HTTP error: {exc}",
+                exchange=exchange,
+                symbol=symbol,
+            )
+        except requests.RequestException as exc:
+            logger.error("Request failed for %s:%s: %s", exchange, symbol, exc)
             return self._error_response(
                 f"Request failed: {exc}",
+                exchange=exchange,
+                symbol=symbol,
+            )
+        except Exception as exc:
+            logger.error("Unexpected error for %s:%s: %s", exchange, symbol, exc)
+            return self._error_response(
+                f"Unexpected error: {exc}",
                 exchange=exchange,
                 symbol=symbol,
             )
@@ -160,9 +210,12 @@ class Minds(BaseScraper):
         """
         # Parse author info
         author = item.get("author", {})
+        uri = author.get("uri", "")
+        if uri and not uri.startswith("http"):
+            uri = f"https://www.tradingview.com{uri}"
         author_data = {
             "username": author.get("username"),
-            "profile_url": f"https://www.tradingview.com{author.get('uri', '')}",
+            "profile_url": uri,
             "is_broker": author.get("is_broker", False),
         }
 

@@ -1,4 +1,3 @@
-from collections.abc import Iterator
 from typing import Any
 from unittest.mock import MagicMock, patch
 
@@ -83,7 +82,7 @@ def _mock_response(
 
 
 @pytest.fixture
-def minds() -> Iterator[Minds]:
+def minds() -> Minds:
     """Create a Minds instance for testing."""
     yield Minds()
 

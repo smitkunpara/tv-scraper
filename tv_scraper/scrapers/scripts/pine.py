@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 
 PINE_FACADE_BASE_URL = "https://pine-facade.tradingview.com/pine-facade"
 PINE_ORIGIN = "https://in.tradingview.com"
+PINE_FILTER_SAVED = "saved"
 
 
 class Pine(BaseScraper):
@@ -56,7 +57,7 @@ class Pine(BaseScraper):
         headers = self._build_pine_headers()
 
         url = f"{PINE_FACADE_BASE_URL}/list"
-        params = {"filter": "saved"}
+        params = {"filter": PINE_FILTER_SAVED}
 
         try:
             response = requests.get(
@@ -99,11 +100,9 @@ class Pine(BaseScraper):
         if cookie_error:
             return cookie_error
 
-        if not source.strip():
-            return self._error_response(
-                "Source code cannot be empty.",
-                source=source,
-            )
+        source_error = self._validate_non_empty(source, "Source code")
+        if source_error:
+            return source_error
 
         headers = self._build_pine_headers()
 
@@ -140,9 +139,6 @@ class Pine(BaseScraper):
         errors = result_obj.get("errors") or []
         warnings = result_obj.get("warnings") or []
 
-        if warnings:
-            logger.warning("Pine validation warnings: %s", warnings)
-
         if errors:
             return self._error_response(
                 "Pine script validation failed.",
@@ -173,28 +169,22 @@ class Pine(BaseScraper):
         if cookie_error:
             return cookie_error
 
-        if not name.strip():
-            return self._error_response(
-                "Script name cannot be empty.",
-                name=name,
-            )
-        if not source.strip():
-            return self._error_response(
-                "Source code cannot be empty.",
-                name=name,
-                source=source,
-            )
+        name_error = self._validate_non_empty(name, "Script name")
+        if name_error:
+            return name_error
+        source_error = self._validate_non_empty(source, "Source code")
+        if source_error:
+            source_error["metadata"]["name"] = name
+            return source_error
 
         validation = self.validate_script(source)
         if validation["status"] != "success":
+            validation_meta = validation.get("metadata", {})
             return self._error_response(
                 validation["error"] or "Pine script validation failed.",
                 name=name,
-                **{
-                    k: v
-                    for k, v in validation.get("metadata", {}).items()
-                    if k != "source"
-                },
+                warnings=validation_meta.get("warnings"),
+                errors=validation_meta.get("errors"),
             )
 
         headers = self._build_pine_headers()
@@ -253,36 +243,28 @@ class Pine(BaseScraper):
         if cookie_error:
             return cookie_error
 
-        if not pine_id.strip():
-            return self._error_response(
-                "Pine script ID cannot be empty.",
-                pine_id=pine_id,
-            )
-        if not name.strip():
-            return self._error_response(
-                "Script name cannot be empty.",
-                pine_id=pine_id,
-                name=name,
-            )
-        if not source.strip():
-            return self._error_response(
-                "Source code cannot be empty.",
-                pine_id=pine_id,
-                name=name,
-                source=source,
-            )
+        pine_id_error = self._validate_non_empty(pine_id, "Pine script ID")
+        if pine_id_error:
+            return pine_id_error
+        name_error = self._validate_non_empty(name, "Script name")
+        if name_error:
+            name_error["metadata"]["pine_id"] = pine_id
+            return name_error
+        source_error = self._validate_non_empty(source, "Source code")
+        if source_error:
+            source_error["metadata"]["pine_id"] = pine_id
+            source_error["metadata"]["name"] = name
+            return source_error
 
         validation = self.validate_script(source)
         if validation["status"] != "success":
+            validation_meta = validation.get("metadata", {})
             return self._error_response(
                 validation["error"] or "Pine script validation failed.",
                 pine_id=pine_id,
                 name=name,
-                **{
-                    k: v
-                    for k, v in validation.get("metadata", {}).items()
-                    if k != "source"
-                },
+                warnings=validation_meta.get("warnings"),
+                errors=validation_meta.get("errors"),
             )
 
         headers = self._build_pine_headers()
@@ -344,11 +326,9 @@ class Pine(BaseScraper):
         if cookie_error:
             return cookie_error
 
-        if not pine_id.strip():
-            return self._error_response(
-                "Pine script ID cannot be empty.",
-                pine_id=pine_id,
-            )
+        pine_id_error = self._validate_non_empty(pine_id, "Pine script ID")
+        if pine_id_error:
+            return pine_id_error
 
         headers = self._build_pine_headers()
         encoded_pine_id = quote(pine_id, safe="")
@@ -368,13 +348,12 @@ class Pine(BaseScraper):
 
         if response_text != "ok":
             return self._error_response(
-                "Unexpected response from Pine delete endpoint.",
+                f"Pine delete endpoint returned unexpected response: {response.text}",
                 pine_id=pine_id,
-                response=response.text,
             )
 
         return self._success_response(
-            {"id": pine_id, "deleted": True},
+            {"id": pine_id},
             pine_id=pine_id,
         )
 
@@ -386,10 +365,21 @@ class Pine(BaseScraper):
             "Provide it via the cookie argument or TRADINGVIEW_COOKIE environment variable."
         )
 
+    @staticmethod
+    def _validate_non_empty(value: str, field_name: str) -> dict[str, Any] | None:
+        if value and value.strip():
+            return None
+        return {
+            "status": "failed",
+            "data": None,
+            "metadata": {},
+            "error": f"{field_name} cannot be empty.",
+        }
+
     def _build_pine_headers(self) -> dict[str, str]:
         """Build headers expected by Pine facade endpoints."""
         headers = dict(self._headers)
-        headers["cookie"] = self._cookie or ""
+        headers["cookie"] = self._cookie
         headers["accept"] = "*/*"
         headers["origin"] = PINE_ORIGIN
         headers["referer"] = f"{PINE_ORIGIN}/"
@@ -397,11 +387,14 @@ class Pine(BaseScraper):
 
     @staticmethod
     def _map_script_item(item: dict[str, Any]) -> dict[str, Any]:
+        modified = item.get("modified", 0)
+        if not isinstance(modified, int) or modified < 0:
+            modified = 0
         return {
             "id": item.get("scriptIdPart", ""),
             "name": item.get("scriptName") or item.get("scriptTitle", ""),
             "version": item.get("version") or item.get("scriptVersion"),
-            "modified": item.get("modified", 0),
+            "modified": modified,
         }
 
     @staticmethod
@@ -414,9 +407,12 @@ class Pine(BaseScraper):
         meta_info = result_obj.get("metaInfo")
         if not isinstance(meta_info, dict):
             return None
+        script_id = meta_info.get("scriptIdPart")
+        if not script_id:
+            return None
 
         return {
-            "scriptIdPart": meta_info.get("scriptIdPart", ""),
+            "scriptIdPart": script_id,
             "description": meta_info.get("description", ""),
             "shortDescription": meta_info.get("shortDescription", ""),
             "modified": result_obj.get("modified", 0),

@@ -15,6 +15,8 @@ _PINE_FACADE_URL = "https://pine-facade.tradingview.com/pine-facade/translate/{s
 
 _PINE_LIST_URL = "https://pine-facade.tradingview.com/pine-facade/list?filter=standard"
 
+BASE_STUDY_ID = 9
+
 
 def fetch_tradingview_indicators(query: str) -> dict[str, Any]:
     """Search public TradingView indicators by name or author.
@@ -143,7 +145,7 @@ def prepare_indicator_metadata(
         "m": "create_study",
         "p": [
             chart_session,
-            "st9",
+            f"st{BASE_STUDY_ID}",
             "st1",
             "sds_1",
             "Script@tv-scripting-101!",

@@ -117,29 +117,17 @@ class Overview(BaseScraper):
         "ATR",
     ]
 
-    ALL_FIELDS: list[str] = (
-        BASIC_FIELDS
-        + PRICE_FIELDS
-        + MARKET_FIELDS
-        + VALUATION_FIELDS
-        + DIVIDEND_FIELDS
-        + FINANCIAL_FIELDS
-        + PERFORMANCE_FIELDS
-        + VOLATILITY_FIELDS
-        + TECHNICAL_FIELDS
-    )
-
-    def __init__(
-        self,
-        export_result: bool = False,
-        export_type: str = "json",
-        timeout: int = 10,
-    ) -> None:
-        super().__init__(
-            export_result=export_result,
-            export_type=export_type,
-            timeout=timeout,
-        )
+    ALL_FIELDS: list[str] = [
+        *BASIC_FIELDS,
+        *PRICE_FIELDS,
+        *MARKET_FIELDS,
+        *VALUATION_FIELDS,
+        *DIVIDEND_FIELDS,
+        *FINANCIAL_FIELDS,
+        *PERFORMANCE_FIELDS,
+        *VOLATILITY_FIELDS,
+        *TECHNICAL_FIELDS,
+    ]
 
     def get_overview(
         self,
@@ -159,6 +147,12 @@ class Overview(BaseScraper):
             Standardized response dict with keys
             ``status``, ``data``, ``metadata``, ``error``.
         """
+        if fields is not None and len(fields) == 0:
+            return self._error_response(
+                "Fields list cannot be empty.",
+                exchange=exchange,
+                symbol=symbol,
+            )
         field_list = fields if fields else self.ALL_FIELDS
         return self._fetch_symbol_fields(
             exchange=exchange,

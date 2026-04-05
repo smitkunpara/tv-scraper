@@ -1,8 +1,9 @@
 """Calendar scraper for dividend and earnings events."""
 
 import datetime
+import json
 import logging
-from typing import Any
+from typing import Any, Literal
 
 import requests
 
@@ -90,6 +91,7 @@ class Calendar(BaseScraper):
         timestamp_to: int | None = None,
         markets: list[str] | None = None,
         fields: list[str] | None = None,
+        lang: str = "en",
     ) -> dict[str, Any]:
         """Fetch dividend events from the TradingView calendar.
 
@@ -102,6 +104,7 @@ class Calendar(BaseScraper):
                 (e.g. ``["america", "uk"]``).
             fields: Specific fields to fetch. Validated against the
                 known dividend field list. Defaults to all dividend fields.
+            lang: Language code for API responses (default: "en").
 
         Returns:
             Standardized response dict with ``status``, ``data``,
@@ -116,6 +119,7 @@ class Calendar(BaseScraper):
             timestamp_to=timestamp_to,
             markets=markets,
             data_category="dividends",
+            lang=lang,
         )
 
     def get_earnings(
@@ -124,6 +128,7 @@ class Calendar(BaseScraper):
         timestamp_to: int | None = None,
         markets: list[str] | None = None,
         fields: list[str] | None = None,
+        lang: str = "en",
     ) -> dict[str, Any]:
         """Fetch earnings events from the TradingView calendar.
 
@@ -136,6 +141,7 @@ class Calendar(BaseScraper):
                 (e.g. ``["america", "uk"]``).
             fields: Specific fields to fetch. Validated against the
                 known earnings field list. Defaults to all earnings fields.
+            lang: Language code for API responses (default: "en").
 
         Returns:
             Standardized response dict with ``status``, ``data``,
@@ -150,6 +156,7 @@ class Calendar(BaseScraper):
             timestamp_to=timestamp_to,
             markets=markets,
             data_category="earnings",
+            lang=lang,
         )
 
     # ------------------------------------------------------------------
@@ -165,7 +172,8 @@ class Calendar(BaseScraper):
         timestamp_from: int | None,
         timestamp_to: int | None,
         markets: list[str] | None,
-        data_category: str,
+        data_category: Literal["dividends", "earnings"],
+        lang: str = "en",
     ) -> dict[str, Any]:
         """Shared implementation for fetching calendar events.
 
@@ -178,11 +186,11 @@ class Calendar(BaseScraper):
             timestamp_to: End timestamp or ``None`` for default.
             markets: Optional market filter.
             data_category: Category name for export filenames.
+            lang: Language code for API responses (default: "en").
 
         Returns:
             Standardized response envelope dict.
         """
-        # Validate fields
         use_fields = default_fields
         if fields:
             try:
@@ -196,20 +204,18 @@ class Calendar(BaseScraper):
                 )
             use_fields = fields
 
-        # Compute default timestamps (±3 days from midnight)
-        if timestamp_from is None:
+        if timestamp_from is None or timestamp_to is None:
             now = datetime.datetime.now().timestamp()
             midnight = now - (now % _SECONDS_PER_DAY)
+
+        if timestamp_from is None:
             timestamp_from = int(midnight - _DAYS_OFFSET * _SECONDS_PER_DAY)
 
         if timestamp_to is None:
-            now = datetime.datetime.now().timestamp()
-            midnight = now - (now % _SECONDS_PER_DAY)
             timestamp_to = int(
                 midnight + _DAYS_OFFSET * _SECONDS_PER_DAY + _SECONDS_PER_DAY - 1
             )
 
-        # Build payload
         url = f"{SCANNER_URL}/global/scan?label-product={label}"
         payload: dict[str, Any] = {
             "columns": use_fields,
@@ -221,13 +227,12 @@ class Calendar(BaseScraper):
                 }
             ],
             "ignore_unknown_fields": False,
-            "options": {"lang": "en"},
+            "options": {"lang": lang},
         }
 
         if markets:
             payload["markets"] = markets
 
-        # Execute request
         try:
             response = requests.post(
                 url,
@@ -241,20 +246,25 @@ class Calendar(BaseScraper):
             return self._error_response(
                 f"Network error: {exc}", event_type=data_category
             )
-        except Exception as exc:
-            return self._error_response(
-                f"Request failed: {exc}", event_type=data_category
-            )
-        except (ValueError, KeyError) as exc:
+        except json.JSONDecodeError as exc:
             return self._error_response(
                 f"Failed to parse API response: {exc}", event_type=data_category
             )
+        except (ValueError, KeyError) as exc:
+            return self._error_response(
+                f"Request failed: {exc}", event_type=data_category
+            )
 
-        # Parse events
         data_items: list[dict[str, Any]] = json_response.get("data", [])
+        if not isinstance(data_items, list):
+            data_items = []
+            logger.warning("API response 'data' field is not a list")
+
+        if not data_items:
+            logger.info("No %s events found in the specified date range", data_category)
+
         events = self._map_scanner_rows(data_items, use_fields)
 
-        # Export if enabled
         if self.export_result:
             self._export(
                 data=events,
@@ -268,5 +278,5 @@ class Calendar(BaseScraper):
             total=len(events),
             timestamp_from=timestamp_from,
             timestamp_to=timestamp_to,
-            **({"markets": markets} if markets is not None else {}),
+            **{"markets": markets} if markets else {},
         )

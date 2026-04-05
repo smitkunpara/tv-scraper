@@ -1,6 +1,6 @@
 """Type definitions for tv_scraper."""
 
-from typing import Any, TypedDict
+from typing import Any, Literal, TypedDict
 
 
 class ResponseMetadata(TypedDict, total=False):
@@ -13,10 +13,22 @@ class ResponseMetadata(TypedDict, total=False):
     total_count: int
 
 
-class ScraperResponse(TypedDict):
-    """Standardized response envelope for all scrapers."""
+class ScraperResponseSuccess(TypedDict):
+    """Standardized success response envelope for all scrapers."""
 
-    status: str  # "success" or "failed"
+    status: Literal["success"]
     data: Any
     metadata: ResponseMetadata
-    error: str | None
+    error: None
+
+
+class ScraperResponseFailed(TypedDict):
+    """Standardized failure response envelope for all scrapers."""
+
+    status: Literal["failed"]
+    data: None
+    metadata: ResponseMetadata
+    error: str
+
+
+ScraperResponse = ScraperResponseSuccess | ScraperResponseFailed

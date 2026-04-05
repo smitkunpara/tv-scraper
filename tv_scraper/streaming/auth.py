@@ -12,7 +12,6 @@ import threading
 import time
 from typing import Any
 
-import jwt as pyjwt
 import requests
 
 from tv_scraper.core.constants import CHART_SESSION_URL, DEFAULT_USER_AGENT
@@ -27,6 +26,24 @@ _token_cache: dict[str, Any] = {
 _token_lock = threading.Lock()
 
 
+def _pad_base64(data: str) -> str:
+    """Add base64 padding to a string if needed."""
+    padding = 4 - len(data) % 4
+    return data + "=" * padding if padding < 4 else data
+
+
+def _decode_jwt_payload(token: str) -> dict[str, Any] | None:
+    """Decode JWT payload without verification. Returns None on failure."""
+    try:
+        parts = token.split(".")
+        if len(parts) != 3:
+            return None
+        payload_b64 = _pad_base64(parts[1])
+        return json.loads(base64.urlsafe_b64decode(payload_b64))
+    except Exception:
+        return None
+
+
 def extract_jwt_token(cookie: str) -> str | None:
     """Extract JWT token from TradingView using provided cookies.
 
@@ -39,7 +56,7 @@ def extract_jwt_token(cookie: str) -> str | None:
     Raises:
         ValueError: If cookies are invalid or token extraction fails.
     """
-    if not cookie:
+    if not cookie or not cookie.strip():
         raise ValueError("TradingView cookie is required for token extraction.")
 
     headers = {
@@ -59,7 +76,6 @@ def extract_jwt_token(cookie: str) -> str | None:
         response.raise_for_status()
         html_content = response.text
 
-        # Extract potential JWT tokens from the page source
         jwt_pattern = r"eyJ[A-Za-z0-9-_]+\.eyJ[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+"
         potential_tokens = re.findall(jwt_pattern, html_content)
 
@@ -68,10 +84,8 @@ def extract_jwt_token(cookie: str) -> str | None:
                 parts = token.split(".")
                 if len(parts) != 3:
                     return False
-                header_b64, payload_b64, _ = parts
-                # Pad for base64 decoding
-                header_b64 += "=" * (4 - len(header_b64) % 4)
-                payload_b64 += "=" * (4 - len(payload_b64) % 4)
+                header_b64 = _pad_base64(parts[0])
+                payload_b64 = _pad_base64(parts[1])
                 header = json.loads(base64.urlsafe_b64decode(header_b64))
                 json.loads(base64.urlsafe_b64decode(payload_b64))
                 return "alg" in header and "typ" in header
@@ -99,34 +113,16 @@ def get_token_info(token: str) -> dict[str, Any]:
 
     Note: This does NOT verify the signature, only decodes the payload.
     """
-    try:
-        parts = token.split(".")
-        if len(parts) != 3:
-            return {"valid": False, "error": "Invalid token format"}
+    payload = _decode_jwt_payload(token)
+    if payload is None:
+        return {"valid": False, "error": "Invalid token format"}
 
-        payload_b64 = parts[1]
-        payload_b64 += "=" * (4 - len(payload_b64) % 4)
-        payload = json.loads(base64.urlsafe_b64decode(payload_b64))
-
-        return {
-            "valid": True,
-            "exp": payload.get("exp"),
-            "iat": payload.get("iat"),
-            "user_id": payload.get("user_id"),
-        }
-    except Exception as e:
-        return {"valid": False, "error": str(e)}
-
-
-def is_jwt_token_valid(token: str) -> bool:
-    """Check if the provided JWT token is valid and not expired."""
-    try:
-        # decode without verification just to check 'exp'
-        decoded = pyjwt.decode(token, options={"verify_signature": False})
-        exp = decoded.get("exp")
-        return exp is not None and exp > int(time.time())
-    except Exception:
-        return False
+    return {
+        "valid": True,
+        "exp": payload.get("exp"),
+        "iat": payload.get("iat"),
+        "user_id": payload.get("user_id"),
+    }
 
 
 def get_valid_jwt_token(cookie: str, force_refresh: bool = False) -> str:
@@ -142,20 +138,14 @@ def get_valid_jwt_token(cookie: str, force_refresh: bool = False) -> str:
     Raises:
         ValueError: If unable to generate/extract a valid token.
     """
-
     with _token_lock:
         current_time = int(time.time())
 
         cached_token = _token_cache["token"]
         cached_expiry = _token_cache["expiry"]
 
-        # Return cached token if still valid (with 60s buffer)
-        if (
-            not force_refresh
-            and cached_token is not None
-            and cached_expiry > (current_time + 60)
-        ):
-            return str(cached_token)
+        if not force_refresh and cached_token and cached_expiry > (current_time + 60):
+            return cached_token
 
         try:
             token = extract_jwt_token(cookie)
@@ -170,6 +160,6 @@ def get_valid_jwt_token(cookie: str, force_refresh: bool = False) -> str:
             _token_cache["expiry"] = token_info.get("exp", current_time + 3600)
             return token
 
-        except Exception as e:
-            logger.error("Token resolution failed: %s", e)
+        except (ValueError, requests.RequestException, OSError) as e:
+            logger.error("Token resolution failed: unable to obtain valid token")
             raise ValueError(f"Could not generate JWT token from cookies: {e}") from e

@@ -16,6 +16,7 @@ scraper = Ideas(
     export_type="json",    # Export format: "json" or "csv"
     timeout=10,            # HTTP timeout in seconds
     cookie=None,           # TradingView session cookie (or set TRADINGVIEW_COOKIE env var)
+    max_workers=3,         # Max concurrent page scrapes (min: 1)
 )
 ```
 
@@ -25,6 +26,7 @@ scraper = Ideas(
 | `export_type` | `str` | `"json"` | Export format (`"json"` or `"csv"`) |
 | `timeout` | `int` | `10` | HTTP request timeout in seconds |
 | `cookie` | `str \| None` | `None` | Session cookie for captcha bypass |
+| `max_workers` | `int` | `3` | Max concurrent workers for page scraping (clamped to minimum 1) |
 
 ### `get_ideas()`
 
@@ -133,4 +135,25 @@ Or set the `TRADINGVIEW_COOKIE` environment variable and omit the `cookie` param
 ```python
 scraper = Ideas(export_result=True, export_type="csv")
 result = scraper.get_ideas(exchange="CRYPTO", symbol="ETHUSD", end_page=3)
+```
+
+### Custom Concurrency
+
+```python
+scraper = Ideas(max_workers=5)  # Scrape up to 5 pages concurrently
+result = scraper.get_ideas(exchange="NASDAQ", symbol="AAPL", end_page=5)
+```
+
+### Error Handling
+
+The scraper validates input and returns structured errors:
+
+```python
+result = scraper.get_ideas(exchange="NASDAQ", symbol="AAPL", start_page=0)
+# result["status"] == "failed"
+# result["error"] == "start_page must be >= 1, got 0"
+
+result = scraper.get_ideas(exchange="NASDAQ", symbol="AAPL", start_page=3, end_page=2)
+# result["status"] == "failed"
+# result["error"] == "end_page (2) must be >= start_page (3)"
 ```

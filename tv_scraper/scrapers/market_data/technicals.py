@@ -1,5 +1,6 @@
 """Technicals scraper for fetching technical analysis indicators."""
 
+import json
 import logging
 import re
 from typing import Any
@@ -88,7 +89,7 @@ class Technicals(BaseScraper):
                     timeframe=timeframe,
                     technical_indicators=technical_indicators,
                 )
-            indicators = list(technical_indicators)
+            indicators = technical_indicators
         else:
             return self._error_response(
                 "No indicators provided. "
@@ -106,7 +107,7 @@ class Technicals(BaseScraper):
         if timeframe_value and timeframe_value != "1D":
             api_indicators = [f"{ind}|{timeframe_value}" for ind in indicators]
         else:
-            api_indicators = list(indicators)
+            api_indicators = indicators
 
         # Build query parameters for GET request
         fields_param = ",".join(api_indicators)
@@ -128,7 +129,7 @@ class Technicals(BaseScraper):
                 timeout=self.timeout,
             )
             response.raise_for_status()
-            json_response: dict[str, Any] = response.json()
+            json_response = response.json()
         except requests.RequestException as exc:
             return self._error_response(
                 f"Network error: {exc}",
@@ -136,7 +137,7 @@ class Technicals(BaseScraper):
                 symbol=symbol,
                 timeframe=timeframe,
             )
-        except (ValueError, KeyError) as exc:
+        except (ValueError, KeyError, json.JSONDecodeError) as exc:
             return self._error_response(
                 f"Failed to parse API response: {exc}",
                 exchange=exchange,
@@ -148,7 +149,8 @@ class Technicals(BaseScraper):
         # API returns indicators directly as a dict, not wrapped in "data"
         if not json_response:
             return self._error_response(
-                "No data returned from API.",
+                f"Empty response for {exchange}:{symbol} with timeframe {timeframe}. "
+                "This may indicate an invalid symbol or no data available for the requested timeframe.",
                 exchange=exchange,
                 symbol=symbol,
                 timeframe=timeframe,
@@ -162,9 +164,10 @@ class Technicals(BaseScraper):
         # Strip timeframe suffix from keys
         result = self._revise_response(result, timeframe_value)
 
-        # Optional field filtering
+        # Optional field filtering - strip suffixes from fields to match revised keys
         if fields:
-            result = {k: v for k, v in result.items() if k in fields}
+            stripped_fields = [re.sub(r"\|.*", "", f) for f in fields]
+            result = {k: v for k, v in result.items() if k in stripped_fields}
 
         # --- Export ---
         if self.export_result:

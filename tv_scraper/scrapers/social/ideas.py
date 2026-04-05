@@ -1,6 +1,5 @@
 """Ideas scraper for fetching trading ideas from TradingView."""
 
-import json
 import logging
 import os
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -15,6 +14,7 @@ from tv_scraper.core.exceptions import ValidationError
 logger = logging.getLogger(__name__)
 
 ALLOWED_SORT_VALUES = {"popular", "recent"}
+DEFAULT_MAX_WORKERS = 3
 
 
 class Ideas(BaseScraper):
@@ -45,6 +45,7 @@ class Ideas(BaseScraper):
         export_type: str = "json",
         timeout: int = 10,
         cookie: str | None = None,
+        max_workers: int = DEFAULT_MAX_WORKERS,
     ) -> None:
         super().__init__(
             export_result=export_result,
@@ -52,6 +53,7 @@ class Ideas(BaseScraper):
             timeout=timeout,
         )
         self._cookie: str | None = cookie or os.environ.get("TRADINGVIEW_COOKIE")
+        self._max_workers: int = max(1, max_workers)
 
     def get_ideas(
         self,
@@ -76,6 +78,25 @@ class Ideas(BaseScraper):
         """
 
         # --- Validation ---
+        if start_page < 1:
+            return self._error_response(
+                f"start_page must be >= 1, got {start_page}",
+                exchange=exchange,
+                symbol=symbol,
+                start_page=start_page,
+                end_page=end_page,
+                sort_by=sort_by,
+            )
+        if end_page < start_page:
+            return self._error_response(
+                f"end_page ({end_page}) must be >= start_page ({start_page})",
+                exchange=exchange,
+                symbol=symbol,
+                start_page=start_page,
+                end_page=end_page,
+                sort_by=sort_by,
+            )
+
         try:
             self.validator.verify_symbol_exchange(exchange, symbol)
             self.validator.validate_choice("sort_by", sort_by, ALLOWED_SORT_VALUES)
@@ -89,51 +110,52 @@ class Ideas(BaseScraper):
                 sort_by=sort_by,
             )
 
-        # Build the URL slug (TV uses HYPHEN for combined symbols in URLs)
         url_slug = f"{exchange}-{symbol}"
 
-        # Apply cookie header if available
         headers = dict(self._headers)
         if self._cookie:
             headers["cookie"] = self._cookie
 
-        page_list = list(range(start_page, end_page + 1))
+        page_list = range(start_page, end_page + 1)
         articles: list[dict[str, Any]] = []
+        failed_pages: list[tuple[int, str]] = []
 
-        # --- Concurrent page scraping ---
-        with ThreadPoolExecutor(max_workers=3) as executor:
+        with ThreadPoolExecutor(max_workers=self._max_workers) as executor:
             futures = {
                 executor.submit(
                     self._scrape_page, url_slug, page, sort_by, headers
                 ): page
                 for page in page_list
             }
-            for future in as_completed(futures):
+            for future in as_completed(futures, timeout=self.timeout * 2):
                 page = futures[future]
                 try:
-                    result = future.result()
+                    result = future.result(timeout=self.timeout)
                     if result is None:
-                        # Captcha or fatal page error — abort
-                        return self._error_response(
-                            f"Captcha challenge encountered on page {page}. "
-                            "Try updating the TRADINGVIEW_COOKIE.",
-                            exchange=exchange,
-                            symbol=symbol,
-                            start_page=start_page,
-                            end_page=end_page,
-                            sort_by=sort_by,
+                        logger.error(
+                            "Captcha challenge on page %d of %s",
+                            page,
+                            url_slug,
                         )
+                        failed_pages.append((page, f"Captcha challenge on page {page}"))
+                        continue
                     articles.extend(result)
                 except Exception as exc:
                     logger.error("Failed to scrape page %d: %s", page, exc)
-                    return self._error_response(
-                        f"Failed to scrape page {page}: {exc}",
-                        exchange=exchange,
-                        symbol=symbol,
-                        start_page=start_page,
-                        end_page=end_page,
-                        sort_by=sort_by,
-                    )
+                    failed_pages.append((page, str(exc)))
+
+        if failed_pages:
+            return self._error_response(
+                f"Failed pages: {failed_pages}. Articles collected so far: {len(articles)}",
+                exchange=exchange,
+                symbol=symbol,
+                start_page=start_page,
+                end_page=end_page,
+                sort_by=sort_by,
+                total=len(articles),
+                pages=len(page_list),
+                failed_pages=failed_pages,
+            )
 
         # --- Export ---
         if self.export_result:
@@ -185,7 +207,6 @@ class Ideas(BaseScraper):
             response = requests.get(
                 url, headers=headers, params=params, timeout=self.timeout
             )
-            # Do NOT call raise_for_status here because we check status_code manually below
 
             if response.status_code != 200:
                 logger.error(
@@ -204,16 +225,32 @@ class Ideas(BaseScraper):
                 )
                 return None
 
-            data = response.json()
-            ideas_data = data.get("data", {}).get("ideas", {}).get("data", {})
-            items = ideas_data.get("items", [])
+            response_data = response.json()
+            if not isinstance(response_data, dict):
+                logger.error(
+                    "Unexpected response type for page %d of %s: %s",
+                    page,
+                    url_slug,
+                    type(response_data).__name__,
+                )
+                return []
+
+            ideas_data = response_data.get("data")
+            if not isinstance(ideas_data, dict):
+                ideas_data = {}
+            ideas_inner = ideas_data.get("ideas")
+            if not isinstance(ideas_inner, dict):
+                ideas_inner = {}
+            items_container = ideas_inner.get("data")
+            if not isinstance(items_container, dict):
+                items_container = {}
+            items = items_container.get("items")
+            if not isinstance(items, list):
+                items = []
 
             return [self._map_idea(item) for item in items]
 
-        except json.JSONDecodeError as exc:
-            logger.error("Invalid JSON for page %d of %s: %s", page, url_slug, exc)
-            raise
-        except Exception as exc:
+        except requests.RequestException as exc:
             logger.error(
                 "Request failed for page %d of %s: %s",
                 page,

@@ -1,14 +1,11 @@
 """Symbol Markets module for finding all exchanges where a symbol is traded."""
 
-import logging
 from typing import Any
 
 import requests
 
 from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.constants import SCANNER_URL
-
-logger = logging.getLogger(__name__)
 
 
 class SymbolMarkets(BaseScraper):
@@ -102,7 +99,7 @@ class SymbolMarkets(BaseScraper):
         search_symbol = symbol.split(":", 1)[1] if ":" in symbol else symbol
 
         # Validate symbol
-        if not search_symbol or not search_symbol.strip():
+        if not search_symbol.strip():
             return self._error_response(
                 "Symbol must be a non-empty string.",
                 symbol=symbol,
@@ -139,27 +136,6 @@ class SymbolMarkets(BaseScraper):
             )
             response.raise_for_status()
             json_response = response.json()
-
-            raw_items = json_response.get("data", [])
-            formatted_data = self._map_scanner_rows(raw_items, resolved_fields)
-
-            total_count = json_response.get("totalCount", len(formatted_data))
-
-            if self.export_result:
-                self._export(
-                    data=formatted_data,
-                    symbol=symbol,
-                    data_category="symbol_markets",
-                )
-
-            return self._success_response(
-                formatted_data,
-                symbol=symbol,
-                scanner=scanner,
-                limit=limit,
-                total=len(formatted_data),
-                total_available=total_count,
-            )
         except requests.RequestException as exc:
             return self._error_response(
                 f"Network error: {exc}",
@@ -167,10 +143,39 @@ class SymbolMarkets(BaseScraper):
                 scanner=scanner,
                 limit=limit,
             )
-        except Exception as exc:
+        except ValueError as exc:
             return self._error_response(
-                f"Request failed: {exc}",
+                f"JSON parse error: {exc}",
                 symbol=symbol,
                 scanner=scanner,
                 limit=limit,
             )
+
+        raw_items = json_response.get("data", [])
+        formatted_data = self._map_scanner_rows(raw_items, resolved_fields)
+
+        if not formatted_data:
+            return self._error_response(
+                f"No markets found for symbol: {symbol}",
+                symbol=symbol,
+                scanner=scanner,
+                limit=limit,
+            )
+
+        total_count = json_response.get("totalCount", len(formatted_data))
+
+        if self.export_result:
+            self._export(
+                data=formatted_data,
+                symbol=symbol,
+                data_category="symbol_markets",
+            )
+
+        return self._success_response(
+            formatted_data,
+            symbol=symbol,
+            scanner=scanner,
+            limit=limit,
+            total=len(formatted_data),
+            total_available=total_count,
+        )

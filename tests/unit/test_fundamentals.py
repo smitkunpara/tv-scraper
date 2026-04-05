@@ -181,6 +181,94 @@ class TestCompareFundamentals:
         assert len(result["data"]["items"]) == 1
         assert "NASDAQ:AAPL" in result["data"]["comparison"]["total_revenue"]
         assert "NASDAQ:FAIL" not in result["data"]["comparison"]["total_revenue"]
+        assert "failed_symbols" in result["data"]
+        assert len(result["data"]["failed_symbols"]) == 1
+
+    def test_compare_fundamentals_invalid_symbol_dict_type(
+        self, fundamentals: Fundamentals
+    ) -> None:
+        """Non-dict symbol entry returns error response."""
+        symbols: list[Any] = [
+            {"exchange": "NASDAQ", "symbol": "AAPL"},
+            "invalid_string",
+        ]
+        result = fundamentals.compare_fundamentals(symbols)
+        assert result["status"] == STATUS_FAILED
+        assert "must be a dict" in result["error"]
+
+    def test_compare_fundamentals_missing_exchange_key(
+        self, fundamentals: Fundamentals
+    ) -> None:
+        """Symbol dict without 'exchange' key returns error response."""
+        symbols: list[dict[str, str]] = [
+            {"exchange": "NASDAQ", "symbol": "AAPL"},
+            {"symbol": "MSFT"},
+        ]
+        result = fundamentals.compare_fundamentals(symbols)
+        assert result["status"] == STATUS_FAILED
+        assert "missing required keys" in result["error"]
+
+    def test_compare_fundamentals_missing_symbol_key(
+        self, fundamentals: Fundamentals
+    ) -> None:
+        """Symbol dict without 'symbol' key returns error response."""
+        symbols: list[dict[str, str]] = [
+            {"exchange": "NASDAQ", "symbol": "AAPL"},
+            {"exchange": "NASDAQ"},
+        ]
+        result = fundamentals.compare_fundamentals(symbols)
+        assert result["status"] == STATUS_FAILED
+        assert "missing required keys" in result["error"]
+
+    def test_compare_fundamentals_invalid_fields_type(
+        self, fundamentals: Fundamentals
+    ) -> None:
+        """Non-list fields parameter returns error response."""
+        symbols = [{"exchange": "NASDAQ", "symbol": "AAPL"}]
+        result = fundamentals.compare_fundamentals(symbols, fields="not_a_list")
+        assert result["status"] == STATUS_FAILED
+        assert "Fields must be a list" in result["error"]
+
+    def test_compare_fundamentals_invalid_field_name(
+        self, fundamentals: Fundamentals
+    ) -> None:
+        """Invalid field name returns error response."""
+        symbols = [{"exchange": "NASDAQ", "symbol": "AAPL"}]
+        result = fundamentals.compare_fundamentals(
+            symbols, fields=["total_revenue", "invalid_field_xyz"]
+        )
+        assert result["status"] == STATUS_FAILED
+        assert "Invalid field" in result["error"]
+
+
+class TestGetFundamentalsValidation:
+    """Tests for get_fundamentals input validation."""
+
+    def test_get_fundamentals_invalid_fields_type(
+        self, fundamentals: Fundamentals
+    ) -> None:
+        """Non-list fields parameter returns error response."""
+        result = fundamentals.get_fundamentals(
+            exchange="NASDAQ", symbol="AAPL", fields="not_a_list"
+        )
+        assert result["status"] == STATUS_FAILED
+        assert "Fields must be a list" in result["error"]
+
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
+        return_value=True,
+    )
+    def test_get_fundamentals_invalid_field_name(
+        self, mock_verify, fundamentals: Fundamentals
+    ) -> None:
+        """Invalid field name returns error response."""
+        result = fundamentals.get_fundamentals(
+            exchange="NASDAQ",
+            symbol="AAPL",
+            fields=["total_revenue", "invalid_field_xyz"],
+        )
+        assert result["status"] == STATUS_FAILED
+        assert "Invalid field" in result["error"]
 
 
 class TestResponseFormat:

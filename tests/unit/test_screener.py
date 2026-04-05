@@ -289,6 +289,117 @@ class TestScreenErrors:
         assert result["data"] is None
         assert "Connection refused" in result["error"]
 
+    @patch("requests.post")
+    def test_get_data_http_error(
+        self, mock_post: MagicMock, screener: Screener
+    ) -> None:
+        """HTTP error returns error response, does not raise."""
+        mock_post.side_effect = requests.HTTPError("404 Not Found")
+        result = screener.get_screener(market="america")
+
+        assert result["status"] == STATUS_FAILED
+        assert result["data"] is None
+        assert "HTTP error" in result["error"]
+
+    @patch("requests.post")
+    def test_get_data_invalid_json(
+        self, mock_post: MagicMock, screener: Screener
+    ) -> None:
+        """Invalid JSON response returns error response, does not raise."""
+        response = MagicMock()
+        response.raise_for_status.return_value = None
+        response.json.side_effect = ValueError("Expecting value")
+        mock_post.return_value = response
+        result = screener.get_screener(market="america")
+
+        assert result["status"] == STATUS_FAILED
+        assert result["data"] is None
+        assert "Failed to parse JSON" in result["error"]
+
+
+class TestValidation:
+    """Tests for input validation."""
+
+    def test_invalid_sort_order(self, screener: Screener) -> None:
+        """Invalid sort_order returns error response."""
+        result = screener.get_screener(market="america", sort_order="invalid")
+        assert result["status"] == STATUS_FAILED
+        assert "sort_order" in result["error"].lower()
+
+    def test_invalid_limit_too_low(self, screener: Screener) -> None:
+        """Limit below minimum returns error response."""
+        result = screener.get_screener(market="america", limit=0)
+        assert result["status"] == STATUS_FAILED
+        assert "limit" in result["error"].lower()
+
+    def test_invalid_limit_too_high(self, screener: Screener) -> None:
+        """Limit above maximum returns error response."""
+        result = screener.get_screener(market="america", limit=50000)
+        assert result["status"] == STATUS_FAILED
+        assert "limit" in result["error"].lower()
+
+    def test_invalid_limit_type(self, screener: Screener) -> None:
+        """Non-integer limit returns error response."""
+        result = screener.get_screener(market="america", limit=10.5)  # type: ignore
+        assert result["status"] == STATUS_FAILED
+        assert "limit" in result["error"].lower()
+
+    def test_invalid_filter_missing_left(self, screener: Screener) -> None:
+        """Filter missing 'left' key returns error response."""
+        filters = [{"operation": "greater", "right": 100}]
+        result = screener.get_screener(market="america", filters=filters)
+        assert result["status"] == STATUS_FAILED
+        assert "left" in result["error"].lower()
+
+    def test_invalid_filter_missing_operation(self, screener: Screener) -> None:
+        """Filter missing 'operation' key returns error response."""
+        filters = [{"left": "close", "right": 100}]
+        result = screener.get_screener(market="america", filters=filters)
+        assert result["status"] == STATUS_FAILED
+        assert "operation" in result["error"].lower()
+
+    def test_invalid_filter_invalid_operation(self, screener: Screener) -> None:
+        """Filter with invalid operation returns error response."""
+        filters = [{"left": "close", "operation": "invalid_op", "right": 100}]
+        result = screener.get_screener(market="america", filters=filters)
+        assert result["status"] == STATUS_FAILED
+        assert "invalid_op" in result["error"]
+        assert "operation" in result["error"].lower()
+
+    def test_invalid_filter_not_dict(self, screener: Screener) -> None:
+        """Filter that is not a dict returns error response."""
+        filters = ["not a dict"]  # type: ignore
+        result = screener.get_screener(market="america", filters=filters)
+        assert result["status"] == STATUS_FAILED
+        assert "dictionary" in result["error"].lower()
+
+    def test_invalid_filter2_not_dict(self, screener: Screener) -> None:
+        """filter2 that is not a dict returns error response."""
+        result = screener.get_screener(market="america", filter2="not a dict")  # type: ignore
+        assert result["status"] == STATUS_FAILED
+        assert "filter2" in result["error"].lower()
+
+    def test_invalid_filter2_missing_operator(self, screener: Screener) -> None:
+        """filter2 missing 'operator' key returns error response."""
+        filter2 = {"operands": []}
+        result = screener.get_screener(market="america", filter2=filter2)
+        assert result["status"] == STATUS_FAILED
+        assert "operator" in result["error"].lower()
+
+    def test_valid_sort_order_asc(self, screener: Screener) -> None:
+        """sort_order='asc' is valid."""
+        with patch("requests.post") as mock_post:
+            mock_post.return_value = _mock_response({"data": [], "totalCount": 0})
+            result = screener.get_screener(market="america", sort_order="asc")
+            assert result["status"] == STATUS_SUCCESS
+
+    def test_valid_sort_order_desc(self, screener: Screener) -> None:
+        """sort_order='desc' is valid."""
+        with patch("requests.post") as mock_post:
+            mock_post.return_value = _mock_response({"data": [], "totalCount": 0})
+            result = screener.get_screener(market="america", sort_order="desc")
+            assert result["status"] == STATUS_SUCCESS
+
 
 class TestResponseFormat:
     """Tests for response envelope structure."""

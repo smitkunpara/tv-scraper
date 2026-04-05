@@ -27,7 +27,16 @@ result = scraper.get_minds(exchange="NASDAQ", symbol="AAPL", limit=50)
 |-----------|----------------|---------|----------------------------------------------|
 | `exchange` | `str`          | —       | Exchange name (e.g. `"NASDAQ"`)              |
 | `symbol`   | `str`          | —       | Trading symbol (e.g. `"AAPL"`)              |
-| `limit`    | `Optional[int]`| `None`  | Max results to retrieve. `None` = fetch all  |
+| `limit`    | `Optional[int]`| `None`  | Max results to retrieve. `None` = fetch all. Max 100 pages limit. |
+
+## Error Handling
+
+The scraper handles the following error cases:
+
+- **Symbol/Exchange Validation**: Invalid symbols or exchanges return an error response.
+- **HTTP Errors**: Non-200 status codes return an error with the status code.
+- **Captcha Detection**: If TradingView returns a captcha challenge, returns an error message.
+- **JSON Parse Errors**: If the response cannot be parsed as JSON, returns an error message.
 
 ## Response Format
 

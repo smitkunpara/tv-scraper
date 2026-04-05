@@ -1,6 +1,7 @@
 """Tests for DataValidator singleton."""
 
 from collections.abc import Iterator
+from unittest import mock
 
 import pytest
 
@@ -29,6 +30,55 @@ class TestSingleton:
         DataValidator.reset()
         v2 = DataValidator()
         assert v1 is not v2
+
+    def test_reset_thread_safe(self) -> None:
+        """Test that reset is thread-safe and no AttributeError occurs."""
+        import threading
+
+        def reset_and_create():
+            DataValidator.reset()
+            DataValidator()
+
+        threads = [threading.Thread(target=reset_and_create) for _ in range(10)]
+        for t in threads:
+            t.start()
+        for t in threads:
+            t.join()
+
+
+class TestRetriesValidation:
+    """Tests for retries parameter validation."""
+
+    @mock.patch("tv_scraper.core.validators.DataValidator.validate_exchange")
+    @mock.patch("tv_scraper.core.validators.DataValidator.validate_symbol")
+    def test_retries_must_be_at_least_1(self, mock_sym, mock_exch) -> None:
+        mock_exch.return_value = True
+        mock_sym.return_value = True
+        validator = DataValidator()
+        with pytest.raises(ValidationError, match="Retries must be at least 1"):
+            validator.verify_symbol_exchange("NASDAQ", "AAPL", retries=0)
+
+    @mock.patch("tv_scraper.core.validators.DataValidator.validate_exchange")
+    @mock.patch("tv_scraper.core.validators.DataValidator.validate_symbol")
+    def test_retries_negative_raises(self, mock_sym, mock_exch) -> None:
+        mock_exch.return_value = True
+        mock_sym.return_value = True
+        validator = DataValidator()
+        with pytest.raises(ValidationError, match="Retries must be at least 1"):
+            validator.verify_symbol_exchange("NASDAQ", "AAPL", retries=-1)
+
+    @mock.patch("tv_scraper.core.validators.DataValidator.validate_exchange")
+    @mock.patch("tv_scraper.core.validators.DataValidator.validate_symbol")
+    def test_retries_valid(self, mock_sym, mock_exch) -> None:
+        mock_exch.return_value = True
+        mock_sym.return_value = True
+        validator = DataValidator()
+        with mock.patch("requests.get") as mock_get:
+            mock_resp = mock.MagicMock()
+            mock_resp.status_code = 200
+            mock_get.return_value = mock_resp
+            result = validator.verify_symbol_exchange("NASDAQ", "AAPL", retries=1)
+            assert result is True
 
 
 class TestValidateExchange:

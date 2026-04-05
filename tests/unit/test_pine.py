@@ -319,7 +319,7 @@ class TestDeleteScript:
 
         assert result["status"] == STATUS_SUCCESS
         assert result["error"] is None
-        assert result["data"] == {"id": "USER;abc123", "deleted": True}
+        assert result["data"] == {"id": "USER;abc123"}
         assert result["metadata"]["pine_id"] == "USER;abc123"
 
     def test_delete_script_empty_id_returns_error(self, pine: Pine) -> None:

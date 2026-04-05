@@ -20,6 +20,7 @@ cal.get_dividends(
     timestamp_to: Optional[int] = None,     # Unix timestamp, default: midnight + 3 days + 86399
     markets: Optional[List[str]] = None,    # e.g. ["america", "uk"]
     fields: Optional[List[str]] = None,     # validated against known dividend fields
+    lang: str = "en",                       # language code for API responses
 ) -> Dict[str, Any]
 ```
 
@@ -31,6 +32,7 @@ cal.get_earnings(
     timestamp_to: Optional[int] = None,
     markets: Optional[List[str]] = None,
     fields: Optional[List[str]] = None,     # validated against known earnings fields
+    lang: str = "en",                       # language code for API responses
 ) -> Dict[str, Any]
 ```
 

@@ -7,24 +7,155 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Removed
+- **Auth Module**: **CRITICAL** - Removed dead code: `is_jwt_token_valid()` function was never called
+- **Auth Module**: Removed unused `import jwt as pyjwt` import
+- **Pine Scraper**: Removed redundant `deleted` field from success response data
+- **Options Scraper**: Removed unused `logger` import
+- **Options Scraper**: Removed unnecessary `ignore_unknown_fields: False` from payload
+- **SymbolMarkets**: Removed unused logging import
+
 ### Added
+- **Core**: Added timeout validation (must be 1-300 seconds) in BaseScraper.__init__
+- **Core**: Added retries validation (must be >= 1) in verify_symbol_exchange
+- **Core**: Added thread-safe reset with lock in DataValidator.reset()
+- **Core**: Added ScraperResponseSuccess and ScraperResponseFailed TypedDicts with proper Literal constraints
+- **Utils**: Added export_type validation with `ALLOWED_EXPORT_TYPES` set
+- **Utils**: Added ImportError for pandas to catch missing module
+- **Utils**: Added DataFrame type validation before conversion
+- **Utils**: Updated docstring with accurate `Raises: ExportError` documentation
+
+### Changed
+- **Core**: Moved imports (EXPORT_TYPES, SCANNER_URL, ValidationError, os) to module level in base.py
+- **Calendar**: Added `import json` for explicit JSONDecodeError handling
+- **Technicals**: Added `import json` for explicit JSON error handling
+- **Calendar**: Added `Literal["dividends", "earnings"]` type hint for data_category parameter
+- **Calendar**: Added logging for empty results to help debugging
+- **Fundamentals**: Added `isinstance(fields, list)` validation for fields parameter
+- **Fundamentals**: Added DataValidator field validation for field names
+- **Fundamentals**: Added `failed_symbols` tracking for partial failures in `compare_fundamentals()`
+- **Market Movers**: Added `language` parameter (default: "en") for configurable language
+- **Market Movers**: Added `totalCount` to response metadata (total available in category)
+- **Market Movers**: Added user-provided fields validation (list of strings)
+- **Market Movers**: Added limit bounds checking (1-1000)
+- **News Scraper**: Added `import json` for explicit JSON error handling
 - **BaseScraper Enhancements**: Added native cookie support and automatically load the `TRADINGVIEW_COOKIE` environment variable in `BaseScraper.__init__`. All subclasses now benefit from this shared authentication logic.
 - **Standardized Exports**: `tv_scraper.core` now correctly exports the base `TvScraperError` exception.
 - **Streamer Helpers**: Added `_success_response` and `_error_response` helper methods to the `Streamer` class to maintain API consistency with the scraper modules.
+- **Streamer**: Added `BASE_STUDY_ID = 9` constant in utils.py for study ID offset
+- **Streamer**: `_error_response` now supports partial data via metadata extraction
+- **Ideas Scraper**: Added page validation errors with descriptive messages for invalid page parameters
+- **Minds Scraper**: Added `MAX_PAGES = 100` constant to prevent infinite loops during pagination
+- **Minds Scraper**: Added separate HTTP error logging for better debugging
+- **Auth Module**: Added specific exception types for better token extraction error handling
+- **Screener**: Added sort_order validation against `SORT_ORDERS` frozenset
+- **Screener**: Added limit bounds checking with `MIN_LIMIT`/`MAX_LIMIT` constants
+- **Screener**: Added defensive market validation in `_build_payload()`
+- **Pine Scraper**: Extracted input validation to `_validate_non_empty()` helper method
+- **Pine Scraper**: Defined `PINE_FILTER_SAVED` constant for magic string "saved"
+- **Options Scraper**: Extracted duplicate payload logic to `_build_payload()` helper method
+- **Options Scraper**: Added column validation via `_validate_inputs()` method
+- **Options Scraper**: Added response structure validation (isinstance checks)
+- **Options Scraper**: Added type validation for strike parameter
+- **Markets**: Added empty fields list validation
+- **Overview**: Fixed ALL_FIELDS to use proper list syntax with unpacking instead of tuple
 
 ### Changed
+- **Core**: Moved imports (EXPORT_TYPES, SCANNER_URL, ValidationError, os) to module level in base.py
+- **Core**: Distinguished error messages in verify_options_symbol for 403 vs not found cases
+- **Core**: Removed redundant try-except re-raise in verify_options_symbol
+- **Fundamentals**: Renamed `symbol_name` variable to `symbol` for consistency
+- **Technicals**: Removed redundant `list()` copy on line 92 (indicators)
+- **Technicals**: Removed redundant `list()` copy on line 110 (api_indicators)
+- **Technicals**: Removed redundant type hint annotation on line 132
+- **Technicals**: Improved empty response error message for better debugging
+- **Calendar**: Optimized timestamp calculation by computing `now` and `midnight` once when either timestamp is None
+- **Calendar**: Made lang parameter configurable (was hardcoded to "en")
+- **Market Movers**: Simplified `_get_sort_config()` by removing unnecessary `dict()` wrapper
+- **Market Movers**: Simplified `_resolve_fields()` by removing unnecessary `list()` copy
+- **Market Movers**: Separated HTTPError, RequestException, and ValueError/KeyError handlers
 - **Network Layer Refactoring**: Successfully migrated all scrapers from the legacy `make_request` utility to direct `requests` library calls (`requests.get`, `requests.post`).
+- **News Scraper**: Consolidated `_sort_news()` logic by removing duplicate if/elif branches into single reverse/key pattern
+- **News Scraper**: Added JSON parsing error handling (ValueError, JSONDecodeError) for API responses
+- **News Scraper**: Added specific exception handlers (HTTPError, Timeout, ConnectionError) for consistent HTTP error handling
+- **News Response**: Added `"id": story_id` to `_parse_story()` return for consistency
 - **Standardized Error Handling**: Improved network robustness by wrapping all API calls in `try...except requests.RequestException` blocks, ensuring failures always return a valid error envelope rather than raising unhandled exceptions.
 - **Metadata Standardization**: Extensively refactored every public method in the library (15+ modules) to ensure the `metadata` field is always present.
   - Enforced `dict[str, Any]` type for all metadata blocks.
   - Dynamically exclude optional arguments (e.g., `area`, `provider`, `filters`) from metadata when they are not provided by the user.
   - Ensured metadata is preserved in both `success` and `failed` status responses for better debugging.
 - **Test Suite Modernization**: Refactored over 350 unit and integration tests to verify strict metadata requirements and new standardized response formats.
+- **Ideas Scraper**: Made `max_workers` configurable via constructor parameter (default still 3) for concurrent page scraping
+- **Ideas Scraper**: Added page validation (start_page/end_page must be positive integers, start <= end)
+- **Ideas Scraper**: Added timeout to `as_completed()` and `future.result()` to prevent indefinite hangs
+- **Ideas Scraper**: Removed unnecessary `list()` conversion around `range()`
+- **Minds Scraper**: Removed redundant early limit check (duplicate validation)
+- **Minds Scraper**: Added empty cursor handling (`if not cursor_part: break`)
+- **Minds Scraper**: Fixed author URL validation to handle absolute URLs in uri field
+- **Auth Module**: Extracted redundant base64 padding logic to `_pad_base64()` helper function
+- **Auth Module**: Removed redundant `str()` conversion in token caching
+- **Auth Module**: Added empty cookie validation with `cookie.strip()` check
+- **Streamer**: Removed redundant boolean flag `ind_flag` by using `indicators` directly
+- **Streamer**: Moved `exchange_symbol` variable inside try block
+- **Streamer**: Now uses `_error_response` helper for partial forecast data consistency
+- **Streamer**: Extracted duplicate timeframe lookup to `_get_mapped_timeframe()` helper method
+- **Streamer**: Moved `quote_hibernate_all` outside the loop for efficiency
+- **Screener**: Changed OPERATIONS from `list[str]` to `frozenset[str]` and now used for validation
+- **Screener**: Added JSON parse error handling (ValueError catch for response.json())
+- **Screener**: Separated HTTPError and RequestException handlers for consistent error handling
+- **Screener**: Extracted duplicate metadata building to `_build_metadata()` helper method
+- **Screener**: Removed unnecessary `list()` copies of class constants
+- **Pine Scraper**: Removed redundant `or ""` cookie fallback (self._cookie already handles this)
+- **Pine Scraper**: Simplified metadata filtering in error responses
+- **Pine Scraper**: Improved `delete_script` error message for better debugging
+- **Options Scraper**: Standardized error response metadata
+- **Markets**: Added sort_order validation ("asc"/"desc")
+- **Markets**: Added limit bounds checking (1-1000)
+- **Overview**: Removed redundant `__init__` - now uses inheritance from BaseScraper
+- **SymbolMarkets**: Simplified empty check to `if not search_symbol.strip()`
+- **Utils**: Inlined root_path variable (removed unnecessary variable)
+- **Utils**: Changed bare `except Exception` to `except OSError` for specific exception handling
+- **Utils**: Made symbol parameter required (removed empty string handling)
 
 ### Fixed
+- **Core**: JSON file load now raises exceptions instead of returning empty dict on failure
+- **Core**: Added error indicator checks for API responses in _fetch_symbol_fields
+- **Core**: Added logging for missing field values in _map_scanner_rows
+- **Fundamentals**: Added symbol dict structure validation (must have 'exchange' and 'symbol' keys)
+- **Technicals**: **CRITICAL** - Fixed fields filtering bug: Stripping timeframe suffixes now happens AFTER field filtering, not before. This fixes the bug where `fields` parameter didn't work correctly for non-daily timeframes
+- **Technicals**: Added `json.JSONDecodeError` to exception handling for explicit JSON parsing error handling
+- **Calendar**: **CRITICAL** - Fixed unreachable code: Reordered exception handlers (RequestException → JSONDecodeError → Exception) to make ValueError/KeyError handler reachable
+- **Calendar**: Added defensive check `if not isinstance(data_items, list)` for API response validation
+- **Calendar**: Fixed redundant None check in metadata building
+- **Market Movers**: Added JSON response structure validation (ensures response is a dict)
+- **News Scraper**: Added validation for `language` parameter in `get_news_content()` against `_language_codes`
+- **News Scraper**: Added empty/whitespace validation for `story_id` parameter
+- **News Response**: Fixed duplicate metadata building by extracting shared `meta` dict at start of each method
+- **News Response**: Fixed duplicate storyPath normalization by extracting to `_normalize_story_path()` helper
+- **Streamer**: **CRITICAL** - Fixed resource leak in `stream_realtime_price()` by adding try/finally block to ensure WebSocket cleanup even on exceptions
+- **Streamer**: Added validation for `p_list` before accessing index 1 to prevent potential crashes
+- **Streamer**: Added defensive checks for `entry` dict and `v` list to prevent IndexError/KeyError
 - **Streamer error handling**: Updated `Streamer.get_candles()` and indicator setup so failures stop execution and return a standardized failed response instead of logging and continuing.
 - **Forecast Data**: Fixed `Streamer.get_forecast()` to correctly return partial data in the `data` field when a timeout occurs, ensuring compliance with the documented behavior while maintaining a `failed` status.
 - **Pine Metadata**: Removed redundant `source` code from success metadata in `Pine.create_script` and `Pine.edit_script` to reduce response payload size.
+- **Ideas Scraper**: **CRITICAL** - Fixed data loss on partial failures: now collects successful results before returning error, instead of discarding all data when some pages fail
+- **Ideas Scraper**: Removed unused `json` import and unused `data` variable
+- **Ideas Scraper**: Simplified redundant exception handling
+- **Minds Scraper**: Added captcha detection (`<title>Captcha Challenge</title>`) to prevent data loss
+- **Minds Scraper**: Added JSON parsing error handling (ValueError for response.json())
+- **Minds Scraper**: Added `raise_for_status()` for consistent HTTP error handling
+- **Auth Module**: Added `OSError` to exception tuple for better WebSocket error handling
+- **Auth Module**: Security fix: Generic error message used instead of logging raw error args that could expose JWT tokens
+- **Screener**: Added filter structure validation with `_validate_filter()` method
+- **Screener**: Added filter2 validation with `_validate_filter2()` method
+- **Pine Scraper**: Fixed duplicate warnings check by removing redundant logging and keeping single return path
+- **Pine Scraper**: Added scriptIdPart validation in `_extract_save_result()` to prevent empty IDs
+- **Pine Scraper**: Added timestamp validation in `_map_script_item()` to prevent invalid values
+- **Options Scraper**: Fixed exception handler scope by moving 404 check inside try block
+- **Markets**: Added JSON parse error handling (ValueError catch) in both markets.py and symbol_markets.py
+- **SymbolMarkets**: Added empty data validation - now returns error instead of empty success for no results
+- **Utils**: **CRITICAL** - Fixed race condition in directory creation: Using `exist_ok=True` instead of check-then-create pattern
+- **Utils**: **CRITICAL** - Added path traversal protection via `_sanitize_filename_part()` function
 
 ## [1.3.2] - 2026-04-03
 

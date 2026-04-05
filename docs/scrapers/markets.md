@@ -128,19 +128,19 @@ get_markets(
 ### Most Active Stocks by Volume
 
 ```python
-result = markets.get_data(market="america", sort_by="volume", limit=15)
+result = markets.get_markets(market="america", sort_by="volume", limit=15)
 ```
 
 ### Top Indian Stocks Ascending by Price
 
 ```python
-result = markets.get_data(market="india", sort_by="price", sort_order="asc", limit=10)
+result = markets.get_markets(market="india", sort_by="price", sort_order="asc", limit=10)
 ```
 
 ### Custom Fields
 
 ```python
-result = markets.get_data(
+result = markets.get_markets(
     fields=["name", "close", "volume", "market_cap_basic", "sector"],
     limit=10,
 )
@@ -150,5 +150,5 @@ result = markets.get_data(
 
 ```python
 markets = Markets(export_result=True, export_type="csv")
-result = markets.get_data(market="uk", sort_by="market_cap")
+result = markets.get_markets(market="uk", sort_by="market_cap")
 ```

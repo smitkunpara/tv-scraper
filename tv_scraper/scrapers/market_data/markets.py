@@ -114,6 +114,24 @@ class Markets(BaseScraper):
                 limit=limit,
             )
 
+        if sort_order not in ("asc", "desc"):
+            return self._error_response(
+                f"Invalid sort_order: '{sort_order}'. Must be 'asc' or 'desc'.",
+                market=market,
+                sort_by=sort_by,
+                sort_order=sort_order,
+                limit=limit,
+            )
+
+        if limit <= 0 or limit > 1000:
+            return self._error_response(
+                f"Invalid limit: {limit}. Must be between 1 and 1000.",
+                market=market,
+                sort_by=sort_by,
+                sort_order=sort_order,
+                limit=limit,
+            )
+
         # --- build payload ---------------------------------------------
         used_fields = fields if fields is not None else self.DEFAULT_FIELDS
         sort_field = self.SORT_CRITERIA[sort_by]
@@ -141,9 +159,17 @@ class Markets(BaseScraper):
             )
             response.raise_for_status()
             json_data = response.json()
-        except Exception as exc:
+        except requests.RequestException as exc:
             return self._error_response(
-                str(exc),
+                f"Network error: {exc}",
+                market=market,
+                sort_by=sort_by,
+                sort_order=sort_order,
+                limit=limit,
+            )
+        except ValueError as exc:
+            return self._error_response(
+                f"JSON parse error: {exc}",
                 market=market,
                 sort_by=sort_by,
                 sort_order=sort_order,

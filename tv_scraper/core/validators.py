@@ -14,6 +14,8 @@ from tv_scraper.core.exceptions import ValidationError
 
 logger = logging.getLogger(__name__)
 
+_EXPORT_TYPES: set[str] = {"json", "csv"}
+
 _DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 
 # TradingView scanner API for live symbol:exchange combination validation
@@ -93,15 +95,15 @@ class DataValidator:
 
         Returns:
             Parsed JSON content as a dict.
+
+        Raises:
+            FileNotFoundError: If the data file cannot be found.
+            json.JSONDecodeError: If the file contains invalid JSON.
         """
         path = _DATA_DIR / filename
-        try:
-            with open(path, encoding="utf-8") as f:
-                result: dict[str, Any] = json.load(f)
-                return result
-        except (OSError, json.JSONDecodeError) as e:
-            logger.error("Error loading data file %s: %s", path, e)
-            return {}
+        with open(path, encoding="utf-8") as f:
+            result: dict[str, Any] = json.load(f)
+            return result
 
     def validate_exchange(self, exchange: str) -> bool:
         """Validate exchange exists.
@@ -253,7 +255,7 @@ class DataValidator:
         Args:
             exchange: Exchange name (e.g. ``"NASDAQ"``).
             symbol: Symbol name (e.g. ``"AAPL"``).
-            retries: Number of HTTP retry attempts on network errors.
+            retries: Number of HTTP retry attempts on network errors. Must be >= 1.
 
         Returns:
             True if the symbol:exchange combination is confirmed valid.
@@ -264,6 +266,8 @@ class DataValidator:
         """
         self.validate_exchange(exchange)
         self.validate_symbol(exchange, symbol)
+        if retries < 1:
+            raise ValidationError(f"Retries must be at least 1, got {retries}.")
 
         url = _SCANNER_SYMBOL_URL.format(
             exchange=exchange.upper(), symbol=symbol.upper()
@@ -280,8 +284,6 @@ class DataValidator:
                     )
                 resp.raise_for_status()
                 return True
-            except ValidationError:
-                raise
             except requests.RequestException as exc:
                 last_exc = exc
                 logger.warning(
@@ -340,8 +342,6 @@ class DataValidator:
                 f"Symbol '{symbol}' has no options available on exchange '{exchange}'. "
                 "Check the symbol name or try a different exchange."
             )
-        except ValidationError:
-            raise
         except requests.RequestException as exc:
             raise ValidationError(
                 f"Network error while checking options for '{exchange}:{symbol}': {exc}"
@@ -374,4 +374,5 @@ class DataValidator:
     @classmethod
     def reset(cls) -> None:
         """Reset singleton for testing."""
-        cls._instance = None
+        with cls._lock:
+            cls._instance = None

@@ -1,5 +1,6 @@
 """News scraper for fetching headlines and article content from TradingView."""
 
+import json
 import logging
 from typing import Any
 
@@ -92,19 +93,43 @@ class News(BaseScraper):
             Standardized response dict with keys
             ``status``, ``data``, ``metadata``, ``error``.
         """
+        meta: dict[str, Any] = {
+            "exchange": exchange,
+            "symbol": symbol,
+            "sort_by": sort_by,
+            "section": section,
+            "language": language,
+        }
+        if provider is not None:
+            meta["provider"] = provider
+        if area is not None:
+            meta["area"] = area
 
-        # Validate inputs
         try:
-            self._validate_headlines_params(
-                exchange, symbol, provider, area, sort_by, section, language
-            )
+            self.validator.verify_symbol_exchange(exchange, symbol)
+            self.validator.validate_choice("sort_by", sort_by, VALID_SORT_OPTIONS)
+            self.validator.validate_choice("section", section, VALID_SECTIONS)
+
+            if language not in self._language_codes:
+                raise ValidationError(
+                    f"Invalid language: '{language}'. "
+                    f"Allowed values: {', '.join(sorted(self._language_codes))}"
+                )
+
+            if provider is not None and provider not in self._news_providers:
+                raise ValidationError(
+                    f"Invalid provider: '{provider}'. "
+                    f"Allowed values: {', '.join(sorted(self._news_providers))}"
+                )
+
+            if area is not None and area not in self._areas:
+                raise ValidationError(
+                    f"Invalid area: '{area}'. "
+                    f"Allowed values: {', '.join(sorted(self._areas.keys()))}"
+                )
         except ValidationError as exc:
-            meta = self._build_news_metadata(
-                exchange, symbol, provider, area, sort_by, section, language
-            )
             return self._error_response(str(exc), **meta)
 
-        # Build URL parameters
         params: dict[str, Any] = {
             "client": "web",
             "lang": language,
@@ -124,45 +149,34 @@ class News(BaseScraper):
             )
             response.raise_for_status()
 
-            # Check captcha
             if "<title>Captcha Challenge</title>" in response.text:
                 logger.error(
                     "Captcha Challenge encountered for %s on %s.",
                     symbol,
                     exchange,
                 )
-                captcha_meta = self._build_news_metadata(
-                    exchange, symbol, provider, area, sort_by, section, language
-                )
                 return self._error_response(
                     f"Captcha challenge encountered for {symbol} on {exchange}. "
                     "Try updating the TRADINGVIEW_COOKIE.",
-                    **captcha_meta,
+                    **meta,
                 )
 
-            response_json = response.json()
+            try:
+                response_json = response.json()
+            except (ValueError, json.JSONDecodeError) as exc:
+                logger.error(
+                    "Invalid JSON response for %s on %s: %s", symbol, exchange, exc
+                )
+                return self._error_response(f"Invalid JSON response: {exc}", **meta)
+
             items: list[dict[str, Any]] = response_json.get("items", [])
 
             if not items:
-                success_meta = self._build_news_metadata(
-                    exchange,
-                    symbol,
-                    provider,
-                    area,
-                    sort_by,
-                    section,
-                    language,
-                    total=0,
-                )
-                return self._success_response([], **success_meta)
+                return self._success_response([], total=0, **meta)
 
-            # Apply client-side sorting
             items = self._sort_news(items, sort_by)
-
-            # Clean up output - remove unwanted fields
             cleaned_items = [self._clean_headline(item) for item in items]
 
-            # Export if requested
             if self.export_result:
                 self._export(
                     data=cleaned_items,
@@ -170,23 +184,25 @@ class News(BaseScraper):
                     data_category="news",
                 )
 
-            final_meta = self._build_news_metadata(
-                exchange,
-                symbol,
-                provider,
-                area,
-                sort_by,
-                section,
-                language,
-                total=len(cleaned_items),
+            return self._success_response(
+                cleaned_items, total=len(cleaned_items), **meta
             )
-            return self._success_response(cleaned_items, **final_meta)
 
+        except requests.exceptions.Timeout as exc:
+            logger.error("Timeout fetching headlines for %s on %s.", symbol, exchange)
+            return self._error_response(f"Request timeout: {exc}", **meta)
+        except requests.exceptions.ConnectionError as exc:
+            logger.error("Connection error for %s on %s: %s", symbol, exchange, exc)
+            return self._error_response(f"Connection error: {exc}", **meta)
+        except requests.exceptions.HTTPError as exc:
+            logger.error("HTTP error for %s on %s: %s", symbol, exchange, exc)
+            return self._error_response(f"HTTP error: {exc}", **meta)
+        except requests.exceptions.RequestException as exc:
+            logger.error("Request failed for %s on %s: %s", symbol, exchange, exc)
+            return self._error_response(f"Request failed: {exc}", **meta)
         except Exception as exc:
-            exc_meta = self._build_news_metadata(
-                exchange, symbol, provider, area, sort_by, section, language
-            )
-            return self._error_response(f"Request failed: {exc}", **exc_meta)
+            logger.error("Unexpected error for %s on %s: %s", symbol, exchange, exc)
+            return self._error_response(f"Unexpected error: {exc}", **meta)
 
     def get_news_content(
         self,
@@ -204,13 +220,28 @@ class News(BaseScraper):
             Standardized response dict with keys
             ``status``, ``data``, ``metadata``, ``error``.
         """
-        try:
-            params = {
-                "id": story_id,
-                "lang": language,
-                "user_prostatus": "non_pro",
-            }
+        meta: dict[str, Any] = {
+            "story_id": story_id,
+            "language": language,
+        }
 
+        if not story_id or not story_id.strip():
+            return self._error_response("story_id cannot be empty", **meta)
+
+        if language not in self._language_codes:
+            return self._error_response(
+                f"Invalid language: '{language}'. "
+                f"Allowed values: {', '.join(sorted(self._language_codes))}",
+                **meta,
+            )
+
+        params: dict[str, str] = {
+            "id": story_id,
+            "lang": language,
+            "user_prostatus": "non_pro",
+        }
+
+        try:
             response = requests.get(
                 NEWS_STORY_URL,
                 headers=self._headers,
@@ -219,9 +250,12 @@ class News(BaseScraper):
             )
             response.raise_for_status()
 
-            story_data = response.json()
+            try:
+                story_data = response.json()
+            except (ValueError, json.JSONDecodeError) as exc:
+                logger.error("Invalid JSON response for story %s: %s", story_id, exc)
+                return self._error_response(f"Invalid JSON response: {exc}", **meta)
 
-            # Parse the story data
             article_data = self._parse_story(story_data)
 
             return self._success_response(
@@ -230,12 +264,21 @@ class News(BaseScraper):
                 language=language,
             )
 
+        except requests.exceptions.Timeout as exc:
+            logger.error("Timeout fetching content for story %s.", story_id)
+            return self._error_response(f"Request timeout: {exc}", **meta)
+        except requests.exceptions.ConnectionError as exc:
+            logger.error("Connection error for story %s: %s", story_id, exc)
+            return self._error_response(f"Connection error: {exc}", **meta)
+        except requests.exceptions.HTTPError as exc:
+            logger.error("HTTP error for story %s: %s", story_id, exc)
+            return self._error_response(f"HTTP error: {exc}", **meta)
+        except requests.exceptions.RequestException as exc:
+            logger.error("Request failed for story %s: %s", story_id, exc)
+            return self._error_response(f"Request failed: {exc}", **meta)
         except Exception as exc:
-            return self._error_response(
-                f"Request failed: {exc}",
-                story_id=story_id,
-                language=language,
-            )
+            logger.error("Unexpected error for story %s: %s", story_id, exc)
+            return self._error_response(f"Unexpected error: {exc}", **meta)
 
     def _sort_news(
         self,
@@ -251,15 +294,9 @@ class News(BaseScraper):
         Returns:
             Sorted list of news headline dicts.
         """
-        if sort_by == "latest":
-            return sorted(news_list, key=lambda x: x.get("published", 0), reverse=True)
-        elif sort_by == "oldest":
-            return sorted(news_list, key=lambda x: x.get("published", 0), reverse=False)
-        elif sort_by == "most_urgent":
-            return sorted(news_list, key=lambda x: x.get("urgency", 0), reverse=True)
-        elif sort_by == "least_urgent":
-            return sorted(news_list, key=lambda x: x.get("urgency", 0), reverse=False)
-        return news_list
+        reverse = sort_by in ("latest", "most_urgent")
+        key = "published" if sort_by in ("latest", "oldest") else "urgency"
+        return sorted(news_list, key=lambda x: x.get(key, 0), reverse=reverse)
 
     def _clean_headline(self, item: dict[str, Any]) -> dict[str, Any]:
         """Remove unwanted fields from headline.
@@ -272,44 +309,47 @@ class News(BaseScraper):
         Returns:
             Cleaned headline dict with only relevant fields.
         """
-        # Ensure story_path starts with "/"
-        story_path = item.get("storyPath", "")
-        if story_path and not story_path.startswith("/"):
-            story_path = f"/{story_path}"
-
         return {
             "id": item.get("id"),
             "title": item.get("title"),
             "shortDescription": item.get("shortDescription"),
             "published": item.get("published"),
-            "storyPath": story_path,
+            "storyPath": self._normalize_story_path(item.get("storyPath", "")),
         }
+
+    def _normalize_story_path(self, story_path: str) -> str:
+        """Ensure story path starts with a forward slash.
+
+        Args:
+            story_path: The raw story path.
+
+        Returns:
+            Story path with leading slash if not already present.
+        """
+        if story_path and not story_path.startswith("/"):
+            return f"/{story_path}"
+        return story_path
 
     def _parse_story(self, story_data: dict[str, Any]) -> dict[str, Any]:
         """Parse story JSON into simplified format.
 
-        Extracts title, description, and published timestamp.
+        Extracts title, description, published timestamp, and id.
         Description is built from ast_description.children by merging paragraphs.
 
         Args:
             story_data: Raw JSON response from the story API.
 
         Returns:
-            Dict with title, description, and published timestamp.
+            Dict with title, description, published timestamp, id, and storyPath.
         """
-        # Extract basic fields
         title = story_data.get("title", "")
         published = story_data.get("published", 0)
-
-        # Parse ast_description to build description
+        story_id = story_data.get("id", "")
         description = self._parse_ast_description(story_data.get("ast_description", {}))
-
-        # Ensure story_path starts with "/"
-        story_path = story_data.get("story_path", "")
-        if story_path and not story_path.startswith("/"):
-            story_path = f"/{story_path}"
+        story_path = self._normalize_story_path(story_data.get("story_path", ""))
 
         return {
+            "id": story_id,
             "title": title,
             "description": description,
             "published": published,
@@ -337,7 +377,6 @@ class News(BaseScraper):
 
             child_type = child.get("type")
             if child_type == "p":
-                # Process paragraph children
                 para_children = child.get("children", [])
                 para_text = self._parse_paragraph_children(para_children)
                 if para_text.strip():
@@ -362,94 +401,9 @@ class News(BaseScraper):
             if isinstance(item, str):
                 parts.append(item)
             elif isinstance(item, dict):
-                # Extract text from symbol objects
                 params = item.get("params", {})
                 text = params.get("text", "")
                 if text:
                     parts.append(text)
 
         return "".join(parts)
-
-    def _validate_headlines_params(
-        self,
-        exchange: str,
-        symbol: str,
-        provider: str | None,
-        area: str | None,
-        sort_by: str,
-        section: str,
-        language: str,
-    ) -> None:
-        """Validate headlines parameters.
-
-        Args:
-            exchange: Exchange name.
-            symbol: Symbol name.
-            provider: News provider.
-            area: Region area.
-            sort_by: Sort option.
-            section: News section.
-            language: Language code.
-        """
-        self.validator.verify_symbol_exchange(exchange, symbol)
-        self.validator.validate_choice("sort_by", sort_by, VALID_SORT_OPTIONS)
-        self.validator.validate_choice("section", section, VALID_SECTIONS)
-
-        if language not in self._language_codes:
-            raise ValidationError(
-                f"Invalid language: '{language}'. "
-                f"Allowed values: {', '.join(sorted(self._language_codes))}"
-            )
-
-        if provider is not None and provider not in self._news_providers:
-            raise ValidationError(
-                f"Invalid provider: '{provider}'. "
-                f"Allowed values: {', '.join(sorted(self._news_providers))}"
-            )
-
-        if area is not None and area not in self._areas:
-            raise ValidationError(
-                f"Invalid area: '{area}'. "
-                f"Allowed values: {', '.join(sorted(self._areas.keys()))}"
-            )
-
-    def _build_news_metadata(
-        self,
-        exchange: str,
-        symbol: str,
-        provider: str | None,
-        area: str | None,
-        sort_by: str,
-        section: str,
-        language: str,
-        **kwargs: Any,
-    ) -> dict[str, Any]:
-        """Build metadata dictionary for news responses.
-
-        Args:
-            exchange: Exchange name.
-            symbol: Symbol name.
-            provider: News provider.
-            area: Region area.
-            sort_by: Sort option.
-            section: News section.
-            language: Language code.
-            **kwargs: Additional metadata fields.
-
-        Returns:
-            Metadata dictionary.
-        """
-        meta: dict[str, Any] = {
-            "exchange": exchange,
-            "symbol": symbol,
-            "sort_by": sort_by,
-            "section": section,
-            "language": language,
-        }
-        if provider is not None:
-            meta["provider"] = provider
-        if area is not None:
-            meta["area"] = area
-
-        meta.update(kwargs)
-        return meta

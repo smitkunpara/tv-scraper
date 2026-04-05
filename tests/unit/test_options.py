@@ -1,9 +1,13 @@
+import sys
 from collections.abc import Iterator
+from pathlib import Path
 from typing import Any
 from unittest.mock import MagicMock, patch
 
 import pytest
 import requests
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.constants import STATUS_FAILED, STATUS_SUCCESS
@@ -70,6 +74,7 @@ class TestGetOptionsChainSuccess:
         assert item["ask"] == 251.5
         assert result["metadata"]["exchange"] == "BSE"
         assert result["metadata"]["symbol"] == "SENSEX"
+        assert result["metadata"]["filter_value"] == 20260219
         mock_post.assert_called_once()
 
     @patch(
@@ -96,8 +101,32 @@ class TestGetOptionsChainSuccess:
         assert len(result["data"]) == 1
         item = result["data"][0]
         assert item["expiration"] == 20260219
-        assert result["metadata"]["filter_type"] == "strike"
         assert result["metadata"]["filter_value"] == 83300
+
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_options_symbol",
+        return_value=True,
+    )
+    @patch("requests.post")
+    def test_custom_columns(
+        self, mock_post: MagicMock, mock_verify, options: Options
+    ) -> None:
+        """Custom columns are passed in the request."""
+        mock_data = {
+            "totalCount": 1,
+            "fields": ["strike", "bid"],
+            "symbols": [{"s": "BSE:BSX260219C83300", "f": [83300, 250.05]}],
+        }
+        mock_post.return_value = _mock_response(mock_data)
+
+        result = options.get_options_by_strike(
+            exchange="BSE", symbol="SENSEX", strike=83300, columns=["strike", "bid"]
+        )
+
+        assert result["status"] == STATUS_SUCCESS
+        mock_post.assert_called_once()
+        payload = mock_post.call_args[1]["json"]
+        assert payload["columns"] == ["strike", "bid"]
 
 
 class TestGetOptionsChainErrors:
@@ -115,6 +144,22 @@ class TestGetOptionsChainErrors:
         """Empty symbol returns error response."""
         result = options.get_options_by_strike(exchange="BSE", symbol="", strike=83300)
         assert result["status"] == STATUS_FAILED
+
+    def test_invalid_columns(self, options: Options) -> None:
+        """Invalid column names return error response."""
+        with patch(
+            "tv_scraper.core.validators.DataValidator.verify_options_symbol",
+            return_value=True,
+        ):
+            result = options.get_options_by_strike(
+                exchange="BSE",
+                symbol="SENSEX",
+                strike=83300,
+                columns=["invalid_col", "another_invalid"],
+            )
+        assert result["status"] == STATUS_FAILED
+        assert "invalid" in result["error"].lower()
+        assert "invalid_col" in result["error"]
 
     @patch(
         "tv_scraper.core.validators.DataValidator.verify_options_symbol",
@@ -151,3 +196,90 @@ class TestGetOptionsChainErrors:
         assert result["status"] == STATUS_FAILED
         assert "not found" in result["error"].lower()
         assert "NO_OPTIONS" in result["error"]
+
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_options_symbol",
+        return_value=True,
+    )
+    @patch("requests.post")
+    def test_empty_response(
+        self, mock_post: MagicMock, mock_verify, options: Options
+    ) -> None:
+        """Empty symbols list returns error response."""
+        mock_data = {
+            "totalCount": 0,
+            "fields": ["strike", "bid"],
+            "symbols": [],
+        }
+        mock_post.return_value = _mock_response(mock_data)
+
+        result = options.get_options_by_strike(
+            exchange="BSE", symbol="SENSEX", strike=83300
+        )
+
+        assert result["status"] == STATUS_FAILED
+        assert "no options found" in result["error"].lower()
+
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_options_symbol",
+        return_value=True,
+    )
+    @patch("requests.post")
+    def test_invalid_response_format(
+        self, mock_post: MagicMock, mock_verify, options: Options
+    ) -> None:
+        """Non-dict response returns error."""
+        mock_post.return_value = _mock_response("not a dict")
+
+        result = options.get_options_by_strike(
+            exchange="BSE", symbol="SENSEX", strike=83300
+        )
+
+        assert result["status"] == STATUS_FAILED
+        assert "invalid" in result["error"].lower()
+        assert "format" in result["error"].lower()
+
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_options_symbol",
+        return_value=True,
+    )
+    @patch("requests.post")
+    def test_malformed_symbols(
+        self, mock_post: MagicMock, mock_verify, options: Options
+    ) -> None:
+        """Malformed symbol items are skipped gracefully."""
+        mock_data = {
+            "totalCount": 2,
+            "fields": ["strike", "bid"],
+            "symbols": [
+                {"s": "BSE:BSX260219C83300", "f": [83300, 250.05]},
+                "not a dict",
+                {"f": [84400, 300.0]},
+            ],
+        }
+        mock_post.return_value = _mock_response(mock_data)
+
+        result = options.get_options_by_strike(
+            exchange="BSE", symbol="SENSEX", strike=83300
+        )
+
+        assert result["status"] == STATUS_SUCCESS
+        assert len(result["data"]) == 2
+
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_options_symbol",
+        return_value=True,
+    )
+    @patch("requests.post")
+    def test_http_error_other_than_404(
+        self, mock_post: MagicMock, mock_verify, options: Options
+    ) -> None:
+        """HTTP errors other than 404 are caught."""
+        mock_post.return_value = _mock_response({}, status_code=500)
+
+        result = options.get_options_by_strike(
+            exchange="BSE", symbol="SENSEX", strike=83300
+        )
+
+        assert result["status"] == STATUS_FAILED
+        assert "request failed" in result["error"].lower()

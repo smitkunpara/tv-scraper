@@ -3,11 +3,40 @@
 import json
 from unittest import mock
 
+import pytest
 import requests
 
 from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.constants import DEFAULT_TIMEOUT, STATUS_FAILED, STATUS_SUCCESS
 from tv_scraper.core.exceptions import ValidationError
+
+
+class TestTimeoutValidation:
+    """Tests for timeout validation in BaseScraper."""
+
+    def test_timeout_must_be_int(self) -> None:
+        with pytest.raises(ValueError, match="Timeout must be an integer"):
+            BaseScraper(timeout="invalid")  # type: ignore[arg-type]
+
+    def test_timeout_must_be_positive(self) -> None:
+        with pytest.raises(ValueError, match="Timeout must be an integer"):
+            BaseScraper(timeout=0)
+
+    def test_timeout_must_be_less_than_301(self) -> None:
+        with pytest.raises(ValueError, match="Timeout must be an integer"):
+            BaseScraper(timeout=301)
+
+    def test_valid_timeout(self) -> None:
+        scraper = BaseScraper(timeout=30)
+        assert scraper.timeout == 30
+
+    def test_min_valid_timeout(self) -> None:
+        scraper = BaseScraper(timeout=1)
+        assert scraper.timeout == 1
+
+    def test_max_valid_timeout(self) -> None:
+        scraper = BaseScraper(timeout=300)
+        assert scraper.timeout == 300
 
 
 class TestBaseScraperInit:
@@ -231,3 +260,45 @@ class TestFetchSymbolFields:
             result = scraper._fetch_symbol_fields("INVALID", "AAPL", ["close"], "test")
             assert result["status"] == STATUS_FAILED
             assert "Invalid symbol" in result["error"]
+
+    @mock.patch("tv_scraper.core.validators.DataValidator.verify_symbol_exchange")
+    @mock.patch("requests.get")
+    def test_error_indicator_in_response(self, mock_get, mock_verify) -> None:
+        mock_verify.return_value = True
+        scraper = BaseScraper()
+        mock_resp = mock.MagicMock()
+        mock_resp.json.return_value = {"error": "Symbol not found", "close": 150.0}
+        mock_get.return_value = mock_resp
+
+        result = scraper._fetch_symbol_fields("NASDAQ", "AAPL", ["close"], "test")
+
+        assert result["status"] == STATUS_FAILED
+        assert "API error" in result["error"]
+
+    @mock.patch("tv_scraper.core.validators.DataValidator.verify_symbol_exchange")
+    @mock.patch("requests.get")
+    def test_error_s_status_in_response(self, mock_get, mock_verify) -> None:
+        mock_verify.return_value = True
+        scraper = BaseScraper()
+        mock_resp = mock.MagicMock()
+        mock_resp.json.return_value = {"s": "error", "errmsg": "Invalid request"}
+        mock_get.return_value = mock_resp
+
+        result = scraper._fetch_symbol_fields("NASDAQ", "AAPL", ["close"], "test")
+
+        assert result["status"] == STATUS_FAILED
+        assert "API error" in result["error"]
+        assert "Invalid request" in result["error"]
+
+    @mock.patch("tv_scraper.core.validators.DataValidator.verify_symbol_exchange")
+    @mock.patch("requests.get")
+    def test_missing_field_logs_warning(self, mock_get, mock_verify) -> None:
+        mock_verify.return_value = True
+        scraper = BaseScraper()
+        mock_resp = mock.MagicMock()
+        mock_resp.json.return_value = {"close": 150.0}
+        mock_get.return_value = mock_resp
+
+        with mock.patch("tv_scraper.core.base.logger") as mock_logger:
+            scraper._fetch_symbol_fields("NASDAQ", "AAPL", ["close", "volume"], "test")
+            mock_logger.warning.assert_called()

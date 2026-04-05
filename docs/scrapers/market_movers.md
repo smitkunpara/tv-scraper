@@ -44,6 +44,7 @@ get_market_movers(
     category: str = "gainers",
     fields: Optional[List[str]] = None,
     limit: int = 50,
+    language: str = "en",
 ) -> Dict[str, Any]
 ```
 
@@ -52,7 +53,8 @@ get_market_movers(
 | `market`   | `str`             | `"stocks-usa"` | Market to query (see supported list).    |
 | `category` | `str`             | `"gainers"`    | Movers category (see supported list).    |
 | `fields`   | `List[str]|None`  | `None`         | Columns to retrieve; `None` = defaults. |
-| `limit`    | `int`             | `50`           | Maximum number of results.               |
+| `limit`    | `int`             | `50`           | Maximum results (1-1000).                |
+| `language` | `str`             | `"en"`         | Language code (e.g., "en", "es", "de"). |
 
 ### Supported Markets
 
@@ -92,10 +94,21 @@ All responses follow the standard envelope:
         "market": "stocks-usa",
         "category": "gainers",
         "total": 20,
+        "totalCount": 4500,       # total available in category
     },
     "error": None,                # error message string on failure
 }
 ```
+
+## Validation Errors
+
+The method validates inputs and returns error responses for:
+
+- **Invalid limit**: Must be an integer between 1 and 1000
+- **Unsupported market**: Must be one of the supported markets
+- **Unsupported category**: Must be valid for the selected market
+- **Invalid language**: Must be a valid language code
+- **Invalid fields**: Must be a list of strings
 
 ## Examples
 

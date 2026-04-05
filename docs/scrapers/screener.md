@@ -68,7 +68,9 @@ get_screener(
 | `fields`     | `List[str]` or `None`       | `None`      | Columns to retrieve (market defaults).   |
 | `sort_by`    | `str` or `None`             | `None`      | Field to sort by.                        |
 | `sort_order` | `str`                       | `"desc"`    | Sort direction: `"asc"` or `"desc"`.     |
-| `limit`      | `int`                       | `50`        | Maximum number of results.               |
+| `limit`      | `int`                       | `50`        | Max results (1-10000).                  |
+| `symbols`    | `Dict` or `None`            | `None`      | Symbol filter (index or explicit list). |
+| `filter2`    | `Dict` or `None`            | `None`      | Complex boolean filter with operator.   |
 
 ## Response Format
 

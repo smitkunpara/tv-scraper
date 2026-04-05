@@ -1,4 +1,5 @@
 import datetime
+import json
 from collections.abc import Iterator
 from typing import Any
 from unittest.mock import MagicMock, patch
@@ -339,3 +340,66 @@ class TestDefaultTimestampRange:
         # Allow 1-second tolerance for execution time
         assert abs(ts_from - expected_from) <= 1
         assert abs(ts_to - expected_to) <= 1
+
+
+# ---------- lang parameter ----------
+
+
+class TestLangParameter:
+    @patch("requests.post")
+    def test_lang_parameter_in_payload(
+        self, mock_post: MagicMock, scraper: Calendar
+    ) -> None:
+        """Custom lang parameter is included in the API payload."""
+        mock_post.return_value = _mock_calendar_response(symbols=[], values=[])
+
+        scraper.get_dividends(lang="fr")
+
+        call_kwargs = mock_post.call_args[1]
+        payload = call_kwargs.get("json")
+        assert payload["options"]["lang"] == "fr"
+
+    @patch("requests.post")
+    def test_default_lang_is_en(self, mock_post: MagicMock, scraper: Calendar) -> None:
+        """Default lang is 'en' when not specified."""
+        mock_post.return_value = _mock_calendar_response(symbols=[], values=[])
+
+        scraper.get_dividends()
+
+        call_kwargs = mock_post.call_args[1]
+        payload = call_kwargs.get("json")
+        assert payload["options"]["lang"] == "en"
+
+
+# ---------- Error handling ----------
+
+
+class TestErrorHandling:
+    @patch("requests.post")
+    def test_json_decode_error_returns_error_response(
+        self, mock_post: MagicMock, scraper: Calendar
+    ) -> None:
+        """Invalid JSON in response returns error response with correct message."""
+        mock_resp = MagicMock()
+        mock_resp.raise_for_status.return_value = None
+        mock_resp.json.side_effect = json.JSONDecodeError("Expecting value", "", 0)
+        mock_post.return_value = mock_resp
+
+        result = scraper.get_dividends()
+
+        assert result["status"] == "failed"
+        assert result["data"] is None
+        assert "Failed to parse API response" in result["error"]
+
+    @patch("requests.post")
+    def test_empty_results_returns_success_with_empty_list(
+        self, mock_post: MagicMock, scraper: Calendar
+    ) -> None:
+        """Empty results return success with empty data list."""
+        mock_post.return_value = _mock_calendar_response(symbols=[], values=[])
+
+        result = scraper.get_dividends()
+
+        assert result["status"] == "success"
+        assert result["data"] == []
+        assert result["metadata"]["total"] == 0

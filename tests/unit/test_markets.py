@@ -191,6 +191,38 @@ class TestGetTopStocksErrors:
         assert result["data"] is None
         assert "sort" in result["error"].lower()
 
+    def test_get_data_invalid_sort_order(self, markets: Markets) -> None:
+        """Invalid sort_order returns error response, does not raise."""
+        result = markets.get_markets(sort_order="invalid")
+
+        assert result["status"] == STATUS_FAILED
+        assert result["data"] is None
+        assert "sort_order" in result["error"].lower()
+
+    def test_get_data_invalid_limit_zero(self, markets: Markets) -> None:
+        """Limit of 0 returns error response."""
+        result = markets.get_markets(limit=0)
+
+        assert result["status"] == STATUS_FAILED
+        assert result["data"] is None
+        assert "limit" in result["error"].lower()
+
+    def test_get_data_invalid_limit_negative(self, markets: Markets) -> None:
+        """Negative limit returns error response."""
+        result = markets.get_markets(limit=-5)
+
+        assert result["status"] == STATUS_FAILED
+        assert result["data"] is None
+        assert "limit" in result["error"].lower()
+
+    def test_get_data_invalid_limit_too_large(self, markets: Markets) -> None:
+        """Limit exceeding 1000 returns error response."""
+        result = markets.get_markets(limit=1001)
+
+        assert result["status"] == STATUS_FAILED
+        assert result["data"] is None
+        assert "limit" in result["error"].lower()
+
     @patch("requests.post")
     def test_get_data_network_error(
         self, mock_post: MagicMock, markets: Markets
@@ -202,6 +234,21 @@ class TestGetTopStocksErrors:
         assert result["status"] == STATUS_FAILED
         assert result["data"] is None
         assert "Connection refused" in result["error"]
+
+    @patch("requests.post")
+    def test_get_data_json_parse_error(
+        self, mock_post: MagicMock, markets: Markets
+    ) -> None:
+        """JSON parse error returns error response, does not raise."""
+        mock_response = MagicMock()
+        mock_response.json.side_effect = ValueError("Expecting value")
+        mock_response.raise_for_status.return_value = None
+        mock_post.return_value = mock_response
+        result = markets.get_markets()
+
+        assert result["status"] == STATUS_FAILED
+        assert result["data"] is None
+        assert "JSON" in result["error"] or "json" in result["error"]
 
 
 class TestResponseFormat:

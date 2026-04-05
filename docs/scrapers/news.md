@@ -43,6 +43,14 @@ get_news_headlines(
 | `section`  | str          | `"all"`    | `all`, `esg`, `press_release`, `financial_statement` |
 | `language` | str          | `"en"`     | Language code (e.g. `"en"`, `"fr"`, `"ja"`)       |
 
+**Validation:**
+- Exchange and symbol are verified against TradingView's symbol database
+- `sort_by` must be one of: `latest`, `oldest`, `most_urgent`, `least_urgent`
+- `section` must be one of: `all`, `esg`, `press_release`, `financial_statement`
+- `provider` must be a valid news provider (case-insensitive)
+- `area` must be a valid area code
+- `language` must be a valid language code
+
 Code:
 
 ```python
@@ -97,6 +105,10 @@ get_news_content(
 |--------------|--------------|---------|------------------------------------------------|
 | `story_id`   | str          | —       | Story ID from news API (e.g. `"tag:reuters.com,2026:newsml_L4N3Z9104:0"`) |
 | `language`   | str          | `"en"`  | Language code (e.g. `"en"`, `"fr"`)            |
+
+**Validation:**
+- `story_id` cannot be empty or whitespace-only
+- `language` must be a valid language code
 
 Code:
 

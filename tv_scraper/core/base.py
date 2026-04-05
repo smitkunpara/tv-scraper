@@ -1,16 +1,27 @@
 """Base scraper class for tv_scraper."""
 
 import logging
+import os
 from typing import Any
 
 import requests
 
-from tv_scraper.core.constants import DEFAULT_TIMEOUT, STATUS_FAILED, STATUS_SUCCESS
+from tv_scraper.core.constants import (
+    DEFAULT_TIMEOUT,
+    EXPORT_TYPES,
+    SCANNER_URL,
+    STATUS_FAILED,
+    STATUS_SUCCESS,
+)
+from tv_scraper.core.exceptions import ValidationError
 from tv_scraper.core.validators import DataValidator
 from tv_scraper.utils.helpers import generate_user_agent
 from tv_scraper.utils.io import generate_export_filepath, save_csv_file, save_json_file
 
 logger = logging.getLogger(__name__)
+
+_MIN_TIMEOUT: int = 1
+_MAX_TIMEOUT: int = 300
 
 
 class BaseScraper:
@@ -32,17 +43,22 @@ class BaseScraper:
         timeout: int = DEFAULT_TIMEOUT,
         cookie: str | None = None,
     ) -> None:
-        from tv_scraper.core.constants import EXPORT_TYPES
-
         if export_type not in EXPORT_TYPES:
             raise ValueError(
                 f"Invalid export_type: '{export_type}'. "
                 f"Supported types: {', '.join(sorted(EXPORT_TYPES))}"
             )
+        if (
+            not isinstance(timeout, int)
+            or timeout < _MIN_TIMEOUT
+            or timeout > _MAX_TIMEOUT
+        ):
+            raise ValueError(
+                f"Timeout must be an integer between {_MIN_TIMEOUT} and {_MAX_TIMEOUT}, got {timeout}."
+            )
         self.export_result = export_result
         self.export_type = export_type
         self.timeout = timeout
-        import os
 
         self.cookie = cookie or os.environ.get("TRADINGVIEW_COOKIE")
         self.validator = DataValidator()
@@ -137,9 +153,6 @@ class BaseScraper:
         Returns:
             Standardized response dict.
         """
-        from tv_scraper.core.constants import SCANNER_URL
-        from tv_scraper.core.exceptions import ValidationError
-
         try:
             self.validator.verify_symbol_exchange(exchange, symbol)
         except ValidationError as exc:
@@ -172,9 +185,26 @@ class BaseScraper:
                 "No data returned from API.", exchange=exchange, symbol=symbol
             )
 
+        error_indicator = (
+            json_response.get("error") or json_response.get("s") == "error"
+        )
+        if error_indicator:
+            error_msg = json_response.get("errmsg", "Unknown API error")
+            return self._error_response(
+                f"API error: {error_msg}", exchange=exchange, symbol=symbol
+            )
+
         result: dict[str, Any] = {"symbol": f"{exchange}:{symbol}"}
         for field in fields:
-            result[field] = json_response.get(field)
+            value = json_response.get(field)
+            if value is None:
+                logger.warning(
+                    "Field '%s' not found in response for %s:%s",
+                    field,
+                    exchange,
+                    symbol,
+                )
+            result[field] = value
 
         if self.export_result:
             self._export(

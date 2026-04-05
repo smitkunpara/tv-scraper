@@ -272,3 +272,127 @@ class TestCookieHandling:
         call_kwargs = mock_get.call_args[1]
         headers = call_kwargs.get("headers", {})
         assert headers.get("cookie") == "env_cookie_value"
+
+
+class TestPageValidation:
+    """Tests for page parameter validation."""
+
+    def test_invalid_start_page_zero(self) -> None:
+        """start_page=0 returns error response."""
+        scraper = Ideas()
+        result = scraper.get_ideas(
+            exchange="CRYPTO", symbol="BTCUSD", start_page=0, end_page=1
+        )
+
+        assert result["status"] == STATUS_FAILED
+        assert result["data"] is None
+        assert "start_page" in result["error"]
+
+    def test_invalid_start_page_negative(self) -> None:
+        """Negative start_page returns error response."""
+        scraper = Ideas()
+        result = scraper.get_ideas(
+            exchange="CRYPTO", symbol="BTCUSD", start_page=-1, end_page=1
+        )
+
+        assert result["status"] == STATUS_FAILED
+        assert "start_page" in result["error"]
+
+    def test_invalid_end_page_less_than_start(self) -> None:
+        """end_page < start_page returns error response."""
+        scraper = Ideas()
+        result = scraper.get_ideas(
+            exchange="CRYPTO", symbol="BTCUSD", start_page=5, end_page=3
+        )
+
+        assert result["status"] == STATUS_FAILED
+        assert result["data"] is None
+        assert (
+            "end_page" in result["error"].lower()
+            or "start_page" in result["error"].lower()
+        )
+
+
+class TestPartialFailures:
+    """Tests for partial failure handling - data should be preserved."""
+
+    @patch("requests.get")
+    def test_partial_failure_preserves_data(
+        self, mock_get: MagicMock, ideas: Ideas
+    ) -> None:
+        """Page failures still return successfully scraped data."""
+        mock_get.side_effect = [
+            _mock_response(_make_api_response([_sample_idea(title="Success 1")])),
+            requests.RequestException("Network error on page 2"),
+            _mock_response(_make_api_response([_sample_idea(title="Success 3")])),
+        ]
+
+        result = ideas.get_ideas(
+            exchange="CRYPTO",
+            symbol="BTCUSD",
+            start_page=1,
+            end_page=3,
+        )
+
+        assert result["status"] == STATUS_FAILED
+        assert result["data"] is None
+        assert "Failed pages" in result["error"]
+        assert "Articles collected so far" in result["error"]
+        assert "1" in result["error"] or "3" in result["error"]
+
+    @patch("requests.get")
+    def test_captcha_on_later_page_preserves_earlier_data(
+        self, mock_get: MagicMock, ideas: Ideas
+    ) -> None:
+        """Captcha on later page still returns earlier page data."""
+        mock_get.side_effect = [
+            _mock_response(_make_api_response([_sample_idea(title="Page 1")])),
+            _mock_response(
+                _make_api_response([]),
+                text="<title>Captcha Challenge</title>",
+            ),
+            _mock_response(_make_api_response([_sample_idea(title="Page 3")])),
+        ]
+
+        result = ideas.get_ideas(
+            exchange="CRYPTO",
+            symbol="BTCUSD",
+            start_page=1,
+            end_page=3,
+        )
+
+        assert result["status"] == STATUS_FAILED
+        assert result["data"] is None
+        assert "captcha" in result["error"].lower()
+
+
+class TestMaxWorkers:
+    """Tests for max_workers configuration."""
+
+    @patch("requests.get")
+    def test_custom_max_workers(self, mock_get: MagicMock) -> None:
+        """Custom max_workers value is used."""
+        scraper = Ideas(max_workers=5)
+        mock_get.return_value = _mock_response(_make_api_response([_sample_idea()]))
+
+        with patch(
+            "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
+            return_value=True,
+        ):
+            result = scraper.get_ideas(
+                exchange="CRYPTO",
+                symbol="BTCUSD",
+                start_page=1,
+                end_page=3,
+            )
+
+        assert result["status"] == STATUS_SUCCESS
+        assert mock_get.call_count == 3
+
+    def test_max_workers_clamped_to_one(self) -> None:
+        """max_workers < 1 is clamped to 1."""
+        scraper = Ideas(max_workers=0)
+        assert scraper._max_workers == 1
+
+        scraper = Ideas(max_workers=-5)
+        assert scraper._max_workers == 1

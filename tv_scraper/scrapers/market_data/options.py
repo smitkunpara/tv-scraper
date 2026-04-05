@@ -1,6 +1,5 @@
 """Options scraper for fetching option chain data from TradingView."""
 
-import logging
 from typing import Any
 
 import requests
@@ -8,8 +7,6 @@ import requests
 from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.constants import SCANNER_URL
 from tv_scraper.core.exceptions import ValidationError
-
-logger = logging.getLogger(__name__)
 
 OPTIONS_SCANNER_URL = f"{SCANNER_URL}/options/scan2?label-product=symbols-options"
 
@@ -32,6 +29,8 @@ DEFAULT_OPTION_COLUMNS = [
     "bid_iv",
     "ask_iv",
 ]
+
+VALID_OPTION_COLUMNS = set(DEFAULT_OPTION_COLUMNS)
 
 
 class Options(BaseScraper):
@@ -87,34 +86,26 @@ class Options(BaseScraper):
             Standardized response dict with keys
             ``status``, ``data``, ``metadata``, ``error``.
         """
+        error = self._validate_inputs(exchange, symbol, columns)
+        if error:
+            return error
 
-        # Validation — verify combination exists and has options
-        try:
-            self.validator.verify_options_symbol(exchange, symbol)
-        except ValidationError as exc:
-            return self._error_response(
-                str(exc),
-                exchange=exchange,
-                symbol=symbol,
-                expiration=expiration,
-                root=root,
-            )
-
-        cols = columns if columns is not None else DEFAULT_OPTION_COLUMNS
         underlying = f"{exchange}:{symbol}"
+        cols = columns if columns is not None else DEFAULT_OPTION_COLUMNS
 
-        payload = {
-            "columns": cols,
-            "filter": [
+        payload = self._build_payload(
+            cols=cols,
+            underlying=underlying,
+            filter_type="expiry",
+            filter_value=expiration,
+            additional_filters=[
                 {"left": "type", "operation": "equal", "right": "option"},
                 {"left": "expiration", "operation": "equal", "right": expiration},
                 {"left": "root", "operation": "equal", "right": root},
             ],
-            "ignore_unknown_fields": False,
-            "index_filters": [{"name": "underlying_symbol", "values": [underlying]}],
-        }
+        )
 
-        return self._execute_request(payload, exchange, symbol, "expiry", expiration)
+        return self._execute_request(payload, exchange, symbol, expiration)
 
     def get_options_by_strike(
         self,
@@ -136,7 +127,38 @@ class Options(BaseScraper):
             Standardized response dict with keys
             ``status``, ``data``, ``metadata``, ``error``.
         """
+        error = self._validate_inputs(exchange, symbol, columns)
+        if error:
+            return error
 
+        if not isinstance(strike, (int, float)):
+            return self._error_response(
+                f"Invalid strike value: {strike!r}. Must be int or float.",
+                exchange=exchange,
+                symbol=symbol,
+                strike=strike,
+            )
+
+        underlying = f"{exchange}:{symbol}"
+        cols = columns if columns is not None else DEFAULT_OPTION_COLUMNS
+
+        payload = self._build_payload(
+            cols=cols,
+            underlying=underlying,
+            filter_type="strike",
+            filter_value=strike,
+            additional_filters=[
+                {"left": "type", "operation": "equal", "right": "option"},
+                {"left": "strike", "operation": "equal", "right": strike},
+            ],
+        )
+
+        return self._execute_request(payload, exchange, symbol, strike)
+
+    def _validate_inputs(
+        self, exchange: str, symbol: str, columns: list[str] | None
+    ) -> dict[str, Any] | None:
+        """Validate exchange, symbol, and columns. Returns error dict or None."""
         try:
             self.validator.verify_options_symbol(exchange, symbol)
         except ValidationError as exc:
@@ -144,31 +166,41 @@ class Options(BaseScraper):
                 str(exc),
                 exchange=exchange,
                 symbol=symbol,
-                strike=strike,
             )
 
-        cols = columns if columns is not None else DEFAULT_OPTION_COLUMNS
-        underlying = f"{exchange}:{symbol}"
+        if columns is not None:
+            invalid_cols = [c for c in columns if c not in VALID_OPTION_COLUMNS]
+            if invalid_cols:
+                return self._error_response(
+                    f"Invalid column names: {invalid_cols}. "
+                    f"Valid columns: {sorted(VALID_OPTION_COLUMNS)}",
+                    exchange=exchange,
+                    symbol=symbol,
+                )
 
-        payload = {
+        return None
+
+    def _build_payload(
+        self,
+        cols: list[str],
+        underlying: str,
+        filter_type: str,
+        filter_value: int | float,
+        additional_filters: list[dict[str, Any]],
+    ) -> dict[str, Any]:
+        """Build the request payload for the options scanner API."""
+        return {
             "columns": cols,
-            "filter": [
-                {"left": "type", "operation": "equal", "right": "option"},
-                {"left": "strike", "operation": "equal", "right": strike},
-            ],
-            "ignore_unknown_fields": False,
+            "filter": additional_filters,
             "index_filters": [{"name": "underlying_symbol", "values": [underlying]}],
         }
-
-        return self._execute_request(payload, exchange, symbol, "strike", strike)
 
     def _execute_request(
         self,
         payload: dict[str, Any],
         exchange: str,
         symbol: str,
-        filter_type: str,
-        filter_value: Any,
+        filter_value: int | float,
     ) -> dict[str, Any]:
         """Internal helper to execute the POST request and format response."""
         try:
@@ -185,7 +217,6 @@ class Options(BaseScraper):
                     "This symbol may not have options available on TradingView.",
                     exchange=exchange,
                     symbol=symbol,
-                    filter_type=filter_type,
                     filter_value=filter_value,
                 )
 
@@ -193,10 +224,9 @@ class Options(BaseScraper):
             json_response = response.json()
         except requests.RequestException as exc:
             return self._error_response(
-                f"Network error: {exc}",
+                f"Request failed: {exc}",
                 exchange=exchange,
                 symbol=symbol,
-                filter_type=filter_type,
                 filter_value=filter_value,
             )
         except (ValueError, KeyError) as exc:
@@ -204,20 +234,34 @@ class Options(BaseScraper):
                 f"Failed to parse API response: {exc}",
                 exchange=exchange,
                 symbol=symbol,
-                filter_type=filter_type,
                 filter_value=filter_value,
             )
         except Exception as exc:
             return self._error_response(
-                f"Request failed: {exc}",
+                f"Unexpected error: {exc}",
                 exchange=exchange,
                 symbol=symbol,
-                filter_type=filter_type,
+                filter_value=filter_value,
+            )
+
+        if not isinstance(json_response, dict):
+            return self._error_response(
+                "Invalid API response format: expected a dictionary",
+                exchange=exchange,
+                symbol=symbol,
                 filter_value=filter_value,
             )
 
         fields = json_response.get("fields", [])
         raw_symbols = json_response.get("symbols", [])
+
+        if not isinstance(fields, list) or not isinstance(raw_symbols, list):
+            return self._error_response(
+                "Invalid API response: 'fields' and 'symbols' must be lists",
+                exchange=exchange,
+                symbol=symbol,
+                filter_value=filter_value,
+            )
 
         if not raw_symbols:
             return self._error_response(
@@ -225,12 +269,13 @@ class Options(BaseScraper):
                 "This symbol may not have options available on TradingView.",
                 exchange=exchange,
                 symbol=symbol,
-                filter_type=filter_type,
                 filter_value=filter_value,
             )
 
         formatted_data = []
         for item in raw_symbols:
+            if not isinstance(item, dict):
+                continue
             option_data = {"symbol": item.get("s")}
             values = item.get("f", [])
             for i, field in enumerate(fields):
@@ -238,11 +283,10 @@ class Options(BaseScraper):
                     option_data[field] = values[i]
             formatted_data.append(option_data)
 
-        # Export if requested
         if self.export_result:
             self._export(
                 data=formatted_data,
-                symbol=f"{exchange}_{symbol}_{filter_type}_{filter_value}",
+                symbol=f"{exchange}_{symbol}_{filter_value}",
                 data_category="options",
             )
 
@@ -251,6 +295,5 @@ class Options(BaseScraper):
             exchange=exchange,
             symbol=symbol,
             total=json_response.get("totalCount", len(formatted_data)),
-            filter_type=filter_type,
             filter_value=filter_value,
         )

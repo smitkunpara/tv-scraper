@@ -168,6 +168,55 @@ class TestScrapeSuccess:
         assert "RSI|1M" in mock_get.call_args[1]["params"]["fields"]
         assert result_m["data"]["RSI"] == 75.0
 
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
+        return_value=True,
+    )
+    @patch("requests.get")
+    def test_fields_filtering_with_timeframe_suffix(
+        self, mock_get: MagicMock, mock_verify: MagicMock, technicals: Technicals
+    ) -> None:
+        """Fields parameter works with timeframe suffixes."""
+        mock_get.return_value = _mock_response(
+            {
+                "RSI|240": 60.0,
+                "CCI20|240": 45.0,
+                "EMA10|240": 100.0,
+            }
+        )
+        result = technicals.get_technicals(
+            exchange="BINANCE",
+            symbol="BTCUSD",
+            timeframe="4h",
+            technical_indicators=["RSI", "CCI20", "EMA10"],
+            fields=["RSI|240", "CCI20"],
+        )
+        assert result["status"] == STATUS_SUCCESS
+        assert "RSI" in result["data"]
+        assert "CCI20" in result["data"]
+        assert "EMA10" not in result["data"]
+
+    @patch(
+        "tv_scraper.core.validators.DataValidator.verify_symbol_exchange",
+        return_value=True,
+    )
+    @patch("requests.get")
+    def test_fields_filtering_without_suffix(
+        self, mock_get: MagicMock, mock_verify: MagicMock, technicals: Technicals
+    ) -> None:
+        """Fields parameter works without timeframe suffixes."""
+        mock_get.return_value = _mock_response({"RSI|240": 60.0, "CCI20|240": 45.0})
+        result = technicals.get_technicals(
+            exchange="BINANCE",
+            symbol="BTCUSD",
+            timeframe="4h",
+            technical_indicators=["RSI", "CCI20"],
+            fields=["RSI"],
+        )
+        assert result["status"] == STATUS_SUCCESS
+        assert "RSI" in result["data"]
+        assert "CCI20" not in result["data"]
+
 
 class TestScrapeErrors:
     """Tests for error handling — returns error responses, never raises."""

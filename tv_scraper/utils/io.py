@@ -3,12 +3,25 @@
 import json
 import logging
 import os
+import re
 from datetime import datetime
 from typing import Any
 
 from tv_scraper.core.exceptions import ExportError
 
 logger = logging.getLogger(__name__)
+
+ALLOWED_EXPORT_TYPES = frozenset({"json", "csv"})
+
+
+def _sanitize_filename_part(part: str, name: str) -> str:
+    """Sanitize a filename component to prevent path traversal."""
+    sanitized = re.sub(r"[^a-zA-Z0-9_-]", "", part)
+    if not sanitized:
+        raise ExportError(
+            f"Invalid {name}: contains no valid characters after sanitization"
+        )
+    return sanitized
 
 
 def ensure_export_directory(directory: str) -> None:
@@ -20,12 +33,10 @@ def ensure_export_directory(directory: str) -> None:
     Raises:
         ExportError: If the directory cannot be created.
     """
-    if not os.path.exists(directory):
-        try:
-            os.makedirs(directory)
-            logger.info("Directory %s created.", directory)
-        except Exception as e:
-            raise ExportError(f"Error creating directory {directory}: {e}") from e
+    try:
+        os.makedirs(directory, exist_ok=True)
+    except OSError as e:
+        raise ExportError(f"Error creating directory {directory}: {e}") from e
 
 
 def generate_export_filepath(
@@ -44,16 +55,25 @@ def generate_export_filepath(
 
     Returns:
         Full file path like ``export/category_symbol_timeframe_20260215-120000.json``.
+
+    Raises:
+        ExportError: If export_type is invalid or filename components are invalid.
     """
+    if export_type not in ALLOWED_EXPORT_TYPES:
+        raise ExportError(
+            f"Invalid export_type '{export_type}'. Must be one of {list(ALLOWED_EXPORT_TYPES)}"
+        )
+
     timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-    symbol_part = f"{symbol.lower()}_" if symbol else ""
-    timeframe_part = f"{timeframe}_" if timeframe else ""
+    symbol_part = f"{_sanitize_filename_part(symbol, 'symbol').lower()}_"
+    timeframe_part = (
+        f"{_sanitize_filename_part(timeframe, 'timeframe')}_" if timeframe else ""
+    )
     extension = f".{export_type}"
-    root_path = os.getcwd()
     return os.path.join(
-        root_path,
+        os.getcwd(),
         "export",
-        f"{data_category}_{symbol_part}{timeframe_part}{timestamp}{extension}",
+        f"{_sanitize_filename_part(data_category, 'data_category')}_{symbol_part}{timeframe_part}{timestamp}{extension}",
     )
 
 
@@ -86,10 +106,18 @@ def save_csv_file(data: Any, filepath: str) -> None:
     Raises:
         ExportError: If the file cannot be written.
     """
+    if not isinstance(data, (list, dict)):
+        raise ExportError(
+            f"Data must be a list or dict for CSV export, got {type(data).__name__}"
+        )
+
     ensure_export_directory(os.path.dirname(filepath))
     try:
         import pandas as pd
+    except ImportError as e:
+        raise ExportError(f"pandas is required for CSV export: {e}") from e
 
+    try:
         df = pd.DataFrame.from_dict(data)
         df.to_csv(filepath, index=False)
         logger.info("CSV file saved at: %s", filepath)
