@@ -141,7 +141,7 @@ class BaseScraper:
         """Fetch field values for a symbol from the TradingView scanner API.
 
         This is a shared implementation for scrapers that query the
-        ``GET /symbol`` endpoint with a flat field list (e.g. Overview,
+        ``GET /symbol`` endpoint with a flat field list (e.g.
         Fundamentals).
 
         Args:

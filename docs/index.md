@@ -53,7 +53,6 @@ All methods return a **standardized response envelope**:
 | Module | Description |
 |--------|-------------|
 | [Technicals](scrapers/technicals.md) | Technical indicators via TradingView scanner API |
-| [Overview](scrapers/overview.md) | Symbol overview data (profile, stats, financials) |
 | [Fundamentals](scrapers/fundamentals.md) | Fundamental financial graphs and metrics |
 | [Markets](scrapers/markets.md) | Market listings and top stocks |
 

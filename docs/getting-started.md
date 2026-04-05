@@ -29,17 +29,12 @@ uv sync --extra dev
 ### Market Data
 
 ```python
-from tv_scraper import Technicals, Overview, Fundamentals, Markets
+from tv_scraper import Technicals, Fundamentals, Markets
 
 # Technical indicators
 tech = Technicals()
 result = tech.get_technicals(exchange="NASDAQ", symbol="AAPL")
 print(result["data"])  # {"RSI": 65.5, "MACD.macd": 1.23, ...}
-
-# Symbol overview
-overview = Overview()
-result = overview.get_overview(exchange="NASDAQ", symbol="AAPL")
-print(result["data"])
 
 # Fundamental data
 fundamentals = Fundamentals()

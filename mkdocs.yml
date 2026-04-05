@@ -60,7 +60,6 @@ nav:
     - Streamer (Convenience Wrapper): streaming/streamer.md
     - Extending (BaseStreamer): streaming/base_streamer.md
   - Scrapers:
-    - Overview: scrapers/overview.md
     - Pine: scrapers/pine.md
     - Technicals: scrapers/technicals.md
     - Fundamentals: scrapers/fundamentals.md

@@ -8,7 +8,6 @@ from tv_scraper.scrapers.events.calendar import Calendar
 from tv_scraper.scrapers.market_data.fundamentals import Fundamentals
 from tv_scraper.scrapers.market_data.markets import Markets
 from tv_scraper.scrapers.market_data.options import Options
-from tv_scraper.scrapers.market_data.overview import Overview
 from tv_scraper.scrapers.market_data.technicals import Technicals
 from tv_scraper.scrapers.screening.market_movers import MarketMovers
 
@@ -34,7 +33,6 @@ __all__ = [
     "Minds",
     "News",
     "Options",
-    "Overview",
     "Pine",
     "Screener",
     "Streamer",
