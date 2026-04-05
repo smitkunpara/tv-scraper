@@ -1,22 +1,27 @@
 """DataValidator singleton for validating exchanges, indicators, timeframes, etc."""
 
-import json
 import logging
 import re
 import threading
 from difflib import get_close_matches
-from pathlib import Path
 from typing import Any, Optional
 
 import requests
 
 from tv_scraper.core.exceptions import ValidationError
+from tv_scraper.core.validation_data import (
+    AREAS,
+    EXCHANGES,
+    INDICATORS,
+    LANGUAGES,
+    NEWS_PROVIDERS,
+    TIMEFRAMES,
+)
 
 logger = logging.getLogger(__name__)
 
 _EXPORT_TYPES: set[str] = {"json", "csv"}
 
-_DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 
 # TradingView scanner API for live symbol:exchange combination validation
 _SCANNER_SYMBOL_URL = (
@@ -46,7 +51,7 @@ _OPTIONS_SEARCH_HEADERS = {
 
 
 class DataValidator:
-    """Singleton validator that loads validation data once from JSON files.
+    """Singleton validator that uses static validation data.
 
     Usage::
 
@@ -66,44 +71,17 @@ class DataValidator:
         return cls._instance
 
     def _load_data(self) -> None:
-        """Load all JSON data files from tv_scraper/data/."""
-        self._exchanges: list[str] = self._load_json("exchanges.json").get(
-            "exchanges", []
-        )
+        """Initialize data from constants."""
+        self._exchanges: list[str] = EXCHANGES
         self._exchanges_set: set[str] = {e.upper() for e in self._exchanges}
 
-        self._indicators: list[str] = self._load_json("indicators.json").get(
-            "indicators", []
-        )
+        self._indicators: list[str] = INDICATORS
         self._indicators_set: set[str] = set(self._indicators)
 
-        self._timeframes: dict[str, Any] = self._load_json("timeframes.json").get(
-            "timeframes", {}
-        )
-        self._languages: dict[str, str] = self._load_json("languages.json")
-        self._areas: dict[str, str] = self._load_json("areas.json")
-        self._news_providers: list[str] = self._load_json("news_providers.json").get(
-            "providers", []
-        )
-
-    @staticmethod
-    def _load_json(filename: str) -> dict[str, Any]:
-        """Load a JSON file from the data directory.
-
-        Args:
-            filename: Name of the JSON file to load.
-
-        Returns:
-            Parsed JSON content as a dict.
-
-        Raises:
-            FileNotFoundError: If the data file cannot be found.
-            json.JSONDecodeError: If the file contains invalid JSON.
-        """
-        path = _DATA_DIR / filename
-        with open(path, encoding="utf-8") as f:
-            result: dict[str, Any] = json.load(f)
-            return result
+        self._timeframes: dict[str, Any] = TIMEFRAMES
+        self._languages: dict[str, str] = LANGUAGES
+        self._areas: dict[str, str] = AREAS
+        self._news_providers: list[str] = NEWS_PROVIDERS
 
     def validate_exchange(self, exchange: str) -> bool:
         """Validate exchange exists.
