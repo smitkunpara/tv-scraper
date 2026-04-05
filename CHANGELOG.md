@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Performance
+- **Data Loading**: Significantly reduced `DataValidator` startup time and eliminated disk I/O by migrating static validation data (exchanges, indicators, timeframes, etc.) from JSON files to a consolidated Python module (`validation_data.py`).
+
+### Refactor
+- **Core**: Migrated all static validation data from individual JSON files in `tv_scraper/data/` to `tv_scraper/core/validation_data.py`.
+- **Core**: Simplified `DataValidator` singleton implementation by removing runtime JSON parsing and file path resolution.
+- **Cleanup**: Removed the redundant `tv_scraper/data/` directory and all its JSON contents.
+
 ### Removed
 - **Auth Module**: **CRITICAL** - Removed dead code: `is_jwt_token_valid()` function was never called
 - **Auth Module**: Removed unused `import jwt as pyjwt` import
