@@ -28,7 +28,7 @@ classifiers = [
 dependencies = [
     "requests>=2.32.4",
     "websocket-client>=1.8.0",
-    "pyjwt>=2.10.1",
+    "pyjwt>=2.8.0",
 ]
 
 [project.optional-dependencies]
