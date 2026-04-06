@@ -1,0 +1,15 @@
+{
+  "status": "success",
+  "data": {
+    "symbol": "NASDAQ:MSFT",
+    "gross_margin": 68.5863291570225,
+    "operating_margin": 46.6713373252186,
+    "net_margin": 39.0443046884463,
+    "EBITDA_margin": null
+  },
+  "metadata": {
+    "exchange": "NASDAQ",
+    "symbol": "MSFT"
+  },
+  "error": null
+}

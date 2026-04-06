@@ -1,0 +1,19 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "id": "USER;sample123",
+      "name": "Sample Indicator",
+      "version": "4",
+      "modified": 1700000000
+    },
+    {
+      "id": "USER;sample456",
+      "name": "Another Script",
+      "version": "3",
+      "modified": 1699999000
+    }
+  ],
+  "metadata": {},
+  "error": null
+}

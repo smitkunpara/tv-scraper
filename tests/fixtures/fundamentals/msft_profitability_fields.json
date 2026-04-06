@@ -1,0 +1,15 @@
+{
+  "status": "success",
+  "data": {
+    "symbol": "NASDAQ:MSFT",
+    "return_on_equity": 34.3907608460574,
+    "return_on_equity_fq": 34.3907608460574,
+    "return_on_assets": 19.890260173449,
+    "return_on_investment_ttm": null
+  },
+  "metadata": {
+    "exchange": "NASDAQ",
+    "symbol": "MSFT"
+  },
+  "error": null
+}

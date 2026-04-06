@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "symbol": "VVSFINANCE:MERYWCRO_A51231",
+      "name": "MERYWCRO_A51231",
+      "close": 5.89629163573e-05,
+      "change": 0.8819060859646785,
+      "change_abs": 5.154517474860012e-07,
+      "volume": 714283105.2172507,
+      "market_cap_calc": null,
+      "Recommend.All": -0.35454545454545455
+    },
+    {
+      "symbol": "ORCA:PSTUSDC_FCDB84.USD",
+      "name": "PSTUSDC_FCDB84.USD",
+      "close": 1.09400467,
+      "change": -0.003041027992144877,
+      "change_abs": -3.3270000000085176e-05,
+      "volume": 177270.469651,
+      "market_cap_calc": null,
+      "Recommend.All": 0.4454545454545455
+    },
+    {
+      "symbol": "KUCOIN:AGTUSDT",
+      "name": "AGTUSDT",
+      "close": 0.007494,
+      "change": 23.054187192118224,
+      "change_abs": 0.0014039999999999999,
+      "volume": 27606757,
+      "market_cap_calc": null,
+      "Recommend.All": 0.5121212121212121
+    },
+    {
+      "symbol": "PANCAKESWAP:MINIBTCCELL_485A26.USD",
+      "name": "MINIBTCCELL_485A26.USD",
+      "close": 0.00223869,
+      "change": -41.01430449686587,
+      "change_abs": -0.0015566199999999999,
+      "volume": 99.45739417,
+      "market_cap_calc": null,
+      "Recommend.All": -0.6363636363636364
+    },
+    {
+      "symbol": "COINEX:FIROUSDT",
+      "name": "FIROUSDT",
+      "close": 0.6411,
+      "change": 5.513495720868988,
+      "change_abs": 0.033499999999999974,
+      "volume": 8744.52922125,
+      "market_cap_calc": null,
+      "Recommend.All": -0.04242424242424242
+    }
+  ],
+  "metadata": {
+    "market": "crypto",
+    "sort_order": "desc",
+    "limit": 5,
+    "total": 5,
+    "total_available": 56417
+  },
+  "error": null
+}

@@ -1,0 +1,53 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "symbol": "EASYMARKETS:EURCNH",
+      "name": "EURCNH",
+      "close": 7.9383,
+      "change": 0.021419751530877083,
+      "change_abs": 0.0016999999999995907,
+      "Recommend.All": -0.30194805194805197
+    },
+    {
+      "symbol": "FX_IDC:PENFJD",
+      "name": "PENFJD",
+      "close": 0.647858,
+      "change": 0.24556262001544318,
+      "change_abs": 0.001587000000000005,
+      "Recommend.All": 0.2909090909090909
+    },
+    {
+      "symbol": "FX_IDC:AEDTHX",
+      "name": "AEDTHX",
+      "close": 8.844,
+      "change": -0.058762373999913166,
+      "change_abs": -0.0052000000000003155,
+      "Recommend.All": 0.26666666666666666
+    },
+    {
+      "symbol": "FX_IDC:BDTGBP",
+      "name": "BDTGBP",
+      "close": 0.0061531,
+      "change": -0.33044464242326527,
+      "change_abs": -2.040000000000028e-05,
+      "Recommend.All": 0.49090909090909096
+    },
+    {
+      "symbol": "THINKMARKETS:AUDCHF",
+      "name": "AUDCHF",
+      "close": 0.55195,
+      "change": 0.2961913068760031,
+      "change_abs": 0.0016300000000000203,
+      "Recommend.All": 0.3333333333333333
+    }
+  ],
+  "metadata": {
+    "market": "forex",
+    "sort_order": "desc",
+    "limit": 5,
+    "total": 5,
+    "total_available": 7181
+  },
+  "error": null
+}

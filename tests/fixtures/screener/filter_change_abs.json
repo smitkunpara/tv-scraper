@@ -1,0 +1,140 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "symbol": "NYSE:MOG.A",
+      "name": "MOG.A",
+      "close": 296.09,
+      "change": 2.092959106268531,
+      "change_abs": 6.069999999999993,
+      "volume": 73118,
+      "Recommend.All": 0.06666666666666667,
+      "market_cap_basic": 8417572218.999999,
+      "price_earnings_ttm": 36.62032799861478,
+      "earnings_per_share_basic_ttm": 8.1835
+    },
+    {
+      "symbol": "OTC:ISMCF",
+      "name": "ISMCF",
+      "close": 682.1544,
+      "change": 0.8575833280229976,
+      "change_abs": 5.800299999999993,
+      "volume": 420,
+      "Recommend.All": 0.045454545454545456,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "NYSE:MUSA",
+      "name": "MUSA",
+      "close": 510.62,
+      "change": 1.634123524611369,
+      "change_abs": 8.20999999999998,
+      "volume": 103523,
+      "Recommend.All": 0.603030303030303,
+      "market_cap_basic": 9464494886,
+      "price_earnings_ttm": 21.024329788241495,
+      "earnings_per_share_basic_ttm": 24.5548
+    },
+    {
+      "symbol": "OTC:UILCY",
+      "name": "UILCY",
+      "close": 55,
+      "change": 25,
+      "change_abs": 11,
+      "volume": 100,
+      "Recommend.All": 0.625,
+      "market_cap_basic": 3949749675.6492,
+      "price_earnings_ttm": 18.892552899148118,
+      "earnings_per_share_basic_ttm": 2.9112
+    },
+    {
+      "symbol": "NASDAQ:STX",
+      "name": "STX",
+      "close": 456.95,
+      "change": 6.4258431153344455,
+      "change_abs": 27.589999999999975,
+      "volume": 2874582,
+      "Recommend.All": 0.603030303030303,
+      "market_cap_basic": 99648457350,
+      "price_earnings_ttm": 51.675393262238906,
+      "earnings_per_share_basic_ttm": 9.2285
+    },
+    {
+      "symbol": "OTC:KGHPF",
+      "name": "KGHPF",
+      "close": 76,
+      "change": 9.368254425097145,
+      "change_abs": 6.510000000000005,
+      "volume": 671,
+      "Recommend.All": -0.08787878787878788,
+      "market_cap_basic": 15200000000,
+      "price_earnings_ttm": 21.550056123009647,
+      "earnings_per_share_basic_ttm": 3.5266729500000005
+    },
+    {
+      "symbol": "OTC:FRFHF",
+      "name": "FRFHF",
+      "close": 1713,
+      "change": 0.824014125956445,
+      "change_abs": 14,
+      "volume": 1958,
+      "Recommend.All": 0.35757575757575755,
+      "market_cap_basic": 34090070400,
+      "price_earnings_ttm": 7.880103942322905,
+      "earnings_per_share_basic_ttm": 226.14950072
+    },
+    {
+      "symbol": "OTC:SKPJF",
+      "name": "SKPJF",
+      "close": 20.83,
+      "change": 116.30321910695739,
+      "change_abs": 11.199999999999998,
+      "volume": 20,
+      "Recommend.All": null,
+      "market_cap_basic": 5904045326.58,
+      "price_earnings_ttm": 41.42554639516604,
+      "earnings_per_share_basic_ttm": 0.5028298191
+    },
+    {
+      "symbol": "OTC:XTRKF",
+      "name": "XTRKF",
+      "close": 374.0829,
+      "change": 1.5961454165034836,
+      "change_abs": 5.8770999999999844,
+      "volume": 93,
+      "Recommend.All": 0.29370629370629375,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "NYSE:NVR",
+      "name": "NVR",
+      "close": 6678.815,
+      "change": 0.23524944695742953,
+      "change_abs": 15.674999999999272,
+      "volume": 8373,
+      "Recommend.All": -0.15454545454545454,
+      "market_cap_basic": 18659006194.399998,
+      "price_earnings_ttm": 15.274427010161354,
+      "earnings_per_share_basic_ttm": 462.6963
+    }
+  ],
+  "metadata": {
+    "market": "america",
+    "sort_order": "desc",
+    "limit": 10,
+    "filters": [
+      {
+        "left": "change_abs",
+        "operation": "greater",
+        "right": 5
+      }
+    ],
+    "total": 10,
+    "total_available": 145
+  },
+  "error": null
+}

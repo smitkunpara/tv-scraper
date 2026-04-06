@@ -1,0 +1,91 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "symbol": "FX_IDC:CLPHUX",
+      "name": "CLPHUX",
+      "close": 0.3631,
+      "change": 2.310510002817691,
+      "change_abs": 0.008199999999999985
+    },
+    {
+      "symbol": "FX_IDC:XAFBRX",
+      "name": "XAFBRX",
+      "close": 0.009012,
+      "change": 2.1768707482993137,
+      "change_abs": 0.00019199999999999946
+    },
+    {
+      "symbol": "IBKR:MXNJPY",
+      "name": "MXNJPY",
+      "close": 8.9758,
+      "change": 1.9762890755920586,
+      "change_abs": 0.1739499999999996
+    },
+    {
+      "symbol": "FX_IDC:PENCZX",
+      "name": "PENCZX",
+      "close": 6.17716,
+      "change": 1.7310463517263497,
+      "change_abs": 0.10510999999999981
+    },
+    {
+      "symbol": "FX_IDC:KZTBRX",
+      "name": "KZTBRX",
+      "close": 0.0111,
+      "change": 1.648351648351661,
+      "change_abs": 0.00018000000000000134
+    },
+    {
+      "symbol": "FX_IDC:NPRBRX",
+      "name": "NPRBRX",
+      "close": 0.0346,
+      "change": 1.645123384253813,
+      "change_abs": 0.000559999999999998
+    },
+    {
+      "symbol": "FX_IDC:PENHUX",
+      "name": "PENHUX",
+      "close": 96.5669,
+      "change": 1.6135362793120323,
+      "change_abs": 1.5334000000000003
+    },
+    {
+      "symbol": "FX_IDC:KZTUSD",
+      "name": "KZTUSD",
+      "close": 0.002154,
+      "change": 1.5558698727015579,
+      "change_abs": 3.300000000000004e-05
+    },
+    {
+      "symbol": "FX_IDC:MXNSBD",
+      "name": "MXNSBD",
+      "close": 0.450082,
+      "change": 1.5358446468775477,
+      "change_abs": 0.006807999999999981
+    },
+    {
+      "symbol": "FX_IDC:RUBILS",
+      "name": "RUBILS",
+      "close": 0.03975797302,
+      "change": 1.4913892027101507,
+      "change_abs": 0.0005842329299999977
+    }
+  ],
+  "metadata": {
+    "market": "forex",
+    "sort_order": "desc",
+    "limit": 10,
+    "filters": [
+      {
+        "left": "change",
+        "operation": "egreater",
+        "right": 0
+      }
+    ],
+    "sort_by": "change",
+    "total": 10,
+    "total_available": 4147
+  },
+  "error": null
+}

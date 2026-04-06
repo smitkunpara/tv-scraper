@@ -1,0 +1,103 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "symbol": "TVC:CH01Y",
+      "name": "CH01Y",
+      "close": 0.28,
+      "change": 75.00000000000001,
+      "change_abs": 0.12000000000000002,
+      "logoid": "country/CH",
+      "description": "Switzerland 1 Year Government Bonds Yield"
+    },
+    {
+      "symbol": "TVC:CH01",
+      "name": "CH01",
+      "close": 0.28,
+      "change": 75.00000000000001,
+      "change_abs": 0.12000000000000002,
+      "logoid": "country/CH",
+      "description": "Switzerland 1 Year Government Bonds"
+    },
+    {
+      "symbol": "TVC:CH01M",
+      "name": "CH01M",
+      "close": -0.12,
+      "change": 42.857142857142854,
+      "change_abs": 0.09,
+      "logoid": "country/CH",
+      "description": "Switzerland 1 Month Government Bonds"
+    },
+    {
+      "symbol": "TVC:CH01MY",
+      "name": "CH01MY",
+      "close": -0.12,
+      "change": 42.857142857142854,
+      "change_abs": 0.09,
+      "logoid": "country/CH",
+      "description": "Switzerland 1 Month Government Bonds Yield"
+    },
+    {
+      "symbol": "TVC:TH02Y",
+      "name": "TH02Y",
+      "close": 1.426,
+      "change": 36.32887189292542,
+      "change_abs": 0.3799999999999999,
+      "logoid": "country/TH",
+      "description": "Thailand 2 Year Government Bonds Yield"
+    },
+    {
+      "symbol": "TVC:CH03Y",
+      "name": "CH03Y",
+      "close": 0.144,
+      "change": 26.315789473684198,
+      "change_abs": 0.029999999999999985,
+      "logoid": "country/CH",
+      "description": "Switzerland 3 Year Government Bonds Yield"
+    },
+    {
+      "symbol": "TVC:CH02Y",
+      "name": "CH02Y",
+      "close": 0.092,
+      "change": 26.027397260273975,
+      "change_abs": 0.019000000000000003,
+      "logoid": "country/CH",
+      "description": "Switzerland 2 Year Government Bonds Yield"
+    },
+    {
+      "symbol": "TVC:CH04Y",
+      "name": "CH04Y",
+      "close": 0.156,
+      "change": 25.806451612903224,
+      "change_abs": 0.032,
+      "logoid": "country/CH",
+      "description": "Switzerland 4 Year Government Bonds Yield"
+    },
+    {
+      "symbol": "TVC:TH10Y",
+      "name": "TH10Y",
+      "close": 2.14,
+      "change": 22.49570692615913,
+      "change_abs": 0.393,
+      "logoid": "country/TH",
+      "description": "Thailand 10 Year Government Bonds Yield"
+    },
+    {
+      "symbol": "TVC:CH07Y",
+      "name": "CH07Y",
+      "close": 0.308,
+      "change": 20.312499999999996,
+      "change_abs": 0.05199999999999999,
+      "logoid": "country/CH",
+      "description": "Switzerland 7 Year Government Bonds Yield"
+    }
+  ],
+  "metadata": {
+    "market": "bonds",
+    "category": "gainers",
+    "limit": 10,
+    "total": 10,
+    "totalCount": 549
+  },
+  "error": null
+}

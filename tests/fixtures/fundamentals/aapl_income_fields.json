@@ -1,0 +1,15 @@
+{
+  "status": "success",
+  "data": {
+    "symbol": "NASDAQ:AAPL",
+    "total_revenue": 416161000000,
+    "net_income": 112010000000,
+    "gross_profit": 195201000000,
+    "operating_income": null
+  },
+  "metadata": {
+    "exchange": "NASDAQ",
+    "symbol": "AAPL"
+  },
+  "error": null
+}

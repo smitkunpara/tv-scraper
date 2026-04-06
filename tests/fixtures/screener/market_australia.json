@@ -1,0 +1,73 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "symbol": "ASX:JHX",
+      "name": "JHX",
+      "close": 27.42,
+      "change": -2.5586353944562856,
+      "change_abs": -0.7199999999999989,
+      "volume": 1572868,
+      "Recommend.All": -0.3333333333333333,
+      "market_cap_basic": 15728010121.915821,
+      "price_earnings_ttm": 65.64519990423749,
+      "earnings_per_share_basic_ttm": 0.4217
+    },
+    {
+      "symbol": "ASX:GLDN",
+      "name": "GLDN",
+      "close": 53.87,
+      "change": 0.27922561429634885,
+      "change_abs": 0.14999999999999858,
+      "volume": 49936,
+      "Recommend.All": -0.02121212121212121,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "ASX:NMG",
+      "name": "NMG",
+      "close": 0.048,
+      "change": 2.1276595744680873,
+      "change_abs": 0.0010000000000000009,
+      "volume": 49040531,
+      "Recommend.All": -0.02121212121212121,
+      "market_cap_basic": 521483629.99999994,
+      "price_earnings_ttm": 120,
+      "earnings_per_share_basic_ttm": 0.0004
+    },
+    {
+      "symbol": "ASX:SNAS",
+      "name": "SNAS",
+      "close": 18.44,
+      "change": 2.2172949002217415,
+      "change_abs": 0.40000000000000213,
+      "volume": 820647,
+      "Recommend.All": 0.4,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "ASX:APC",
+      "name": "APC",
+      "close": 0.01,
+      "change": 0,
+      "change_abs": 0,
+      "volume": 430281,
+      "Recommend.All": -0.2,
+      "market_cap_basic": 7341258,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": -0.004
+    }
+  ],
+  "metadata": {
+    "market": "australia",
+    "sort_order": "desc",
+    "limit": 5,
+    "total": 5,
+    "total_available": 2196
+  },
+  "error": null
+}

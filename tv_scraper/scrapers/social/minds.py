@@ -98,13 +98,17 @@ class Minds(BaseScraper):
             results = json_response.get("results", [])
 
             if not results:
+                if pages == 0:
+                    meta_dict = json_response.get("meta", {})
+                    symbol_info = meta_dict.get("symbols_info", {}).get(
+                        combined_symbol, {}
+                    )
                 break
 
             parsed = [self._parse_mind(item) for item in results]
             parsed_data.extend(parsed)
             pages += 1
 
-            # Extract symbol info from first page
             if pages == 1:
                 meta_dict = json_response.get("meta", {})
                 symbol_info = meta_dict.get("symbols_info", {}).get(combined_symbol, {})

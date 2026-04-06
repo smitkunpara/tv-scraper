@@ -1,0 +1,138 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "symbol": "NASDAQ:WBD",
+      "name": "WBD",
+      "close": 27.425,
+      "change": 0.3843338213762827,
+      "change_abs": 0.10500000000000043,
+      "volume": 11136245,
+      "Recommend.All": 0.1575757575757576,
+      "market_cap_basic": 68012080250,
+      "price_earnings_ttm": 95.42449547668755,
+      "earnings_per_share_basic_ttm": 0.293
+    },
+    {
+      "symbol": "NASDAQ:EA",
+      "name": "EA",
+      "close": 203.845,
+      "change": 0.120333988212183,
+      "change_abs": 0.24500000000000455,
+      "volume": 436791,
+      "Recommend.All": 0.4,
+      "market_cap_basic": 51013026630,
+      "price_earnings_ttm": 76.53275764970903,
+      "earnings_per_share_basic_ttm": 2.6891
+    },
+    {
+      "symbol": "NASDAQ:CRWD",
+      "name": "CRWD",
+      "close": 398.31,
+      "change": -0.20294648226097473,
+      "change_abs": -0.8100000000000023,
+      "volume": 852681,
+      "Recommend.All": -0.3333333333333333,
+      "market_cap_basic": 101016992340,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": -0.7365
+    },
+    {
+      "symbol": "NASDAQ:ODFL",
+      "name": "ODFL",
+      "close": 200.245,
+      "change": 1.133838383838386,
+      "change_abs": 2.2450000000000045,
+      "volume": 1565785,
+      "Recommend.All": 0.4,
+      "market_cap_basic": 41736264370,
+      "price_earnings_ttm": 41.39859416994005,
+      "earnings_per_share_basic_ttm": 4.8614
+    },
+    {
+      "symbol": "NASDAQ:ADSK",
+      "name": "ADSK",
+      "close": 238.3,
+      "change": 0.09240591397849414,
+      "change_abs": 0.21999999999999886,
+      "volume": 431156,
+      "Recommend.All": -0.5363636363636364,
+      "market_cap_basic": 50281300000,
+      "price_earnings_ttm": 45.55098920003824,
+      "earnings_per_share_basic_ttm": 5.2807
+    },
+    {
+      "symbol": "NASDAQ:LIN",
+      "name": "LIN",
+      "close": 498.03,
+      "change": -0.9092717867091226,
+      "change_abs": -4.57000000000005,
+      "volume": 500974,
+      "Recommend.All": 0.35454545454545455,
+      "market_cap_basic": 230784113820,
+      "price_earnings_ttm": 34.11795332013454,
+      "earnings_per_share_basic_ttm": 14.6815
+    },
+    {
+      "symbol": "NASDAQ:WDAY",
+      "name": "WDAY",
+      "close": 129.54,
+      "change": -2.056555269922878,
+      "change_abs": -2.719999999999999,
+      "volume": 1630520,
+      "Recommend.All": -0.4454545454545455,
+      "market_cap_basic": 27203400000,
+      "price_earnings_ttm": 50.13157894736842,
+      "earnings_per_share_basic_ttm": 2.6126
+    },
+    {
+      "symbol": "NASDAQ:MU",
+      "name": "MU",
+      "close": 379.6699,
+      "change": 3.6669670161642567,
+      "change_abs": 13.429899999999975,
+      "volume": 28605123,
+      "Recommend.All": 0,
+      "market_cap_basic": 428165136327,
+      "price_earnings_ttm": 17.92476854583996,
+      "earnings_per_share_basic_ttm": 21.4443
+    },
+    {
+      "symbol": "NASDAQ:SHOP",
+      "name": "SHOP",
+      "close": 118.45,
+      "change": 0.16913319238900873,
+      "change_abs": 0.20000000000000284,
+      "volume": 2210995,
+      "Recommend.All": -0.2424242424242424,
+      "market_cap_basic": 145224165565,
+      "price_earnings_ttm": 127.62758475489848,
+      "earnings_per_share_basic_ttm": 0.9361011
+    },
+    {
+      "symbol": "NASDAQ:TXN",
+      "name": "TXN",
+      "close": 197.47,
+      "change": 1.3342228152101372,
+      "change_abs": 2.5999999999999943,
+      "volume": 1941684,
+      "Recommend.All": 0.35757575757575755,
+      "market_cap_basic": 179789128610,
+      "price_earnings_ttm": 36.26363536195688,
+      "earnings_per_share_basic_ttm": 5.4738
+    }
+  ],
+  "metadata": {
+    "market": "america",
+    "sort_order": "desc",
+    "limit": 10,
+    "symbols": {
+      "symbolset": [
+        "SYML:NASDAQ;NDX"
+      ]
+    },
+    "total": 10,
+    "total_available": 101
+  },
+  "error": null
+}

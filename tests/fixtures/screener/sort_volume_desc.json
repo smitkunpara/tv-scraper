@@ -1,0 +1,134 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "symbol": "NASDAQ:AIXI",
+      "name": "AIXI",
+      "close": 0.3441,
+      "change": 163.27467482785002,
+      "change_abs": 0.2134,
+      "volume": 765791544,
+      "Recommend.All": 0.33636363636363636,
+      "market_cap_basic": 1758278,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "NASDAQ:PFSA",
+      "name": "PFSA",
+      "close": 1.83,
+      "change": 141.42480211081795,
+      "change_abs": 1.072,
+      "volume": 217494174,
+      "Recommend.All": 0.1575757575757576,
+      "market_cap_basic": 1030405.9999999999,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": -283.719
+    },
+    {
+      "symbol": "OTC:LTNC",
+      "name": "LTNC",
+      "close": 0.0003,
+      "change": 49.99999999999998,
+      "change_abs": 9.999999999999996e-05,
+      "volume": 216611847,
+      "Recommend.All": 0.33636363636363636,
+      "market_cap_basic": 6405478.199999999,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": -0.0001
+    },
+    {
+      "symbol": "NASDAQ:ZSPC",
+      "name": "ZSPC",
+      "close": 0.0946,
+      "change": -7.254901960784305,
+      "change_abs": -0.00739999999999999,
+      "volume": 153366303,
+      "Recommend.All": -0.4212121212121212,
+      "market_cap_basic": 3150462.0972,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": -0.9364
+    },
+    {
+      "symbol": "NASDAQ:IOBT",
+      "name": "IOBT",
+      "close": 0.0403,
+      "change": 24.76780185758514,
+      "change_abs": 0.008,
+      "volume": 137824576,
+      "Recommend.All": -0.35454545454545455,
+      "market_cap_basic": 2899538.4535000003,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": -1.339
+    },
+    {
+      "symbol": "OTC:XALL",
+      "name": "XALL",
+      "close": 0.00025,
+      "change": -16.666666666666657,
+      "change_abs": -4.999999999999997e-05,
+      "volume": 131967675,
+      "Recommend.All": -0.4212121212121212,
+      "market_cap_basic": 453170,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "NASDAQ:RDGT",
+      "name": "RDGT",
+      "close": 0.0177,
+      "change": -28.048780487804876,
+      "change_abs": -0.0069,
+      "volume": 107378742,
+      "Recommend.All": -0.49090909090909096,
+      "market_cap_basic": 323655.12,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": -0.5715
+    },
+    {
+      "symbol": "CBOE:BMNU",
+      "name": "BMNU",
+      "close": 1.8101,
+      "change": 6.476470588235299,
+      "change_abs": 0.11010000000000009,
+      "volume": 93746086,
+      "Recommend.All": -0.13986013986013987,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "NASDAQ:TSLL",
+      "name": "TSLL",
+      "close": 10.6378,
+      "change": -6.439753737906763,
+      "change_abs": -0.7321999999999989,
+      "volume": 90841319,
+      "Recommend.All": -0.5121212121212121,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "AMEX:SPDN",
+      "name": "SPDN",
+      "close": 9.84,
+      "change": -0.30395136778114856,
+      "change_abs": -0.02999999999999936,
+      "volume": 85751356,
+      "Recommend.All": -0.024242424242424246,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    }
+  ],
+  "metadata": {
+    "market": "america",
+    "sort_order": "desc",
+    "limit": 10,
+    "sort_by": "volume",
+    "total": 10,
+    "total_available": 19096
+  },
+  "error": null
+}

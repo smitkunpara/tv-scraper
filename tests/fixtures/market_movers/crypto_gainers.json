@@ -1,0 +1,123 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "symbol": "UNISWAPBASE:WLWETH_A44ED7",
+      "name": "WLWETH_A44ED7",
+      "close": 0.00021718699276871564,
+      "change": 5.872988398909194e+26,
+      "change_abs": 0.00021718699276871564,
+      "volume": 40061972000.593376,
+      "market_cap_calc": null,
+      "logoid": "",
+      "description": "WorldLand / Wrapped Ether on BASE (0xa44Ed7D961765A21Cfb27Dec1141893dF2558e3C)"
+    },
+    {
+      "symbol": "UNISWAPBASE:WLWETH_A44ED7.USD",
+      "name": "WLWETH_A44ED7.USD",
+      "close": 0.4543603833373539,
+      "change": 5.758261442076893e+26,
+      "change_abs": 0.4543603833373539,
+      "volume": 18651408961.476387,
+      "market_cap_calc": null,
+      "logoid": "",
+      "description": "WorldLand / Wrapped Ether on BASE (0xa44Ed7D961765A21Cfb27Dec1141893dF2558e3C) in USD"
+    },
+    {
+      "symbol": "UNISWAPBASE:EDGEWETH_A940AB",
+      "name": "EDGEWETH_A940AB",
+      "close": 6.253462373752259e-16,
+      "change": 20183104301072332,
+      "change_abs": 6.253462373752228e-16,
+      "volume": 30564.973569461,
+      "market_cap_calc": null,
+      "logoid": "",
+      "description": "edgeX / Wrapped Ether on BASE (0xa940AB75E225988434c88A06515654230B5b568e)"
+    },
+    {
+      "symbol": "UNISWAPBASE:EDGEWETH_A940AB.USD",
+      "name": "EDGEWETH_A940AB.USD",
+      "close": 1.2650869489545217e-12,
+      "change": 19891390130454620,
+      "change_abs": 1.2650869489545155e-12,
+      "volume": 0.020234056786598526,
+      "market_cap_calc": null,
+      "logoid": "",
+      "description": "edgeX / Wrapped Ether on BASE (0xa940AB75E225988434c88A06515654230B5b568e) in USD"
+    },
+    {
+      "symbol": "PANCAKESWAP:RFEOWBNB_B4FD4F",
+      "name": "RFEOWBNB_B4FD4F",
+      "close": 1463414634.2682927,
+      "change": 1513673122970174.5,
+      "change_abs": 1463414634.2681959,
+      "volume": 0,
+      "market_cap_calc": null,
+      "logoid": "",
+      "description": "AI RoboForce / Wrapped BNB on BSC (0xb4fd4f6bE08A2E81c21B91C1899809Ff9Ebddb87)"
+    },
+    {
+      "symbol": "PANCAKESWAP:RFEOWBNB_B4FD4F.USD",
+      "name": "RFEOWBNB_B4FD4F.USD",
+      "close": 862212100020.6101,
+      "change": 1445812635273561,
+      "change_abs": 862212100020.5504,
+      "volume": 0.1746514,
+      "market_cap_calc": null,
+      "logoid": "",
+      "description": "AI RoboForce / Wrapped BNB on BSC (0xb4fd4f6bE08A2E81c21B91C1899809Ff9Ebddb87) in USD"
+    },
+    {
+      "symbol": "UNISWAP3POLYGON:WETHTTAJ_DC33A8.USD",
+      "name": "WETHTTAJ_DC33A8.USD",
+      "close": 2130.61991974,
+      "change": 93215919.72892094,
+      "change_abs": 2130.61763406,
+      "volume": 111.2051463,
+      "market_cap_calc": null,
+      "logoid": "",
+      "description": "Wrapped Ether / TTAJ on Polygon (0xDC33A816F6f9790Dfd00bBf775871FaFb03245C3) in USD"
+    },
+    {
+      "symbol": "UNISWAPBASE:USRWETH_C1BDF4.USD",
+      "name": "USRWETH_C1BDF4.USD",
+      "close": 1.11037947,
+      "change": 74522012.08053692,
+      "change_abs": 1.11037798,
+      "volume": 259639.39108508,
+      "market_cap_calc": null,
+      "logoid": "",
+      "description": "Resolv USD / Wrapped Ether on BASE (0xC1BDf4c2D6F4E7CD18Bd4801Df820013AF57023A) in USD"
+    },
+    {
+      "symbol": "UNISWAPBASE:USRWETH_C1BDF4",
+      "name": "USRWETH_C1BDF4",
+      "close": 0.0005159127083954062,
+      "change": 74370557.62480515,
+      "change_abs": 0.0005159120146907586,
+      "volume": 491459148103.0522,
+      "market_cap_calc": null,
+      "logoid": "",
+      "description": "Resolv USD / Wrapped Ether on BASE (0xC1BDf4c2D6F4E7CD18Bd4801Df820013AF57023A)"
+    },
+    {
+      "symbol": "PANCAKESWAP:RWALABUBU_9C2971",
+      "name": "RWALABUBU_9C2971",
+      "close": 636.9652335,
+      "change": 40629938.11267318,
+      "change_abs": 636.9636657799999,
+      "volume": 54860.22148538,
+      "market_cap_calc": null,
+      "logoid": "",
+      "description": "RWA / LABUBU on BSC (0x9C29716cAB88e4A04b6F77B36dE59fBCbcEf86E5)"
+    }
+  ],
+  "metadata": {
+    "market": "crypto",
+    "category": "gainers",
+    "limit": 10,
+    "total": 10,
+    "totalCount": 34143
+  },
+  "error": null
+}

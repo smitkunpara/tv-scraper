@@ -1,0 +1,134 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "symbol": "OTC:PBLA",
+      "name": "PBLA",
+      "close": 0.0026,
+      "change": 259900,
+      "change_abs": 0.0025989999999999997,
+      "volume": 366,
+      "Recommend.All": -0.26363636363636367,
+      "market_cap_basic": 5,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "OTC:AICOF",
+      "name": "AICOF",
+      "close": 0.001,
+      "change": 99900.00000000001,
+      "change_abs": 0.000999,
+      "volume": 2360,
+      "Recommend.All": -0.4454545454545455,
+      "market_cap_basic": 7208191.873260001,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "OTC:PIKM",
+      "name": "PIKM",
+      "close": 0.0005,
+      "change": 49900,
+      "change_abs": 0.000499,
+      "volume": 120,
+      "Recommend.All": 0.024242424242424246,
+      "market_cap_basic": 975.8190000000001,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "OTC:YELLQ",
+      "name": "YELLQ",
+      "close": 0.165,
+      "change": 41149.99999999999,
+      "change_abs": 0.1646,
+      "volume": 523,
+      "Recommend.All": 0.606060606060606,
+      "market_cap_basic": 8675650.5,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "OTC:CYPMF",
+      "name": "CYPMF",
+      "close": 0.24,
+      "change": 39900.00000000001,
+      "change_abs": 0.2394,
+      "volume": 1200,
+      "Recommend.All": 0.18055555555555555,
+      "market_cap_basic": 120154080,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": -0.039434475000000004
+    },
+    {
+      "symbol": "OTC:KNKT",
+      "name": "KNKT",
+      "close": 0.0003,
+      "change": 29899.999999999993,
+      "change_abs": 0.00029899999999999995,
+      "volume": 2000,
+      "Recommend.All": 0.33636363636363636,
+      "market_cap_basic": 62,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "OTC:SLCO",
+      "name": "SLCO",
+      "close": 0.0402,
+      "change": 20000,
+      "change_abs": 0.04,
+      "volume": 100,
+      "Recommend.All": 0.6484848484848484,
+      "market_cap_basic": 9408,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "OTC:CXBS",
+      "name": "CXBS",
+      "close": 0.0002,
+      "change": 19900.000000000004,
+      "change_abs": 0.000199,
+      "volume": 100,
+      "Recommend.All": -0.2424242424242424,
+      "market_cap_basic": 4004.5266,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "OTC:TLOG",
+      "name": "TLOG",
+      "close": 0.0002,
+      "change": 19900.000000000004,
+      "change_abs": 0.000199,
+      "volume": 475,
+      "Recommend.All": 0.1575757575757576,
+      "market_cap_basic": 4893,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "OTC:FRCJL",
+      "name": "FRCJL",
+      "close": 0.0002,
+      "change": 19900.000000000004,
+      "change_abs": 0.000199,
+      "volume": 1300,
+      "Recommend.All": -0.17575757575757575,
+      "market_cap_basic": 74615,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    }
+  ],
+  "metadata": {
+    "market": "america",
+    "sort_order": "desc",
+    "limit": 10,
+    "sort_by": "change",
+    "total": 10,
+    "total_available": 19096
+  },
+  "error": null
+}

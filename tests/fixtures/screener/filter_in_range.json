@@ -1,0 +1,143 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "symbol": "NYSE:AEE",
+      "name": "AEE",
+      "close": 111.5118,
+      "change": -0.15060888252150162,
+      "change_abs": -0.168200000000013,
+      "volume": 389184,
+      "Recommend.All": 0.5363636363636364,
+      "market_cap_basic": 30824649315,
+      "price_earnings_ttm": 20.84605462396949,
+      "earnings_per_share_basic_ttm": 5.3828
+    },
+    {
+      "symbol": "NASDAQ:FELE",
+      "name": "FELE",
+      "close": 93.855,
+      "change": 0.7135958793862069,
+      "change_abs": 0.6650000000000063,
+      "volume": 64612,
+      "Recommend.All": -0.02121212121212121,
+      "market_cap_basic": 4148597481,
+      "price_earnings_ttm": 29.218292758856858,
+      "earnings_per_share_basic_ttm": 3.2495
+    },
+    {
+      "symbol": "AMEX:EVSB",
+      "name": "EVSB",
+      "close": 50.765,
+      "change": -0.005909234163252667,
+      "change_abs": -0.0030000000000001137,
+      "volume": 8537,
+      "Recommend.All": -0.35454545454545455,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "AMEX:MGV",
+      "name": "MGV",
+      "close": 145.815,
+      "change": 0.23716230150546427,
+      "change_abs": 0.34499999999999886,
+      "volume": 157590,
+      "Recommend.All": 0.17878787878787877,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "NYSE:EGP",
+      "name": "EGP",
+      "close": 187.775,
+      "change": -0.3370309431558786,
+      "change_abs": -0.6349999999999909,
+      "volume": 81419,
+      "Recommend.All": 0.4242424242424242,
+      "market_cap_basic": 10048697878,
+      "price_earnings_ttm": 38.544040068148696,
+      "earnings_per_share_basic_ttm": 4.8802
+    },
+    {
+      "symbol": "AMEX:CVMC",
+      "name": "CVMC",
+      "close": 65.025,
+      "change": 0.291659404743376,
+      "change_abs": 0.18910000000001048,
+      "volume": 2036,
+      "Recommend.All": 0.22424242424242424,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "OTC:WTKWY",
+      "name": "WTKWY",
+      "close": 75.791,
+      "change": 0.252645502645506,
+      "change_abs": 0.1910000000000025,
+      "volume": 49449,
+      "Recommend.All": -0.04242424242424242,
+      "market_cap_basic": 16992028866.4106,
+      "price_earnings_ttm": 11.831436644343496,
+      "earnings_per_share_basic_ttm": 6.4281
+    },
+    {
+      "symbol": "OTC:FSDK",
+      "name": "FSDK",
+      "close": 67.1,
+      "change": 1.5128593040847202,
+      "change_abs": 1,
+      "volume": 233,
+      "Recommend.All": 0.13636363636363635,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "NYSE:SAP",
+      "name": "SAP",
+      "close": 171.21,
+      "change": -0.3260173487803471,
+      "change_abs": -0.5600000000000023,
+      "volume": 846865,
+      "Recommend.All": -0.3090909090909091,
+      "market_cap_basic": 200213802025.1198,
+      "price_earnings_ttm": 24.24006456088686,
+      "earnings_per_share_basic_ttm": 7.1082
+    },
+    {
+      "symbol": "NYSE:EIX",
+      "name": "EIX",
+      "close": 73.16,
+      "change": -0.4083855159270313,
+      "change_abs": -0.29999999999999716,
+      "volume": 813451,
+      "Recommend.All": 0.35454545454545455,
+      "market_cap_basic": 28151309560,
+      "price_earnings_ttm": 6.327789165953104,
+      "earnings_per_share_basic_ttm": 11.5793
+    }
+  ],
+  "metadata": {
+    "market": "america",
+    "sort_order": "desc",
+    "limit": 10,
+    "filters": [
+      {
+        "left": "close",
+        "operation": "in_range",
+        "right": [
+          50,
+          200
+        ]
+      }
+    ],
+    "total": 10,
+    "total_available": 2754
+  },
+  "error": null
+}

@@ -1,0 +1,73 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "symbol": "LSX:A12EXX",
+      "name": "A12EXX",
+      "close": 8.85,
+      "change": -1.6666666666666705,
+      "change_abs": -0.15000000000000036,
+      "volume": 327,
+      "Recommend.All": -0.603030303030303,
+      "market_cap_basic": 1015913794.4200062,
+      "price_earnings_ttm": 40.48042085812274,
+      "earnings_per_share_basic_ttm": 0.21896831870311873
+    },
+    {
+      "symbol": "GETTEX:89W",
+      "name": "89W",
+      "close": 4.4,
+      "change": -2.654867256637151,
+      "change_abs": -0.11999999999999922,
+      "volume": 0,
+      "Recommend.All": -0.5121212121212121,
+      "market_cap_basic": 246020338,
+      "price_earnings_ttm": 45.92901878914405,
+      "earnings_per_share_basic_ttm": 0.0958
+    },
+    {
+      "symbol": "LS:909471",
+      "name": "909471",
+      "close": 2.86,
+      "change": 3.623188405797105,
+      "change_abs": 0.10000000000000009,
+      "volume": 35,
+      "Recommend.All": -0.2027972027972028,
+      "market_cap_basic": 63906038.29288412,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": -2.2832229657109173
+    },
+    {
+      "symbol": "TRADEGATE:AES",
+      "name": "AES",
+      "close": 12.402,
+      "change": 1.2077688917904332,
+      "change_abs": 0.1479999999999997,
+      "volume": 1384,
+      "Recommend.All": 0.22424242424242424,
+      "market_cap_basic": 8847820423.739851,
+      "price_earnings_ttm": 11.068596519756836,
+      "earnings_per_share_basic_ttm": 1.122851231577424
+    },
+    {
+      "symbol": "XETR:SQL",
+      "name": "SQL",
+      "close": 4.28,
+      "change": 0,
+      "change_abs": 0,
+      "volume": 0,
+      "Recommend.All": -0.17878787878787877,
+      "market_cap_basic": 68335527.62141275,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    }
+  ],
+  "metadata": {
+    "market": "germany",
+    "sort_order": "desc",
+    "limit": 5,
+    "total": 5,
+    "total_available": 35816
+  },
+  "error": null
+}

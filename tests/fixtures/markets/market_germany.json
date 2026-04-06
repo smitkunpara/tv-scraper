@@ -1,0 +1,84 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "symbol": "LS:918422",
+      "name": "918422",
+      "close": 153.6,
+      "change": 1.3460015835312695,
+      "change_abs": 2.039999999999992,
+      "volume": 27038,
+      "Recommend.All": 0.09090909090909091,
+      "market_cap_basic": 3742957482888.03,
+      "price_earnings_ttm": 37.13086339154562,
+      "earnings_per_share_basic_ttm": 4.162292176554983,
+      "sector": "Electronic Technology",
+      "industry": "Semiconductors"
+    },
+    {
+      "symbol": "FWB:NVD",
+      "name": "NVD",
+      "close": 153.5,
+      "change": 0.9337190952130375,
+      "change_abs": 1.4199999999999875,
+      "volume": 5361,
+      "Recommend.All": -0.17878787878787877,
+      "market_cap_basic": 3742957482888.03,
+      "price_earnings_ttm": 37.10668965235841,
+      "earnings_per_share_basic_ttm": 4.162292176554983,
+      "sector": "Electronic Technology",
+      "industry": "Semiconductors"
+    },
+    {
+      "symbol": "SWB:NVD",
+      "name": "NVD",
+      "close": 153.7,
+      "change": 1.4119820533122105,
+      "change_abs": 2.1399999999999864,
+      "volume": 3332,
+      "Recommend.All": -0.06666666666666667,
+      "market_cap_basic": 3742957482888.03,
+      "price_earnings_ttm": 37.15503713073282,
+      "earnings_per_share_basic_ttm": 4.162292176554983,
+      "sector": "Electronic Technology",
+      "industry": "Semiconductors"
+    },
+    {
+      "symbol": "TRADEGATE:NVD",
+      "name": "NVD",
+      "close": 153.74,
+      "change": 1.2779973649538852,
+      "change_abs": 1.9399999999999977,
+      "volume": 153527,
+      "Recommend.All": -0.13333333333333333,
+      "market_cap_basic": 3742957482888.03,
+      "price_earnings_ttm": 37.16470662640771,
+      "earnings_per_share_basic_ttm": 4.162292176554983,
+      "sector": "Electronic Technology",
+      "industry": "Semiconductors"
+    },
+    {
+      "symbol": "XETR:NVD",
+      "name": "NVD",
+      "close": 152.94,
+      "change": 0.39385584875935037,
+      "change_abs": 0.5999999999999943,
+      "volume": 113930,
+      "Recommend.All": -0.2,
+      "market_cap_basic": 3742957482888.03,
+      "price_earnings_ttm": 36.971316712910074,
+      "earnings_per_share_basic_ttm": 4.162292176554983,
+      "sector": "Electronic Technology",
+      "industry": "Semiconductors"
+    }
+  ],
+  "metadata": {
+    "market": "germany",
+    "sort_by": "market_cap",
+    "sort_order": "desc",
+    "limit": 5,
+    "total": 5,
+    "total_count": 32049
+  },
+  "error": null
+}

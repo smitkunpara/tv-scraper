@@ -1,0 +1,63 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "symbol": "PANCAKESWAP3BASE:PAXUSDC_935CCB",
+      "name": "PAXUSDC_935CCB",
+      "close": 39.30685937,
+      "change": -10.194356113216719,
+      "change_abs": -4.461948100000001,
+      "volume": 104.21904152,
+      "market_cap_calc": null,
+      "Recommend.All": -0.5
+    },
+    {
+      "symbol": "MEXC:BEAMXUSDT",
+      "name": "BEAMXUSDT",
+      "close": 0.001819,
+      "change": 0.16519823788547255,
+      "change_abs": 3.0000000000001813e-06,
+      "volume": 85680142.08000132,
+      "market_cap_calc": null,
+      "Recommend.All": -0.04242424242424242
+    },
+    {
+      "symbol": "BITMART:CCDOGUSDT",
+      "name": "CCDOGUSDT",
+      "close": 7.5e-05,
+      "change": 1.3513513513513475,
+      "change_abs": 9.999999999999972e-07,
+      "volume": 110400000,
+      "market_cap_calc": null,
+      "Recommend.All": -0.19696969696969696
+    },
+    {
+      "symbol": "RAYDIUMCLMM:DOBESOL_2SVTC1.USD",
+      "name": "DOBESOL_2SVTC1.USD",
+      "close": 2.01876470041e-07,
+      "change": 0.0855862087423265,
+      "change_abs": 1.7263066900620157e-10,
+      "volume": 0.24475012,
+      "market_cap_calc": null,
+      "Recommend.All": -0.2167832167832168
+    },
+    {
+      "symbol": "BITVAVO:SIGNEUR",
+      "name": "SIGNEUR",
+      "close": 0.027948,
+      "change": -7.414032995428345,
+      "change_abs": -0.0022380000000000004,
+      "volume": 5060027.3076,
+      "market_cap_calc": null,
+      "Recommend.All": -0.5575757575757576
+    }
+  ],
+  "metadata": {
+    "market": "crypto",
+    "sort_order": "desc",
+    "limit": 5,
+    "total": 5,
+    "total_available": 56417
+  },
+  "error": null
+}

@@ -1,0 +1,103 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "symbol": "FX_IDC:COPMXV",
+      "name": "COPMXV",
+      "close": 0.0005,
+      "change": -16.666666666666657,
+      "change_abs": -9.999999999999994e-05,
+      "logoid": "",
+      "description": "COLOMBIAN PESO / MEXICAN UNIDAD DE INVERSION"
+    },
+    {
+      "symbol": "FX_IDC:COPKPW",
+      "name": "COPKPW",
+      "close": 0.24,
+      "change": -4.0000000000000036,
+      "change_abs": -0.010000000000000009,
+      "logoid": "",
+      "description": "COLOMBIAN PESO / NORTH KOREAN WON"
+    },
+    {
+      "symbol": "FX_IDC:COPKZT",
+      "name": "COPKZT",
+      "close": 0.1257,
+      "change": -2.0265003897116065,
+      "change_abs": -0.002599999999999991,
+      "logoid": "",
+      "description": "COLOMBIAN PESO / KAZAKHSTANI TENGE"
+    },
+    {
+      "symbol": "FX_IDC:ZARHKD",
+      "name": "ZARHKD",
+      "close": 0.4499,
+      "change": -1.9825708061002172,
+      "change_abs": -0.009099999999999997,
+      "logoid": "",
+      "description": "SOUTH AFRICAN RAND / HONG KONG DOLLAR"
+    },
+    {
+      "symbol": "FX_IDC:COPDKX",
+      "name": "COPDKX",
+      "close": 0.001735,
+      "change": -1.921989824759749,
+      "change_abs": -3.399999999999996e-05,
+      "logoid": "",
+      "description": "COLOMBIAN PESO / DKX"
+    },
+    {
+      "symbol": "FX_IDC:AUXINR",
+      "name": "AUXINR",
+      "close": 64.38,
+      "change": -1.6648846800061148,
+      "change_abs": -1.0900000000000034,
+      "logoid": "",
+      "description": "AUSTRALIAN DOLLAR REFERENCE RATE / INDIAN RUPEE"
+    },
+    {
+      "symbol": "FX_IDC:JPYKZT",
+      "name": "JPYKZT",
+      "close": 2.8962,
+      "change": -1.6136155178856648,
+      "change_abs": -0.04750000000000032,
+      "logoid": "",
+      "description": "JAPANESE YEN / KAZAKHSTANI TENGE"
+    },
+    {
+      "symbol": "FX_IDC:CNYKZT",
+      "name": "CNYKZT",
+      "close": 67.3048,
+      "change": -1.5552574958204164,
+      "change_abs": -1.0632999999999981,
+      "logoid": "",
+      "description": "YUAN RENMINBI / KAZAKHSTANI TENGE"
+    },
+    {
+      "symbol": "FX_IDC:USDKZT",
+      "name": "USDKZT",
+      "close": 463.35,
+      "change": -1.5531381464326695,
+      "change_abs": -7.310000000000002,
+      "logoid": "",
+      "description": "U.S. DOLLAR / KAZAKHSTANI TENGE"
+    },
+    {
+      "symbol": "FX_IDC:UYUKZT",
+      "name": "UYUKZT",
+      "close": 11.4142,
+      "change": -1.5525003881251098,
+      "change_abs": -0.1800000000000015,
+      "logoid": "",
+      "description": "PESO URUGUAYO / KAZAKHSTANI TENGE"
+    }
+  ],
+  "metadata": {
+    "market": "forex",
+    "category": "losers",
+    "limit": 10,
+    "total": 10,
+    "totalCount": 3032
+  },
+  "error": null
+}

@@ -1,0 +1,143 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "symbol": "NASDAQ:AIXI",
+      "name": "AIXI",
+      "close": 0.3441,
+      "change": 163.27467482785002,
+      "change_abs": 0.2134,
+      "volume": 765791544,
+      "market_cap_basic": 1758278,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null,
+      "logoid": "xiao-i",
+      "description": "XIAO-I Corporation"
+    },
+    {
+      "symbol": "NASDAQ:PFSA",
+      "name": "PFSA",
+      "close": 1.83,
+      "change": 141.42480211081795,
+      "change_abs": 1.072,
+      "volume": 217494174,
+      "market_cap_basic": 1030405.9999999999,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": -283.719,
+      "logoid": "profusa",
+      "description": "Profusa, Inc."
+    },
+    {
+      "symbol": "OTC:LTNC",
+      "name": "LTNC",
+      "close": 0.0003,
+      "change": 49.99999999999998,
+      "change_abs": 9.999999999999996e-05,
+      "volume": 216611847,
+      "market_cap_basic": 6405478.199999999,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": -0.0001,
+      "logoid": "labor-smart",
+      "description": "Labor Smart Inc"
+    },
+    {
+      "symbol": "NASDAQ:ZSPC",
+      "name": "ZSPC",
+      "close": 0.0948,
+      "change": -7.058823529411764,
+      "change_abs": -0.007199999999999998,
+      "volume": 153353128,
+      "market_cap_basic": 3157122.6936,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": -0.9364,
+      "logoid": "zspace",
+      "description": "zSpace, Inc."
+    },
+    {
+      "symbol": "NASDAQ:IOBT",
+      "name": "IOBT",
+      "close": 0.0403,
+      "change": 24.76780185758514,
+      "change_abs": 0.008,
+      "volume": 137824576,
+      "market_cap_basic": 2899538.4535000003,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": -1.339,
+      "logoid": "io-biotech",
+      "description": "IO Biotech, Inc."
+    },
+    {
+      "symbol": "OTC:XALL",
+      "name": "XALL",
+      "close": 0.00025,
+      "change": -16.666666666666657,
+      "change_abs": -4.999999999999997e-05,
+      "volume": 131967675,
+      "market_cap_basic": 453170,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null,
+      "logoid": "xalles",
+      "description": "Xalles Holdings Inc."
+    },
+    {
+      "symbol": "NASDAQ:RDGT",
+      "name": "RDGT",
+      "close": 0.0177,
+      "change": -28.048780487804876,
+      "change_abs": -0.0069,
+      "volume": 107378585,
+      "market_cap_basic": 323655.12,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": -0.5715,
+      "logoid": "china-jo-jo-drugstores",
+      "description": "Ridgetech, Inc."
+    },
+    {
+      "symbol": "CBOE:BMNU",
+      "name": "BMNU",
+      "close": 1.8101,
+      "change": 6.476470588235299,
+      "change_abs": 0.11010000000000009,
+      "volume": 93746086,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null,
+      "logoid": "t-rex",
+      "description": "T-REX 2X Long BMNR Daily Target ETF"
+    },
+    {
+      "symbol": "OTC:ECOX",
+      "name": "ECOX",
+      "close": 0.00165,
+      "change": -2.94117647058823,
+      "change_abs": -4.9999999999999914e-05,
+      "volume": 82519727,
+      "market_cap_basic": 1808862,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null,
+      "logoid": "eco-innovation",
+      "description": "Eco Innovation Group, Inc."
+    },
+    {
+      "symbol": "AMEX:AIB",
+      "name": "AIB",
+      "close": 1.695,
+      "change": 46.120689655172434,
+      "change_abs": 0.5350000000000001,
+      "volume": 75841343,
+      "market_cap_basic": 167972805,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": -4.6216,
+      "logoid": "",
+      "description": "BlockchAIn Digital Infrastructure, Inc"
+    }
+  ],
+  "metadata": {
+    "market": "stocks-usa",
+    "category": "penny-stocks",
+    "limit": 10,
+    "total": 10,
+    "totalCount": 6263
+  },
+  "error": null
+}

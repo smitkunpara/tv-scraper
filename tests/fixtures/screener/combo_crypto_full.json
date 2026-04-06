@@ -1,0 +1,101 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "symbol": "KRAKEN:USDTUSD",
+      "name": "USDTUSD",
+      "close": 1,
+      "change": 0.041016816894929066,
+      "volume": 102307803.78258955,
+      "market_cap_calc": 184151480311.99927
+    },
+    {
+      "symbol": "BINANCE:USDTUSD",
+      "name": "USDTUSD",
+      "close": 1,
+      "change": 0,
+      "volume": 17406797,
+      "market_cap_calc": 184151480311.99927
+    },
+    {
+      "symbol": "COINBASE:USDTUSD",
+      "name": "USDTUSD",
+      "close": 0.99985,
+      "change": 0.026010664372396484,
+      "volume": 23583598.99000001,
+      "market_cap_calc": 184123857589.95248
+    },
+    {
+      "symbol": "BITFINEX:USTUSD",
+      "name": "USTUSD",
+      "close": 0.9995,
+      "change": -0.0010004902402131536,
+      "volume": 27961228.1974627,
+      "market_cap_calc": 184059404571.8433
+    },
+    {
+      "symbol": "BITSTAMP:XRPUSD",
+      "name": "XRPUSD",
+      "close": 1.33826,
+      "change": 0.9717967677194467,
+      "volume": 10192454.73656922,
+      "market_cap_calc": 82176566875.59242
+    },
+    {
+      "symbol": "COINBASE:XRPUSD",
+      "name": "XRPUSD",
+      "close": 1.3382,
+      "change": 0.9505129752565002,
+      "volume": 47276800.56279566,
+      "market_cap_calc": 82172882543.6894
+    },
+    {
+      "symbol": "KRAKEN:XRPUSD",
+      "name": "XRPUSD",
+      "close": 1.338,
+      "change": 0.9232440260680687,
+      "volume": 11000782.77110895,
+      "market_cap_calc": 82160601437.34601
+    },
+    {
+      "symbol": "BTSE:XRPUSD",
+      "name": "XRPUSD",
+      "close": 1.3378,
+      "change": 0.9355666213973284,
+      "volume": 29658508.18734245,
+      "market_cap_calc": 82148320331.00261
+    },
+    {
+      "symbol": "BINANCE:USDCUSD",
+      "name": "USDCUSD",
+      "close": 1.0001,
+      "change": -0.029988004798077467,
+      "volume": 16154355,
+      "market_cap_calc": 77770909542.9694
+    },
+    {
+      "symbol": "KRAKEN:USDCUSD",
+      "name": "USDCUSD",
+      "close": 1,
+      "change": 0.02000400080015783,
+      "volume": 32054216.67023724,
+      "market_cap_calc": 77763133229.64644
+    }
+  ],
+  "metadata": {
+    "market": "crypto",
+    "sort_order": "desc",
+    "limit": 10,
+    "filters": [
+      {
+        "left": "volume",
+        "operation": "greater",
+        "right": 10000000
+      }
+    ],
+    "sort_by": "market_cap_calc",
+    "total": 10,
+    "total_available": 10991
+  },
+  "error": null
+}

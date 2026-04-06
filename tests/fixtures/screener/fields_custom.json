@@ -1,0 +1,83 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "symbol": "OTC:VRSSF",
+      "name": "VRSSF",
+      "close": 0.6302,
+      "change": 2.083130851718661,
+      "volume": 8396
+    },
+    {
+      "symbol": "NASDAQ:SPRY",
+      "name": "SPRY",
+      "close": 8.385,
+      "change": 1.0240963855421574,
+      "volume": 308690
+    },
+    {
+      "symbol": "NASDAQ:NVDU",
+      "name": "NVDU",
+      "close": 99.35,
+      "change": -0.4059946869831098,
+      "volume": 172751
+    },
+    {
+      "symbol": "CBOE:VOXP",
+      "name": "VOXP",
+      "close": 33.885,
+      "change": 0,
+      "volume": 24
+    },
+    {
+      "symbol": "NYSE:CIM/PB",
+      "name": "CIM/PB",
+      "close": 22.7599,
+      "change": 1.3804008908685923,
+      "volume": 25677
+    },
+    {
+      "symbol": "NASDAQ:RDNW",
+      "name": "RDNW",
+      "close": 6.48,
+      "change": -4.424778761061944,
+      "volume": 13395
+    },
+    {
+      "symbol": "NASDAQ:QCMD",
+      "name": "QCMD",
+      "close": 29.29,
+      "change": 1.7398946128916775,
+      "volume": 654
+    },
+    {
+      "symbol": "CBOE:QCAP",
+      "name": "QCAP",
+      "close": 24.04,
+      "change": 0.04161464835621311,
+      "volume": 531
+    },
+    {
+      "symbol": "OTC:AASP",
+      "name": "AASP",
+      "close": 4.7,
+      "change": 0,
+      "volume": 1389
+    },
+    {
+      "symbol": "OTC:LUDG",
+      "name": "LUDG",
+      "close": 0.044,
+      "change": 25.714285714285694,
+      "volume": 6100
+    }
+  ],
+  "metadata": {
+    "market": "america",
+    "sort_order": "desc",
+    "limit": 10,
+    "total": 10,
+    "total_available": 19096
+  },
+  "error": null
+}

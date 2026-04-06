@@ -1,0 +1,327 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "title": "Trading the Stars: A $5,410 Walk-Forward SPY Case Study",
+      "description": "Well, never in a million years would I expect to be having this conversation. \n\nIf you have followed me, you know I am all about math, statistics and science. I tend to brush of \"technical analysis\" and roll my eyes at things like EWT. And not because I assume they don't work, but because I have tried them and they failed me. \n\nWell, market astrology was one thing I did more than roll my eyes at and turn my back to, and unlike the other strategies it wasn't because I had tried it. It stemmed purely from thinking anything to do with astrology was bogus and nonsense and personal bias. (Bias is the enemy in the market, especially when it erodes into your strategy!!). \n\nI have been trading since 2018, applying multiple different strategies. Profitability for me came with the transition to math and statistics for trading, which I transitioned to around end of 2019, early 2020 (That's right, almost 3 years of doing this whole nonsense losing money constantly!). And here we are, in April of 2026, and I am about to talk to you about market \"astrology\"! \n\nHow did we get here? To be honest, I am not sure. This long weekend, I was randomly inspired to check the full moon and new moons' relationship to trading and market returns. Despite this being within the last 3 days, I can't for the life of me remember why I decided to try this, but I did and I went through with the analysis. And to my surprise, there was actually a significant relationship between price action and new / full moons. \n\nSo I did what I do and of course consulted AI to get its take, I shared my code and my findings. It told me that this is a well documented phenomenon, attributed it to the gravitational pull and how the moon effects the tides, it could for sure affect humans, etc. etc. \nOkay, got it. Easy - ish pill to swallow. But then, the AI was like, try this code here. I tired it and it showed that certain circumstances the new moon actually caused a completely opposite effect. And so I asked, what I did wrong, thinking it was a coding error, and good ol' AI was like \"Nah Bruh, these are the cases where Mercury is in Retrograde\". \n\nAnd that was where this little quantitative trader entered the forbidden realm of Astrology. \n\n The Curiosity Spikes \n\nLogically, my curiosity spiked even though hearing the term \"Mercury in retrograde\" sparks feelings of, well, nonsense. But because these findings were significant alone, I decided to play devil's advocate and add all of these celestial features to one of my larger predictive models that, at the time, totaled around 94 features, from fundamentals to technicals. I added all celestial features, including the zodiac signs, mercury in retrograde, new moons and full moons, etc. etc. \n\nI then ran 2 algorithms I have to filter whether these are worth keeping or completely bogus. The first is a basic decision tree importance test, which iterates through all features and decides which ones it wants to keep because it adds substantial predictive power and which ones it wants to discard. In this case, I used Random Forest. \n\nThe next, I iterated through a similar one, but using regression. This tells me, if there is significance and it adds predictive power, what is the actual relationship to the data (i.e. does it have a positive or negative correlation). \n\nAnd in those 94 and, after these additions over 100 features, wouldn't you know it, both regression and my tree based algorithm prioritized many astrological features in the top 20 most important features for predicting market behaviour. \n\nI hope you are just as shook as I was when I looked at the screen. And just to be transparent, here are the results: \n\n\n\nTake a look at the chart. You will see how the astrological features can hold their weight against heavy hitters like VIX, VWAP and Volatility features. \n\nThis table shows the predictive power of these features in relation to predicted the daily high price and the daily low price. \n\nHonestly, having the conversation even a week ago, I would have been like \"You're NUTS!\". But alas, data doesn't lie. \n\nAnd I being someone who is visual, needed to really see this. So I went ahead and coded a quick python script to plot this out: \n\n\n\nThis is 5 years of SPX data with the zodiac signs aligned and the Mercury in retrograde plotted in those red bands. \n\nLooking at the chart, you will see right away that mercury in retrograde tends to lead to a major pivot. After retrograde, the stock tends to flip its direction for the majority of the time before the next retrograde.\n\nAnd if you look closely (which will likely be hard to visualize from the image, so I will share the table below), you can see very clearly certain zodiac signs aligning with very clear sentiments. \nHere is the table that outlines that: \n\n\n\nSo now the next thing, because this is all about viable strategy, is can we make this into an actual successful strategy? \n\n And shockingly, yes. Yes we can.  \n\nThe strategy is actually fairly simple. For SPX, we long the bullish zodiac signs and short the bearish signs. We hold our position right to the very end of the zodiac phase, and we set a 2% stop loss. \n\nHere are the results: \n\n\n\nThis is with a 2% stop loss. If we tighten our stop to 1%, here are the results: \n\n\n\nEven better!\nYou can theoretically optimize the strategy further by omitting the periods that have low win rates, such as Gemini which carries a lower 39% win rate. \n\n And it gets even funnier: \n\n\n\nThe win rate on the astrology strategy is higher than any conventional technical strategy, such as RSI, Stoch or MFI. Though, its only a tad bit higher than stochastic.\n\n Applying the Strategy  \n\nSo, you want to try the strategy? You would need to calculate the average return for your ticker based on the celestial zodiac phases, if you wanted to follow the strategy exactly. \nCurrently, unless you can code python, there is no default indicator to do this, you would have to do it manually. However, in researching and doing this analysis, I have created one: \n\n\n\nWhich I will release in the coming days following this article, so you can apply it yourself. \n\nYou can even augment the strategy further by combining stochastics or RSI. Since stochastics has a relatively close win rate, combining the 2 dramatically increases your win rate. \n\nIn fact, I ran this in Python and the result was 18.571.79$ over 2 years with a win rate of 66.67%. \n\nThe parameters for this strategy? \n\nSimple, before we long a bullish zodiac phase, we only long it if Stochastic is <= 20. \nBefore we short a bearish zodiac phase, we only short it if stoch is >= 80. \nIn both cases, we hold for the entire duration of the zodiac phase, which is really what augments your profits in this strategy. \n\n Explanations  \n\nSo, if you're like me, you're probably asking.. \"how\"? How is this a thing? And to be truthful, its impossible to know what comes first, the chicken or the egg. Initially, I chalked it up to just seasonality. However, when I compared the performance of my seasonality features, which have forever been a huge hallmark in my models, my seasonality features lifted my model prediction by only 6%. The astrology lifted the accuracy by a whopping 32%!!!! Meaning, the astrology features outperform traditional seasonality. \n\nMake it make sense. \n\nBut there are other hypothesized rationales to the effect of astrological on the market, namely: \n\n \n  The influence of gravitational pulls on human behavior. \n   In certain zodiac phases, there is changes in the magnetic fields caused by the sun. This has been known to change behavior and increase anxiety and risk averse behavior in animals and humans. \n  More granular seasonality. Seasonality as we know it comes by month. However, zodiac phases and retrograde create more granular seasonal periods, that are sometimes shorter than full months and other times overlap into existing months. This can create a more zoomed in look at seasonal trends. \n \n\n Conclusion  \n\nAnd that's it. \nWild idea, right?\nAnd who would of thought you would have heard it from me! \n\nAnyway, that's all for now! Hope you learned something and enjoyed.\nTake care and as always, safe trades! ",
+      "preview_image": [
+        "https://s3-symbol-logo.tradingview.com/spdr-sandp500-etf-tr.svg"
+      ],
+      "chart_url": "https://www.tradingview.com/chart/SPY/5kIiwO1Q-Trading-the-Stars-A-5-410-Walk-Forward-SPY-Case-Study/",
+      "comments_count": 25,
+      "views_count": 0,
+      "author": "Steversteves",
+      "likes_count": 23,
+      "timestamp": 1775371592
+    },
+    {
+      "title": "A critical moment",
+      "description": "Either SPX starts to fall apart today or it won't. Basically when oil drops the SPX rallies. if oil can get above 105.5, the SPX should start falling harder than it has. The VIX is so far still holding support. ",
+      "preview_image": [
+        "https://s3-symbol-logo.tradingview.com/spdr-sandp500-etf-tr.svg"
+      ],
+      "chart_url": "https://www.tradingview.com/chart/SPY/yBZ55ouU-A-critical-moment/",
+      "comments_count": 5,
+      "views_count": 0,
+      "author": "rsitrades",
+      "likes_count": 4,
+      "timestamp": 1774970658
+    },
+    {
+      "title": "A potential Short covering rally ",
+      "description": "We are at the Friday low and slowing down considerably. Watch out for a short squeeze on some announcement. It doesn't have to happen, but the conditions are there for one. ",
+      "preview_image": [
+        "https://s3-symbol-logo.tradingview.com/spdr-sandp500-etf-tr.svg"
+      ],
+      "chart_url": "https://www.tradingview.com/chart/SPY/YQ2qyJ7F-A-potential-Short-covering-rally/",
+      "comments_count": 5,
+      "views_count": 0,
+      "author": "rsitrades",
+      "likes_count": 12,
+      "timestamp": 1774893952
+    },
+    {
+      "title": "SPY PRICE ACTION 27TH MARCH-3RD APRIL 2026",
+      "description": "I have thoroughly explained the price action here with RSI. I have also explained why I am bullish & have discussed my long positions as well.\n\nNOTE: DO NOT PANIC,THIS IS MOST LIKELY A RALLY",
+      "preview_image": [
+        "https://s3-symbol-logo.tradingview.com/spdr-sandp500-etf-tr.svg"
+      ],
+      "chart_url": "https://www.tradingview.com/chart/SPY/WwcmU7y3-SPY-PRICE-ACTION-27TH-MARCH-3RD-APRIL-2026/",
+      "comments_count": 21,
+      "views_count": 0,
+      "author": "THECHAARTIST",
+      "likes_count": 26,
+      "timestamp": 1774632676
+    },
+    {
+      "title": "SPY Bottom Been Touched\u2026 or Is This Just a Dead Cat Bounce?",
+      "description": ".\nDe-escalation headlines drove a sharp relief rally (futures still green), but no peace is signed, Iran demanding guarantees and oil remains elevated. Not a clean risk-on signal yet.\n\n\nThe market was heavily oversold, so the bounce makes sense. Still, I\u2019m focused on structure: we still have unfilled imbalances around the 600 & 570 areas, plus a massive liquidity pool sitting near 500. Plenty of orders resting there waiting to be executed.\n\nFor now, we\u2019re staying mostly in cash and in observation mode,  watching how the next pullback behaves. If buyers defend key levels early, that\u2019s real strength. If we sweep deeper into those liquidity zones, uncertainty is still being repriced.\n\nKey catalysts this week: ADP today, Payrolls Friday + Trump speech tonight.\nLonger-term? I still see strong upside potential into year-end if geopolitics clears and momentum holds.\n\nWhat\u2019s your read,  bottom in, or more work to do before sustained move higher?\n\nDon't forget to Follow for weekly insights \nNFA",
+      "preview_image": [
+        "https://s3-symbol-logo.tradingview.com/spdr-sandp500-etf-tr.svg"
+      ],
+      "chart_url": "https://www.tradingview.com/chart/SPY/rDY7rOHE-SPY-Bottom-Been-Touched-or-Is-This-Just-a-Dead-Cat-Bounce/",
+      "comments_count": 5,
+      "views_count": 0,
+      "author": "JP9X",
+      "likes_count": 7,
+      "timestamp": 1775056550
+    },
+    {
+      "title": "HOW-TO: Read weekly charts on heavy volume tickers like SPY",
+      "description": "Here we have the weekly chart for spy, seeing as the weekly indication of bearish flow came in around Dec of 2025, price action has since been extremely bearish. ",
+      "preview_image": [
+        "https://s3-symbol-logo.tradingview.com/spdr-sandp500-etf-tr.svg"
+      ],
+      "chart_url": "https://www.tradingview.com/chart/SPY/Z5AdO65X-HOW-TO-Read-weekly-charts-on-heavy-volume-tickers-like-SPY/",
+      "comments_count": 6,
+      "views_count": 0,
+      "author": "Ichi-TP",
+      "likes_count": 5,
+      "timestamp": 1775277109
+    },
+    {
+      "title": "S&P 500: Bull/Bear scorecard reads like 2015, not 2022...",
+      "description": "I learned to think about markets as a tug-of-war between competing bull and bear factors from Tim West (@timwest) right here on TradingView. Instead of building a narrative around one indicator, you lay out everything pulling in each direction and see where the weight falls.\n\nI've been running a version of this scorecard monthly. Here's April 1st.\n\n5 Bull / 2 Bear / 11 Neutral\n\n The bulls:  \n \n Consumer Confidence at 56.6, readings this depressed have historically marked sentiment troughs, not peaks.\n AAII Sentiment at 49.8% bearish, half the survey wants out, which is a contrarian buy signal.\n VIX at 24.7, real fear priced in.\n ISM Manufacturing PMI at 52.4, still expanding.\n Yield Curve at +51bps, positive slope, no inversion.\n \n\n The bears:  \n\n \n Energy at $99.8, oil near triple digits squeezes consumers and margins.\n Trailing P/E at 25.8x, the market isn't cheap.\n \n\nEverything else is neutral. Eleven indicators sitting on the fence.\n\nI went back through the same indicators at every major turn since 2007. The pattern is hard to miss.\n\n What tops look like: \n\nAt the Jan 2022 top, VIX was 17-20 and AAII bearish was around 30%. The Jan 2018 Volmageddon top had VIX at 9.15, close to an all-time low. Oct 2007 sat at VIX 10-16 with AAII bearish around 25-30%. Same profile every time: low VIX, low fear, everyone positioned long, nobody hedging. We are nowhere near that right now.\n\n What mid-cycle buying opportunities look like: \n\nSep 2015, AAII bearish 48.9%. VIX settled into the 24-27 range after spiking to 40 on China's Black Monday. PMI 50.2, barely expanding. The narrative was China hard landing, first Fed hike since 2006 (man I remember it like it was yesterday), an earnings recession that turned out to be entirely energy-sector driven (ex-energy, S&P earnings grew 7.6%). The S&P returned +12% in 2016 and +22% in 2017.\n\nDec 2018, AAII bearish around 50%. VIX hit 36 on Christmas Eve. PMI was still 54. The Fed blinked, paused hikes, and the market ripped through 2019.\n\nOct 2022, AAII bearish above 60% for consecutive weeks, first time in survey history. VIX at 33. PMI 50.2. The S&P returned +24% in 2023.\n\nToday sits closest to September 2015. AAII is nearly identical (49.8% vs 48.9%). VIX is in the same post-spike mid-20s territory. PMI is actually stronger now at 52.4 vs 50.2. Junk spreads at 346bps show zero credit stress, in Sep 2015 they were already blowing past 550.\n\nWhere the analog weakens: valuations are more stretched now (25.8x trailing vs 21.5x). The yield curve is thinner at +51bps vs +154bps. Consumer confidence at 56.6 is genuinely poor, it was around 98 in Sep 2015. And energy is working against us (oil near $100), where falling oil in 2015 actually became a consumer tailwind by mid-2016.\n\nSo it's not a clean replay. The direction of the signal is the same, but the margin of safety is thinner.\n\nWhat I'm watching from here: PMI holding above 50 is the single most important factor. If manufacturing rolls into contraction, the mid-cycle thesis breaks. Junk spreads are the second tell, 346 is comfortable, 500+ changes the picture entirely.\n\nFive bulls against two bears, with a large neutral middle that hasn't picked a side. In my experience, the market everybody is afraid of tends to go up, and the market nobody worries about tends to go down. Right now, everybody is afraid.\n\nOne observation for those who trade volatility: VIX above 24 with junk spreads below 350 and PMI above 50 is a combination where selling premium has historically paid well. Fear is priced in, but the structural damage to justify it hasn't shown up. That gap between implied and realized is where the money is.\n\nCredit to Tim West (@timwest) for the bull/bear framework that shaped how I look at markets. If you're not following his work, you should be.\n\nBest of luck!\nCheers,\n\nIvan Labrie.",
+      "preview_image": [
+        "https://s3-symbol-logo.tradingview.com/spdr-sandp500-etf-tr.svg"
+      ],
+      "chart_url": "https://www.tradingview.com/chart/SPY/O4iWTFni-S-P-500-Bull-Bear-scorecard-reads-like-2015-not-2022/",
+      "comments_count": 1,
+      "views_count": 0,
+      "author": "IvanLabrie",
+      "likes_count": 8,
+      "timestamp": 1775079316
+    },
+    {
+      "title": "SPY | The 4 Horsemen of the 75% Crash | SHORT",
+      "description": "Are you ready for the Great Reset?\n\nIf you've been following the Divergence Seeker journey, you know we don\u2019t just look at the ticker - we look at the structural rot beneath the surface. We\u2019re currently staring down a potential 75% decline in the S&P 500. This isn't fear-mongering; it\u2019s a mathematical \"mean reversion\" to the reality our current economy actually supports.\n\nHere is the roadmap of how we get there and why the volume \"spikes\" you see on your charts are the footprints of the big money getting trapped.\n\nThe 4 Horsemen of the 75% Crash\nTo see the S&P 500 back at the 1,500 level, these four collisions have to happen at once. (Spoiler: They already are.)\n\nThe Energy Blockade: The 2026 Iran War has effectively choked the Strait of Hormuz. This isn't \"transitory\" anymore. With oil locked at triple digits, the \"Silicon Dreams\" of cheap tech growth are being crushed by the high cost of physical reality.\n\nThe Gravity of Rates: High interest rates are the gravity of the financial world. As the 10-Year Treasury yield pushes toward 6%, the high multiples we paid for tech in 2024 become impossible to justify. We are moving from a 25x \"frenzy\" back to an 8x \"depression\" multiple.\n\nThe Credit Wall: Trillions in corporate debt are rolling over right now at these massive 2026 rates. The \"zombie companies\" that lived on free money are hitting a wall, and when they default, the credit markets freeze just like they did in 2008.\n\nThe Survival Pivot: We are shifting from \"software and AI\" to \"food, energy, and defense.\" If you aren't positioned in hard assets, you\u2019re holding a bag of digital air.\n\nDecoding the Volume Spikes: The Trail We\u2019ve Followed\nEvery time the market hits a breaking point, the volume tells the story. Here\u2019s how we got here:\n\n2020: The Algorithmic Panic\nRemember the COVID spike? That wasn't just people being scared; it was the \"Volatility-Targeting\" algorithms being forced to sell everything at once. It was a massive liquidity trap that only cleared when the Fed flooded the zone with cash.\n\n2022: The Narrative Death\nThe volume spike in early 2022 was the sound of the \"Transitory Inflation\" lie finally dying. As Russia invaded Ukraine, the smart money ditched tech and rotated into Energy and Grains (WEAT) on record volume.\n\n2025: The Policy Shock\nThe 20% \"flash correction\" in 2025 was driven by the Tariff Tantrum. Overnight, the market had to re-price every global supply chain. The volume showed us that the \"old way\" of global trade was officially over.\n\n2026: The Bond Rout (Right Now)\nWhat we are seeing today is Forced Liquidation. As the Iran conflict escalates, energy prices are forcing a global bond sell-off. The volume is peaking because passive index funds are being forced to dump their crashing tech holdings to cover the carnage.\n\nThe Seeker\u2019s Edge\nA 75% drop sounds terrifying to the average investor, but for us, it's the ultimate Divergence. While the masses are trapped in the \"Silicon Dreams\" of the past, we are watching the charts for the pivot into the next supercycle.\n\nStay sharp. The \"DS Eye\" sees what the crowd misses.",
+      "preview_image": [
+        "https://s3-symbol-logo.tradingview.com/spdr-sandp500-etf-tr.svg"
+      ],
+      "chart_url": "https://www.tradingview.com/chart/SPY/zIOdwrhb-SPY-The-4-Horsemen-of-the-75-Crash-SHORT/",
+      "comments_count": 2,
+      "views_count": 0,
+      "author": "DivergenceSeeker",
+      "likes_count": 9,
+      "timestamp": 1775390493
+    },
+    {
+      "title": "SPY WEEKLY 6-10 APRIL 2026",
+      "description": "This is my analysis of the market. This should be the U turn for the market. I have clearly explained the price action. I have bullish\n\nNOTE:MARKET IS BULLISH",
+      "preview_image": [
+        "https://s3-symbol-logo.tradingview.com/spdr-sandp500-etf-tr.svg"
+      ],
+      "chart_url": "https://www.tradingview.com/chart/SPY/KyWFlwqi-SPY-WEEKLY-6-10-APRIL-2026/",
+      "comments_count": 6,
+      "views_count": 0,
+      "author": "THECHAARTIST",
+      "likes_count": 5,
+      "timestamp": 1775160623
+    },
+    {
+      "title": "SPY: Tuesdays 2.9% Rally Was a Trap - Gap Down Confirms Bear Cas",
+      "description": "SPY ripped from $632 to $651 on Tuesday \u2014 a +2.9% rally that had everyone calling the bottom. Two days later, it gapped down to $646, VIX surged +13% to 27.7, and the rally looks like a textbook bear market bounce.\n\nThe Pattern:\nTuesday (Mar 31): SPY gaps up, runs from $632 to $651. Massive volume, shorts covering, FOMO.\nWednesday (Apr 1): Flat. SPY holds $650 but cannot push higher.\nThursday (Apr 2): Gap down to $646. VIX surges. Rally unwinding. Bounced to $657 intraday but rejected \u2014 exactly at the resistance level fintwit called.\n\nWhy This Pattern Matters\n\nIn bear markets, the strongest rallies happen in the sharpest downtrends. A +2.9% day is MORE common in bear markets than bull markets. The pattern:\n1. Sharp selloff creates oversold conditions\n2. Violent short-covering rally (+2-3%)\n3. 1-2 days of consolidation\n4. Gap down resumes prior trend\n5. New lows within 1-2 weeks\n\nWe are at step 4 right now.\n\nThe VIX Signal\n\nVIX at 27.7 \u2014 elevated but not extreme (35+ = capitulation). Rising VIX on a gap down with orderly selling, not panic. Orderly selling can persist for weeks.\n\nOil at $111 (+11%) \u2014 largest daily move since 2020. Iran escalation + Hormuz Strait risks. When both equities AND gold sell off simultaneously, it usually means forced liquidation.\n\nWhat I Am Trading\n\nBear call spreads: sell premium above the market while VIX is elevated.\n- Closed META 615/625C for +$89 profit today (40% of max, 2 days held)\n- QQQ 600/605C still working \u2014 $16 cushion to short strike\n\n0DTE today: NO-GO. Thursday = SPY 0DTE day but VIX +13% and gap down = directional risk too high.\n\nLevels to Watch:\n- SPY resistance: $657 (rejected today), $660 (Tuesday high)\n- SPY support: $640 (swing low zone), $632 (gap fill)\n- VIX > 30: reduce all positions. VIX < 25: consider adding.\n\nFor the rally to be real: SPY needs to hold $640 and reclaim $655 this week. Failure targets $625.\n\nBottom Line\n\nTuesdays rally was a short squeeze, not a trend change. The gap-up-stall-gap-down pattern is textbook. Trade the trend: sell rallies, sell premium, keep stops tight. Not at capitulation yet.\n\nNFP tomorrow (Apr 3) is the next binary event. Strong = rally attempt. Weak = next leg down. Position accordingly.\n\nDisclaimer: Not financial advice. These are my trades and analysis, shared for educational purposes.",
+      "preview_image": [
+        "https://s3-symbol-logo.tradingview.com/spdr-sandp500-etf-tr.svg"
+      ],
+      "chart_url": "https://www.tradingview.com/chart/SPY/v5lw966h-SPY-Tuesdays-2-9-Rally-Was-a-Trap-Gap-Down-Confirms-Bear-Cas/",
+      "comments_count": 1,
+      "views_count": 0,
+      "author": "bubblyLion51830",
+      "likes_count": 5,
+      "timestamp": 1775159579
+    },
+    {
+      "title": "SPY:  Short Trade with Entry/SL/TP",
+      "description": "\n\n SPY  \n- Classic bearish formation\n- Our team expects pullback\n\n SUGGESTED TRADE:  \n\nSwing Trade\nShort SPY\nEntry - 656.01\nSl - 660.35\nTp - 648.65  \n Our Risk - 1%  \n\n\nStart protection of your profits from lower levels\n\nDisclosure: I am part of Trade Nation's Influencer program and receive a monthly fee for using their TradingView charts in my analysis.\n\n\u2764\ufe0f Please, support our work with like & comment! \u2764\ufe0f\n",
+      "preview_image": [
+        "https://s3-symbol-logo.tradingview.com/spdr-sandp500-etf-tr.svg"
+      ],
+      "chart_url": "https://www.tradingview.com/chart/SPY/8e9lZcID-SPY-Short-Trade-with-Entry-SL-TP/",
+      "comments_count": 2,
+      "views_count": 0,
+      "author": "UnitedSignals",
+      "likes_count": 1,
+      "timestamp": 1775384314
+    },
+    {
+      "title": "S&P500 - The stockmarket remains 100% bullish!",
+      "description": "\ud83d\udca1S&P500 ( AMEX:SPY ) will head for new highs:  \n  \n \ud83d\udd0eAnalysis summary: \n Over the course of the past couple of weeks, the S&P500 already created a correction of about -10%. And looking at the higher timeframe, we could still see another -10% from here. But either way, the underlying trend for the remainder of 2026 remains just bullish. \n \ud83d\udcddLevels to watch: \n $600 \nSwingTraderPhil\nSwingTrading.Simplified. | Investing.Simplified. | #LONGTERMVISION",
+      "preview_image": [
+        "https://s3-symbol-logo.tradingview.com/spdr-sandp500-etf-tr.svg"
+      ],
+      "chart_url": "https://www.tradingview.com/chart/SPY/q8WP4FeV-S-P500-The-stockmarket-remains-100-bullish/",
+      "comments_count": 3,
+      "views_count": 0,
+      "author": "SwingTraderPhil",
+      "likes_count": 21,
+      "timestamp": 1775164441
+    },
+    {
+      "title": "UPDATE wave 2 up under way  ",
+      "description": "The chart posted is My view  of the markets  .I have a strong view based on The DJI that the super cycle peak  from 3/09/2009 has been seen   The worst is just ahead . Best of trades WAVETIMER ",
+      "preview_image": [
+        "https://s3-symbol-logo.tradingview.com/spdr-sandp500-etf-tr.svg"
+      ],
+      "chart_url": "https://www.tradingview.com/chart/SPY/KuSlaZiZ-UPDATE-wave-2-up-under-way/",
+      "comments_count": 11,
+      "views_count": 0,
+      "author": "wavetimer",
+      "likes_count": 13,
+      "timestamp": 1774979067
+    },
+    {
+      "title": "SPY at a Critical Weekly Level! Will 600 Hold or Break? April 3",
+      "description": "SPY still has a strong bigger-picture trend, but this weekly pullback is serious. The main thing now is whether buyers defend the 600 area. That level can decide if this is just a reset or the start of a deeper correction.\nNow let\u2019s look at GEX to get a deeper view of where the pressure and key reaction zones may be.\n\n  \n\nSo based on the weekly SPY chart, the pressure is still bearish short term, and price is sitting at a very important decision area.\n\nSPY is around 655.8, after a hard rejection from the upper zone. The chart shows that price pushed up into the 666 to 680 area, stalled, and then got sold off fast. That tells me buyers lost control near the overhead gamma and resistance cluster.\n\nWhat stands out most is this:\n\nThe market is now trading right above a key support band around 635 to 640, with another lower level around 625 to 620. So SPY is not in a clean bullish continuation right now. It is in a pullback phase, testing whether buyers will defend this area or whether the selloff continues lower.\n\nHow I see the current setup.\n\nThe previous move up was strong, but once SPY entered that purple supply/resistance box and the GEX resistance zones above, price could not continue. On the right side, you can see major overhead levels around:\n\n666 near HVL\n671 around the 1st CALL wall\n680 around the 2nd CALL wall\n695 to 700 major higher resistance\n\nThat means the upside is stacked with resistance. So even if SPY bounces, it still has work to do before the chart becomes strong again.\n\nNow look at downside structure:\n\n640 to 635 is the first key support zone\n625 to 620 is the next important downside shelf\nBelow that, the chart opens up more risk toward 600, and deeper support sits much lower near 575\n\nSo the current weekly candle location matters a lot. SPY is basically sitting between overhead call resistance and lower put support, and the next move depends on whether this 640-ish area can hold.\n\nMy current bias:\n\nShort-term bias: bearish to cautious\nWeekly structure: pullback / breakdown risk\nCurrent condition: testing support, not confirmed reversal\n\nBullish scenario:\nIf SPY can hold this support area and reclaim 666, that would be the first sign buyers are regaining control. After that, price would need to push back into 671 to 680. Only then does the chart start looking stronger again.\n\nBearish scenario:\nIf SPY loses 640 to 635, I would expect pressure toward 625 to 620 next. If that breaks too, then the weekly chart likely continues lower toward 600. That would confirm the selloff is not just a pullback but a deeper reset.\n\nWhat the options/GEX side is suggesting:\n\nGEX option data shows stronger downside support zones below, but also very clear call resistance overhead. That usually means price can stay pinned or heavy unless buyers force a reclaim. Also the oscillator below shows elevated put pressure, which supports the idea that sentiment is still weak right now.\n\nSo overall:\n\nSPY is not strong here yet.\nIt is trying to stabilize, but the weekly chart still leans bearish unless price can reclaim 666 first.\nIf 640 to 635 fails, then 625 to 620 becomes the next likely downside target.\n\nMy overall view:\nBelow 666 = cautious / bearish\nLose 635 = more downside likely\nReclaim 666 and then 671 to 680 = bullish recovery starts to improve\n\nThanks for reading. Let me know in the comments what levels you\u2019re watching and whether you think SPY holds this zone or breaks lower. Good discussion always helps us see the market more clearly.",
+      "preview_image": [
+        "https://s3-symbol-logo.tradingview.com/spdr-sandp500-etf-tr.svg"
+      ],
+      "chart_url": "https://www.tradingview.com/chart/SPY/eMlnAE0u-SPY-at-a-Critical-Weekly-Level-Will-600-Hold-or-Break-April-3/",
+      "comments_count": 1,
+      "views_count": 0,
+      "author": "BullBearInsights",
+      "likes_count": 11,
+      "timestamp": 1775234373
+    },
+    {
+      "title": "$SPY - THE NECKLINE BREAK NOBODY WANTED TO SEE",
+      "description": "AMEX:SPY  - THE NECKLINE BREAK NOBODY WANTED TO SEE \ud83d\udd34\n\nTechnical Execution:\nClean H&S top confirmed. Neckline at 672-680 shattered with conviction volume. Price testing 0.702 Fib (633.81) after rejecting premium zone. RSI 37.30 shows momentum bleed\u2014not capitulation. ORB bearish, CM_Ultimate MA acting as resistance at 658.\nMeasured move projects 618-635 equilibrium zone. Volume profile screams distribution, not healthy consolidation.\n\nMacro Reality Check:\nThis isn't retail fear\u2014this is institutional repositioning ahead of structural breakdown.\nMoody's AI-driven recession model hit 49% probability Yahoo Finance\u2014and when backtested over 80 years, every time it crosses 50%, recession follows within 12 months. We just lost 92,000 jobs when economists expected +59,000 Yahoo Finance. GDP revised from 1.4% down to 0.7% Yahoo Finance.\nShiller CAPE ratio hit 39.7 in January 2026\u2014the second-highest reading in over 150 years The Motley Fool. Only 1999 dot-com bubble was higher. We're not \"fairly valued\"\u2014we're historically stretched at a macro inflection point.\n\nThe Iran Variable:\nOil disruptions now exceed 11 million barrels/day\u2014worse than the combined 1970s oil shocks News24. WTI crude jumped nearly 10% to $110/barrel after Trump confirmed the war continues for weeks CNBC. Strait of Hormuz blockade = 20% of global oil supply offline.\nEnergy shock + negative GDP revision + labor market deterioration = stagflation setup.\nJPMorgan CEO Jamie Dimon warned of more \"cockroaches\" in credit markets after auto loan blowups Yahoo Finance. Credit spreads widening. High-yield bonds under pressure. This is how 2008 started\u2014not with a bang, but with cracks.\n\nThe Flow Doesn't Lie:\nPremium dominance in recent sessions. Institutions loading puts at structure. Sweep activity concentrated in bearish strikes. P/C ratios elevated. Aggression scores trending negative.\nSmart Money Concepts Read:\nWe've broken market structure to the downside. Previous demand zones failed. Order blocks invalidated. Liquidity grab complete\u2014now the real move begins.\nThis is not a dip to buy. This is the beginning of mean reversion from the second-most-overvalued market in modern history during an accelerating energy crisis and deteriorating macro data.\nTargets:\n\nImmediate: 635 (0.702 Fib)\nSecondary: 618 (0.618 Fib)\nStructural: 595-601 (1.5 Fib extension + ORB equilibrium)\n\nRisk-First, Always:\nIf 672 reclaimed with volume? Invalidation. Until then, structure favors sellers.\nProcess over prediction. The chart is speaking. Are you listening?\nNFA | DYOR\n#SPY #SPX #bearish #marketstructure #SmartMoneyConcepts #OptionsFlow #recession2026\n\n@WaverVanir | Process over prediction. Risk-first, always.",
+      "preview_image": [
+        "https://s3-symbol-logo.tradingview.com/spdr-sandp500-etf-tr.svg"
+      ],
+      "chart_url": "https://www.tradingview.com/chart/SPY/cKf9FOhQ-SPY-THE-NECKLINE-BREAK-NOBODY-WANTED-TO-SEE/",
+      "comments_count": 2,
+      "views_count": 0,
+      "author": "Wavervanir_International_LLC",
+      "likes_count": 5,
+      "timestamp": 1775409234
+    },
+    {
+      "title": "SPY/SPX Weekly Outlook \u2013 Week 13 of 2026 (30 MAR-03 APR)",
+      "description": "SPY Weekly Outlook  \n\n Last Week's Recap \nLast week, SPY ran the 647 level, which I defined as the HTF Key Low, and closed back above it. This was a clear deviation, and it made a potential bounce at the start of the week very likely. That idea was already shared in the weekly post.\n\nHowever, we also clearly stated that if price failed to break and hold above the Lower Band, the direction would shift back to the downside.\n\nWith the ceasefire news coming from the US side, the market got hyped and price pushed into the Lower Band on Monday and Tuesday. Many participants started to assume a bullish reversal and chased the upside.\n\nWe stayed disciplined and followed the plan.\n\nPrice trapped the bulls and, as expected, closed below the 657 Lower Band level. That was the confirmation we needed. We entered Puts and shorted the market.\n\nWe took profits around the 647 level, closing 90% of the position, capturing a clean 10-point move, roughly a 1.5% drop.\n\nOverall, we stayed away from the noise, followed the Sunday plan, and executed one clean trade with a 1/1 win rate while many got trapped by FOMO.\n\n (Last week\u2019s analysis is shared on the side for reference.) \n\n\n\n Current Week's Scenarios \u2013 Prediction \n\n Scenario 1: Bearish Continuation \nThe market continues to move within a bearish structure.\n\nThe 644 level (lower band of the Key Level) stands out as a potential rejection zone. If price moves into this level and shows rejection, I will look to enter Puts and continue shorting the market.\n\n Bounce Levels (Bearish Targets): \n629.5 \u2013 614 \u2013 598\n\nThese levels can act as bounce zones, and I will be taking profits on Puts around these areas.\nIf price reaches any of these levels and prints a daily close back above, a short term long can be considered toward the next level. However, since a full bullish reversal structure is not present yet, these would only be reaction trades, so position sizing should remain controlled.\n\n Scenario 2: Bullish Reversal Attempt \nIf price breaks above the 649.5 level (upper band of the Key Level) and secures a daily close above it, the structure can shift to bullish.\n\nIn that case, I will look to take Calls around the 649.5 area and target 661 as the next level.\nUntil that confirmation comes, downside continuation remains the more probable scenario.\n\n Position Management Notes \nI only enter trades after confirmation. Acceptance above or below key levels is required before taking a position.\nIf price reclaims or loses a level after entry, the setup becomes invalid and positions should be managed accordingly.\n\n\n\n I share deeper US Market breakdowns and weekly scenario updates on Substack. Link is in my profile. \n\n\n This analysis is for educational purposes only and reflects my personal opinion. It is not financial advice.",
+      "preview_image": [
+        "https://s3-symbol-logo.tradingview.com/spdr-sandp500-etf-tr.svg"
+      ],
+      "chart_url": "https://www.tradingview.com/chart/SPY/jqjv0qJG-SPY-SPX-Weekly-Outlook-Week-13-of-2026-30-MAR-03-APR/",
+      "comments_count": 2,
+      "views_count": 0,
+      "author": "UA_CAPITAL",
+      "likes_count": 6,
+      "timestamp": 1774868649
+    },
+    {
+      "title": "SPY Breakdown Confirmed, Key Levels To Watch For Mar 31",
+      "description": "SPY is no longer in a range. The structure already shifted and now price is moving with direction. The focus now is not guessing bottom, but understanding where reactions can happen.\n\nDaily\nOn the daily chart, I can clearly see a failed range at the highs.\nPrice was holding around that 680 to 690 area for a while, but once it broke down, it did not come back.\nThat breakdown is important.\nThe moment price lost the 670 area, the entire structure shifted from sideways to bearish.\nNow price is sitting around 630.\nThis is a strong move down without any real base forming yet. That tells me sellers are still in control.\nThe previous support zones around 670 and 650 are now resistance.\nFor the daily, this setup can stay valid for a few days into this week unless price reclaims back above 650.\n\n1H\n  \nOn the 1H, the trend is very clean.\nLower highs and lower lows all the way down.\nThere is a clear trendline pushing price lower, and every bounce is getting rejected near that line.\nRight now price is consolidating slightly around 630.\nThis is not strength yet. This is just a pause after a strong selloff.\nThe last bounce failed to break previous highs, which confirms continuation behavior.\nUntil price can break above 640 to 645, there is no real shift in momentum.\n\nGEX\n  \nLooking at the GEX levels, everything lines up with price action.\nThere is heavy resistance stacked above around 675 to 700. That matches the daily rejection zone perfectly.\nBelow, I see support levels around 625, then 620, and much lower near 600 where the largest support sits.\nRight now price is sitting just above that 625 area.\nThat makes this a key decision zone.\nIf this level holds, there can be a short bounce.\u2028If it breaks, price can accelerate lower toward 620 and possibly 600.\n\nPutting it together\nDaily shows a confirmed breakdown from range\u20281H shows clean continuation with weak bounces\u2028GEX shows price sitting right on support with downside room\nEverything is aligned to the downside unless buyers step in strongly.\n\nMy plan for Mar 31\nIf price holds above 625 and shows strong buyers stepping in, then a bounce toward 635 to 640 is possible.\nBut that bounce is still considered a lower high unless price breaks above 645.\nIf price breaks below 625 and holds under it, then continuation toward 620 and 600 becomes very likely.\nThat aligns with both structure and GEX positioning.\n\nWhat I\u2019m watching\nThe main level is 625.\nIf buyers defend it with strong candles and follow-through, I respect the bounce.\nIf not, I follow the breakdown.\nNo need to predict. Let the level confirm the direction.\n",
+      "preview_image": [
+        "https://s3-symbol-logo.tradingview.com/spdr-sandp500-etf-tr.svg"
+      ],
+      "chart_url": "https://www.tradingview.com/chart/SPY/0sghwWaH-SPY-Breakdown-Confirmed-Key-Levels-To-Watch-For-Mar-31/",
+      "comments_count": 2,
+      "views_count": 0,
+      "author": "BullBearInsights",
+      "likes_count": 6,
+      "timestamp": 1774917061
+    },
+    {
+      "title": "SPY consolidation almost finished",
+      "description": "I expect a move down to under 630 by Thursday after the consolidation breaks. ",
+      "preview_image": [
+        "https://s3-symbol-logo.tradingview.com/spdr-sandp500-etf-tr.svg"
+      ],
+      "chart_url": "https://www.tradingview.com/chart/SPY/ii5A6iEN-SPY-consolidation-almost-finished/",
+      "comments_count": 1,
+      "views_count": 0,
+      "author": "rsitrades",
+      "likes_count": 5,
+      "timestamp": 1774885430
+    },
+    {
+      "title": "SPY: End of Wave 4",
+      "description": "I am expecting one more push down to 625 for the final push down of the ABC correction of Wave 4. If this is the case, I am expecting us to head to ATH's by end of summer reaching 720-750.",
+      "preview_image": [
+        "https://s3-symbol-logo.tradingview.com/spdr-sandp500-etf-tr.svg"
+      ],
+      "chart_url": "https://www.tradingview.com/chart/SPY/FGQjtuEP-SPY-End-of-Wave-4/",
+      "comments_count": 1,
+      "views_count": 0,
+      "author": "fibotradertv",
+      "likes_count": 2,
+      "timestamp": 1774888622
+    },
+    {
+      "title": "SPY intraday reversal complete.  Overnight dip is next.",
+      "description": "As I stated on March 10th, the SPY was about to make a major intraday price reversal to the downside.  The downside move intraday appears to have just completed, or nearly completed.\n\nThe VIX hasn't topped quite yet and will likely see a major move up.  This leaves the major price decline to happen during overnight/pre-market trading.\n\nWe should see over the next couple of days a large VIX spike and for it to happen in the pre-market while everyone is screaming about the next market crash.  This will be the reversal point.",
+      "preview_image": [
+        "https://s3-symbol-logo.tradingview.com/spdr-sandp500-etf-tr.svg"
+      ],
+      "chart_url": "https://www.tradingview.com/chart/SPY/BK4mYyQy-SPY-intraday-reversal-complete-Overnight-dip-is-next/",
+      "comments_count": 1,
+      "views_count": 0,
+      "author": "TheUltimator5",
+      "likes_count": 9,
+      "timestamp": 1774574073
+    },
+    {
+      "title": "SPY<  Bullish Set Up?",
+      "description": "SPY bullish again?  sure it is ladies and gentlemen.\nAfter last week bouncing back up and failing to recover its Daily Zero Line and dropping to the 2nd supply zone is ready to rumble again.\nSPY is at buy zone all the way to 626.00 with first target  to fill recent gap at 645.00  and if it s move builds muscle then 655.00 will be 2nd target. \nAll looks good for a good week start ladies and gentlemen.\nTake care everyone and have a nice trading week.\n\nPlay it right...............Play it safe...............Play it The Numberfive Way.\n\nBoost..................Follow................Share................Comment.",
+      "preview_image": [
+        "https://s3-symbol-logo.tradingview.com/spdr-sandp500-etf-tr.svg"
+      ],
+      "chart_url": "https://www.tradingview.com/chart/SPY/BUVFciPp-SPY-Bullish-Set-Up/",
+      "comments_count": 0,
+      "views_count": 0,
+      "author": "Numberfive",
+      "likes_count": 12,
+      "timestamp": 1774923244
+    },
+    {
+      "title": "Why Price Drops While Buying Was Increasing -Most Traders Miss",
+      "description": "Hi Everyone,\n\nOne of the most confusing things you\u2019ll see in the market is this:\n\ud83d\udc49 Price is dropping\u2026\n\ud83d\udc49 But buying pressure is increasing\nThat seems like a contradiction.\nIt\u2019s not.\n________________________________________\n\ud83d\udd25 What\u2019s Actually Happening\nWhen you see price going down while liquidity (buying) is rising, it means:\nInstitutions are buying into the selloff \u2014 not chasing price higher.\nIn other words:\n\u2022\tRetail traders are panic selling\n\u2022\tStops are getting triggered\n\u2022\tWeak hands are getting flushed out\n\ud83d\udc49 And institutions are absorbing all of it\n________________________________________\n\u26a0\ufe0f Why Price Still Drops\nEven though buying is increasing:\n\ud83d\udc49 There is still more selling than buying (for now)\nSo price continues lower\u2026\nBut underneath the surface:\n\ud83d\udc49 Smart money is building positions\n________________________________________\n\ud83e\udde0 What This Means\nThis is called:\n\ud83d\udc49 Accumulation / Absorption\nAnd it\u2019s one of the most important signals you can learn to recognize.\nBecause:\nThe biggest moves often start when price is going down \u2014 and buying is increasing.\n________________________________________\n\ud83c\udfaf How You Trade It\nThis does NOT mean:\n\ud83d\udc49 \u201cBuy immediately\u201d\nYou need structure.\n________________________________________\nStep 1 \u2014 Location\nIs price in an accumulation zone?\n________________________________________\nStep 2 \u2014 Signal\nDo you see:\n\u2022\tRising buying pressure\n\u2022\tBullish divergence\n________________________________________\nStep 3 \u2014 Trigger\nWait for:\n\u2022\tSelling to slow\n\u2022\tPrice to stabilize\n\u2022\tA turn higher\n________________________________________\n\ud83d\udc49 That\u2019s your entry\n________________________________________\n\ud83d\udca5 The Edge\nMost traders:\n\u2022\tSell into the drop\n\u2022\tBuy after the move\n________________________________________\nYou:\n\u2022\tRecognize accumulation early\n\u2022\tPosition before the reversal\n________________________________________\n\ud83d\udd11 Simple Way to Think About It\nInstitutions are buying the dip\u2026\nbut letting price fall into them first.\n________________________________________\n\ud83d\ude80 Why This Matters\nOnce the selling is absorbed:\n\ud83d\udc49 There are no sellers left\n\ud83d\udca5 That\u2019s when price moves fast in the opposite direction\n________________________________________\nIf you want to see how this plays out in real time \u2014 not after the move \u2014check my profile link to gain access to the Matrix\n",
+      "preview_image": [
+        "https://s3-symbol-logo.tradingview.com/spdr-sandp500-etf-tr.svg"
+      ],
+      "chart_url": "https://www.tradingview.com/chart/SPY/5uZzhpeT-Why-Price-Drops-While-Buying-Was-Increasing-Most-Traders-Miss/",
+      "comments_count": 0,
+      "views_count": 0,
+      "author": "sentimenttiming",
+      "likes_count": 8,
+      "timestamp": 1774970214
+    },
+    {
+      "title": "SPY is NOT A BUY!!",
+      "description": "Don't let the bear market oversold dead cat bounce fool you.  The economic data is atrocious aside from Fridays BULLS*T jobs numbers.   Under the threat of being fired like their predecessor releasing weak jobs numbers is immediate termination.  Most the stocks I follow are in severe downtrends from their highs and UNDER THEIR 200 dma.  Never go long besides scalps a stock under the 200, and 150 DMA. It's better to wait and pay higher if and when it regains that level, tests it and stays above it.  \n\nWe have a disaster conman grifter in the white house who has underestimated Iran and their ability to retaliate for being attacked.  Until there is peace and the straight of Hormuz is opened without mines, without levies and toll fees or threats of drones and missiles attacking ships, until insurance companies resume insuring the vessels none of this will end.  \n\nWith $115 dollar oil the stock market besides bear market rallies WILL NEVER MAKE ALL TIME HIGHS.\n\nDon't be fooled.  If you traded the last bear market of 2022 and the 2008 era like I have, you will know rallies are violent they are great to trade if you are on the right side of them they are designed to fool you and sucker you in to thinking the bottom is in. \n\nIt is NOT\n\nThere is NO GOOD DATA to support this BUBBLE economy of relentless money printing propping up FAKE asset bubbles and garbage like SHITCOIN you fools think are an investment. Show me your bitcoin,  try to use it ANYWHERE!  The FIAT US dollar is accepted worldwide. Its a SCAM and will ultimately return to its fair value of Z E R O ",
+      "preview_image": [
+        "https://s3-symbol-logo.tradingview.com/spdr-sandp500-etf-tr.svg"
+      ],
+      "chart_url": "https://www.tradingview.com/chart/SPY/3c8BlX6w-SPY-is-NOT-A-BUY/",
+      "comments_count": 0,
+      "views_count": 0,
+      "author": "ShortSeller76",
+      "likes_count": 9,
+      "timestamp": 1775410633
+    },
+    {
+      "title": " Stock Market Forecast | BTC TSLA NVDA AAPL AMZN META MSFT",
+      "description": "0:00 Intro \u2013 Stock Market Overview, Sentiment, Dark Pool Data\nstock market update, S&P 500 analysis, market sentiment, fear and greed index, dark pool trading, sector rotation, semiconductor stocks, SMH ETF, oil impact on stocks\n\n3:59 SPY \u2013 S&P 500 Technical Analysis (Downtrend vs Reversal Setup)  CME_MINI:ES1! \nSPY analysis, S&P 500 support resistance, market downtrend, RSI oversold bounce, stock market reversal levels\n\n6:23 QQQ \u2013 Nasdaq Technical Analysis (Key Levels & Breakout Zone)  NASDAQ:NDX   CME_MINI:NQ1! \nQQQ analysis, Nasdaq 100 forecast, tech stocks outlook, support resistance levels, breakout confirmation\n\n10:43 Bitcoin \u2013  CRYPTOCAP:BTC  Price Action & Market Weakness\nBitcoin analysis, BTC price prediction, crypto market weakness, risk assets correlation, BTC support resistance\n\n12:15 Tesla \u2013 TSLA Downtrend & Key Support Levels\nTesla stock analysis, TSLA support levels, EV stocks outlook, bearish trend continuation\n\n14:06 Meta \u2013 META Reversal & Bounce Potential\nMeta stock analysis, META stock rebound, capitulation move, V-shape recovery stocks\n\n15:33 Amazon \u2013 AMZN Range Bound Setup\nAmazon stock analysis, AMZN sideways range, consolidation pattern, breakout watch\n\n16:11 Microsoft \u2013 MSFT Support & Trend Shift Watch\nMicrosoft stock analysis, MSFT support levels, tech stock recovery, trend reversal setup\n\n17:59 Google \u2013 GOOGL Relative Strength Leader\nGoogle stock analysis, GOOGL strong stocks, relative strength, bull flag setup\n\n19:21 Apple \u2013 AAPL Range & Market Support Role\nApple stock analysis, AAPL support levels, market stability stocks, consolidation range\n\n19:47 Nvidia \u2013 NVDA Trendline Break & Semiconductor Outlook\nNvidia stock analysis, NVDA trendline break, semiconductor stocks outlook, AI stocks\n\n19:55 Outro \u2013 Key Levels to Watch Next Week\nstock market outlook next week, key levels to watch, trading plan recap",
+      "preview_image": [
+        "https://s3-symbol-logo.tradingview.com/spdr-sandp500-etf-tr.svg"
+      ],
+      "chart_url": "https://www.tradingview.com/chart/SPY/Up0kCEAj-Stock-Market-Forecast-BTC-TSLA-NVDA-AAPL-AMZN-META-MSFT/",
+      "comments_count": 0,
+      "views_count": 0,
+      "author": "ArcadiaTrading",
+      "likes_count": 6,
+      "timestamp": 1775338839
+    }
+  ],
+  "metadata": {
+    "exchange": "AMEX",
+    "symbol": "SPY",
+    "start_page": 1,
+    "end_page": 1,
+    "sort_by": "popular",
+    "total": 24,
+    "pages": 1
+  },
+  "error": null
+}

@@ -1,0 +1,143 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "symbol": "ASX:KAI",
+      "name": "KAI",
+      "close": 8.55,
+      "change": 1361.5384615384617,
+      "change_abs": 7.965000000000001,
+      "volume": 23526.93333333,
+      "market_cap_basic": 103266640,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": -0.0038,
+      "logoid": "kairos-minerals",
+      "description": "Kairos Minerals Limited"
+    },
+    {
+      "symbol": "ASX:CHM",
+      "name": "CHM",
+      "close": 0.002,
+      "change": 100,
+      "change_abs": 0.001,
+      "volume": 1462317,
+      "market_cap_basic": 8837408,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": -0.0072,
+      "logoid": "chimeric-therapeutics-limited",
+      "description": "Chimeric Therapeutics Limited"
+    },
+    {
+      "symbol": "ASX:CCO",
+      "name": "CCO",
+      "close": 0.003,
+      "change": 50,
+      "change_abs": 0.001,
+      "volume": 331500,
+      "market_cap_basic": 10561488,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": -0.0011,
+      "logoid": "the-calmer-co-international-limited",
+      "description": "Calmer Co International Limited"
+    },
+    {
+      "symbol": "ASX:AM7",
+      "name": "AM7",
+      "close": 0.04,
+      "change": 33.33333333333334,
+      "change_abs": 0.010000000000000002,
+      "volume": 1771053,
+      "market_cap_basic": 3521502.99,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": -0.0046,
+      "logoid": "arcadia-minerals-limited",
+      "description": "Arcadia Minerals Limited Chess Depository Interests Repr 1 Sh"
+    },
+    {
+      "symbol": "ASX:AYT",
+      "name": "AYT",
+      "close": 0.004,
+      "change": 33.33333333333333,
+      "change_abs": 0.001,
+      "volume": 376013,
+      "market_cap_basic": 8768765,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": -0.0004,
+      "logoid": "austin-metals-limited",
+      "description": "Austin Metals Limited"
+    },
+    {
+      "symbol": "ASX:SVG",
+      "name": "SVG",
+      "close": 0.016,
+      "change": 33.33333333333333,
+      "change_abs": 0.004,
+      "volume": 9118421,
+      "market_cap_basic": 34265232,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": -0.0134,
+      "logoid": "savannah-goldfields-limited",
+      "description": "Savannah Goldfields Limited"
+    },
+    {
+      "symbol": "ASX:GBE",
+      "name": "GBE",
+      "close": 0.145,
+      "change": 31.818181818181806,
+      "change_abs": 0.03499999999999999,
+      "volume": 1591829,
+      "market_cap_basic": 135996836,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": -0.0049,
+      "logoid": "globe-metals-and-mining-ltd",
+      "description": "Globe Metals & Mining Limited"
+    },
+    {
+      "symbol": "ASX:RRE",
+      "name": "RRE",
+      "close": 0.14,
+      "change": 27.27272727272728,
+      "change_abs": 0.030000000000000013,
+      "volume": 103053,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null,
+      "logoid": "right-resources-limited",
+      "description": "Right Resources Limited"
+    },
+    {
+      "symbol": "ASX:KGL",
+      "name": "KGL",
+      "close": 0.265,
+      "change": 26.190476190476204,
+      "change_abs": 0.05500000000000002,
+      "volume": 6093980,
+      "market_cap_basic": 204285713,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": -0.0053,
+      "logoid": "kgl-resources-ltd",
+      "description": "KGL Resources Limited"
+    },
+    {
+      "symbol": "ASX:CMD",
+      "name": "CMD",
+      "close": 0.041,
+      "change": 20.588235294117645,
+      "change_abs": 0.006999999999999999,
+      "volume": 2431198,
+      "market_cap_basic": 30073638,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": -0.0022,
+      "logoid": "cassius-mining-limited",
+      "description": "Cassius Mining Ltd"
+    }
+  ],
+  "metadata": {
+    "market": "stocks-australia",
+    "category": "gainers",
+    "limit": 10,
+    "total": 10,
+    "totalCount": 543
+  },
+  "error": null
+}

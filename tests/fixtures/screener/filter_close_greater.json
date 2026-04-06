@@ -1,0 +1,140 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "symbol": "AMEX:XLK",
+      "name": "XLK",
+      "close": 136.5,
+      "change": 0.37502757555701954,
+      "change_abs": 0.5099999999999909,
+      "volume": 6242516,
+      "Recommend.All": 0.09090909090909091,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "NASDAQ:DVY",
+      "name": "DVY",
+      "close": 151.63,
+      "change": -0.01978108927865036,
+      "change_abs": -0.030000000000001137,
+      "volume": 136482,
+      "Recommend.All": 0.31212121212121213,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "NYSE:NVS",
+      "name": "NVS",
+      "close": 153.295,
+      "change": -0.47717977017465013,
+      "change_abs": -0.7350000000000136,
+      "volume": 348471,
+      "Recommend.All": 0.17878787878787877,
+      "market_cap_basic": 281165689082.0601,
+      "price_earnings_ttm": 21.329187015625216,
+      "earnings_per_share_basic_ttm": 7.2354
+    },
+    {
+      "symbol": "NASDAQ:VTWV",
+      "name": "VTWV",
+      "close": 169.09,
+      "change": -0.15352819604369114,
+      "change_abs": -0.2599999999999909,
+      "volume": 3766,
+      "Recommend.All": 0.3787878787878788,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "OTC:BLHWF",
+      "name": "BLHWF",
+      "close": 778.22,
+      "change": -3.087086381034542,
+      "change_abs": -24.78959999999995,
+      "volume": 5,
+      "Recommend.All": -0.36363636363636365,
+      "market_cap_basic": 9572081875.18,
+      "price_earnings_ttm": 41.7806250188228,
+      "earnings_per_share_basic_ttm": 18.626336960000003
+    },
+    {
+      "symbol": "AMEX:XLY",
+      "name": "XLY",
+      "close": 108.445,
+      "change": 0.2727693018955039,
+      "change_abs": 0.2949999999999875,
+      "volume": 4079049,
+      "Recommend.All": -0.37575757575757573,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "NYSE:MKL",
+      "name": "MKL",
+      "close": 1899.71,
+      "change": 0.03844168974923476,
+      "change_abs": 0.7300000000000182,
+      "volume": 14521,
+      "Recommend.All": -0.3090909090909091,
+      "market_cap_basic": 23890183047,
+      "price_earnings_ttm": 11.23088610438633,
+      "earnings_per_share_basic_ttm": 169.4994
+    },
+    {
+      "symbol": "NASDAQ:WYNN",
+      "name": "WYNN",
+      "close": 101.9225,
+      "change": -0.10536116828383976,
+      "change_abs": -0.1075000000000017,
+      "volume": 376720,
+      "Recommend.All": -0.15454545454545454,
+      "market_cap_basic": 10628784067.5,
+      "price_earnings_ttm": 32.44286350903998,
+      "earnings_per_share_basic_ttm": 3.1597
+    },
+    {
+      "symbol": "NASDAQ:MYRG",
+      "name": "MYRG",
+      "close": 286.63,
+      "change": 0.33253990478857065,
+      "change_abs": 0.9499999999999886,
+      "volume": 136166,
+      "Recommend.All": 0.4454545454545455,
+      "market_cap_basic": 4454258863,
+      "price_earnings_ttm": 38.02265732781492,
+      "earnings_per_share_basic_ttm": 7.5823
+    },
+    {
+      "symbol": "NYSE:SPHR",
+      "name": "SPHR",
+      "close": 126.91,
+      "change": -0.2436723785568325,
+      "change_abs": -0.3100000000000023,
+      "volume": 322122,
+      "Recommend.All": 0.5575757575757576,
+      "market_cap_basic": 3634118614,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": 0.9333
+    }
+  ],
+  "metadata": {
+    "market": "america",
+    "sort_order": "desc",
+    "limit": 10,
+    "filters": [
+      {
+        "left": "close",
+        "operation": "greater",
+        "right": 100
+      }
+    ],
+    "total": 10,
+    "total_available": 1310
+  },
+  "error": null
+}

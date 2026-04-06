@@ -1,0 +1,15 @@
+{
+  "status": "success",
+  "data": {
+    "symbol": "NYSE:JPM",
+    "current_ratio": 0.998577021876696,
+    "current_ratio_fq": 0.998577021876696,
+    "quick_ratio": null,
+    "quick_ratio_fq": null
+  },
+  "metadata": {
+    "exchange": "NYSE",
+    "symbol": "JPM"
+  },
+  "error": null
+}

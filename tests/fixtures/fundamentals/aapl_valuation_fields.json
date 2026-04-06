@@ -1,0 +1,15 @@
+{
+  "status": "success",
+  "data": {
+    "symbol": "NASDAQ:AAPL",
+    "market_cap_basic": 3798734625000,
+    "price_earnings_ttm": 32.7374174447734,
+    "price_book_fq": 43.13779754660549,
+    "price_sales_ttm": null
+  },
+  "metadata": {
+    "exchange": "NASDAQ",
+    "symbol": "AAPL"
+  },
+  "error": null
+}

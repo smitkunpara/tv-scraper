@@ -1,0 +1,9 @@
+{
+  "status": "failed",
+  "data": null,
+  "metadata": {
+    "exchange": "NYSE",
+    "symbol": "ZZZ_NO_DATA_XYZ"
+  },
+  "error": "Symbol 'ZZZ_NO_DATA_XYZ' not found on exchange 'NYSE'. Verify the symbol and exchange combination, or use SymbolMarkets to discover valid exchange listings."
+}

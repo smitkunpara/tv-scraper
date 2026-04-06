@@ -1,0 +1,73 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "symbol": "OTC:ERMAY",
+      "name": "ERMAY",
+      "close": 5.89,
+      "change": -6.50793650793651,
+      "change_abs": -0.41000000000000014,
+      "volume": 1265,
+      "Recommend.All": -0.3333333333333333,
+      "market_cap_basic": 1675908566.43055,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": -1.9048
+    },
+    {
+      "symbol": "NASDAQ:QQQH",
+      "name": "QQQH",
+      "close": 51.72,
+      "change": 0.16228924669126804,
+      "change_abs": 0.08379999999999654,
+      "volume": 22633,
+      "Recommend.All": -0.17575757575757575,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "NYSE:HFGM",
+      "name": "HFGM",
+      "close": 32.32,
+      "change": 0.21705426356589236,
+      "change_abs": 0.07000000000000028,
+      "volume": 104036,
+      "Recommend.All": -0.11212121212121212,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "NASDAQ:PTC",
+      "name": "PTC",
+      "close": 143.74,
+      "change": 0.7641079565369809,
+      "change_abs": 1.0900000000000034,
+      "volume": 169073,
+      "Recommend.All": -0.3787878787878788,
+      "market_cap_basic": 17104485040.000002,
+      "price_earnings_ttm": 20.992522490945206,
+      "earnings_per_share_basic_ttm": 6.8914
+    },
+    {
+      "symbol": "OTC:PPTDF",
+      "name": "PPTDF",
+      "close": 8.18,
+      "change": 5.5483870967741895,
+      "change_abs": 0.4299999999999997,
+      "volume": 1032,
+      "Recommend.All": -0.3090909090909091,
+      "market_cap_basic": 1056966961.6999998,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": -0.18499795200000002
+    }
+  ],
+  "metadata": {
+    "market": "america",
+    "sort_order": "desc",
+    "limit": 5,
+    "total": 5,
+    "total_available": 19096
+  },
+  "error": null
+}

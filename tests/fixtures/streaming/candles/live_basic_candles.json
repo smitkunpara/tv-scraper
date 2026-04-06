@@ -1,0 +1,66 @@
+{
+  "description": "Live basic candles fixture",
+  "exchange": "BINANCE",
+  "symbol": "BTCUSDT",
+  "timeframe": "1h",
+  "result": {
+    "status": "success",
+    "data": {
+      "ohlcv": [
+        {
+          "index": 0,
+          "timestamp": 1775480400.0,
+          "open": 69366.76,
+          "high": 69550.0,
+          "low": 69235.09,
+          "close": 69428.23,
+          "volume": 658.07588
+        },
+        {
+          "index": 1,
+          "timestamp": 1775484000.0,
+          "open": 69428.23,
+          "high": 69809.99,
+          "low": 69163.86,
+          "close": 69654.38,
+          "volume": 1337.06434
+        },
+        {
+          "index": 2,
+          "timestamp": 1775487600.0,
+          "open": 69654.39,
+          "high": 69973.25,
+          "low": 69526.87,
+          "close": 69968.87,
+          "volume": 814.26276
+        },
+        {
+          "index": 3,
+          "timestamp": 1775491200.0,
+          "open": 69968.87,
+          "high": 70351.46,
+          "low": 69782.11,
+          "close": 69799.14,
+          "volume": 1292.09208
+        },
+        {
+          "index": 4,
+          "timestamp": 1775494800.0,
+          "open": 69799.14,
+          "high": 69820.0,
+          "low": 69282.02,
+          "close": 69576.1,
+          "volume": 843.83242
+        }
+      ],
+      "indicators": {}
+    },
+    "metadata": {
+      "exchange": "BINANCE",
+      "symbol": "BTCUSDT",
+      "timeframe": "1h",
+      "numb_candles": 5
+    },
+    "error": null
+  }
+}

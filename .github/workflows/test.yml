@@ -36,9 +36,9 @@ jobs:
       run: uv run mypy tv_scraper/
       continue-on-error: true  # Don't fail the build on type errors initially
 
-    - name: Run Unit Tests
-      run: uv run pytest tests/unit tests/integration -v --cov=tv_scraper --cov-report=term-missing
+    - name: Run Unit, Mock, and Integration Tests
+      run: uv run pytest tests/unit tests/mock tests/integration -v --cov=tv_scraper --cov-report=term-missing
 
-    - name: Run Live API Tests
-      run: uv run pytest tests/live_api -v --maxfail=5
-      continue-on-error: true  # Don't fail build if live tests timeout or fail
+    # Note: Live tests (tests/live/) require TradingView API access and should be run locally by developers
+    # to avoid rate limiting on CI. To run live tests locally:
+    #   pytest tests/live/ -v

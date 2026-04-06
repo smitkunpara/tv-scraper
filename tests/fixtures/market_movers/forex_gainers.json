@@ -1,0 +1,103 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "symbol": "FX_IDC:CLPHUX",
+      "name": "CLPHUX",
+      "close": 0.3631,
+      "change": 2.310510002817691,
+      "change_abs": 0.008199999999999985,
+      "logoid": "",
+      "description": "CHILEAN PESO / HUNGARIAN FORINT REFERENCE RATE"
+    },
+    {
+      "symbol": "FX_IDC:XAFBRX",
+      "name": "XAFBRX",
+      "close": 0.009012,
+      "change": 2.1768707482993137,
+      "change_abs": 0.00019199999999999946,
+      "logoid": "",
+      "description": "CENTRAL AFRICAN C.F.A. FRANC B.E.A.C. / BRAZILIAN REAL REFERENCE RATE"
+    },
+    {
+      "symbol": "IBKR:MXNJPY",
+      "name": "MXNJPY",
+      "close": 8.97811,
+      "change": 2.002533558286033,
+      "change_abs": 0.1762599999999992,
+      "logoid": "",
+      "description": "MXN / JPY"
+    },
+    {
+      "symbol": "FX_IDC:PENCZX",
+      "name": "PENCZX",
+      "close": 6.17716,
+      "change": 1.7310463517263497,
+      "change_abs": 0.10510999999999981,
+      "logoid": "",
+      "description": "SOL / CZECH KORUNA REFERENCE RATE"
+    },
+    {
+      "symbol": "FX_IDC:KZTBRX",
+      "name": "KZTBRX",
+      "close": 0.0111,
+      "change": 1.648351648351661,
+      "change_abs": 0.00018000000000000134,
+      "logoid": "",
+      "description": "KAZAKHSTANI TENGE / BRAZILIAN REAL REFERENCE RATE"
+    },
+    {
+      "symbol": "FX_IDC:NPRBRX",
+      "name": "NPRBRX",
+      "close": 0.0346,
+      "change": 1.645123384253813,
+      "change_abs": 0.000559999999999998,
+      "logoid": "",
+      "description": "NEPALESE RUPEE / BRAZILIAN REAL REFERENCE RATE"
+    },
+    {
+      "symbol": "FX_IDC:PENHUX",
+      "name": "PENHUX",
+      "close": 96.5669,
+      "change": 1.6135362793120323,
+      "change_abs": 1.5334000000000003,
+      "logoid": "",
+      "description": "SOL / HUNGARIAN FORINT REFERENCE RATE"
+    },
+    {
+      "symbol": "FX_IDC:KZTUSD",
+      "name": "KZTUSD",
+      "close": 0.002154,
+      "change": 1.5558698727015579,
+      "change_abs": 3.300000000000004e-05,
+      "logoid": "",
+      "description": "KAZAKHSTANI TENGE / U.S. DOLLAR"
+    },
+    {
+      "symbol": "FX_IDC:MXNSBD",
+      "name": "MXNSBD",
+      "close": 0.450082,
+      "change": 1.5358446468775477,
+      "change_abs": 0.006807999999999981,
+      "logoid": "",
+      "description": "MEXICAN PESO / SOLOMON ISLANDER DOLLAR"
+    },
+    {
+      "symbol": "FX_IDC:RUBILS",
+      "name": "RUBILS",
+      "close": 0.03975797302,
+      "change": 1.4913892027101507,
+      "change_abs": 0.0005842329299999977,
+      "logoid": "",
+      "description": "RUSSIAN RUBLE / ISRAELI SHEKEL"
+    }
+  ],
+  "metadata": {
+    "market": "forex",
+    "category": "gainers",
+    "limit": 10,
+    "total": 10,
+    "totalCount": 3815
+  },
+  "error": null
+}

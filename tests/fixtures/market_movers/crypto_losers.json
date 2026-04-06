@@ -1,0 +1,123 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "symbol": "UNISWAPBASE:GRO38ZUSDBC_AEC026.USD",
+      "name": "GRO38ZUSDBC_AEC026.USD",
+      "close": 3.5302907341792587e-20,
+      "change": -100,
+      "change_abs": -0.00654804195097553,
+      "volume": 9.999999976781522e-07,
+      "market_cap_calc": null,
+      "logoid": "",
+      "description": "GRO38Z / USD Base Coin on BASE (0xAeC02699F467d1DC668C583a4eDb6e639Cc34E31) in USD"
+    },
+    {
+      "symbol": "UNISWAPBASE:MUTMWETH_B32BF2.USD",
+      "name": "MUTMWETH_B32BF2.USD",
+      "close": 5.214899877486822e-27,
+      "change": -100,
+      "change_abs": -1.0047763146400009e-06,
+      "volume": 171062.62651985572,
+      "market_cap_calc": null,
+      "logoid": "",
+      "description": "Mutuum Finance / Wrapped Ether on BASE (0xB32Bf2AeF5D55FebC3caFa6446D314a95940930d) in USD"
+    },
+    {
+      "symbol": "UNISWAPBASE:R2WETH_FFFFAF",
+      "name": "R2WETH_FFFFAF",
+      "close": 3.774895371861172e-29,
+      "change": -100,
+      "change_abs": -1.376304239569718e-10,
+      "volume": 1566340174527.2493,
+      "market_cap_calc": null,
+      "logoid": "",
+      "description": "R2 Protocol / Wrapped Ether on BASE (0xFFfFafaf49BF7C7495dFCf5D3d7cB70E5C963b09)"
+    },
+    {
+      "symbol": "UNISWAPBASE:ASTRAIWETH_C6DC4A.USD",
+      "name": "ASTRAIWETH_C6DC4A.USD",
+      "close": 1.5336893960836815e-25,
+      "change": -100,
+      "change_abs": -1.4883732330463621e-06,
+      "volume": 406786.6399775761,
+      "market_cap_calc": null,
+      "logoid": "",
+      "description": "Astrai / Wrapped Ether on BASE (0xC6Dc4aed0105EF85469682D1d94F65B70793fE8C) in USD"
+    },
+    {
+      "symbol": "UNISWAPBASE:BASEDWETH_90D07C",
+      "name": "BASEDWETH_90D07C",
+      "close": 4.868431496013042e-29,
+      "change": -100,
+      "change_abs": -1.481002847867352e-10,
+      "volume": 1219167208629.2239,
+      "market_cap_calc": null,
+      "logoid": "",
+      "description": "Based / Wrapped Ether on BASE (0x90d07ccc8a0A960956Ed893551Acd6f6c4AA6077)"
+    },
+    {
+      "symbol": "UNISWAPBASE:GRO38ZUSDBC_AEC026",
+      "name": "GRO38ZUSDBC_AEC026",
+      "close": 3.5302907341792587e-20,
+      "change": -100,
+      "change_abs": -0.00654804195097553,
+      "volume": 28326278852799.29,
+      "market_cap_calc": null,
+      "logoid": "",
+      "description": "GRO38Z / USD Base Coin on BASE (0xAeC02699F467d1DC668C583a4eDb6e639Cc34E31)"
+    },
+    {
+      "symbol": "UNISWAPBASE:ADIWETH_2448B2.USD",
+      "name": "ADIWETH_2448B2.USD",
+      "close": 4.8581919682944484e-26,
+      "change": -100,
+      "change_abs": -5.95790847652108e-07,
+      "volume": 248543.5379362015,
+      "market_cap_calc": null,
+      "logoid": "",
+      "description": "ADI / Wrapped Ether on BASE (0x2448B2d45FC0813280D9D9C58a76d4C1e5DC01fC) in USD"
+    },
+    {
+      "symbol": "UNISWAPBASE:ASTRAIWETH_C6DC4A",
+      "name": "ASTRAIWETH_C6DC4A",
+      "close": 7.363514450823668e-29,
+      "change": -100,
+      "change_abs": -6.863232017792887e-10,
+      "volume": 596284904489.6335,
+      "market_cap_calc": null,
+      "logoid": "",
+      "description": "Astrai / Wrapped Ether on BASE (0xC6Dc4aed0105EF85469682D1d94F65B70793fE8C)"
+    },
+    {
+      "symbol": "UNISWAPBASE:BASEDWETH_81C8B8.USD",
+      "name": "BASEDWETH_81C8B8.USD",
+      "close": 5.003433788105098e-26,
+      "change": -100,
+      "change_abs": -1.5252766379124502e-06,
+      "volume": 323337.75526099105,
+      "market_cap_calc": null,
+      "logoid": "",
+      "description": "Based / Wrapped Ether on BASE (0x81c8b813A82882e1c4ae96a6FaE0eE50f01769b1) in USD"
+    },
+    {
+      "symbol": "UNISWAPBASE:MUTMWETH_B32BF2",
+      "name": "MUTMWETH_B32BF2",
+      "close": 2.609865349447252e-30,
+      "change": -100,
+      "change_abs": -5.044396652521567e-10,
+      "volume": 1102362639286.0168,
+      "market_cap_calc": null,
+      "logoid": "",
+      "description": "Mutuum Finance / Wrapped Ether on BASE (0xB32Bf2AeF5D55FebC3caFa6446D314a95940930d)"
+    }
+  ],
+  "metadata": {
+    "market": "crypto",
+    "category": "losers",
+    "limit": 10,
+    "total": 10,
+    "totalCount": 20433
+  },
+  "error": null
+}

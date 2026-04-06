@@ -1,0 +1,53 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "symbol": "VELOCITY:EURJPY",
+      "name": "EURJPY",
+      "close": 184.39,
+      "change": 0.47570524801516506,
+      "change_abs": 0.8729999999999905,
+      "Recommend.All": 0.6484848484848484
+    },
+    {
+      "symbol": "FX_IDC:BRLDKK",
+      "name": "BRLDKK",
+      "close": 1.256644,
+      "change": -0.06441587525269134,
+      "change_abs": -0.0008099999999999774,
+      "Recommend.All": 0.26363636363636367
+    },
+    {
+      "symbol": "FX_IDC:CNYAUX",
+      "name": "CNYAUX",
+      "close": 0.099842,
+      "change": -0.43776986667463924,
+      "change_abs": -0.00043899999999999495,
+      "Recommend.All": -0.13333333333333333
+    },
+    {
+      "symbol": "FX_IDC:XDRPHP",
+      "name": "XDRPHP",
+      "close": 82.0978,
+      "change": -0.8078157319878573,
+      "change_abs": -0.6685999999999979,
+      "Recommend.All": 0.3090909090909091
+    },
+    {
+      "symbol": "IG:AUDGBP.1.CSM",
+      "name": "AUDGBP.1.CSM",
+      "close": 0.52272,
+      "change": 0.12738121462296417,
+      "change_abs": 0.0006649999999999157,
+      "Recommend.All": 0.17878787878787877
+    }
+  ],
+  "metadata": {
+    "market": "forex",
+    "sort_order": "desc",
+    "limit": 5,
+    "total": 5,
+    "total_available": 7181
+  },
+  "error": null
+}

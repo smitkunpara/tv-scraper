@@ -1,0 +1,138 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "symbol": "NYSE:PNR",
+      "name": "PNR",
+      "close": 86.17,
+      "change": 0.40783034257749773,
+      "change_abs": 0.3500000000000085,
+      "volume": 295073,
+      "Recommend.All": -0.4212121212121212,
+      "market_cap_basic": 14066046120,
+      "price_earnings_ttm": 21.80194312316567,
+      "earnings_per_share_basic_ttm": 3.9838
+    },
+    {
+      "symbol": "NYSE:MCD",
+      "name": "MCD",
+      "close": 309.31,
+      "change": 0.7065182001693091,
+      "change_abs": 2.170000000000016,
+      "volume": 745051,
+      "Recommend.All": -0.31212121212121213,
+      "market_cap_basic": 219733514690,
+      "price_earnings_ttm": 25.878268144739593,
+      "earnings_per_share_basic_ttm": 12.0037
+    },
+    {
+      "symbol": "NYSE:RJF",
+      "name": "RJF",
+      "close": 141.97,
+      "change": -0.161744022503509,
+      "change_abs": -0.22999999999998977,
+      "volume": 178964,
+      "Recommend.All": -0.4212121212121212,
+      "market_cap_basic": 27981009270,
+      "price_earnings_ttm": 13.90009399232396,
+      "earnings_per_share_basic_ttm": 10.4416
+    },
+    {
+      "symbol": "NYSE:CVX",
+      "name": "CVX",
+      "close": 198.595,
+      "change": -0.18847062371211742,
+      "change_abs": -0.375,
+      "volume": 3852099,
+      "Recommend.All": 0.04242424242424242,
+      "market_cap_basic": 396274477050,
+      "price_earnings_ttm": 29.872894103489774,
+      "earnings_per_share_basic_ttm": 6.6714
+    },
+    {
+      "symbol": "NASDAQ:TTD",
+      "name": "TTD",
+      "close": 22.24,
+      "change": 0.8616780045351371,
+      "change_abs": 0.18999999999999773,
+      "volume": 4232876,
+      "Recommend.All": -0.3787878787878788,
+      "market_cap_basic": 9626984320,
+      "price_earnings_ttm": 24.59632824596328,
+      "earnings_per_share_basic_ttm": 0.9125
+    },
+    {
+      "symbol": "NYSE:EG",
+      "name": "EG",
+      "close": 326.49,
+      "change": -0.18343575162798187,
+      "change_abs": -0.5999999999999659,
+      "volume": 66079,
+      "Recommend.All": -0.11212121212121212,
+      "market_cap_basic": 13186996398,
+      "price_earnings_ttm": 8.634583292561336,
+      "earnings_per_share_basic_ttm": 37.8119
+    },
+    {
+      "symbol": "NYSE:PFE",
+      "name": "PFE",
+      "close": 28.025,
+      "change": -1.0416666666666727,
+      "change_abs": -0.2950000000000017,
+      "volume": 11659153,
+      "Recommend.All": 0.4,
+      "market_cap_basic": 159357716750,
+      "price_earnings_ttm": 20.6811305438713,
+      "earnings_per_share_basic_ttm": 1.3633
+    },
+    {
+      "symbol": "NYSE:CMG",
+      "name": "CMG",
+      "close": 33.365,
+      "change": 0.6182147165259513,
+      "change_abs": 0.2050000000000054,
+      "volume": 5978029,
+      "Recommend.All": -0.06666666666666667,
+      "market_cap_basic": 43455243300,
+      "price_earnings_ttm": 29.188172513340916,
+      "earnings_per_share_basic_ttm": 1.1476
+    },
+    {
+      "symbol": "NASDAQ:HSIC",
+      "name": "HSIC",
+      "close": 74.51,
+      "change": 0.7708953205301696,
+      "change_abs": 0.5700000000000074,
+      "volume": 364623,
+      "Recommend.All": 0.045454545454545456,
+      "market_cap_basic": 8546595040.000001,
+      "price_earnings_ttm": 22.783842460936306,
+      "earnings_per_share_basic_ttm": 3.2949
+    },
+    {
+      "symbol": "NASDAQ:DLTR",
+      "name": "DLTR",
+      "close": 110.925,
+      "change": 2.291589819254887,
+      "change_abs": 2.4849999999999994,
+      "volume": 882381,
+      "Recommend.All": 0.09090909090909091,
+      "market_cap_basic": 21885280650,
+      "price_earnings_ttm": 17.761356540118168,
+      "earnings_per_share_basic_ttm": 6.2616
+    }
+  ],
+  "metadata": {
+    "market": "america",
+    "sort_order": "desc",
+    "limit": 10,
+    "symbols": {
+      "symbolset": [
+        "SYML:SP;SPX"
+      ]
+    },
+    "total": 10,
+    "total_available": 503
+  },
+  "error": null
+}

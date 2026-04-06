@@ -1,0 +1,103 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "symbol": "THINKMARKETS:EURJPY",
+      "name": "EURJPY",
+      "close": 184.405,
+      "change": 0.40181415278738125,
+      "change_abs": 0.7379999999999995,
+      "logoid": "",
+      "description": "Euro vs Japanese Yen"
+    },
+    {
+      "symbol": "THINKMARKETS:GBPJPY",
+      "name": "GBPJPY",
+      "close": 211.356,
+      "change": 0.3823301717873612,
+      "change_abs": 0.8050000000000068,
+      "logoid": "",
+      "description": "Great Britain Pound vs Japanese Yen"
+    },
+    {
+      "symbol": "THINKMARKETS:GBPNZD",
+      "name": "GBPNZD",
+      "close": 2.3156,
+      "change": -0.040577758208359925,
+      "change_abs": -0.0009399999999999409,
+      "logoid": "",
+      "description": "Great Britain Pound vs New Zealand Dollar"
+    },
+    {
+      "symbol": "THINKMARKETS:GBPAUD",
+      "name": "GBPAUD",
+      "close": 1.91306,
+      "change": 0.06852360402771923,
+      "change_abs": 0.0013099999999999223,
+      "logoid": "",
+      "description": "Great Britain Pound vs Australian Dollar"
+    },
+    {
+      "symbol": "THINKMARKETS:EURAUD",
+      "name": "EURAUD",
+      "close": 1.66915,
+      "change": 0.011384335154821713,
+      "change_abs": 0.00018999999999991246,
+      "logoid": "",
+      "description": "Euro vs Australian Dollar"
+    },
+    {
+      "symbol": "THINKMARKETS:EURNZD",
+      "name": "EURNZD",
+      "close": 2.02041,
+      "change": -0.07468149086017856,
+      "change_abs": -0.0015100000000001224,
+      "logoid": "",
+      "description": "Euro vs New Zealand Dollar"
+    },
+    {
+      "symbol": "THINKMARKETS:AUDJPY",
+      "name": "AUDJPY",
+      "close": 110.462,
+      "change": 0.4537890017551444,
+      "change_abs": 0.49900000000000944,
+      "logoid": "",
+      "description": "Australian Dollar vs Japanese Yen"
+    },
+    {
+      "symbol": "THINKMARKETS:CHFJPY",
+      "name": "CHFJPY",
+      "close": 200.126,
+      "change": 0.44368155308620405,
+      "change_abs": 0.8840000000000146,
+      "logoid": "",
+      "description": "Swiss Franc vs Japanese Yen"
+    },
+    {
+      "symbol": "THINKMARKETS:AUDNZD",
+      "name": "AUDNZD",
+      "close": 1.21031,
+      "change": 0.06696982224059342,
+      "change_abs": 0.0008099999999999774,
+      "logoid": "",
+      "description": "Australian Dollar vs New Zealand Dollar"
+    },
+    {
+      "symbol": "THINKMARKETS:GBPCAD",
+      "name": "GBPCAD",
+      "close": 1.84096,
+      "change": 0.15396081887569912,
+      "change_abs": 0.002829999999999888,
+      "logoid": "",
+      "description": "Great Britain Pound vs Canadian Dollar"
+    }
+  ],
+  "metadata": {
+    "market": "forex",
+    "category": "most-active",
+    "limit": 10,
+    "total": 10,
+    "totalCount": 7181
+  },
+  "error": null
+}

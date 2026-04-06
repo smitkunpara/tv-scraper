@@ -1,0 +1,134 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "symbol": "NASDAQ:NVDA",
+      "name": "NVDA",
+      "close": 176.925,
+      "change": -0.2621342803991065,
+      "change_abs": -0.464999999999975,
+      "volume": 68694078,
+      "Recommend.All": -0.17575757575757575,
+      "market_cap_basic": 4299277500000.0005,
+      "price_earnings_ttm": 36.0953566182471,
+      "earnings_per_share_basic_ttm": 4.9319
+    },
+    {
+      "symbol": "NASDAQ:AAPL",
+      "name": "AAPL",
+      "close": 258.75,
+      "change": 1.1058143169740593,
+      "change_abs": 2.8300000000000125,
+      "volume": 14771401,
+      "Recommend.All": 0.35757575757575755,
+      "market_cap_basic": 3798734625000,
+      "price_earnings_ttm": 32.7374174447734,
+      "earnings_per_share_basic_ttm": 7.9334
+    },
+    {
+      "symbol": "NASDAQ:GOOGL",
+      "name": "GOOGL",
+      "close": 299.335,
+      "change": 1.2053284646853968,
+      "change_abs": 3.5649999999999977,
+      "volume": 8044703,
+      "Recommend.All": 0.22424242424242424,
+      "market_cap_basic": 3570805790375,
+      "price_earnings_ttm": 27.70107071137064,
+      "earnings_per_share_basic_ttm": 10.9092
+    },
+    {
+      "symbol": "NASDAQ:GOOG",
+      "name": "GOOG",
+      "close": 297.22,
+      "change": 0.9373089723561937,
+      "change_abs": 2.7600000000000477,
+      "volume": 5216102,
+      "Recommend.All": 0.1575757575757576,
+      "market_cap_basic": 3570805790375,
+      "price_earnings_ttm": 27.505344302649483,
+      "earnings_per_share_basic_ttm": 10.9092
+    },
+    {
+      "symbol": "NASDAQ:MSFT",
+      "name": "MSFT",
+      "close": 372.13,
+      "change": -0.35612917046001824,
+      "change_abs": -1.329999999999984,
+      "volume": 9266396,
+      "Recommend.All": -0.35454545454545455,
+      "market_cap_basic": 2763299691900,
+      "price_earnings_ttm": 23.28300871556476,
+      "earnings_per_share_basic_ttm": 16.0464
+    },
+    {
+      "symbol": "NASDAQ:AMZN",
+      "name": "AMZN",
+      "close": 211.92,
+      "change": 1.0249320684559171,
+      "change_abs": 2.1499999999999773,
+      "volume": 13425907,
+      "Recommend.All": 0.1575757575757576,
+      "market_cap_basic": 2274940008000,
+      "price_earnings_ttm": 29.547419201918515,
+      "earnings_per_share_basic_ttm": 7.2867
+    },
+    {
+      "symbol": "NASDAQ:AVGO",
+      "name": "AVGO",
+      "close": 312.43,
+      "change": -0.6739786997297741,
+      "change_abs": -2.1200000000000045,
+      "volume": 6390456,
+      "Recommend.All": -0.3787878787878788,
+      "market_cap_basic": 1479252948100,
+      "price_earnings_ttm": 60.94530274656679,
+      "earnings_per_share_basic_ttm": 5.2832
+    },
+    {
+      "symbol": "NYSE:TSM",
+      "name": "TSM",
+      "close": 340.675,
+      "change": 0.4822439830108515,
+      "change_abs": 1.634999999999991,
+      "volume": 3789501,
+      "Recommend.All": 0.2909090909090909,
+      "market_cap_basic": 1465306345176.094,
+      "price_earnings_ttm": 31.9501627167603,
+      "earnings_per_share_basic_ttm": 10.6631
+    },
+    {
+      "symbol": "NASDAQ:TSLA",
+      "name": "TSLA",
+      "close": 348.82,
+      "change": -3.2640949554896097,
+      "change_abs": -11.769999999999982,
+      "volume": 49614716,
+      "Recommend.All": -0.5121212121212121,
+      "market_cap_basic": 1308922632600,
+      "price_earnings_ttm": 324.182156133829,
+      "earnings_per_share_basic_ttm": 1.1762
+    },
+    {
+      "symbol": "NASDAQ:META",
+      "name": "META",
+      "close": 577,
+      "change": 0.44215437106151234,
+      "change_abs": 2.5399999999999636,
+      "volume": 4574290,
+      "Recommend.All": -0.3333333333333333,
+      "market_cap_basic": 1262002860000,
+      "price_earnings_ttm": 24.56270300414203,
+      "earnings_per_share_basic_ttm": 23.9622
+    }
+  ],
+  "metadata": {
+    "market": "america",
+    "sort_order": "desc",
+    "limit": 10,
+    "sort_by": "market_cap_basic",
+    "total": 10,
+    "total_available": 19096
+  },
+  "error": null
+}

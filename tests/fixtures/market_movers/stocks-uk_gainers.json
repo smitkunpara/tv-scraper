@@ -1,0 +1,143 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "symbol": "LSE:BSFA",
+      "name": "BSFA",
+      "close": 2.125,
+      "change": 130.47722342733186,
+      "change_abs": 1.2029999999999998,
+      "volume": 34147349,
+      "market_cap_basic": 2727957,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": -0.0093,
+      "logoid": "bsf-enterprise-plc-ord-gbp001",
+      "description": "BSF Enterprise PLC"
+    },
+    {
+      "symbol": "LSE:0YEG",
+      "name": "0YEG",
+      "close": 17.29182,
+      "change": 70.36275862068966,
+      "change_abs": 7.141820000000001,
+      "volume": 450,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null,
+      "logoid": "proshares",
+      "description": "ProShares UltraShort MSCI Emerging Markets"
+    },
+    {
+      "symbol": "LSE:0A2N",
+      "name": "0A2N",
+      "close": 28.47972,
+      "change": 54.716341530989766,
+      "change_abs": 10.072020000000002,
+      "volume": 2426,
+      "market_cap_basic": 10205816189.680216,
+      "price_earnings_ttm": 339.44839094159715,
+      "earnings_per_share_basic_ttm": 0.041653636699999996,
+      "logoid": "lynas",
+      "description": "Lynas Rare Earths Limited"
+    },
+    {
+      "symbol": "AQUIS:VSA",
+      "name": "VSA",
+      "close": 3.5,
+      "change": 35.92233009708737,
+      "change_abs": 0.9249999999999998,
+      "volume": 200,
+      "market_cap_basic": 734226.025,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": -0.0101,
+      "logoid": "vsa-capital-plc",
+      "description": "VSA Capital Group PLC"
+    },
+    {
+      "symbol": "LSE:ASBE",
+      "name": "ASBE",
+      "close": 40,
+      "change": 33.33333333333333,
+      "change_abs": 10,
+      "volume": 0,
+      "market_cap_basic": 819596,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": -0.0317,
+      "logoid": "associated-british-engineering-ord-gbp0025",
+      "description": "Associated British Engineering plc"
+    },
+    {
+      "symbol": "AQUIS:HYDP",
+      "name": "HYDP",
+      "close": 798,
+      "change": 33,
+      "change_abs": 198,
+      "volume": 4,
+      "market_cap_basic": 4200000,
+      "price_earnings_ttm": 16.736577181208055,
+      "earnings_per_share_basic_ttm": 0.4768,
+      "logoid": "hydro-hotel-eastbourne-plc",
+      "description": "Hydro Hotel, Eastbourne, plc"
+    },
+    {
+      "symbol": "LSE:0NR0",
+      "name": "0NR0",
+      "close": 0.16,
+      "change": 32.23140495867769,
+      "change_abs": 0.03900000000000001,
+      "volume": 12255,
+      "market_cap_basic": 3542477.6922199996,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null,
+      "logoid": "kst-beteiligungs-ag",
+      "description": "TTL Beteiligungs- und Grundbesitz-AG"
+    },
+    {
+      "symbol": "LSE:SPSC",
+      "name": "SPSC",
+      "close": 160,
+      "change": 31.147540983606557,
+      "change_abs": 38,
+      "volume": 0,
+      "market_cap_basic": 75863670,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null,
+      "logoid": "spectra-systems-com-shs-usd001-unres",
+      "description": "Spectra Systems Corporation"
+    },
+    {
+      "symbol": "LSE:VCP",
+      "name": "VCP",
+      "close": 41,
+      "change": 28.125,
+      "change_abs": 9,
+      "volume": 3183494,
+      "market_cap_basic": 47295069,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": -2.0194,
+      "logoid": "victoria-plc",
+      "description": "Victoria PLC"
+    },
+    {
+      "symbol": "LSE:3WTI",
+      "name": "3WTI",
+      "close": 1038,
+      "change": 27.616413093591518,
+      "change_abs": 224.625,
+      "volume": 11504,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null,
+      "logoid": "",
+      "description": "Leverage Shares 3x Long WTI Oil ETC"
+    }
+  ],
+  "metadata": {
+    "market": "stocks-uk",
+    "category": "gainers",
+    "limit": 10,
+    "total": 10,
+    "totalCount": 3658
+  },
+  "error": null
+}

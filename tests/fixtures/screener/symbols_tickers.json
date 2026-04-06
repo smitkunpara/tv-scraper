@@ -1,0 +1,56 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "symbol": "NASDAQ:AAPL",
+      "name": "AAPL",
+      "close": 258.8517,
+      "change": 1.1455532979055982,
+      "change_abs": 2.9317000000000064,
+      "volume": 14811304,
+      "Recommend.All": 0.3787878787878788,
+      "market_cap_basic": 3800227692870,
+      "price_earnings_ttm": 32.75028467319517,
+      "earnings_per_share_basic_ttm": 7.9334
+    },
+    {
+      "symbol": "NYSE:JPM",
+      "name": "JPM",
+      "close": 295.84,
+      "change": 0.42090970807873457,
+      "change_abs": 1.2399999999999523,
+      "volume": 2966393,
+      "Recommend.All": 0.1575757575757576,
+      "market_cap_basic": 797889355199.9999,
+      "price_earnings_ttm": 14.784459925438025,
+      "earnings_per_share_basic_ttm": 20.0468
+    },
+    {
+      "symbol": "NYSE:GS",
+      "name": "GS",
+      "close": 862.3499,
+      "change": -0.07996153133109889,
+      "change_abs": -0.6900999999999158,
+      "volume": 598871,
+      "Recommend.All": 0.2212121212121212,
+      "market_cap_basic": 255904919874.7,
+      "price_earnings_ttm": 16.81020171854532,
+      "earnings_per_share_basic_ttm": 52.0911
+    }
+  ],
+  "metadata": {
+    "market": "america",
+    "sort_order": "desc",
+    "limit": 10,
+    "symbols": {
+      "tickers": [
+        "NASDAQ:AAPL",
+        "NYSE:JPM",
+        "NYSE:GS"
+      ]
+    },
+    "total": 3,
+    "total_available": 3
+  },
+  "error": null
+}

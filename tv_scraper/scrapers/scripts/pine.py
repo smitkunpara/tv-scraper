@@ -384,3 +384,4 @@ class Pine(BaseScraper):
         script_id = meta_info.get("scriptIdPart")
         if not script_id:
             return None
+        return meta_info

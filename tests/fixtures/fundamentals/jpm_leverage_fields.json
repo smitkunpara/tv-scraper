@@ -1,0 +1,14 @@
+{
+  "status": "success",
+  "data": {
+    "symbol": "NYSE:JPM",
+    "debt_to_equity": 2.7029892009116003,
+    "debt_to_equity_fq": 2.7029892009116003,
+    "debt_to_assets": null
+  },
+  "metadata": {
+    "exchange": "NYSE",
+    "symbol": "JPM"
+  },
+  "error": null
+}

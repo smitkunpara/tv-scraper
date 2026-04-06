@@ -1,0 +1,84 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "symbol": "BSE:RELIANCE",
+      "name": "RELIANCE",
+      "close": 1304.75,
+      "change": -3.412666099122768,
+      "change_abs": -46.09999999999991,
+      "volume": 1829449,
+      "Recommend.All": -0.603030303030303,
+      "market_cap_basic": 18280340357313,
+      "price_earnings_ttm": 21.218586815284862,
+      "earnings_per_share_basic_ttm": 61.4909,
+      "sector": "Energy Minerals",
+      "industry": "Oil Refining/Marketing"
+    },
+    {
+      "symbol": "NSE:RELIANCE",
+      "name": "RELIANCE",
+      "close": 1304.7,
+      "change": -3.3913365420214703,
+      "change_abs": -45.799999999999955,
+      "volume": 29274881,
+      "Recommend.All": -0.603030303030303,
+      "market_cap_basic": 18280340357313,
+      "price_earnings_ttm": 21.217773686838214,
+      "earnings_per_share_basic_ttm": 61.4909,
+      "sector": "Energy Minerals",
+      "industry": "Oil Refining/Marketing"
+    },
+    {
+      "symbol": "BSE:HDFCBANK",
+      "name": "HDFCBANK",
+      "close": 771.2,
+      "change": 2.6760750898681964,
+      "change_abs": 20.100000000000023,
+      "volume": 2244500,
+      "Recommend.All": -0.26666666666666666,
+      "market_cap_basic": 11561932779850,
+      "price_earnings_ttm": 15.950361944157187,
+      "earnings_per_share_basic_ttm": 48.585,
+      "sector": "Finance",
+      "industry": "Major Banks"
+    },
+    {
+      "symbol": "NSE:HDFCBANK",
+      "name": "HDFCBANK",
+      "close": 771,
+      "change": 2.676787854574514,
+      "change_abs": 20.100000000000023,
+      "volume": 42976659,
+      "Recommend.All": -0.26666666666666666,
+      "market_cap_basic": 11561932779850,
+      "price_earnings_ttm": 15.94622543950362,
+      "earnings_per_share_basic_ttm": 48.585,
+      "sector": "Finance",
+      "industry": "Major Banks"
+    },
+    {
+      "symbol": "BSE:BHARTIARTL",
+      "name": "BHARTIARTL",
+      "close": 1792.4,
+      "change": 0.15925791400073405,
+      "change_abs": 2.8500000000001364,
+      "volume": 317822,
+      "Recommend.All": -0.4454545454545455,
+      "market_cap_basic": 10198209700208,
+      "price_earnings_ttm": 35.91890391633084,
+      "earnings_per_share_basic_ttm": 49.9013,
+      "sector": "Communications",
+      "industry": "Wireless Telecommunications"
+    }
+  ],
+  "metadata": {
+    "market": "india",
+    "sort_by": "market_cap",
+    "sort_order": "desc",
+    "limit": 5,
+    "total": 5,
+    "total_count": 6725
+  },
+  "error": null
+}

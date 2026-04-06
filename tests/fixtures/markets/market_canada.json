@@ -1,0 +1,84 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "symbol": "NEO:RY",
+      "name": "RY",
+      "close": 228.36,
+      "change": 0.44866719451042936,
+      "change_abs": 1.0200000000000102,
+      "volume": 25676,
+      "Recommend.All": 0.4454545454545455,
+      "market_cap_basic": 317505281204,
+      "price_earnings_ttm": 15.682342599714318,
+      "earnings_per_share_basic_ttm": 14.5921,
+      "sector": "Finance",
+      "industry": "Major Banks"
+    },
+    {
+      "symbol": "NEO:RY.PR.S",
+      "name": "RY.PR.S",
+      "close": 26.18,
+      "change": -0.2666666666666677,
+      "change_abs": -0.07000000000000028,
+      "volume": 600,
+      "Recommend.All": -0.26969696969696966,
+      "market_cap_basic": 317505281204,
+      "price_earnings_ttm": 1.7978793539171518,
+      "earnings_per_share_basic_ttm": 14.5921,
+      "sector": "Finance",
+      "industry": "Major Banks"
+    },
+    {
+      "symbol": "TSX:RY",
+      "name": "RY",
+      "close": 228.37,
+      "change": 0.45306589249582174,
+      "change_abs": 1.0300000000000011,
+      "volume": 674450,
+      "Recommend.All": 0.4454545454545455,
+      "market_cap_basic": 317505281204,
+      "price_earnings_ttm": 15.683029337435446,
+      "earnings_per_share_basic_ttm": 14.5921,
+      "sector": "Finance",
+      "industry": "Major Banks"
+    },
+    {
+      "symbol": "TSX:RY.PR.S",
+      "name": "RY.PR.S",
+      "close": 26.48,
+      "change": 0.30303030303031003,
+      "change_abs": 0.08000000000000185,
+      "volume": 2270,
+      "Recommend.All": 0.46969696969696967,
+      "market_cap_basic": 317505281204,
+      "price_earnings_ttm": 1.8184814855510383,
+      "earnings_per_share_basic_ttm": 14.5921,
+      "sector": "Finance",
+      "industry": "Major Banks"
+    },
+    {
+      "symbol": "NEO:TD.PF.A",
+      "name": "TD.PF.A",
+      "close": 25.69,
+      "change": -0.2717391304347837,
+      "change_abs": -0.07000000000000028,
+      "volume": 100,
+      "Recommend.All": -0.1575757575757576,
+      "market_cap_basic": 223875101927,
+      "price_earnings_ttm": 2.085261124368902,
+      "earnings_per_share_basic_ttm": 12.3362,
+      "sector": "Finance",
+      "industry": "Major Banks"
+    }
+  ],
+  "metadata": {
+    "market": "canada",
+    "sort_by": "market_cap",
+    "sort_order": "desc",
+    "limit": 5,
+    "total": 5,
+    "total_count": 4335
+  },
+  "error": null
+}

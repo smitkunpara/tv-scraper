@@ -1,0 +1,143 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "symbol": "OTC:PBLA",
+      "name": "PBLA",
+      "close": 0.0026,
+      "change": 259900,
+      "change_abs": 0.0025989999999999997,
+      "volume": 366,
+      "market_cap_basic": 5,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null,
+      "logoid": "panbela-therapeutics",
+      "description": "Panbela Therapeutics, Inc."
+    },
+    {
+      "symbol": "OTC:AICOF",
+      "name": "AICOF",
+      "close": 0.001,
+      "change": 99900.00000000001,
+      "change_abs": 0.000999,
+      "volume": 2360,
+      "market_cap_basic": 7208191.873260001,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null,
+      "logoid": "generative-ai-solutions",
+      "description": "Generative AI Solutions Corp."
+    },
+    {
+      "symbol": "OTC:PIKM",
+      "name": "PIKM",
+      "close": 0.0005,
+      "change": 49900,
+      "change_abs": 0.000499,
+      "volume": 120,
+      "market_cap_basic": 975.8190000000001,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null,
+      "logoid": "kidpik",
+      "description": "Kidpik Corp."
+    },
+    {
+      "symbol": "OTC:YELLQ",
+      "name": "YELLQ",
+      "close": 0.165,
+      "change": 41149.99999999999,
+      "change_abs": 0.1646,
+      "volume": 523,
+      "market_cap_basic": 8675650.5,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null,
+      "logoid": "yellow-corporation",
+      "description": "Yellow Corporation"
+    },
+    {
+      "symbol": "OTC:CYPMF",
+      "name": "CYPMF",
+      "close": 0.24,
+      "change": 39900.00000000001,
+      "change_abs": 0.2394,
+      "volume": 1200,
+      "market_cap_basic": 120154080,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": -0.039434475000000004,
+      "logoid": "cyprium-metals-limited",
+      "description": "CYPRIUM METALS LTD."
+    },
+    {
+      "symbol": "OTC:KNKT",
+      "name": "KNKT",
+      "close": 0.0003,
+      "change": 29899.999999999993,
+      "change_abs": 0.00029899999999999995,
+      "volume": 2000,
+      "market_cap_basic": 62,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null,
+      "logoid": "kunekt",
+      "description": "KUNEKT CORP"
+    },
+    {
+      "symbol": "OTC:SLCO",
+      "name": "SLCO",
+      "close": 0.0402,
+      "change": 20000,
+      "change_abs": 0.04,
+      "volume": 100,
+      "market_cap_basic": 9408,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null,
+      "logoid": "sovereign-lithium",
+      "description": "SOVEREIGN LITHIUM INC"
+    },
+    {
+      "symbol": "OTC:TLOG",
+      "name": "TLOG",
+      "close": 0.0002,
+      "change": 19900.000000000004,
+      "change_abs": 0.000199,
+      "volume": 475,
+      "market_cap_basic": 4893,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null,
+      "logoid": "tetralogic-pharmaceuticals",
+      "description": "TETRALOGIC PHARMACEUTICALS CORP"
+    },
+    {
+      "symbol": "OTC:OBCN",
+      "name": "OBCN",
+      "close": 0.0002,
+      "change": 19900.000000000004,
+      "change_abs": 0.000199,
+      "volume": 1000,
+      "market_cap_basic": 6648.44,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null,
+      "logoid": "obocon",
+      "description": "OBOCON INC"
+    },
+    {
+      "symbol": "OTC:FRCJL",
+      "name": "FRCJL",
+      "close": 0.0002,
+      "change": 19900.000000000004,
+      "change_abs": 0.000199,
+      "volume": 1300,
+      "market_cap_basic": 74615,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null,
+      "logoid": "first-republic-bank-san-francisco",
+      "description": "First Republic Bank (San Francisco, California)"
+    }
+  ],
+  "metadata": {
+    "market": "stocks-usa",
+    "category": "pre-market-gainers",
+    "limit": 10,
+    "total": 10,
+    "totalCount": 10237
+  },
+  "error": null
+}

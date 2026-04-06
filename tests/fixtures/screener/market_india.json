@@ -1,0 +1,73 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "symbol": "BSE:NFXXVI01DD",
+      "name": "NFXXVI01DD",
+      "close": 10,
+      "change": 0,
+      "change_abs": 0,
+      "volume": 0,
+      "Recommend.All": 0,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "BSE:DATAMATICS",
+      "name": "DATAMATICS",
+      "close": 700.8,
+      "change": -0.6521122767224302,
+      "change_abs": -4.600000000000023,
+      "volume": 6590,
+      "Recommend.All": -0.11212121212121212,
+      "market_cap_basic": 41693650294,
+      "price_earnings_ttm": 21.256589603440847,
+      "earnings_per_share_basic_ttm": 32.9686
+    },
+    {
+      "symbol": "NSE:DYNAMATECH",
+      "name": "DYNAMATECH",
+      "close": 9348,
+      "change": -0.3836317135549872,
+      "change_abs": -36,
+      "volume": 20432,
+      "Recommend.All": -0.22424242424242424,
+      "market_cap_basic": 63754331707,
+      "price_earnings_ttm": 176.64565991742174,
+      "earnings_per_share_basic_ttm": 52.9195
+    },
+    {
+      "symbol": "BSE:SANDUPHQ",
+      "name": "SANDUPHQ",
+      "close": 35.19,
+      "change": 8.54410857495372,
+      "change_abs": 2.769999999999996,
+      "volume": 4479,
+      "Recommend.All": 0.2909090909090909,
+      "market_cap_basic": 313209270,
+      "price_earnings_ttm": 16.59123055162659,
+      "earnings_per_share_basic_ttm": 2.121
+    },
+    {
+      "symbol": "BSE:SAMKRG",
+      "name": "SAMKRG",
+      "close": 112.8,
+      "change": 1.3932584269662895,
+      "change_abs": 1.5499999999999972,
+      "volume": 181,
+      "Recommend.All": 0.024242424242424246,
+      "market_cap_basic": 1092530667,
+      "price_earnings_ttm": 15.601228181793035,
+      "earnings_per_share_basic_ttm": 7.2302
+    }
+  ],
+  "metadata": {
+    "market": "india",
+    "sort_order": "desc",
+    "limit": 5,
+    "total": 5,
+    "total_available": 8291
+  },
+  "error": null
+}

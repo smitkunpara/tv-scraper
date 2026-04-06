@@ -1,0 +1,133 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "symbol": "AMEX:QGRW",
+      "name": "QGRW",
+      "close": 54.25,
+      "change": 0.2772643253234724,
+      "change_abs": 0.14999999999999858,
+      "volume": 101747,
+      "Recommend.All": -0.17575757575757575,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "OTC:FINMF",
+      "name": "FINMF",
+      "close": 74.46,
+      "change": 3.087359822788301,
+      "change_abs": 2.2299999999999898,
+      "volume": 596,
+      "Recommend.All": 0.603030303030303,
+      "market_cap_basic": 42959233709.88,
+      "price_earnings_ttm": 29.871672486495022,
+      "earnings_per_share_basic_ttm": 2.492662573
+    },
+    {
+      "symbol": "NASDAQ:PSL",
+      "name": "PSL",
+      "close": 108.61,
+      "change": 0.04513591437071543,
+      "change_abs": 0.04899999999999238,
+      "volume": 412,
+      "Recommend.All": 0.024242424242424246,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "NYSE:GXO",
+      "name": "GXO",
+      "close": 53.295,
+      "change": 0.4050489826676779,
+      "change_abs": 0.2150000000000034,
+      "volume": 240641,
+      "Recommend.All": -0.08787878787878788,
+      "market_cap_basic": 6113682630,
+      "price_earnings_ttm": 176.06541129831515,
+      "earnings_per_share_basic_ttm": 0.3107
+    },
+    {
+      "symbol": "OTC:UTGPF",
+      "name": "UTGPF",
+      "close": 6.1,
+      "change": 0,
+      "change_abs": 0,
+      "volume": 410,
+      "Recommend.All": -0.38461538461538464,
+      "market_cap_basic": 3216851405.7075,
+      "price_earnings_ttm": 22.833634587581134,
+      "earnings_per_share_basic_ttm": 0.2687664
+    },
+    {
+      "symbol": "OTC:TAAG",
+      "name": "TAAG",
+      "close": 0.0086,
+      "change": -15.686274509803926,
+      "change_abs": -0.0016000000000000007,
+      "volume": 72640,
+      "Recommend.All": -0.5575757575757576,
+      "market_cap_basic": 608010,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "NASDAQ:VRSN",
+      "name": "VRSN",
+      "close": 272.53,
+      "change": 4.879738310563767,
+      "change_abs": 12.67999999999995,
+      "volume": 523248,
+      "Recommend.All": 0.6484848484848484,
+      "market_cap_basic": 24991000999.999996,
+      "price_earnings_ttm": 30.93767737541151,
+      "earnings_per_share_basic_ttm": 8.8303
+    },
+    {
+      "symbol": "AMEX:ZCBC",
+      "name": "ZCBC",
+      "close": 49.8563,
+      "change": 0.17782582312257372,
+      "change_abs": 0.08849999999999625,
+      "volume": 2,
+      "Recommend.All": -0.375,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "AMEX:SGLC",
+      "name": "SGLC",
+      "close": 37.65,
+      "change": 0.2844722879243106,
+      "change_abs": 0.10679999999999978,
+      "volume": 115467,
+      "Recommend.All": 0.1575757575757576,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "AMEX:SPRE",
+      "name": "SPRE",
+      "close": 19.9912,
+      "change": 0.05605605605604988,
+      "change_abs": 0.011199999999998766,
+      "volume": 54205,
+      "Recommend.All": 0.24545454545454548,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    }
+  ],
+  "metadata": {
+    "market": "america",
+    "sort_order": "desc",
+    "limit": 10,
+    "total": 10,
+    "total_available": 19096
+  },
+  "error": null
+}

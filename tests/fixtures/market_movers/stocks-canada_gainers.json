@@ -1,0 +1,143 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "symbol": "NEO:PTC",
+      "name": "PTC",
+      "close": 0.19,
+      "change": 3700,
+      "change_abs": 0.185,
+      "volume": 500,
+      "market_cap_basic": 1102645,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": -0.0249,
+      "logoid": "petrox-resources",
+      "description": "Petrox Resources Corp."
+    },
+    {
+      "symbol": "NEO:GIG",
+      "name": "GIG",
+      "close": 0.31,
+      "change": 342.8571428571428,
+      "change_abs": 0.24,
+      "volume": 500,
+      "market_cap_basic": 4860835,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": -0.0163,
+      "logoid": "xau-resources",
+      "description": "XAU Resources, Inc."
+    },
+    {
+      "symbol": "CSE:MOSS",
+      "name": "MOSS",
+      "close": 0.075,
+      "change": 150,
+      "change_abs": 0.045,
+      "volume": 1000,
+      "market_cap_basic": 4756091,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null,
+      "logoid": "moss-genomics",
+      "description": "Moss Genomics, Inc."
+    },
+    {
+      "symbol": "TSXV:OCAP.P",
+      "name": "OCAP.P",
+      "close": 0.1,
+      "change": 150,
+      "change_abs": 0.060000000000000005,
+      "volume": 1050,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null,
+      "logoid": "ocean-shore-capital",
+      "description": "Ocean Shore Capital Corp."
+    },
+    {
+      "symbol": "TSXV:AIV.P",
+      "name": "AIV.P",
+      "close": 0.035,
+      "change": 133.33333333333337,
+      "change_abs": 0.020000000000000004,
+      "volume": 1000,
+      "market_cap_basic": 262500,
+      "price_earnings_ttm": 1.2280701754385965,
+      "earnings_per_share_basic_ttm": 0.0285,
+      "logoid": "",
+      "description": "Apolo IV Acquisition Corp."
+    },
+    {
+      "symbol": "NEO:AWE",
+      "name": "AWE",
+      "close": 0.145,
+      "change": 107.14285714285711,
+      "change_abs": 0.07499999999999998,
+      "volume": 3000,
+      "market_cap_basic": 7632775,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": -0.0169,
+      "logoid": "thunderstruck-resources-ltd",
+      "description": "Thunderstruck Resources Ltd."
+    },
+    {
+      "symbol": "TSXV:NAV",
+      "name": "NAV",
+      "close": 0.01,
+      "change": 100,
+      "change_abs": 0.005,
+      "volume": 1000,
+      "market_cap_basic": 556286,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": -0.0013,
+      "logoid": "navco-pharmaceuticals",
+      "description": "NAVCO Pharmaceuticals Inc"
+    },
+    {
+      "symbol": "TSXV:TEST.H",
+      "name": "TEST.H",
+      "close": 0.02,
+      "change": 100,
+      "change_abs": 0.01,
+      "volume": 11000,
+      "market_cap_basic": 232055,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": -0.0057,
+      "logoid": "flurotech-ltd",
+      "description": "FluroTech Ltd."
+    },
+    {
+      "symbol": "CSE:NWI",
+      "name": "NWI",
+      "close": 0.01,
+      "change": 100,
+      "change_abs": 0.005,
+      "volume": 4650,
+      "market_cap_basic": 3077902,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": -0.0004,
+      "logoid": "nuinsco-resources-ltd",
+      "description": "Nuinsco Resources Limited"
+    },
+    {
+      "symbol": "NEO:RLYG",
+      "name": "RLYG",
+      "close": 0.4,
+      "change": 90.4761904761905,
+      "change_abs": 0.19000000000000003,
+      "volume": 103500,
+      "market_cap_basic": 20247782,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": -0.1025,
+      "logoid": "riley-gold",
+      "description": "Riley Gold Corp."
+    }
+  ],
+  "metadata": {
+    "market": "stocks-canada",
+    "category": "gainers",
+    "limit": 10,
+    "total": 10,
+    "totalCount": 4216
+  },
+  "error": null
+}

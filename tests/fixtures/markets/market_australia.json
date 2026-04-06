@@ -1,0 +1,84 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "symbol": "ASX:CBA",
+      "name": "CBA",
+      "close": 172.8,
+      "change": 0.5235602094240871,
+      "change_abs": 0.9000000000000057,
+      "volume": 2036298,
+      "Recommend.All": 0.31212121212121213,
+      "market_cap_basic": 288886589477,
+      "price_earnings_ttm": 27.959355381528706,
+      "earnings_per_share_basic_ttm": 6.1896,
+      "sector": "Finance",
+      "industry": "Major Banks"
+    },
+    {
+      "symbol": "ASX:BHP",
+      "name": "BHP",
+      "close": 51.23,
+      "change": -2.5304414003044244,
+      "change_abs": -1.3300000000000054,
+      "volume": 8654569,
+      "Recommend.All": 0.26666666666666666,
+      "market_cap_basic": 260283743372,
+      "price_earnings_ttm": 16.426189560087213,
+      "earnings_per_share_basic_ttm": 3.1254,
+      "sector": "Non-Energy Minerals",
+      "industry": "Steel"
+    },
+    {
+      "symbol": "ASX:RIO",
+      "name": "RIO",
+      "close": 161.62,
+      "change": -3.2736848405051164,
+      "change_abs": -5.469999999999999,
+      "volume": 1211910,
+      "Recommend.All": 0.3090909090909091,
+      "market_cap_basic": 230779824001,
+      "price_earnings_ttm": 17.149648242272473,
+      "earnings_per_share_basic_ttm": 9.5053,
+      "sector": "Non-Energy Minerals",
+      "industry": "Other Metals/Minerals"
+    },
+    {
+      "symbol": "ASX:WBC",
+      "name": "WBC",
+      "close": 39.85,
+      "change": -0.5242136794807809,
+      "change_abs": -0.21000000000000085,
+      "volume": 4083848,
+      "Recommend.All": -0.17878787878787877,
+      "market_cap_basic": 136125201452.99998,
+      "price_earnings_ttm": 19.987962080553746,
+      "earnings_per_share_basic_ttm": 2.0185,
+      "sector": "Finance",
+      "industry": "Major Banks"
+    },
+    {
+      "symbol": "ASX:NAB",
+      "name": "NAB",
+      "close": 41.8,
+      "change": -0.2862595419847437,
+      "change_abs": -0.12000000000000455,
+      "volume": 6080009,
+      "Recommend.All": -0.4,
+      "market_cap_basic": 127865779258,
+      "price_earnings_ttm": 19.764527873658327,
+      "earnings_per_share_basic_ttm": 2.2092,
+      "sector": "Finance",
+      "industry": "Major Banks"
+    }
+  ],
+  "metadata": {
+    "market": "australia",
+    "sort_by": "market_cap",
+    "sort_order": "desc",
+    "limit": 5,
+    "total": 5,
+    "total_count": 1513
+  },
+  "error": null
+}

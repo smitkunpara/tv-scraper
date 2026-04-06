@@ -1,0 +1,16 @@
+{
+  "status": "success",
+  "data": {
+    "symbol": "NASDAQ:AAPL",
+    "total_assets": 379297000000,
+    "cash_n_short_term_invest": null,
+    "total_debt": 90509000000,
+    "stockholders_equity": null,
+    "book_value_per_share_fq": 5.99822
+  },
+  "metadata": {
+    "exchange": "NASDAQ",
+    "symbol": "AAPL"
+  },
+  "error": null
+}

@@ -1,0 +1,140 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "symbol": "NASDAQ:MDLN",
+      "name": "MDLN",
+      "close": 43.67,
+      "change": -1.377597109304425,
+      "change_abs": -0.6099999999999994,
+      "volume": 2146242,
+      "Recommend.All": 0.2272727272727273,
+      "market_cap_basic": 35444646325,
+      "price_earnings_ttm": 30.2068202254963,
+      "earnings_per_share_basic_ttm": 1.4457
+    },
+    {
+      "symbol": "NYSE:LNG",
+      "name": "LNG",
+      "close": 284.08,
+      "change": 1.0385545596813057,
+      "change_abs": 2.919999999999959,
+      "volume": 1247854,
+      "Recommend.All": 0.4,
+      "market_cap_basic": 59714468240,
+      "price_earnings_ttm": 11.675880068227121,
+      "earnings_per_share_basic_ttm": 24.3941
+    },
+    {
+      "symbol": "NASDAQ:ALDX",
+      "name": "ALDX",
+      "close": 1.57,
+      "change": -5.421686746987944,
+      "change_abs": -0.08999999999999986,
+      "volume": 1175055,
+      "Recommend.All": -0.6484848484848484,
+      "market_cap_basic": 94486996,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": -0.5637
+    },
+    {
+      "symbol": "CBOE:USHY",
+      "name": "USHY",
+      "close": 36.8217,
+      "change": 0.05896739130435521,
+      "change_abs": 0.021700000000002717,
+      "volume": 15117194,
+      "Recommend.All": -0.04242424242424242,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "NYSE:AMPX",
+      "name": "AMPX",
+      "close": 16.43,
+      "change": 2.6874999999999982,
+      "change_abs": 0.4299999999999997,
+      "volume": 2441195,
+      "Recommend.All": 0.24545454545454548,
+      "market_cap_basic": 2251222170,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": -0.3472
+    },
+    {
+      "symbol": "NYSE:GE",
+      "name": "GE",
+      "close": 286.185,
+      "change": 1.7872385830132227,
+      "change_abs": 5.024999999999977,
+      "volume": 2465023,
+      "Recommend.All": -0.4454545454545455,
+      "market_cap_basic": 300153689850,
+      "price_earnings_ttm": 35.16304614930948,
+      "earnings_per_share_basic_ttm": 8.2
+    },
+    {
+      "symbol": "AMEX:JETS",
+      "name": "JETS",
+      "close": 24.99,
+      "change": 0.24067388688326805,
+      "change_abs": 0.05999999999999872,
+      "volume": 1030645,
+      "Recommend.All": -0.1090909090909091,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "NASDAQ:SNDK",
+      "name": "SNDK",
+      "close": 734.804,
+      "change": 4.734103963853524,
+      "change_abs": 33.21399999999994,
+      "volume": 9063615,
+      "Recommend.All": 0.5121212121212121,
+      "market_cap_basic": 108457783159.87999,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": -7.2641
+    },
+    {
+      "symbol": "CBOE:VXX",
+      "name": "VXX",
+      "close": 33.99,
+      "change": -2.0461095100864575,
+      "change_abs": -0.7100000000000009,
+      "volume": 4585563,
+      "Recommend.All": -0.1575757575757576,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "AMEX:FXI",
+      "name": "FXI",
+      "close": 35.48,
+      "change": -0.22497187851520076,
+      "change_abs": -0.0800000000000054,
+      "volume": 10178298,
+      "Recommend.All": -0.3090909090909091,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    }
+  ],
+  "metadata": {
+    "market": "america",
+    "sort_order": "desc",
+    "limit": 10,
+    "filters": [
+      {
+        "left": "volume",
+        "operation": "greater",
+        "right": 1000000
+      }
+    ],
+    "total": 10,
+    "total_available": 1393
+  },
+  "error": null
+}

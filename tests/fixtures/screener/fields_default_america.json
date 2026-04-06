@@ -1,0 +1,73 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "symbol": "OTC:NISTF",
+      "name": "NISTF",
+      "close": 3.655,
+      "change": -5.055070656691613,
+      "change_abs": -0.19460000000000033,
+      "volume": 2855,
+      "Recommend.All": -0.5121212121212121,
+      "market_cap_basic": 19102123696.614998,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": -0.06942591810000001
+    },
+    {
+      "symbol": "NYSE:GGT/PE",
+      "name": "GGT/PE",
+      "close": 20.654,
+      "change": 0.4567098409054501,
+      "change_abs": 0.09390000000000143,
+      "volume": 365,
+      "Recommend.All": -0.3090909090909091,
+      "market_cap_basic": null,
+      "price_earnings_ttm": 19.54020813623463,
+      "earnings_per_share_basic_ttm": 1.057
+    },
+    {
+      "symbol": "OTC:PAVLF",
+      "name": "PAVLF",
+      "close": 2.4,
+      "change": 2.1276595744680775,
+      "change_abs": 0.04999999999999982,
+      "volume": 100,
+      "Recommend.All": -0.6666666666666666,
+      "market_cap_basic": 53884610.4,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "NYSE:GS",
+      "name": "GS",
+      "close": 862.3499,
+      "change": -0.07996153133109889,
+      "change_abs": -0.6900999999999158,
+      "volume": 598871,
+      "Recommend.All": 0.2212121212121212,
+      "market_cap_basic": 255904919874.7,
+      "price_earnings_ttm": 16.81020171854532,
+      "earnings_per_share_basic_ttm": 52.0911
+    },
+    {
+      "symbol": "NASDAQ:ARMY",
+      "name": "ARMY",
+      "close": 26.68,
+      "change": 0.7583310674038527,
+      "change_abs": 0.20080000000000098,
+      "volume": 2519,
+      "Recommend.All": 0.39860139860139865,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    }
+  ],
+  "metadata": {
+    "market": "america",
+    "sort_order": "desc",
+    "limit": 5,
+    "total": 5,
+    "total_available": 19096
+  },
+  "error": null
+}

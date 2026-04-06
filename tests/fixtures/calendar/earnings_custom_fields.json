@@ -1,0 +1,807 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "symbol": "NASDAQ:CLIR",
+      "name": "CLIR",
+      "description": "ClearSign Technologies Corporation",
+      "market": "america",
+      "earnings_per_share_fq": -0.3,
+      "earnings_release_date": 1763586300
+    },
+    {
+      "symbol": "OTC:STCB",
+      "name": "STCB",
+      "description": "Starco Brands, Inc.",
+      "market": "america",
+      "earnings_per_share_fq": null,
+      "earnings_release_date": 1763121600
+    },
+    {
+      "symbol": "OTC:SVNDY",
+      "name": "SVNDY",
+      "description": "Seven & I Holdings Co., Ltd.",
+      "market": "america",
+      "earnings_per_share_fq": 0.199208,
+      "earnings_release_date": 1767853800
+    },
+    {
+      "symbol": "OTC:ADFJF",
+      "name": "ADFJF",
+      "description": "ADF Group Inc.",
+      "market": "america",
+      "earnings_per_share_fq": 0.256824,
+      "earnings_release_date": 1765454460
+    },
+    {
+      "symbol": "OTC:NOWVF",
+      "name": "NOWVF",
+      "description": "NowVertical Group Inc.",
+      "market": "america",
+      "earnings_per_share_fq": -0.01,
+      "earnings_release_date": 1762950600
+    },
+    {
+      "symbol": "NASDAQ:RDI",
+      "name": "RDI",
+      "description": "Reading International Inc",
+      "market": "america",
+      "earnings_per_share_fq": -0.18,
+      "earnings_release_date": 1763128800
+    },
+    {
+      "symbol": "AMEX:MINE",
+      "name": "MINE",
+      "description": "Mayfair Gold Corp.",
+      "market": "america",
+      "earnings_per_share_fq": -0.029379999999999996,
+      "earnings_release_date": 1756158060
+    },
+    {
+      "symbol": "NYSE:RPM",
+      "name": "RPM",
+      "description": "RPM International Inc.",
+      "market": "america",
+      "earnings_per_share_fq": 1.2,
+      "earnings_release_date": 1767872700
+    },
+    {
+      "symbol": "OTC:CGECF",
+      "name": "CGECF",
+      "description": "Cogeco Inc.",
+      "market": "america",
+      "earnings_per_share_fq": 2.145,
+      "earnings_release_date": 1768438440
+    },
+    {
+      "symbol": "NASDAQ:PSMT",
+      "name": "PSMT",
+      "description": "PriceSmart, Inc.",
+      "market": "america",
+      "earnings_per_share_fq": 1.29,
+      "earnings_release_date": 1767819660
+    },
+    {
+      "symbol": "NYSE:LEVI",
+      "name": "LEVI",
+      "description": "Levi Strauss & Co",
+      "market": "america",
+      "earnings_per_share_fq": 0.41,
+      "earnings_release_date": 1769634600
+    },
+    {
+      "symbol": "AMEX:LGL",
+      "name": "LGL",
+      "description": "LGL Group, Inc. (The)",
+      "market": "america",
+      "earnings_per_share_fq": null,
+      "earnings_release_date": 1743422400
+    },
+    {
+      "symbol": "NASDAQ:TRNR",
+      "name": "TRNR",
+      "description": "Interactive Strength Inc.",
+      "market": "america",
+      "earnings_per_share_fq": -31.1,
+      "earnings_release_date": 1763121600
+    },
+    {
+      "symbol": "OTC:SOIEF",
+      "name": "SOIEF",
+      "description": "Stolt-Nielsen Ltd",
+      "market": "america",
+      "earnings_per_share_fq": 1.12,
+      "earnings_release_date": 1769554800
+    },
+    {
+      "symbol": "NASDAQ:DOGZ",
+      "name": "DOGZ",
+      "description": "Dogness (International) Corporation",
+      "market": "america",
+      "earnings_per_share_fq": null,
+      "earnings_release_date": 1697112000
+    },
+    {
+      "symbol": "NYSE:DAL",
+      "name": "DAL",
+      "description": "Delta Air Lines, Inc.",
+      "market": "america",
+      "earnings_per_share_fq": 1.55,
+      "earnings_release_date": 1768303800
+    },
+    {
+      "symbol": "NASDAQ:CAPS",
+      "name": "CAPS",
+      "description": "Capstone Holding Corp.",
+      "market": "america",
+      "earnings_per_share_fq": -0.35,
+      "earnings_release_date": 1763467200
+    },
+    {
+      "symbol": "OTC:VERO",
+      "name": "VERO",
+      "description": "Venus Concept Inc.",
+      "market": "america",
+      "earnings_per_share_fq": -12.14,
+      "earnings_release_date": 1763035200
+    },
+    {
+      "symbol": "OTC:FMANF",
+      "name": "FMANF",
+      "description": "Freeman Gold Corp.",
+      "market": "america",
+      "earnings_per_share_fq": 0,
+      "earnings_release_date": 1721810100
+    },
+    {
+      "symbol": "OTC:BCBNF",
+      "name": "BCBNF",
+      "description": "Base Carbon Inc.",
+      "market": "america",
+      "earnings_per_share_fq": 0.02,
+      "earnings_release_date": 1762293600
+    },
+    {
+      "symbol": "OTC:STPGF",
+      "name": "STPGF",
+      "description": "Steppe Gold Limited",
+      "market": "america",
+      "earnings_per_share_fq": null,
+      "earnings_release_date": 1755086400
+    },
+    {
+      "symbol": "OTC:FMBL",
+      "name": "FMBL",
+      "description": "Farmers & Merchants Bank of Long Beach (CA)",
+      "market": "america",
+      "earnings_per_share_fq": null,
+      "earnings_release_date": null
+    },
+    {
+      "symbol": "NYSE:PXED",
+      "name": "PXED",
+      "description": "Phoenix Education Partners, Inc.",
+      "market": "america",
+      "earnings_per_share_fq": 1.38,
+      "earnings_release_date": 1768338720
+    },
+    {
+      "symbol": "NASDAQ:AMPG",
+      "name": "AMPG",
+      "description": "Amplitech Group, Inc.",
+      "market": "america",
+      "earnings_per_share_fq": null,
+      "earnings_release_date": 1775764800
+    },
+    {
+      "symbol": "NASDAQ:KRUS",
+      "name": "KRUS",
+      "description": "Kura Sushi USA, Inc.",
+      "market": "america",
+      "earnings_per_share_fq": -0.25,
+      "earnings_release_date": 1767819900
+    },
+    {
+      "symbol": "OTC:FTGFF",
+      "name": "FTGFF",
+      "description": "Firan Technology Group Corporation",
+      "market": "america",
+      "earnings_per_share_fq": 0.10010000000000001,
+      "earnings_release_date": 1771451100
+    },
+    {
+      "symbol": "NASDAQ:APLD",
+      "name": "APLD",
+      "description": "Applied Digital Corporation",
+      "market": "america",
+      "earnings_per_share_fq": -0.07,
+      "earnings_release_date": 1767822480
+    },
+    {
+      "symbol": "NASDAQ:ESCA",
+      "name": "ESCA",
+      "description": "Escalade, Incorporated",
+      "market": "america",
+      "earnings_per_share_fq": 0.27,
+      "earnings_release_date": 1772190180
+    },
+    {
+      "symbol": "NASDAQ:SLNHP",
+      "name": "SLNHP",
+      "description": "Soluna Holdings, Inc. - 9.0% Series A Cumulative Perpetual Preferred Stock",
+      "market": "america",
+      "earnings_per_share_fq": -1.14,
+      "earnings_release_date": 1763382600
+    },
+    {
+      "symbol": "NASDAQ:OMEX",
+      "name": "OMEX",
+      "description": "Odyssey Marine Exploration, Inc.",
+      "market": "america",
+      "earnings_per_share_fq": -0.3,
+      "earnings_release_date": 1660596900
+    },
+    {
+      "symbol": "NASDAQ:SHFS",
+      "name": "SHFS",
+      "description": "SHF Holdings, Inc.",
+      "market": "america",
+      "earnings_per_share_fq": 0.2,
+      "earnings_release_date": 1731445800
+    },
+    {
+      "symbol": "OTC:CAMZF",
+      "name": "CAMZF",
+      "description": "Camino Minerals Corp.",
+      "market": "america",
+      "earnings_per_share_fq": 0,
+      "earnings_release_date": 1624955040
+    },
+    {
+      "symbol": "OTC:SAVNF",
+      "name": "SAVNF",
+      "description": "SAVANNAH RESOURCES PLC",
+      "market": "america",
+      "earnings_per_share_fq": -0.00096096,
+      "earnings_release_date": 1758693600
+    },
+    {
+      "symbol": "NASDAQ:RGP",
+      "name": "RGP",
+      "description": "Resources Connection, Inc.",
+      "market": "america",
+      "earnings_per_share_fq": 0.06,
+      "earnings_release_date": 1767819900
+    },
+    {
+      "symbol": "OTC:FRCOF",
+      "name": "FRCOF",
+      "description": "Fast Retailing Co. Ltd.",
+      "market": "america",
+      "earnings_per_share_fq": 3.0769616500000003,
+      "earnings_release_date": 1767853860
+    },
+    {
+      "symbol": "NASDAQ:GNLN",
+      "name": "GNLN",
+      "description": "Greenlane Holdings, Inc.",
+      "market": "america",
+      "earnings_per_share_fq": null,
+      "earnings_release_date": 1742558400
+    },
+    {
+      "symbol": "OTC:IBYAF",
+      "name": "IBYAF",
+      "description": "Ichibanya Co. Ltd.",
+      "market": "america",
+      "earnings_per_share_fq": 0.035088440000000005,
+      "earnings_release_date": 1766730600
+    },
+    {
+      "symbol": "OTC:SEAC",
+      "name": "SEAC",
+      "description": "SeaChange International, Inc.",
+      "market": "america",
+      "earnings_per_share_fq": null,
+      "earnings_release_date": null
+    },
+    {
+      "symbol": "OTC:BORMF",
+      "name": "BORMF",
+      "description": "Borealis Mining Company Limited",
+      "market": "america",
+      "earnings_per_share_fq": -0.01,
+      "earnings_release_date": 1766580120
+    },
+    {
+      "symbol": "NASDAQ:BYRN",
+      "name": "BYRN",
+      "description": "Byrna Technologies, Inc.",
+      "market": "america",
+      "earnings_per_share_fq": 0.14,
+      "earnings_release_date": 1770296940
+    },
+    {
+      "symbol": "NASDAQ:SLP",
+      "name": "SLP",
+      "description": "Simulations Plus, Inc.",
+      "market": "america",
+      "earnings_per_share_fq": 0.13,
+      "earnings_release_date": 1767906360
+    },
+    {
+      "symbol": "NASDAQ:MAXN",
+      "name": "MAXN",
+      "description": "Maxeon Solar Technologies, Ltd.",
+      "market": "america",
+      "earnings_per_share_fq": null,
+      "earnings_release_date": null
+    },
+    {
+      "symbol": "NASDAQ:COCP",
+      "name": "COCP",
+      "description": "Cocrystal Pharma, Inc.",
+      "market": "america",
+      "earnings_per_share_fq": -0.19,
+      "earnings_release_date": 1763125200
+    },
+    {
+      "symbol": "OTC:ZDCAF",
+      "name": "ZDCAF",
+      "description": "Zedcor Inc.",
+      "market": "america",
+      "earnings_per_share_fq": 0,
+      "earnings_release_date": 1762948800
+    },
+    {
+      "symbol": "OTC:SCND",
+      "name": "SCND",
+      "description": "Scientific Industries, Inc.",
+      "market": "america",
+      "earnings_per_share_fq": -0.29,
+      "earnings_release_date": 1681704000
+    },
+    {
+      "symbol": "OTC:FRCOY",
+      "name": "FRCOY",
+      "description": "Fast Retailing Co. Ltd.",
+      "market": "america",
+      "earnings_per_share_fq": 0.304386,
+      "earnings_release_date": 1767853860
+    },
+    {
+      "symbol": "OTC:IGESF",
+      "name": "IGESF",
+      "description": "Igas Energy PLC",
+      "market": "america",
+      "earnings_per_share_fq": -0.04077216,
+      "earnings_release_date": 1758002400
+    },
+    {
+      "symbol": "NASDAQ:NTIC",
+      "name": "NTIC",
+      "description": "Northern Technologies International Corporation",
+      "market": "america",
+      "earnings_per_share_fq": 0.04,
+      "earnings_release_date": 1767877200
+    },
+    {
+      "symbol": "NYSE:BB",
+      "name": "BB",
+      "description": "BlackBerry Limited",
+      "market": "america",
+      "earnings_per_share_fq": 0.049281374999999995,
+      "earnings_release_date": 1766095500
+    },
+    {
+      "symbol": "NASDAQ:UNTY",
+      "name": "UNTY",
+      "description": "Unity Bancorp, Inc.",
+      "market": "america",
+      "earnings_per_share_fq": 1.41,
+      "earnings_release_date": 1768302000
+    },
+    {
+      "symbol": "AMEX:TRX",
+      "name": "TRX",
+      "description": "TRX Gold Corporation",
+      "market": "america",
+      "earnings_per_share_fq": -0.004875585,
+      "earnings_release_date": 1768475700
+    },
+    {
+      "symbol": "OTC:EXNRF",
+      "name": "EXNRF",
+      "description": "Excellon Resources Inc.",
+      "market": "america",
+      "earnings_per_share_fq": null,
+      "earnings_release_date": 1763553600
+    },
+    {
+      "symbol": "OTC:MTASF",
+      "name": "MTASF",
+      "description": "MONTANA AEROSPACE AG",
+      "market": "america",
+      "earnings_per_share_fq": null,
+      "earnings_release_date": 1763035200
+    },
+    {
+      "symbol": "NASDAQ:BMRA",
+      "name": "BMRA",
+      "description": "Biomerica, Inc.",
+      "market": "america",
+      "earnings_per_share_fq": -0.48,
+      "earnings_release_date": 1744603200
+    },
+    {
+      "symbol": "OTC:NUMIF",
+      "name": "NUMIF",
+      "description": "Numinus Wellness Inc.",
+      "market": "america",
+      "earnings_per_share_fq": null,
+      "earnings_release_date": null
+    },
+    {
+      "symbol": "OTC:AMYZF",
+      "name": "AMYZF",
+      "description": "RECYCLICO BATTERY MATERIALS INC.",
+      "market": "america",
+      "earnings_per_share_fq": -0.00086088,
+      "earnings_release_date": 1734498000
+    },
+    {
+      "symbol": "OTC:CRKN",
+      "name": "CRKN",
+      "description": "Crown Electrokinetics Corp.",
+      "market": "america",
+      "earnings_per_share_fq": null,
+      "earnings_release_date": 1711972800
+    },
+    {
+      "symbol": "OTC:NXFNF",
+      "name": "NXFNF",
+      "description": "NEXT 15 GROUP PLC",
+      "market": "america",
+      "earnings_per_share_fq": 0.2824586,
+      "earnings_release_date": 1759212000
+    },
+    {
+      "symbol": "NASDAQ:NNOX",
+      "name": "NNOX",
+      "description": "NANO-X IMAGING LTD",
+      "market": "america",
+      "earnings_per_share_fq": -0.21,
+      "earnings_release_date": 1763644140
+    },
+    {
+      "symbol": "NASDAQ:AKTX",
+      "name": "AKTX",
+      "description": "Akari Therapeutics Plc",
+      "market": "america",
+      "earnings_per_share_fq": -0.1,
+      "earnings_release_date": 1764936000
+    },
+    {
+      "symbol": "OTC:PGCMF",
+      "name": "PGCMF",
+      "description": "Puregold Price Club Inc.",
+      "market": "america",
+      "earnings_per_share_fq": null,
+      "earnings_release_date": 1762776000
+    },
+    {
+      "symbol": "AMEX:TMQ",
+      "name": "TMQ",
+      "description": "Trilogy Metals Inc.",
+      "market": "america",
+      "earnings_per_share_fq": -0.22,
+      "earnings_release_date": 1771345800
+    },
+    {
+      "symbol": "OTC:SVNDF",
+      "name": "SVNDF",
+      "description": "Seven & I Holdings Co., Ltd.",
+      "market": "america",
+      "earnings_per_share_fq": 0.20137435,
+      "earnings_release_date": 1767853800
+    },
+    {
+      "symbol": "OTC:JAGGF",
+      "name": "JAGGF",
+      "description": "Jaguar Mining Inc.",
+      "market": "america",
+      "earnings_per_share_fq": 0.16,
+      "earnings_release_date": 1762428600
+    },
+    {
+      "symbol": "OTC:RHUHF",
+      "name": "RHUHF",
+      "description": "Richelieu Hardware Ltd.",
+      "market": "america",
+      "earnings_per_share_fq": 0.3289,
+      "earnings_release_date": 1768493040
+    },
+    {
+      "symbol": "NASDAQ:ZENA",
+      "name": "ZENA",
+      "description": "ZenaTech, Inc.",
+      "market": "america",
+      "earnings_per_share_fq": -0.24412,
+      "earnings_release_date": 1762864200
+    },
+    {
+      "symbol": "NASDAQ:JAGX",
+      "name": "JAGX",
+      "description": "Jaguar Health, Inc.",
+      "market": "america",
+      "earnings_per_share_fq": -6.28,
+      "earnings_release_date": 1763384400
+    },
+    {
+      "symbol": "OTC:AONNY",
+      "name": "AONNY",
+      "description": "Aeon Co. Ltd.",
+      "market": "america",
+      "earnings_per_share_fq": -0.035471,
+      "earnings_release_date": 1767853800
+    },
+    {
+      "symbol": "AMEX:TOON",
+      "name": "TOON",
+      "description": "Kartoon Studios, Inc.",
+      "market": "america",
+      "earnings_per_share_fq": null,
+      "earnings_release_date": 1743422400
+    },
+    {
+      "symbol": "OTC:TGIFF",
+      "name": "TGIFF",
+      "description": "1933 Industries Inc.",
+      "market": "america",
+      "earnings_per_share_fq": -0.008010573957624063,
+      "earnings_release_date": 1638235080
+    },
+    {
+      "symbol": "NASDAQ:WAFD",
+      "name": "WAFD",
+      "description": "WaFd, Inc.",
+      "market": "america",
+      "earnings_per_share_fq": 0.79,
+      "earnings_release_date": 1768514400
+    },
+    {
+      "symbol": "NASDAQ:EVO",
+      "name": "EVO",
+      "description": "Evotec SE",
+      "market": "america",
+      "earnings_per_share_fq": -0.137748,
+      "earnings_release_date": 1762328460
+    },
+    {
+      "symbol": "AMEX:OSTX",
+      "name": "OSTX",
+      "description": "OS Therapies Incorporated",
+      "market": "america",
+      "earnings_per_share_fq": -0.21,
+      "earnings_release_date": 1763377200
+    },
+    {
+      "symbol": "OTC:CGEAF",
+      "name": "CGEAF",
+      "description": "Cogeco Communications Inc",
+      "market": "america",
+      "earnings_per_share_fq": 1.5086499999999998,
+      "earnings_release_date": 1768438260
+    },
+    {
+      "symbol": "NASDAQ:SMPL",
+      "name": "SMPL",
+      "description": "The Simply Good Foods Company",
+      "market": "america",
+      "earnings_per_share_fq": 0.39,
+      "earnings_release_date": 1767873960
+    },
+    {
+      "symbol": "OTC:FFMGF",
+      "name": "FFMGF",
+      "description": "First Mining Gold Corp.",
+      "market": "america",
+      "earnings_per_share_fq": -0.01436,
+      "earnings_release_date": 1762948800
+    },
+    {
+      "symbol": "OTC:OMQS",
+      "name": "OMQS",
+      "description": "OMNIQ Corp.",
+      "market": "america",
+      "earnings_per_share_fq": -0.2,
+      "earnings_release_date": 1747338420
+    },
+    {
+      "symbol": "NYSE:PGR",
+      "name": "PGR",
+      "description": "Progressive Corporation (The)",
+      "market": "america",
+      "earnings_per_share_fq": 4.582925,
+      "earnings_release_date": 1769605380
+    },
+    {
+      "symbol": "NYSE:STZ",
+      "name": "STZ",
+      "description": "Constellation Brands, Inc.",
+      "market": "america",
+      "earnings_per_share_fq": 3.06,
+      "earnings_release_date": 1767819900
+    },
+    {
+      "symbol": "NASDAQ:WDFC",
+      "name": "WDFC",
+      "description": "WD-40 Company",
+      "market": "america",
+      "earnings_per_share_fq": 1.28,
+      "earnings_release_date": 1767906300
+    },
+    {
+      "symbol": "OTC:WINT",
+      "name": "WINT",
+      "description": "Windtree Therapeutics, Inc.",
+      "market": "america",
+      "earnings_per_share_fq": null,
+      "earnings_release_date": 1763553600
+    },
+    {
+      "symbol": "OTC:EGLXF",
+      "name": "EGLXF",
+      "description": "Enthusiast Gaming Holdings Inc",
+      "market": "america",
+      "earnings_per_share_fq": -0.021539999999999997,
+      "earnings_release_date": 1763071320
+    },
+    {
+      "symbol": "NASDAQ:WAFDP",
+      "name": "WAFDP",
+      "description": "WaFd, Inc. - Depositary Shares",
+      "market": "america",
+      "earnings_per_share_fq": 0.79,
+      "earnings_release_date": 1768514400
+    },
+    {
+      "symbol": "NASDAQ:RDIB",
+      "name": "RDIB",
+      "description": "Reading International Inc",
+      "market": "america",
+      "earnings_per_share_fq": -0.18,
+      "earnings_release_date": 1763128800
+    },
+    {
+      "symbol": "OTC:JTCPF",
+      "name": "JTCPF",
+      "description": "JTC PLC",
+      "market": "america",
+      "earnings_per_share_fq": 0.2924064,
+      "earnings_release_date": 1758002400
+    },
+    {
+      "symbol": "NASDAQ:LAKE",
+      "name": "LAKE",
+      "description": "Lakeland Industries, Inc.",
+      "market": "america",
+      "earnings_per_share_fq": -1.64,
+      "earnings_release_date": 1765314360
+    },
+    {
+      "symbol": "NASDAQ:RMCO",
+      "name": "RMCO",
+      "description": "Royalty Management Holding Corporation",
+      "market": "america",
+      "earnings_per_share_fq": null,
+      "earnings_release_date": 1763035200
+    },
+    {
+      "symbol": "OTC:AVTBF",
+      "name": "AVTBF",
+      "description": "Avant Brands Inc.",
+      "market": "america",
+      "earnings_per_share_fq": null,
+      "earnings_release_date": 1619611200
+    },
+    {
+      "symbol": "NASDAQ:TRIB",
+      "name": "TRIB",
+      "description": "Trinity Biotech plc",
+      "market": "america",
+      "earnings_per_share_fq": null,
+      "earnings_release_date": 1767787200
+    },
+    {
+      "symbol": "OTC:OWWAF",
+      "name": "OWWAF",
+      "description": "Okuwa Company Ltd. Wakayama",
+      "market": "america",
+      "earnings_per_share_fq": -0.00890017,
+      "earnings_release_date": 1766730600
+    },
+    {
+      "symbol": "NYSE:SKIL",
+      "name": "SKIL",
+      "description": "Skillsoft Corp.",
+      "market": "america",
+      "earnings_per_share_fq": 1.65,
+      "earnings_release_date": 1765400700
+    },
+    {
+      "symbol": "OTC:ZIJMF",
+      "name": "ZIJMF",
+      "description": "Zijin Mining Group Company Ltd.",
+      "market": "america",
+      "earnings_per_share_fq": 0.07433920000000001,
+      "earnings_release_date": 1774015020
+    },
+    {
+      "symbol": "NASDAQ:OLOX",
+      "name": "OLOX",
+      "description": "Olenox Industries Inc.",
+      "market": "america",
+      "earnings_per_share_fq": null,
+      "earnings_release_date": 1743508800
+    },
+    {
+      "symbol": "OTC:NXAGF",
+      "name": "NXAGF",
+      "description": "NEXTAGE CO LTD",
+      "market": "america",
+      "earnings_per_share_fq": 0.3983306300000001,
+      "earnings_release_date": 1767594600
+    },
+    {
+      "symbol": "NASDAQ:NXXT",
+      "name": "NXXT",
+      "description": "NextNRG, Inc.",
+      "market": "america",
+      "earnings_per_share_fq": -0.12,
+      "earnings_release_date": 1763096400
+    },
+    {
+      "symbol": "NASDAQ:SLNH",
+      "name": "SLNH",
+      "description": "Soluna Holdings, Inc.",
+      "market": "america",
+      "earnings_per_share_fq": -1.14,
+      "earnings_release_date": 1763382600
+    },
+    {
+      "symbol": "OTC:OVHFF",
+      "name": "OVHFF",
+      "description": "OVH GROUPE",
+      "market": "america",
+      "earnings_per_share_fq": -0.046730400000000005,
+      "earnings_release_date": 1761022920
+    },
+    {
+      "symbol": "OTC:EXROF",
+      "name": "EXROF",
+      "description": "Exro Technologies Inc.",
+      "market": "america",
+      "earnings_per_share_fq": null,
+      "earnings_release_date": null
+    },
+    {
+      "symbol": "NYSE:GBX",
+      "name": "GBX",
+      "description": "Greenbrier Companies, Inc. (The)",
+      "market": "america",
+      "earnings_per_share_fq": 1.14,
+      "earnings_release_date": 1767906900
+    }
+  ],
+  "metadata": {
+    "event_type": "earnings",
+    "total": 99,
+    "timestamp_from": 1775174400,
+    "timestamp_to": 1775779199,
+    "markets": [
+      "america"
+    ]
+  },
+  "error": null
+}

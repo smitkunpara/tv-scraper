@@ -1,0 +1,73 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "symbol": "LSE:WDSC",
+      "name": "WDSC",
+      "close": 131.74,
+      "change": -0.5585748792270386,
+      "change_abs": -0.7399999999999807,
+      "volume": 2883,
+      "Recommend.All": 0.2,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "LSE:EMHG",
+      "name": "EMHG",
+      "close": 3.797,
+      "change": 0.17148133491623666,
+      "change_abs": 0.00649999999999995,
+      "volume": 7465145,
+      "Recommend.All": -0.2212121212121212,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "LSE:ID27",
+      "name": "ID27",
+      "close": 115.94,
+      "change": 0.07768666378938577,
+      "change_abs": 0.09000000000000341,
+      "volume": 729,
+      "Recommend.All": 0.603030303030303,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "LSE:EMCV",
+      "name": "EMCV",
+      "close": 31.0725,
+      "change": 0.49320827943078865,
+      "change_abs": 0.15249999999999986,
+      "volume": 0,
+      "Recommend.All": -0.13333333333333333,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "LSE:0GUX",
+      "name": "0GUX",
+      "close": 182.4,
+      "change": -0.653594771241824,
+      "change_abs": -1.1999999999999886,
+      "volume": 333,
+      "Recommend.All": -0.13333333333333333,
+      "market_cap_basic": 28242685497.585773,
+      "price_earnings_ttm": 11.821357511811636,
+      "earnings_per_share_basic_ttm": 1.2532352599999999
+    }
+  ],
+  "metadata": {
+    "market": "uk",
+    "sort_order": "desc",
+    "limit": 5,
+    "total": 5,
+    "total_available": 9177
+  },
+  "error": null
+}

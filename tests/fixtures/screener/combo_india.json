@@ -1,0 +1,133 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "symbol": "BSE:MDRNSTL",
+      "name": "MDRNSTL",
+      "close": 11.98,
+      "change": 1.8707482993197335,
+      "change_abs": 0.22000000000000064,
+      "volume": 2545,
+      "Recommend.All": -0.15454545454545454,
+      "market_cap_basic": 161845352,
+      "price_earnings_ttm": 3.337512188327065,
+      "earnings_per_share_basic_ttm": 3.5895
+    },
+    {
+      "symbol": "BSE:EXPLEOSOL",
+      "name": "EXPLEOSOL",
+      "close": 722.95,
+      "change": 0.006916585973173082,
+      "change_abs": 0.05000000000006821,
+      "volume": 1193,
+      "Recommend.All": -0.24545454545454548,
+      "market_cap_basic": 11219219811,
+      "price_earnings_ttm": 10.546301172427174,
+      "earnings_per_share_basic_ttm": 68.5501
+    },
+    {
+      "symbol": "BSE:AJANTPHARM",
+      "name": "AJANTPHARM",
+      "close": 2740.85,
+      "change": -1.9391424124792138,
+      "change_abs": -54.20000000000027,
+      "volume": 3698,
+      "Recommend.All": -0.3787878787878788,
+      "market_cap_basic": 349201319639,
+      "price_earnings_ttm": 33.755806907695415,
+      "earnings_per_share_basic_ttm": 81.2139
+    },
+    {
+      "symbol": "BSE:YORKEXP",
+      "name": "YORKEXP",
+      "close": 63.24,
+      "change": -2.2414592672746885,
+      "change_abs": -1.4499999999999957,
+      "volume": 9,
+      "Recommend.All": 0.35454545454545455,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "BSE:INFLAME",
+      "name": "INFLAME",
+      "close": 273,
+      "change": 1.3551141637274837,
+      "change_abs": 3.6499999999999773,
+      "volume": 3250,
+      "Recommend.All": -0.33636363636363636,
+      "market_cap_basic": 2017700943,
+      "price_earnings_ttm": 35.071491887308746,
+      "earnings_per_share_basic_ttm": 7.7841
+    },
+    {
+      "symbol": "BSE:SFMP78GD",
+      "name": "SFMP78GD",
+      "close": 10,
+      "change": 0,
+      "change_abs": 0,
+      "volume": 0,
+      "Recommend.All": 0,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "NSE:HDFCNEXT50",
+      "name": "HDFCNEXT50",
+      "close": 64.5,
+      "change": 1.25588697017268,
+      "change_abs": 0.7999999999999972,
+      "volume": 113132,
+      "Recommend.All": -0.24545454545454548,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "BSE:SBFC",
+      "name": "SBFC",
+      "close": 83.77,
+      "change": 1.3673765730880874,
+      "change_abs": 1.1299999999999955,
+      "volume": 78887,
+      "Recommend.All": -0.4454545454545455,
+      "market_cap_basic": 91241086191,
+      "price_earnings_ttm": 21.986876640419947,
+      "earnings_per_share_basic_ttm": 3.8688
+    },
+    {
+      "symbol": "NSE:UNILEX",
+      "name": "UNILEX",
+      "close": 25.4,
+      "change": -0.3921568627451036,
+      "change_abs": -0.10000000000000142,
+      "volume": 4800,
+      "Recommend.All": -0.17878787878787877,
+      "market_cap_basic": 330212250,
+      "price_earnings_ttm": 9.321442988733532,
+      "earnings_per_share_basic_ttm": 2.7249
+    },
+    {
+      "symbol": "BSE:J_KBANK",
+      "name": "J_KBANK",
+      "close": 115.75,
+      "change": 1.892605633802822,
+      "change_abs": 2.1500000000000057,
+      "volume": 470875,
+      "Recommend.All": 0.17575757575757575,
+      "market_cap_basic": 125094329765,
+      "price_earnings_ttm": 5.948251496698271,
+      "earnings_per_share_basic_ttm": 19.4595
+    }
+  ],
+  "metadata": {
+    "market": "india",
+    "sort_order": "desc",
+    "limit": 10,
+    "total": 10,
+    "total_available": 8291
+  },
+  "error": null
+}

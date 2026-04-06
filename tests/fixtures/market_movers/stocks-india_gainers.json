@@ -1,0 +1,143 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "symbol": "NSE:SGL",
+      "name": "SGL",
+      "close": 11.82,
+      "change": 20.000000000000007,
+      "change_abs": 1.9700000000000006,
+      "volume": 118427,
+      "market_cap_basic": 260251399,
+      "price_earnings_ttm": 367.08074534161494,
+      "earnings_per_share_basic_ttm": 0.0322,
+      "logoid": "standard-group",
+      "description": "STL Global Limited"
+    },
+    {
+      "symbol": "BSE:HEMANG",
+      "name": "HEMANG",
+      "close": 11.82,
+      "change": 20.000000000000007,
+      "change_abs": 1.9700000000000006,
+      "volume": 13775,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null,
+      "logoid": "hemang-resources-limited",
+      "description": "Hemang Resources Limited"
+    },
+    {
+      "symbol": "NSE:ALPA",
+      "name": "ALPA",
+      "close": 62.1,
+      "change": 20.000000000000004,
+      "change_abs": 10.350000000000001,
+      "volume": 75508,
+      "market_cap_basic": 1084853356,
+      "price_earnings_ttm": 11.207161033007887,
+      "earnings_per_share_basic_ttm": 5.5411,
+      "logoid": "alpa-laboratories",
+      "description": "Alpa Laboratories Limited"
+    },
+    {
+      "symbol": "BSE:MANUGRAPH",
+      "name": "MANUGRAPH",
+      "close": 13.5,
+      "change": 20,
+      "change_abs": 2.25,
+      "volume": 3943,
+      "market_cap_basic": 342169425,
+      "price_earnings_ttm": 8.156606851549755,
+      "earnings_per_share_basic_ttm": 1.6551,
+      "logoid": "manugraph-india-ltd",
+      "description": "Manugraph India Limited"
+    },
+    {
+      "symbol": "BSE:AHMDSTE",
+      "name": "AHMDSTE",
+      "close": 124.8,
+      "change": 20,
+      "change_abs": 20.799999999999997,
+      "volume": 153472,
+      "market_cap_basic": 1569568001,
+      "price_earnings_ttm": 7.308075188850499,
+      "earnings_per_share_basic_ttm": 19.8269,
+      "logoid": "ahmedabad-steelcraft-ltd",
+      "description": "Ahmedabad Steelcraft Limited"
+    },
+    {
+      "symbol": "BSE:HAVISHA",
+      "name": "HAVISHA",
+      "close": 1.56,
+      "change": 20,
+      "change_abs": 0.26,
+      "volume": 15618,
+      "market_cap_basic": 199596529,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": -0.3214,
+      "logoid": "sri-havisha-hospitality-infras",
+      "description": "Sri Havisha Hospitality And Infrastructure Ltd"
+    },
+    {
+      "symbol": "BSE:KREBSBIO",
+      "name": "KREBSBIO",
+      "close": 54.72,
+      "change": 19.999999999999993,
+      "change_abs": 9.119999999999997,
+      "volume": 3482,
+      "market_cap_basic": 983162644,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": -10.6036,
+      "logoid": "krebs-biochemandinds",
+      "description": "Krebs Biochemicals & Industries Ltd."
+    },
+    {
+      "symbol": "BSE:SAKUMA",
+      "name": "SAKUMA",
+      "close": 1.92,
+      "change": 19.99999999999999,
+      "change_abs": 0.31999999999999984,
+      "volume": 2379482,
+      "market_cap_basic": 2508349842,
+      "price_earnings_ttm": 40.1673640167364,
+      "earnings_per_share_basic_ttm": 0.0478,
+      "logoid": "sakuma-exports-ltd",
+      "description": "Sakuma Exports Limited"
+    },
+    {
+      "symbol": "BSE:ECORECO",
+      "name": "ECORECO",
+      "close": 402.95,
+      "change": 19.997022036926733,
+      "change_abs": 67.14999999999998,
+      "volume": 148686,
+      "market_cap_basic": 6479848117,
+      "price_earnings_ttm": 44.23015707495911,
+      "earnings_per_share_basic_ttm": 9.1103,
+      "logoid": "eco-recycling-ltd",
+      "description": "Eco Recycling Limited"
+    },
+    {
+      "symbol": "BSE:ALPA",
+      "name": "ALPA",
+      "close": 61.87,
+      "change": 19.99612102404964,
+      "change_abs": 10.309999999999995,
+      "volume": 1836,
+      "market_cap_basic": 1084853356,
+      "price_earnings_ttm": 11.16565302918193,
+      "earnings_per_share_basic_ttm": 5.5411,
+      "logoid": "alpa-laboratories",
+      "description": "Alpa Laboratories Limited"
+    }
+  ],
+  "metadata": {
+    "market": "stocks-india",
+    "category": "gainers",
+    "limit": 10,
+    "total": 10,
+    "totalCount": 5770
+  },
+  "error": null
+}

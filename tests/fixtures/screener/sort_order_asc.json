@@ -1,0 +1,134 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "symbol": "OTC:FUTL",
+      "name": "FUTL",
+      "close": 1e-06,
+      "change": 0,
+      "change_abs": 0,
+      "volume": 25000,
+      "Recommend.All": -0.1,
+      "market_cap_basic": 6716.259999999999,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "OTC:PSWR",
+      "name": "PSWR",
+      "close": 1e-06,
+      "change": -99,
+      "change_abs": -9.900000000000001e-05,
+      "volume": 310475,
+      "Recommend.All": -0.5121212121212121,
+      "market_cap_basic": 141.59199999999998,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "OTC:XCLL",
+      "name": "XCLL",
+      "close": 1e-06,
+      "change": 0,
+      "change_abs": 0,
+      "volume": 1055800,
+      "Recommend.All": -0.4454545454545455,
+      "market_cap_basic": 2240.5299999999997,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "OTC:PPBV",
+      "name": "PPBV",
+      "close": 1e-06,
+      "change": 0,
+      "change_abs": 0,
+      "volume": 54005,
+      "Recommend.All": -0.5030303030303029,
+      "market_cap_basic": 112.386,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "OTC:PSYC",
+      "name": "PSYC",
+      "close": 1e-06,
+      "change": 0,
+      "change_abs": 0,
+      "volume": 10000,
+      "Recommend.All": -0.603030303030303,
+      "market_cap_basic": 1872.1799999999998,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "OTC:ESNR",
+      "name": "ESNR",
+      "close": 1e-06,
+      "change": -99,
+      "change_abs": -9.900000000000001e-05,
+      "volume": 300,
+      "Recommend.All": -0.4666666666666667,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "OTC:SAML",
+      "name": "SAML",
+      "close": 1e-06,
+      "change": -99.5,
+      "change_abs": -0.000199,
+      "volume": 500129,
+      "Recommend.All": -0.5575757575757576,
+      "market_cap_basic": 213.731,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "OTC:SBES",
+      "name": "SBES",
+      "close": 1e-06,
+      "change": 0,
+      "change_abs": 0,
+      "volume": 34100,
+      "Recommend.All": -0.34444444444444444,
+      "market_cap_basic": 2895.81,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "OTC:ANDR",
+      "name": "ANDR",
+      "close": 1e-06,
+      "change": 0,
+      "change_abs": 0,
+      "volume": 1000,
+      "Recommend.All": -0.5575757575757576,
+      "market_cap_basic": 68.105,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "OTC:LICYQ",
+      "name": "LICYQ",
+      "close": 1e-06,
+      "change": -99.66666666666666,
+      "change_abs": -0.00029899999999999995,
+      "volume": 4154,
+      "Recommend.All": -0.5575757575757576,
+      "market_cap_basic": 13363,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    }
+  ],
+  "metadata": {
+    "market": "america",
+    "sort_order": "asc",
+    "limit": 10,
+    "sort_by": "close",
+    "total": 10,
+    "total_available": 19096
+  },
+  "error": null
+}

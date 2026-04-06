@@ -1,0 +1,103 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "symbol": "NYMEX:DABV2026",
+      "name": "DABV2026",
+      "close": 1.08,
+      "change": 620,
+      "change_abs": 0.93,
+      "logoid": "crude-oil",
+      "description": "Bakken DAPL (EMDA) Monthly Futures (Oct 2026)"
+    },
+    {
+      "symbol": "NYMEX:EO1K2026",
+      "name": "EO1K2026",
+      "close": 26.731,
+      "change": 333.0309411955289,
+      "change_abs": 20.558,
+      "logoid": "diesel",
+      "description": "ULSD 10ppm Cargoes CIF NWE (Platts) vs. New York Harbor ULSD Futures (May 2026)"
+    },
+    {
+      "symbol": "BMFBOVESPA:DDIM2026",
+      "name": "DDIM2026",
+      "close": 10.009,
+      "change": 292.5098039215687,
+      "change_abs": 7.4590000000000005,
+      "logoid": "indices/id-ipca-spread",
+      "description": "ID x U.S. Dollar Spread Futures (Jun 2026)"
+    },
+    {
+      "symbol": "NYMEX:GSWM2027",
+      "name": "GSWM2027",
+      "close": 0.4,
+      "change": 207.6923076923077,
+      "change_abs": 0.27,
+      "logoid": "crude-oil",
+      "description": "Guernsey Light Sweet (EMDA) Monthly Futures (Jun 2027)"
+    },
+    {
+      "symbol": "NYMEX:GSWK2027",
+      "name": "GSWK2027",
+      "close": 0.4,
+      "change": 207.6923076923077,
+      "change_abs": 0.27,
+      "logoid": "crude-oil",
+      "description": "Guernsey Light Sweet (EMDA) Monthly Futures (May 2027)"
+    },
+    {
+      "symbol": "NYMEX:GSWJ2027",
+      "name": "GSWJ2027",
+      "close": 0.4,
+      "change": 207.6923076923077,
+      "change_abs": 0.27,
+      "logoid": "crude-oil",
+      "description": "Guernsey Light Sweet (EMDA) Monthly Futures (Apr 2027)"
+    },
+    {
+      "symbol": "NYMEX:GSWH2027",
+      "name": "GSWH2027",
+      "close": 0.55,
+      "change": 175,
+      "change_abs": 0.35000000000000003,
+      "logoid": "crude-oil",
+      "description": "Guernsey Light Sweet (EMDA) Monthly Futures (Mar 2027)"
+    },
+    {
+      "symbol": "NYMEX:MEM2026",
+      "name": "MEM2026",
+      "close": 0.135,
+      "change": 170,
+      "change_abs": 0.085,
+      "logoid": "jet-fuel",
+      "description": "Gulf Coast Jet (Platts) Up-Down Futures (Jun 2026)"
+    },
+    {
+      "symbol": "NYMEX:AKLM2026",
+      "name": "AKLM2026",
+      "close": 0.51,
+      "change": 153.73134328358208,
+      "change_abs": 0.309,
+      "logoid": "diesel",
+      "description": "Los Angeles CARB Diesel (OPIS) vs. NY Harbor ULSD Futures (Jun 2026)"
+    },
+    {
+      "symbol": "NYMEX:EO1J2026",
+      "name": "EO1J2026",
+      "close": 81.782,
+      "change": 120.66862739807345,
+      "change_abs": 44.721,
+      "logoid": "diesel",
+      "description": "ULSD 10ppm Cargoes CIF NWE (Platts) vs. New York Harbor ULSD Futures (Apr 2026)"
+    }
+  ],
+  "metadata": {
+    "market": "futures",
+    "category": "gainers",
+    "limit": 10,
+    "total": 10,
+    "totalCount": 22506
+  },
+  "error": null
+}

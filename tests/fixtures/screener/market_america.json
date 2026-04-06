@@ -1,0 +1,73 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "symbol": "OTC:TSPCF",
+      "name": "TSPCF",
+      "close": 1.625,
+      "change": 1.5624999999999944,
+      "change_abs": 0.02499999999999991,
+      "volume": 4041,
+      "Recommend.All": -0.4,
+      "market_cap_basic": 3640195000,
+      "price_earnings_ttm": 45.183099296464384,
+      "earnings_per_share_basic_ttm": 0.03616495
+    },
+    {
+      "symbol": "OTC:HYEX",
+      "name": "HYEX",
+      "close": 2,
+      "change": 17.647058823529417,
+      "change_abs": 0.30000000000000004,
+      "volume": 4031,
+      "Recommend.All": 0,
+      "market_cap_basic": 33741800,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": -0.3194
+    },
+    {
+      "symbol": "OTC:SBSNY",
+      "name": "SBSNY",
+      "close": 25,
+      "change": 1.9991840065279414,
+      "change_abs": 0.48999999999999844,
+      "volume": 1449,
+      "Recommend.All": -0.2424242424242424,
+      "market_cap_basic": 5278500081.916,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": -0.1234
+    },
+    {
+      "symbol": "AMEX:IAPR",
+      "name": "IAPR",
+      "close": 31.88,
+      "change": 0.07848061528801939,
+      "change_abs": 0.02499999999999858,
+      "volume": 29656,
+      "Recommend.All": 0.35454545454545455,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "AMEX:NTSI",
+      "name": "NTSI",
+      "close": 44.4829,
+      "change": 0.4809125818838889,
+      "change_abs": 0.21289999999999765,
+      "volume": 225512,
+      "Recommend.All": 0.09090909090909091,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    }
+  ],
+  "metadata": {
+    "market": "america",
+    "sort_order": "desc",
+    "limit": 5,
+    "total": 5,
+    "total_available": 19096
+  },
+  "error": null
+}

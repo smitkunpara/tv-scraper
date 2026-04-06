@@ -1,0 +1,15 @@
+{
+  "status": "success",
+  "data": {
+    "symbol": "NASDAQ:AAPL",
+    "cash_f_operating_activities": null,
+    "cash_f_investing_activities": null,
+    "cash_f_financing_activities": null,
+    "free_cash_flow": 123324000000
+  },
+  "metadata": {
+    "exchange": "NASDAQ",
+    "symbol": "AAPL"
+  },
+  "error": null
+}

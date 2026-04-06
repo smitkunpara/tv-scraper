@@ -1,0 +1,883 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "symbol": "OTC:CPYYF",
+      "name": "CPYYF",
+      "description": "Centrica Plc",
+      "market": "america",
+      "dividend_amount_recent": 0.02480016081312
+    },
+    {
+      "symbol": "OTC:HZNFF",
+      "name": "HZNFF",
+      "description": "Horizon Oil Ltd.",
+      "market": "america",
+      "dividend_amount_recent": 0.009764249804715
+    },
+    {
+      "symbol": "NYSE:WLY",
+      "name": "WLY",
+      "description": "John Wiley & Sons, Inc.",
+      "market": "america",
+      "dividend_amount_recent": 0.354999989
+    },
+    {
+      "symbol": "NYSE:BBD",
+      "name": "BBD",
+      "description": "Banco Bradesco Sa",
+      "market": "america",
+      "dividend_amount_recent": 0.00229800004
+    },
+    {
+      "symbol": "OTC:CCFN",
+      "name": "CCFN",
+      "description": "Muncy Columbia Financial Corporation",
+      "market": "america",
+      "dividend_amount_recent": 0.460000008
+    },
+    {
+      "symbol": "NYSE:DG",
+      "name": "DG",
+      "description": "Dollar General Corporation",
+      "market": "america",
+      "dividend_amount_recent": 0.589999974
+    },
+    {
+      "symbol": "OTC:EMBVF",
+      "name": "EMBVF",
+      "description": "Arca Continental SAB de CV",
+      "market": "america",
+      "dividend_amount_recent": 0.053450000000000004
+    },
+    {
+      "symbol": "OTC:IMIUY",
+      "name": "IMIUY",
+      "description": "IMI plc",
+      "market": "america",
+      "dividend_amount_recent": 0.118757002
+    },
+    {
+      "symbol": "OTC:DELKY",
+      "name": "DELKY",
+      "description": "Delek Group Ltd.",
+      "market": "america",
+      "dividend_amount_recent": 0.259029001
+    },
+    {
+      "symbol": "OTC:GUKYF",
+      "name": "GUKYF",
+      "description": "Gulf Keystone Petroleum Ltd.",
+      "market": "america",
+      "dividend_amount_recent": 0.11459684130741
+    },
+    {
+      "symbol": "OTC:TWODY",
+      "name": "TWODY",
+      "description": "Taylor Wimpey Plc",
+      "market": "america",
+      "dividend_amount_recent": 0.543987989
+    },
+    {
+      "symbol": "OTC:DTEGY",
+      "name": "DTEGY",
+      "description": "Deutsche Telekom AG",
+      "market": "america",
+      "dividend_amount_recent": 0.992805004
+    },
+    {
+      "symbol": "OTC:WRDLY",
+      "name": "WRDLY",
+      "description": "Worldline SA",
+      "market": "america",
+      "dividend_amount_recent": null
+    },
+    {
+      "symbol": "NYSE:ACN",
+      "name": "ACN",
+      "description": "Accenture plc",
+      "market": "america",
+      "dividend_amount_recent": 1.63
+    },
+    {
+      "symbol": "NYSE:BBVA",
+      "name": "BBVA",
+      "description": "Banco Bilbao Vizcaya Argentaria S.A.",
+      "market": "america",
+      "dividend_amount_recent": 0.299255013
+    },
+    {
+      "symbol": "NYSE:DGX",
+      "name": "DGX",
+      "description": "Quest Diagnostics Incorporated",
+      "market": "america",
+      "dividend_amount_recent": 0.860000014
+    },
+    {
+      "symbol": "NASDAQ:WSBF",
+      "name": "WSBF",
+      "description": "Waterstone Financial, Inc.",
+      "market": "america",
+      "dividend_amount_recent": 0.150000006
+    },
+    {
+      "symbol": "NYSE:RERE",
+      "name": "RERE",
+      "description": "ATRenew Inc.",
+      "market": "america",
+      "dividend_amount_recent": 0.100000001
+    },
+    {
+      "symbol": "OTC:SWRBY",
+      "name": "SWRBY",
+      "description": "Swire Pacific Ltd.",
+      "market": "america",
+      "dividend_amount_recent": 0.146713004
+    },
+    {
+      "symbol": "NYSE:BRC",
+      "name": "BRC",
+      "description": "Brady Corporation",
+      "market": "america",
+      "dividend_amount_recent": 0.245000005
+    },
+    {
+      "symbol": "OTC:NBKCF",
+      "name": "NBKCF",
+      "description": "National Bank of Canada",
+      "market": "america",
+      "dividend_amount_recent": 0.31490219074804005
+    },
+    {
+      "symbol": "OTC:ICHGF",
+      "name": "ICHGF",
+      "description": "InterContinental Hotels Group Plc",
+      "market": "america",
+      "dividend_amount_recent": 0.581410766
+    },
+    {
+      "symbol": "NASDAQ:NHPAP",
+      "name": "NHPAP",
+      "description": "National Healthcare Properties, Inc. - 7.375% Series A Cumulative Redeemable Perpetual Preferred Stock",
+      "market": "america",
+      "dividend_amount_recent": 0.460938007
+    },
+    {
+      "symbol": "NYSE:GHY",
+      "name": "GHY",
+      "description": "PGIM Global High Yield Fund, Inc.",
+      "market": "america",
+      "dividend_amount_recent": 0.104999997
+    },
+    {
+      "symbol": "OTC:SMGZY",
+      "name": "SMGZY",
+      "description": "Smiths Group Plc",
+      "market": "america",
+      "dividend_amount_recent": 0.390480995
+    },
+    {
+      "symbol": "NYSE:MRSH",
+      "name": "MRSH",
+      "description": "Marsh",
+      "market": "america",
+      "dividend_amount_recent": 0.899999976
+    },
+    {
+      "symbol": "NYSE:GAP",
+      "name": "GAP",
+      "description": "Gap, Inc. (The)",
+      "market": "america",
+      "dividend_amount_recent": 0.165000007
+    },
+    {
+      "symbol": "OTC:DLKGF",
+      "name": "DLKGF",
+      "description": "Delek Group Ltd.",
+      "market": "america",
+      "dividend_amount_recent": 4.364439800784
+    },
+    {
+      "symbol": "OTC:DBSDF",
+      "name": "DBSDF",
+      "description": "DBS Group Holdings Ltd.",
+      "market": "america",
+      "dividend_amount_recent": 0.5763750230549999
+    },
+    {
+      "symbol": "NASDAQ:ESCA",
+      "name": "ESCA",
+      "description": "Escalade, Incorporated",
+      "market": "america",
+      "dividend_amount_recent": 0.152500004
+    },
+    {
+      "symbol": "NYSE:KRG",
+      "name": "KRG",
+      "description": "Kite Realty Group Trust",
+      "market": "america",
+      "dividend_amount_recent": 0.435000002
+    },
+    {
+      "symbol": "OTC:SECCF",
+      "name": "SECCF",
+      "description": "Serco Group Plc.",
+      "market": "america",
+      "dividend_amount_recent": 0.019586599459680002
+    },
+    {
+      "symbol": "OTC:LLDTF",
+      "name": "LLDTF",
+      "description": "Lloyds Banking Group plc",
+      "market": "america",
+      "dividend_amount_recent": 0.01610277973602
+    },
+    {
+      "symbol": "OTC:PSPSF",
+      "name": "PSPSF",
+      "description": "PSP Swiss Property",
+      "market": "america",
+      "dividend_amount_recent": 4.526808116072
+    },
+    {
+      "symbol": "NYSE:MSM",
+      "name": "MSM",
+      "description": "MSC Industrial Direct Company, Inc.",
+      "market": "america",
+      "dividend_amount_recent": 0.870000005
+    },
+    {
+      "symbol": "NASDAQ:MTCH",
+      "name": "MTCH",
+      "description": "Match Group, Inc.",
+      "market": "america",
+      "dividend_amount_recent": 0.189999998
+    },
+    {
+      "symbol": "NYSE:EIX",
+      "name": "EIX",
+      "description": "Edison International",
+      "market": "america",
+      "dividend_amount_recent": 0.877499998
+    },
+    {
+      "symbol": "NYSE:CUZ",
+      "name": "CUZ",
+      "description": "Cousins Properties Incorporated",
+      "market": "america",
+      "dividend_amount_recent": 0.319999993
+    },
+    {
+      "symbol": "OTC:VOLVF",
+      "name": "VOLVF",
+      "description": "Volvo AB",
+      "market": "america",
+      "dividend_amount_recent": 1.8869999999999998
+    },
+    {
+      "symbol": "AMEX:NHS",
+      "name": "NHS",
+      "description": "Neuberger High Yield Strategies Fund Inc.",
+      "market": "america",
+      "dividend_amount_recent": 0.0904999971
+    },
+    {
+      "symbol": "OTC:CAIXY",
+      "name": "CAIXY",
+      "description": "Caixabank SA",
+      "market": "america",
+      "dividend_amount_recent": 0.0396090001
+    },
+    {
+      "symbol": "CBOE:TPAY",
+      "name": "TPAY",
+      "description": "Roundhill S&P 500 Target 10 Managed Distribution ETF",
+      "market": "america",
+      "dividend_amount_recent": 0.421750009
+    },
+    {
+      "symbol": "AMEX:ZDGE",
+      "name": "ZDGE",
+      "description": "Zedge, Inc.",
+      "market": "america",
+      "dividend_amount_recent": 0.0199999996
+    },
+    {
+      "symbol": "OTC:PNXGF",
+      "name": "PNXGF",
+      "description": "Phoenix Group Hldgs Plc",
+      "market": "america",
+      "dividend_amount_recent": 0.36473959333199996
+    },
+    {
+      "symbol": "OTC:SAABY",
+      "name": "SAABY",
+      "description": "Saab AB",
+      "market": "america",
+      "dividend_amount_recent": 0.0262310002
+    },
+    {
+      "symbol": "OTC:AYALY",
+      "name": "AYALY",
+      "description": "Ayala Corp.",
+      "market": "america",
+      "dividend_amount_recent": 0.308721989
+    },
+    {
+      "symbol": "NASDAQ:INTU",
+      "name": "INTU",
+      "description": "Intuit Inc.",
+      "market": "america",
+      "dividend_amount_recent": 1.20000005
+    },
+    {
+      "symbol": "OTC:SGSOY",
+      "name": "SGSOY",
+      "description": "SGS SA",
+      "market": "america",
+      "dividend_amount_recent": 0.180722997
+    },
+    {
+      "symbol": "NASDAQ:TIGO",
+      "name": "TIGO",
+      "description": "Millicom International Cellular S.A.",
+      "market": "america",
+      "dividend_amount_recent": 0.75
+    },
+    {
+      "symbol": "NYSE:ISD",
+      "name": "ISD",
+      "description": "PGIM High Yield Bond Fund, Inc.",
+      "market": "america",
+      "dividend_amount_recent": 0.104999997
+    },
+    {
+      "symbol": "NYSE:CRM",
+      "name": "CRM",
+      "description": "Salesforce, Inc.",
+      "market": "america",
+      "dividend_amount_recent": 0.416000009
+    },
+    {
+      "symbol": "NYSE:SAR",
+      "name": "SAR",
+      "description": "Saratoga Investment Corp New",
+      "market": "america",
+      "dividend_amount_recent": 0.25
+    },
+    {
+      "symbol": "OTC:COIHF",
+      "name": "COIHF",
+      "description": "Croda International Plc",
+      "market": "america",
+      "dividend_amount_recent": 0.6483839851412
+    },
+    {
+      "symbol": "OTC:HNTIF",
+      "name": "HNTIF",
+      "description": "Hunting Group Plc.",
+      "market": "america",
+      "dividend_amount_recent": 0.06238591473124
+    },
+    {
+      "symbol": "OTC:AFBOF",
+      "name": "AFBOF",
+      "description": "African Rainbow Minerals Ltd.",
+      "market": "america",
+      "dividend_amount_recent": 0.3462
+    },
+    {
+      "symbol": "NYSE:ZTO",
+      "name": "ZTO",
+      "description": "ZTO Express (Cayman) Inc.",
+      "market": "america",
+      "dividend_amount_recent": 0.289999992
+    },
+    {
+      "symbol": "NASDAQ:JD",
+      "name": "JD",
+      "description": "JD.com, Inc.",
+      "market": "america",
+      "dividend_amount_recent": 0.980000019
+    },
+    {
+      "symbol": "OTC:DPUKY",
+      "name": "DPUKY",
+      "description": "Dominos Pizza UK and IRL Plc.",
+      "market": "america",
+      "dividend_amount_recent": 0.0767399967
+    },
+    {
+      "symbol": "NASDAQ:ERIE",
+      "name": "ERIE",
+      "description": "Erie Indemnity Company",
+      "market": "america",
+      "dividend_amount_recent": 1.46249998
+    },
+    {
+      "symbol": "OTC:IDTRY",
+      "name": "IDTRY",
+      "description": "Indutrade AB",
+      "market": "america",
+      "dividend_amount_recent": 0.0756300017
+    },
+    {
+      "symbol": "NYSE:DHF",
+      "name": "DHF",
+      "description": "BNY Mellon High Yield Strategies Fund",
+      "market": "america",
+      "dividend_amount_recent": 0.0175000001
+    },
+    {
+      "symbol": "OTC:ILPMF",
+      "name": "ILPMF",
+      "description": "Permanent TSB Group Holdings plc",
+      "market": "america",
+      "dividend_amount_recent": null
+    },
+    {
+      "symbol": "NYSE:OGE",
+      "name": "OGE",
+      "description": "OGE Energy Corp",
+      "market": "america",
+      "dividend_amount_recent": 0.425000012
+    },
+    {
+      "symbol": "NASDAQ:GNTX",
+      "name": "GNTX",
+      "description": "Gentex Corporation",
+      "market": "america",
+      "dividend_amount_recent": 0.119999997
+    },
+    {
+      "symbol": "NYSE:RITM",
+      "name": "RITM",
+      "description": "Rithm Capital Corp.",
+      "market": "america",
+      "dividend_amount_recent": 0.25
+    },
+    {
+      "symbol": "NASDAQ:VIOT",
+      "name": "VIOT",
+      "description": "Viomi Technology Co., Ltd",
+      "market": "america",
+      "dividend_amount_recent": 0.0659999996
+    },
+    {
+      "symbol": "NYSE:CMC",
+      "name": "CMC",
+      "description": "Commercial Metals Company",
+      "market": "america",
+      "dividend_amount_recent": 0.200000003
+    },
+    {
+      "symbol": "NASDAQ:NHPBP",
+      "name": "NHPBP",
+      "description": "National Healthcare Properties, Inc. - 7.125% Series B Cumulative Redeemable Perpetual Preferred Stock",
+      "market": "america",
+      "dividend_amount_recent": 0.445311993
+    },
+    {
+      "symbol": "NYSE:THO",
+      "name": "THO",
+      "description": "Thor Industries, Inc.",
+      "market": "america",
+      "dividend_amount_recent": 0.519999981
+    },
+    {
+      "symbol": "NYSE:BEKE",
+      "name": "BEKE",
+      "description": "KE Holdings Inc",
+      "market": "america",
+      "dividend_amount_recent": 0.310000002
+    },
+    {
+      "symbol": "NYSE:MAIN",
+      "name": "MAIN",
+      "description": "Main Street Capital Corporation",
+      "market": "america",
+      "dividend_amount_recent": 0.300000012
+    },
+    {
+      "symbol": "OTC:BTDPY",
+      "name": "BTDPY",
+      "description": "BARRATT REDROW PLC",
+      "market": "america",
+      "dividend_amount_recent": 0.253868014
+    },
+    {
+      "symbol": "NASDAQ:SFD",
+      "name": "SFD",
+      "description": "Smithfield Foods, Inc.",
+      "market": "america",
+      "dividend_amount_recent": 0.25
+    },
+    {
+      "symbol": "NASDAQ:UPBD",
+      "name": "UPBD",
+      "description": "Upbound Group, Inc.",
+      "market": "america",
+      "dividend_amount_recent": 0.389999986
+    },
+    {
+      "symbol": "NASDAQ:SIGA",
+      "name": "SIGA",
+      "description": "SIGA Technologies Inc.",
+      "market": "america",
+      "dividend_amount_recent": 0.600000024
+    },
+    {
+      "symbol": "NASDAQ:LOAN",
+      "name": "LOAN",
+      "description": "Manhattan Bridge Capital, Inc",
+      "market": "america",
+      "dividend_amount_recent": 0.115000002
+    },
+    {
+      "symbol": "NASDAQ:OFLX",
+      "name": "OFLX",
+      "description": "Omega Flex, Inc.",
+      "market": "america",
+      "dividend_amount_recent": 0.340000004
+    },
+    {
+      "symbol": "OTC:ARYTF",
+      "name": "ARYTF",
+      "description": "Aryt Industries, Ltd.",
+      "market": "america",
+      "dividend_amount_recent": 0.038959698501550004
+    },
+    {
+      "symbol": "NASDAQ:ROP",
+      "name": "ROP",
+      "description": "Roper Technologies, Inc.",
+      "market": "america",
+      "dividend_amount_recent": 0.910000026
+    },
+    {
+      "symbol": "OTC:CELJF",
+      "name": "CELJF",
+      "description": "Cellcom Israel, Ltd.",
+      "market": "america",
+      "dividend_amount_recent": 0.3798633050681
+    },
+    {
+      "symbol": "NYSE:JPM",
+      "name": "JPM",
+      "description": "JP Morgan Chase & Co.",
+      "market": "america",
+      "dividend_amount_recent": 1.5
+    },
+    {
+      "symbol": "OTC:FIBH",
+      "name": "FIBH",
+      "description": "First Bancshares, Inc.",
+      "market": "america",
+      "dividend_amount_recent": 0.349999994
+    },
+    {
+      "symbol": "NYSE:WLYB",
+      "name": "WLYB",
+      "description": "John Wiley & Sons, Inc.",
+      "market": "america",
+      "dividend_amount_recent": 0.354999989
+    },
+    {
+      "symbol": "OTC:KGSPF",
+      "name": "KGSPF",
+      "description": "Kingspan Group plc.",
+      "market": "america",
+      "dividend_amount_recent": 0.3063424128128
+    },
+    {
+      "symbol": "OTC:TTVSY",
+      "name": "TTVSY",
+      "description": "Totvs SA",
+      "market": "america",
+      "dividend_amount_recent": 0.0428900011
+    },
+    {
+      "symbol": "NASDAQ:FNLC",
+      "name": "FNLC",
+      "description": "First Bancorp, Inc (ME)",
+      "market": "america",
+      "dividend_amount_recent": 0.370000005
+    },
+    {
+      "symbol": "NYSE:ORCL",
+      "name": "ORCL",
+      "description": "Oracle Corporation",
+      "market": "america",
+      "dividend_amount_recent": 0.5
+    },
+    {
+      "symbol": "NASDAQ:SCVL",
+      "name": "SCVL",
+      "description": "Shoe Carnival, Inc.",
+      "market": "america",
+      "dividend_amount_recent": 0.170000002
+    },
+    {
+      "symbol": "OTC:KCDMY",
+      "name": "KCDMY",
+      "description": "Kimberly-Clark de Mexico, S.A.B de C.V.",
+      "market": "america",
+      "dividend_amount_recent": 0.125545993
+    },
+    {
+      "symbol": "OTC:ELMUY",
+      "name": "ELMUY",
+      "description": "ELISA OYJ",
+      "market": "america",
+      "dividend_amount_recent": 0.269387007
+    },
+    {
+      "symbol": "NYSE:BNS",
+      "name": "BNS",
+      "description": "Bank Nova Scotia Halifax Pfd 3",
+      "market": "america",
+      "dividend_amount_recent": 0.795960014472
+    },
+    {
+      "symbol": "OTC:SWRAF",
+      "name": "SWRAF",
+      "description": "Swire Pacific Ltd.",
+      "market": "america",
+      "dividend_amount_recent": 0.166841993583
+    },
+    {
+      "symbol": "NYSE:SDHY",
+      "name": "SDHY",
+      "description": "PGIM Short Duration High Yield Opportunities Fund",
+      "market": "america",
+      "dividend_amount_recent": 0.108000003
+    },
+    {
+      "symbol": "NASDAQ:PFBC",
+      "name": "PFBC",
+      "description": "Preferred Bank",
+      "market": "america",
+      "dividend_amount_recent": 0.800000012
+    },
+    {
+      "symbol": "OTC:CSPKY",
+      "name": "CSPKY",
+      "description": "COSCO SHIPPING Ports Limited",
+      "market": "america",
+      "dividend_amount_recent": 0.154845998
+    },
+    {
+      "symbol": "OTC:VBREY",
+      "name": "VBREY",
+      "description": "Vibra Energia SA",
+      "market": "america",
+      "dividend_amount_recent": 0.0786620006
+    },
+    {
+      "symbol": "NYSE:YMM",
+      "name": "YMM",
+      "description": "Full Truck Alliance Co. Ltd.",
+      "market": "america",
+      "dividend_amount_recent": 0.0816000029
+    },
+    {
+      "symbol": "NYSE:PMT",
+      "name": "PMT",
+      "description": "PennyMac Mortgage Investment Trust",
+      "market": "america",
+      "dividend_amount_recent": 0.400000006
+    },
+    {
+      "symbol": "OTC:KCDMF",
+      "name": "KCDMF",
+      "description": "Kimberly-Clark de Mexico, S.A.B de C.V.",
+      "market": "america",
+      "dividend_amount_recent": 0.027871499453499995
+    },
+    {
+      "symbol": "NYSE:MA",
+      "name": "MA",
+      "description": "Mastercard Incorporated",
+      "market": "america",
+      "dividend_amount_recent": 0.870000005
+    },
+    {
+      "symbol": "OTC:BBVXF",
+      "name": "BBVXF",
+      "description": "Banco Bilbao Vizcaya Argentaria, S.A.",
+      "market": "america",
+      "dividend_amount_recent": 0.29785968804405
+    },
+    {
+      "symbol": "OTC:HLNCF",
+      "name": "HLNCF",
+      "description": "HALEON PLC",
+      "market": "america",
+      "dividend_amount_recent": 0.029759399864730002
+    },
+    {
+      "symbol": "NYSE:GBCI",
+      "name": "GBCI",
+      "description": "Glacier Bancorp, Inc.",
+      "market": "america",
+      "dividend_amount_recent": 0.330000013
+    },
+    {
+      "symbol": "OTC:ITVPF",
+      "name": "ITVPF",
+      "description": "ITV Plc.",
+      "market": "america",
+      "dividend_amount_recent": 0.02283270120879
+    },
+    {
+      "symbol": "OTC:VWSYF",
+      "name": "VWSYF",
+      "description": "Vestas Wind Systems A/S",
+      "market": "america",
+      "dividend_amount_recent": 0.08046500175560001
+    },
+    {
+      "symbol": "OTC:LZRFY",
+      "name": "LZRFY",
+      "description": "Localiza Rent A Car SA",
+      "market": "america",
+      "dividend_amount_recent": 0.0619440004
+    },
+    {
+      "symbol": "OTC:QLYXF",
+      "name": "QLYXF",
+      "description": "GLOBAL X ETFS ICAV NASDAQ 100 COVERED CALL UCITS ETF USD DI",
+      "market": "america",
+      "dividend_amount_recent": 0.165273994
+    },
+    {
+      "symbol": "OTC:WARFY",
+      "name": "WARFY",
+      "description": "Wharf Holdings Ltd.",
+      "market": "america",
+      "dividend_amount_recent": 0.0410350002
+    },
+    {
+      "symbol": "NASDAQ:NECB",
+      "name": "NECB",
+      "description": "NorthEast Community Bancorp, Inc.",
+      "market": "america",
+      "dividend_amount_recent": 0.200000003
+    },
+    {
+      "symbol": "NYSE:SLVM",
+      "name": "SLVM",
+      "description": "Sylvamo Corporation",
+      "market": "america",
+      "dividend_amount_recent": 0.449999988
+    },
+    {
+      "symbol": "OTC:SWRAY",
+      "name": "SWRAY",
+      "description": "Swire Pacific Ltd.",
+      "market": "america",
+      "dividend_amount_recent": 0.146706998
+    },
+    {
+      "symbol": "OTC:DBSDY",
+      "name": "DBSDY",
+      "description": "DBS Group Holdings Ltd.",
+      "market": "america",
+      "dividend_amount_recent": 2.24427891
+    },
+    {
+      "symbol": "OTC:PSPSY",
+      "name": "PSPSY",
+      "description": "PSP Swiss Property",
+      "market": "america",
+      "dividend_amount_recent": 0.554938972
+    },
+    {
+      "symbol": "OTC:CIXPF",
+      "name": "CIXPF",
+      "description": "Caixabank SA",
+      "market": "america",
+      "dividend_amount_recent": 0.1562832439551
+    },
+    {
+      "symbol": "NYSE:TD",
+      "name": "TD",
+      "description": "Toronto Dominion Bank (The)",
+      "market": "america",
+      "dividend_amount_recent": 0.7757640287320001
+    },
+    {
+      "symbol": "NYSE:BBDO",
+      "name": "BBDO",
+      "description": "Banco Bradesco Sa",
+      "market": "america",
+      "dividend_amount_recent": 0.00209000008
+    },
+    {
+      "symbol": "OTC:PMOIF",
+      "name": "PMOIF",
+      "description": "Harbour Energy Plc",
+      "market": "america",
+      "dividend_amount_recent": 0.13163664793527
+    },
+    {
+      "symbol": "OTC:HWDJF",
+      "name": "HWDJF",
+      "description": "Howden Joinery Group Plc",
+      "market": "america",
+      "dividend_amount_recent": 0.06715500094016999
+    },
+    {
+      "symbol": "OTC:DNGDF",
+      "name": "DNGDF",
+      "description": "Dynacor Group Inc.",
+      "market": "america",
+      "dividend_amount_recent": 0.009812213368049999
+    },
+    {
+      "symbol": "OTC:RBGPF",
+      "name": "RBGPF",
+      "description": "Reckitt Benckiser Group Plc.",
+      "market": "america",
+      "dividend_amount_recent": 3.21056986338
+    },
+    {
+      "symbol": "OTC:KRYAF",
+      "name": "KRYAF",
+      "description": "Kerry Group plc",
+      "market": "america",
+      "dividend_amount_recent": 0.48566278496758
+    },
+    {
+      "symbol": "OTC:RKLIF",
+      "name": "RKLIF",
+      "description": "Rentokil Initial Plc",
+      "market": "america",
+      "dividend_amount_recent": 0.04166315972946
+    },
+    {
+      "symbol": "NASDAQ:IDCC",
+      "name": "IDCC",
+      "description": "InterDigital, Inc.",
+      "market": "america",
+      "dividend_amount_recent": 0.699999988
+    },
+    {
+      "symbol": "OTC:MTNOF",
+      "name": "MTNOF",
+      "description": "MTN Group Ltd.",
+      "market": "america",
+      "dividend_amount_recent": 0.176985002565
+    }
+  ],
+  "metadata": {
+    "event_type": "dividends",
+    "total": 124,
+    "timestamp_from": 1775174400,
+    "timestamp_to": 1775779199,
+    "markets": [
+      "america"
+    ]
+  },
+  "error": null
+}

@@ -1,0 +1,140 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "symbol": "NASDAQ:CENTA",
+      "name": "CENTA",
+      "close": 31.9,
+      "change": 1.1414077362079882,
+      "change_abs": 0.35999999999999943,
+      "volume": 52865,
+      "Recommend.All": -0.17878787878787877,
+      "market_cap_basic": 1627372120,
+      "price_earnings_ttm": 13.022534291312866,
+      "earnings_per_share_basic_ttm": 2.4775
+    },
+    {
+      "symbol": "OTC:IPXHF",
+      "name": "IPXHF",
+      "close": 29.41,
+      "change": -1.9666666666666661,
+      "change_abs": -0.5899999999999999,
+      "volume": 29,
+      "Recommend.All": 0.3333333333333333,
+      "market_cap_basic": 34274344357.12,
+      "price_earnings_ttm": 13.94291191833601,
+      "earnings_per_share_basic_ttm": 2.1109611438
+    },
+    {
+      "symbol": "NASDAQ:SCAG",
+      "name": "SCAG",
+      "close": 1.14,
+      "change": 9.615384615384603,
+      "change_abs": 0.09999999999999987,
+      "volume": 2895,
+      "Recommend.All": -0.35454545454545455,
+      "market_cap_basic": 75133749,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "NASDAQ:UBCP",
+      "name": "UBCP",
+      "close": 15.85,
+      "change": -0.906533291653639,
+      "change_abs": -0.14499999999999957,
+      "volume": 6711,
+      "Recommend.All": 0.17575757575757575,
+      "market_cap_basic": 91246072.5,
+      "price_earnings_ttm": 11.846924284326182,
+      "earnings_per_share_basic_ttm": 1.3379
+    },
+    {
+      "symbol": "AMEX:YGLD",
+      "name": "YGLD",
+      "close": 39.86,
+      "change": -0.8950770760815501,
+      "change_abs": -0.35999999999999943,
+      "volume": 10019,
+      "Recommend.All": -0.4454545454545455,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "OTC:RCKHF",
+      "name": "RCKHF",
+      "close": 1.13,
+      "change": -6.61157024793389,
+      "change_abs": -0.08000000000000007,
+      "volume": 18752,
+      "Recommend.All": 0.26363636363636367,
+      "market_cap_basic": 971099093.7699999,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "AMEX:NBDS",
+      "name": "NBDS",
+      "close": 31.2544,
+      "change": 0.3171179499030693,
+      "change_abs": 0.09880000000000067,
+      "volume": 220,
+      "Recommend.All": -0.15454545454545454,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "AMEX:PHYS",
+      "name": "PHYS",
+      "close": 35.265,
+      "change": -0.3532071206555524,
+      "change_abs": -0.125,
+      "volume": 1993898,
+      "Recommend.All": -0.08787878787878788,
+      "market_cap_basic": 16663417200,
+      "price_earnings_ttm": 2.7000849877877906,
+      "earnings_per_share_basic_ttm": 13.0607
+    },
+    {
+      "symbol": "NASDAQ:QMCO",
+      "name": "QMCO",
+      "close": 6.1701,
+      "change": 8.628521126760564,
+      "change_abs": 0.4901,
+      "volume": 397141,
+      "Recommend.All": 0.2909090909090909,
+      "market_cap_basic": 90317923.8,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": -8.7314
+    },
+    {
+      "symbol": "CBOE:MSMR",
+      "name": "MSMR",
+      "close": 34.5201,
+      "change": -0.3435424130534563,
+      "change_abs": -0.11899999999999977,
+      "volume": 8665,
+      "Recommend.All": -0.1090909090909091,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    }
+  ],
+  "metadata": {
+    "market": "america",
+    "sort_order": "desc",
+    "limit": 10,
+    "filters": [
+      {
+        "left": "close",
+        "operation": "less",
+        "right": 50
+      }
+    ],
+    "total": 10,
+    "total_available": 15825
+  },
+  "error": null
+}

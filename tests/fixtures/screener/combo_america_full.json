@@ -1,0 +1,181 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "symbol": "NASDAQ:NVDA",
+      "name": "NVDA",
+      "close": 176.925,
+      "change": -0.2621342803991065,
+      "volume": 68694078,
+      "market_cap_basic": 4299277500000.0005
+    },
+    {
+      "symbol": "NASDAQ:INTC",
+      "name": "INTC",
+      "close": 50.575,
+      "change": 0.38705835649067144,
+      "volume": 57847887,
+      "market_cap_basic": 252622125000
+    },
+    {
+      "symbol": "AMEX:SOXL",
+      "name": "SOXL",
+      "close": 54.26,
+      "change": 2.8625592417061574,
+      "volume": 52357815,
+      "market_cap_basic": null
+    },
+    {
+      "symbol": "NASDAQ:SLNO",
+      "name": "SLNO",
+      "close": 52.275,
+      "change": 32.375284882248664,
+      "volume": 50318478,
+      "market_cap_basic": 2698665510
+    },
+    {
+      "symbol": "NASDAQ:HOLX",
+      "name": "HOLX",
+      "close": 76.01,
+      "change": 0.4758757435558485,
+      "volume": 49732128,
+      "market_cap_basic": 16968852450.000002
+    },
+    {
+      "symbol": "NASDAQ:TSLA",
+      "name": "TSLA",
+      "close": 348.82,
+      "change": -3.2640949554896097,
+      "volume": 49614716,
+      "market_cap_basic": 1308922632600
+    },
+    {
+      "symbol": "NASDAQ:SQQQ",
+      "name": "SQQQ",
+      "close": 76.385,
+      "change": -1.170914736705914,
+      "volume": 29224696,
+      "market_cap_basic": null
+    },
+    {
+      "symbol": "NASDAQ:MU",
+      "name": "MU",
+      "close": 379.6699,
+      "change": 3.6669670161642567,
+      "volume": 28605123,
+      "market_cap_basic": 428165136327
+    },
+    {
+      "symbol": "NASDAQ:NFLX",
+      "name": "NFLX",
+      "close": 99,
+      "change": 0.344617879586462,
+      "volume": 24716500,
+      "market_cap_basic": 417993840000
+    },
+    {
+      "symbol": "NASDAQ:QQQ",
+      "name": "QQQ",
+      "close": 587.07,
+      "change": 0.35727717186912916,
+      "volume": 24345704,
+      "market_cap_basic": null
+    },
+    {
+      "symbol": "NASDAQ:AMD",
+      "name": "AMD",
+      "close": 219.98,
+      "change": 1.1402298850574666,
+      "volume": 22319547,
+      "market_cap_basic": 358657591800
+    },
+    {
+      "symbol": "AMEX:SPY",
+      "name": "SPY",
+      "close": 657.32,
+      "change": 0.22719302258207294,
+      "volume": 21173534,
+      "market_cap_basic": null
+    },
+    {
+      "symbol": "AMEX:HYG",
+      "name": "HYG",
+      "close": 79.595,
+      "change": 0.043991955756657354,
+      "volume": 21095396,
+      "market_cap_basic": null
+    },
+    {
+      "symbol": "AMEX:USO",
+      "name": "USO",
+      "close": 139.81,
+      "change": 1.3703596287703126,
+      "volume": 18956647,
+      "market_cap_basic": null
+    },
+    {
+      "symbol": "AMEX:LQD",
+      "name": "LQD",
+      "close": 108.99,
+      "change": -0.11913489736071266,
+      "volume": 18174796,
+      "market_cap_basic": null
+    },
+    {
+      "symbol": "NASDAQ:HOOD",
+      "name": "HOOD",
+      "close": 69.83,
+      "change": 1.3497822931785088,
+      "volume": 17558972,
+      "market_cap_basic": 55169540650
+    },
+    {
+      "symbol": "NASDAQ:PLTR",
+      "name": "PLTR",
+      "close": 147.755,
+      "change": -0.4748753873097215,
+      "volume": 16349647,
+      "market_cap_basic": 338576149850
+    },
+    {
+      "symbol": "NASDAQ:RKLB",
+      "name": "RKLB",
+      "close": 67.57,
+      "change": -0.23623209803633663,
+      "volume": 15357846,
+      "market_cap_basic": 38474898559.99999
+    },
+    {
+      "symbol": "NASDAQ:AAPL",
+      "name": "AAPL",
+      "close": 258.75,
+      "change": 1.1058143169740593,
+      "volume": 14771401,
+      "market_cap_basic": 3798734625000
+    },
+    {
+      "symbol": "AMEX:XLE",
+      "name": "XLE",
+      "close": 59.5101,
+      "change": 0.43898734177215415,
+      "volume": 14543458,
+      "market_cap_basic": null
+    }
+  ],
+  "metadata": {
+    "market": "america",
+    "sort_order": "desc",
+    "limit": 20,
+    "filters": [
+      {
+        "left": "close",
+        "operation": "greater",
+        "right": 50
+      }
+    ],
+    "sort_by": "volume",
+    "total": 20,
+    "total_available": 3266
+  },
+  "error": null
+}

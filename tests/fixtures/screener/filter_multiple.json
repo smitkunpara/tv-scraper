@@ -1,0 +1,145 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "symbol": "NASDAQ:CIBR",
+      "name": "CIBR",
+      "close": 64.07,
+      "change": -0.18694500701044484,
+      "change_abs": -0.12000000000000455,
+      "volume": 528266,
+      "Recommend.All": 0.024242424242424246,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "NASDAQ:HON",
+      "name": "HON",
+      "close": 226.94,
+      "change": -1.0939202440618832,
+      "change_abs": -2.509999999999991,
+      "volume": 826685,
+      "Recommend.All": -0.08787878787878788,
+      "market_cap_basic": 144260311440,
+      "price_earnings_ttm": 28.395895895895897,
+      "earnings_per_share_basic_ttm": 8.0352
+    },
+    {
+      "symbol": "NASDAQ:NVDA",
+      "name": "NVDA",
+      "close": 176.925,
+      "change": -0.2621342803991065,
+      "change_abs": -0.464999999999975,
+      "volume": 68694078,
+      "Recommend.All": -0.17575757575757575,
+      "market_cap_basic": 4299277500000.0005,
+      "price_earnings_ttm": 36.0953566182471,
+      "earnings_per_share_basic_ttm": 4.9319
+    },
+    {
+      "symbol": "AMEX:EWL",
+      "name": "EWL",
+      "close": 59.37,
+      "change": 0.7124681933842147,
+      "change_abs": 0.4199999999999946,
+      "volume": 881393,
+      "Recommend.All": 0,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "NYSE:CVX",
+      "name": "CVX",
+      "close": 198.595,
+      "change": -0.18847062371211742,
+      "change_abs": -0.375,
+      "volume": 3852099,
+      "Recommend.All": 0.04242424242424242,
+      "market_cap_basic": 396274477050,
+      "price_earnings_ttm": 29.872894103489774,
+      "earnings_per_share_basic_ttm": 6.6714
+    },
+    {
+      "symbol": "NYSE:SQM",
+      "name": "SQM",
+      "close": 80.295,
+      "change": -3.503184713375787,
+      "change_abs": -2.914999999999992,
+      "volume": 620607,
+      "Recommend.All": 0.4,
+      "market_cap_basic": 21734632832.40923,
+      "price_earnings_ttm": 38.99329836829837,
+      "earnings_per_share_basic_ttm": 2.0592
+    },
+    {
+      "symbol": "AMEX:XBI",
+      "name": "XBI",
+      "close": 129.56,
+      "change": 0.46526054590570276,
+      "change_abs": 0.5999999999999943,
+      "volume": 4217571,
+      "Recommend.All": 0.49090909090909096,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "AMEX:SSO",
+      "name": "SSO",
+      "close": 52.97,
+      "change": 0.4361016306408738,
+      "change_abs": 0.22999999999999687,
+      "volume": 2028574,
+      "Recommend.All": -0.17575757575757575,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null
+    },
+    {
+      "symbol": "NASDAQ:CRWD",
+      "name": "CRWD",
+      "close": 398.31,
+      "change": -0.20294648226097473,
+      "change_abs": -0.8100000000000023,
+      "volume": 852681,
+      "Recommend.All": -0.3333333333333333,
+      "market_cap_basic": 101016992340,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": -0.7365
+    },
+    {
+      "symbol": "NYSE:JPM",
+      "name": "JPM",
+      "close": 295.8099,
+      "change": 0.4106924643584537,
+      "change_abs": 1.2099000000000046,
+      "volume": 2954678,
+      "Recommend.All": 0.1575757575757576,
+      "market_cap_basic": 797808174597.0001,
+      "price_earnings_ttm": 14.782955692596776,
+      "earnings_per_share_basic_ttm": 20.0468
+    }
+  ],
+  "metadata": {
+    "market": "america",
+    "sort_order": "desc",
+    "limit": 10,
+    "filters": [
+      {
+        "left": "close",
+        "operation": "greater",
+        "right": 50
+      },
+      {
+        "left": "volume",
+        "operation": "greater",
+        "right": 500000
+      }
+    ],
+    "total": 10,
+    "total_available": 588
+  },
+  "error": null
+}

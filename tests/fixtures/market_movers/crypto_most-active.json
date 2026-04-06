@@ -1,0 +1,123 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "symbol": "UNISWAP:SHIBTOROWETH_A96A52",
+      "name": "SHIBTOROWETH_A96A52",
+      "close": 1.9453469527184517e-21,
+      "change": -0.04786065926989277,
+      "change_abs": -9.31501699512317e-25,
+      "volume": 3504790403971392500,
+      "market_cap_calc": null,
+      "logoid": "",
+      "description": "Shibtoro / Wrapped Ether on Ethereum (0xA96A5275d79e8e6FAcc2476707ADA70f907ea305)"
+    },
+    {
+      "symbol": "UNISWAP:4CHANWETH_4FF4C7",
+      "name": "4CHANWETH_4FF4C7",
+      "close": 1e-17,
+      "change": 0,
+      "change_abs": 0,
+      "volume": 755260067592413300,
+      "market_cap_calc": null,
+      "logoid": "",
+      "description": "4CHAN / Wrapped Ether on Ethereum (0x4FF4c7c8754127Cc097910cf9D80400ADEf5b65d)"
+    },
+    {
+      "symbol": "BITMART:PEOGUSDT",
+      "name": "PEOGUSDT",
+      "close": 1e-16,
+      "change": 0,
+      "change_abs": 0,
+      "volume": 377733598409542700,
+      "market_cap_calc": null,
+      "logoid": "",
+      "description": "Peog Token/Tether USD"
+    },
+    {
+      "symbol": "UNISWAP:VOLTWETH_FE796B",
+      "name": "VOLTWETH_FE796B",
+      "close": 1.5690383641648532e-21,
+      "change": 0.0005755910839009058,
+      "change_abs": 9.031192944376163e-27,
+      "volume": 254933218419363940,
+      "market_cap_calc": null,
+      "logoid": "",
+      "description": "Volt Inu / Wrapped Ether on Ethereum (0xfE796ba940256E65048d1e6B52Ec8755067C7145)"
+    },
+    {
+      "symbol": "UNISWAP3BSC:BTCBRWBNB_45C8D1",
+      "name": "BTCBRWBNB_45C8D1",
+      "close": 1.1e-17,
+      "change": 0,
+      "change_abs": 0,
+      "volume": 86122953723025100,
+      "market_cap_calc": null,
+      "logoid": "",
+      "description": "Bitcoin BR / Wrapped BNB on BSC (0x45C8d10a013C313D20984cFe4931Fc276666b1DF)"
+    },
+    {
+      "symbol": "PANCAKESWAP:87D597WBNB_DADB30",
+      "name": "87D597WBNB_DADB30",
+      "close": 3e-18,
+      "change": -99.99999056770173,
+      "change_abs": -3.1805606999999995e-11,
+      "volume": 14760794273209548,
+      "market_cap_calc": null,
+      "logoid": "",
+      "description": "87d597 / Wrapped BNB on BSC (0xdaDB307858613038Df376180FE375777d8942fbC)"
+    },
+    {
+      "symbol": "BITMART:APPLEUSDT",
+      "name": "APPLEUSDT",
+      "close": 4.657e-16,
+      "change": -0.9148936170212957,
+      "change_abs": -4.3000000000000896e-18,
+      "volume": 13067771150893040,
+      "market_cap_calc": null,
+      "logoid": "",
+      "description": "Apple/Tether USD"
+    },
+    {
+      "symbol": "BITMART:AIDOGEUSDT",
+      "name": "AIDOGEUSDT",
+      "close": 1.02e-11,
+      "change": -0.09794319294809167,
+      "change_abs": -1.000000000000016e-14,
+      "volume": 11675814290721988,
+      "market_cap_calc": null,
+      "logoid": "",
+      "description": "AIDOGE/Tether USD"
+    },
+    {
+      "symbol": "UNISWAPBASE:VRDCTWETH_16C58B",
+      "name": "VRDCTWETH_16C58B",
+      "close": 1.925929944387236e-34,
+      "change": -100,
+      "change_abs": -9.696026335908706e-10,
+      "volume": 10384593717069132,
+      "market_cap_calc": null,
+      "logoid": "",
+      "description": "Verdict Protocol by Virtuals / Wrapped Ether on BASE (0x16C58b83C600028ce21D6b84E67B7f34246dAD25)"
+    },
+    {
+      "symbol": "UNISWAPBASE:XA20RWETH_5DEA23",
+      "name": "XA20RWETH_5DEA23",
+      "close": 6.269010338854182e-09,
+      "change": -99.7194442881137,
+      "change_abs": -2.228228479198994e-06,
+      "volume": 7096062438709563,
+      "market_cap_calc": null,
+      "logoid": "",
+      "description": "XA20R / Wrapped Ether on BASE (0x5DEa23099790678C494c0E79ef71ca6d96a8eC0E)"
+    }
+  ],
+  "metadata": {
+    "market": "crypto",
+    "category": "most-active",
+    "limit": 10,
+    "total": 10,
+    "totalCount": 56417
+  },
+  "error": null
+}

@@ -90,6 +90,7 @@ addopts = "-v --cov=tv_scraper --cov-report=term-missing"
 testpaths = ["tests"]
 markers = [
     "live: marks tests that require live network connections to TradingView (deselect with '-m \"not live\"')",
+    "integration: marks tests that test cross-module workflows and interactions",
 ]
 
 [dependency-groups]

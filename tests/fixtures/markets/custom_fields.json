@@ -1,0 +1,84 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "symbol": "NASDAQ:PFSA",
+      "name": "PFSA",
+      "close": 1.827,
+      "change": 141.02902374670182,
+      "volume": 217416842
+    },
+    {
+      "symbol": "OTC:LTNC",
+      "name": "LTNC",
+      "close": 0.0003,
+      "change": 49.99999999999998,
+      "volume": 216611847
+    },
+    {
+      "symbol": "NASDAQ:ZSPC",
+      "name": "ZSPC",
+      "close": 0.0954,
+      "change": -6.470588235294112,
+      "volume": 153299919
+    },
+    {
+      "symbol": "NASDAQ:IOBT",
+      "name": "IOBT",
+      "close": 0.042699,
+      "change": 32.19504643962848,
+      "volume": 136984884
+    },
+    {
+      "symbol": "OTC:XALL",
+      "name": "XALL",
+      "close": 0.00025,
+      "change": -16.666666666666657,
+      "volume": 131967675
+    },
+    {
+      "symbol": "NASDAQ:RDGT",
+      "name": "RDGT",
+      "close": 0.0176,
+      "change": -28.455284552845526,
+      "volume": 107377767
+    },
+    {
+      "symbol": "OTC:ECOX",
+      "name": "ECOX",
+      "close": 0.00165,
+      "change": -2.94117647058823,
+      "volume": 82519727
+    },
+    {
+      "symbol": "AMEX:AIB",
+      "name": "AIB",
+      "close": 1.6897,
+      "change": 45.663793103448285,
+      "volume": 75824223
+    },
+    {
+      "symbol": "NASDAQ:JTAI",
+      "name": "JTAI",
+      "close": 0.0417,
+      "change": -48.581997533908755,
+      "volume": 75035385
+    },
+    {
+      "symbol": "NASDAQ:MAXN",
+      "name": "MAXN",
+      "close": 1.1228,
+      "change": 64.17604912998978,
+      "volume": 70066732
+    }
+  ],
+  "metadata": {
+    "market": "america",
+    "sort_by": "volume",
+    "sort_order": "desc",
+    "limit": 10,
+    "total": 10,
+    "total_count": 10869
+  },
+  "error": null
+}

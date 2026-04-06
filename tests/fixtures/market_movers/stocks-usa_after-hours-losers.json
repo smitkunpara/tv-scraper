@@ -1,0 +1,143 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "symbol": "OTC:LKST",
+      "name": "LKST",
+      "close": 0.0002,
+      "change": -99.99530516431923,
+      "change_abs": -4.259799999999999,
+      "volume": 409,
+      "market_cap_basic": 11.600000000000001,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null,
+      "logoid": "looksmart",
+      "description": "LookSmart Group, Inc."
+    },
+    {
+      "symbol": "OTC:BRVRF",
+      "name": "BRVRF",
+      "close": 2e-06,
+      "change": -99.93333333333334,
+      "change_abs": -0.0029980000000000002,
+      "volume": 500000,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null,
+      "logoid": "blue-river-resources-ltd",
+      "description": "Blue River Resources, Ltd."
+    },
+    {
+      "symbol": "OTC:WTRNF",
+      "name": "WTRNF",
+      "close": 1e-06,
+      "change": -99.90909090909092,
+      "change_abs": -0.0010990000000000002,
+      "volume": 42000,
+      "market_cap_basic": 11727858.672180003,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null,
+      "logoid": "western-res",
+      "description": "Western Resources Corp."
+    },
+    {
+      "symbol": "OTC:PRST",
+      "name": "PRST",
+      "close": 1e-06,
+      "change": -99.87499999999999,
+      "change_abs": -0.000799,
+      "volume": 171,
+      "market_cap_basic": 158.987,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null,
+      "logoid": "presto-automation-inc",
+      "description": "Presto Automation, Inc."
+    },
+    {
+      "symbol": "OTC:RGNCF",
+      "name": "RGNCF",
+      "close": 0.0001,
+      "change": -99.85207100591715,
+      "change_abs": -0.06749999999999999,
+      "volume": 3525,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null,
+      "logoid": "rush-gold",
+      "description": "Rush Gold Corp"
+    },
+    {
+      "symbol": "OTC:OHCS",
+      "name": "OHCS",
+      "close": 1e-06,
+      "change": -99.8,
+      "change_abs": -0.000499,
+      "volume": 100,
+      "market_cap_basic": 50.018699999999995,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null,
+      "logoid": "optimus-healthcare-services",
+      "description": "Optimus Healthcare Services, Inc."
+    },
+    {
+      "symbol": "OTC:PRRE",
+      "name": "PRRE",
+      "close": 0.0001,
+      "change": -99.7506234413965,
+      "change_abs": -0.039999999999999994,
+      "volume": 263,
+      "market_cap_basic": 6255600,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null,
+      "logoid": "praetorian-property",
+      "description": "PRAETORIAN PROPERTY INC"
+    },
+    {
+      "symbol": "OTC:HQGE",
+      "name": "HQGE",
+      "close": 1e-06,
+      "change": -99.75,
+      "change_abs": -0.000399,
+      "volume": 4000,
+      "market_cap_basic": 3095969,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null,
+      "logoid": "hq-global-education",
+      "description": "HQ GLOBAL EDUCATION INC"
+    },
+    {
+      "symbol": "OTC:SIMPQ",
+      "name": "SIMPQ",
+      "close": 0.0001,
+      "change": -99.70887918486171,
+      "change_abs": -0.034249999999999996,
+      "volume": 10294,
+      "market_cap_basic": 532432,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null,
+      "logoid": "simply",
+      "description": "Simply Inc."
+    },
+    {
+      "symbol": "OTC:XLMDF",
+      "name": "XLMDF",
+      "close": 1e-06,
+      "change": -99.66666666666666,
+      "change_abs": -0.00029899999999999995,
+      "volume": 11050,
+      "market_cap_basic": null,
+      "price_earnings_ttm": null,
+      "earnings_per_share_basic_ttm": null,
+      "logoid": "xlmedia",
+      "description": "XLMEDIA PLC"
+    }
+  ],
+  "metadata": {
+    "market": "stocks-usa",
+    "category": "after-hours-losers",
+    "limit": 10,
+    "total": 10,
+    "totalCount": 7364
+  },
+  "error": null
+}

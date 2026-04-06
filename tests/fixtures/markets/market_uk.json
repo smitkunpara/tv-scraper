@@ -1,0 +1,84 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "symbol": "LSIN:0R1I",
+      "name": "0R1I",
+      "close": 174.85,
+      "change": -0.5545286506469469,
+      "change_abs": -0.9749999999999943,
+      "volume": 3026901,
+      "Recommend.All": -0.2909090909090909,
+      "market_cap_basic": 3268313954770.2583,
+      "price_earnings_ttm": 35.672025461073936,
+      "earnings_per_share_basic_ttm": 3.6051893086,
+      "sector": "Electronic Technology",
+      "industry": "Semiconductors"
+    },
+    {
+      "symbol": "LSE:0HD6",
+      "name": "0HD6",
+      "close": 293.998,
+      "change": -0.6190394257769595,
+      "change_abs": -1.8312999999999988,
+      "volume": 31869,
+      "Recommend.All": -0.15454545454545454,
+      "market_cap_basic": 2707413516708.648,
+      "price_earnings_ttm": 27.207173858725326,
+      "earnings_per_share_basic_ttm": 8.097680976000001,
+      "sector": "Technology Services",
+      "industry": "Internet Software/Services"
+    },
+    {
+      "symbol": "LSE:0RIH",
+      "name": "0RIH",
+      "close": 295.44,
+      "change": -0.8856682769726202,
+      "change_abs": -2.6399999999999864,
+      "volume": 150979,
+      "Recommend.All": -0.15454545454545454,
+      "market_cap_basic": 2707413516708.648,
+      "price_earnings_ttm": 27.340619476397155,
+      "earnings_per_share_basic_ttm": 8.097680976000001,
+      "sector": "Technology Services",
+      "industry": "Internet Software/Services"
+    },
+    {
+      "symbol": "LSE:0QYP",
+      "name": "0QYP",
+      "close": 371.3,
+      "change": 0.2700513097488523,
+      "change_abs": 1,
+      "volume": 66219,
+      "Recommend.All": -0.3787878787878788,
+      "market_cap_basic": 2102643703834.8044,
+      "price_earnings_ttm": 23.23107821484211,
+      "earnings_per_share_basic_ttm": 11.910921792,
+      "sector": "Technology Services",
+      "industry": "Packaged Software"
+    },
+    {
+      "symbol": "LSE:0R1O",
+      "name": "0R1O",
+      "close": 209.17,
+      "change": -1.0267814895429241,
+      "change_abs": -2.170000000000016,
+      "volume": 121195,
+      "Recommend.All": -0.24545454545454548,
+      "market_cap_basic": 1707381605065.108,
+      "price_earnings_ttm": 29.163994311368896,
+      "earnings_per_share_basic_ttm": 5.408771676,
+      "sector": "Retail Trade",
+      "industry": "Internet Retail"
+    }
+  ],
+  "metadata": {
+    "market": "uk",
+    "sort_by": "market_cap",
+    "sort_order": "desc",
+    "limit": 5,
+    "total": 5,
+    "total_count": 3560
+  },
+  "error": null
+}

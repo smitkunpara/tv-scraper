@@ -1,0 +1,652 @@
+{
+  "status": "success",
+  "data": {
+    "revenue_currency": "USD",
+    "previous_close_price": 373.46,
+    "average_price_target": 585.0164,
+    "highest_price_target": 675,
+    "lowest_price_target": 392,
+    "median_price_target": 600,
+    "yearly_eps_data": [
+      {
+        "Actual": 3.31,
+        "Estimate": 3.033437,
+        "FiscalPeriod": "2017",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 3.88,
+        "Estimate": 3.836107,
+        "FiscalPeriod": "2018",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 4.75,
+        "Estimate": 4.587657,
+        "FiscalPeriod": "2019",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 5.76,
+        "Estimate": 5.655722,
+        "FiscalPeriod": "2020",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 7.97,
+        "Estimate": 7.768662,
+        "FiscalPeriod": "2021",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 9.21,
+        "Estimate": 9.271991,
+        "FiscalPeriod": "2022",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 9.81,
+        "Estimate": 9.617331,
+        "FiscalPeriod": "2023",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 11.8,
+        "Estimate": 11.831631,
+        "FiscalPeriod": "2024",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 13.64,
+        "Estimate": 13.418601,
+        "FiscalPeriod": "2025",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": null,
+        "Estimate": 16.50136,
+        "FiscalPeriod": "2026",
+        "IsReported": false,
+        "Type": 10
+      },
+      {
+        "Actual": null,
+        "Estimate": 19.010267,
+        "FiscalPeriod": "2027",
+        "IsReported": false,
+        "Type": 10
+      },
+      {
+        "Actual": null,
+        "Estimate": 22.513622,
+        "FiscalPeriod": "2028",
+        "IsReported": false,
+        "Type": 10
+      },
+      {
+        "Actual": null,
+        "Estimate": 26.760874,
+        "FiscalPeriod": "2029",
+        "IsReported": false,
+        "Type": 10
+      },
+      {
+        "Actual": null,
+        "Estimate": 33.405,
+        "FiscalPeriod": "2030",
+        "IsReported": false,
+        "Type": 10
+      }
+    ],
+    "quarterly_eps_data": [
+      {
+        "Actual": 1.95,
+        "Estimate": 1.781298,
+        "FiscalPeriod": "2021-Q3",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 2.17,
+        "Estimate": 1.91602,
+        "FiscalPeriod": "2021-Q4",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 2.27,
+        "Estimate": 2.076868,
+        "FiscalPeriod": "2022-Q1",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 2.48,
+        "Estimate": 2.318963,
+        "FiscalPeriod": "2022-Q2",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 2.22,
+        "Estimate": 2.188787,
+        "FiscalPeriod": "2022-Q3",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 2.23,
+        "Estimate": 2.29224,
+        "FiscalPeriod": "2022-Q4",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 2.35,
+        "Estimate": 2.304587,
+        "FiscalPeriod": "2023-Q1",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 2.32,
+        "Estimate": 2.293323,
+        "FiscalPeriod": "2023-Q2",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 2.45,
+        "Estimate": 2.239098,
+        "FiscalPeriod": "2023-Q3",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 2.69,
+        "Estimate": 2.550625,
+        "FiscalPeriod": "2023-Q4",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 2.99,
+        "Estimate": 2.654008,
+        "FiscalPeriod": "2024-Q1",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 2.93,
+        "Estimate": 2.771324,
+        "FiscalPeriod": "2024-Q2",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 2.94,
+        "Estimate": 2.824645,
+        "FiscalPeriod": "2024-Q3",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 2.95,
+        "Estimate": 2.9375,
+        "FiscalPeriod": "2024-Q4",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 3.3,
+        "Estimate": 3.101224,
+        "FiscalPeriod": "2025-Q1",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 3.23,
+        "Estimate": 3.11949,
+        "FiscalPeriod": "2025-Q2",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 3.46,
+        "Estimate": 3.222219,
+        "FiscalPeriod": "2025-Q3",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 3.65,
+        "Estimate": 3.37471,
+        "FiscalPeriod": "2025-Q4",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 4.13,
+        "Estimate": 3.673318,
+        "FiscalPeriod": "2026-Q1",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 4.14,
+        "Estimate": 3.902866,
+        "FiscalPeriod": "2026-Q2",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": null,
+        "Estimate": 4.053215,
+        "FiscalPeriod": "2026-Q3",
+        "IsReported": false,
+        "Type": 10
+      },
+      {
+        "Actual": null,
+        "Estimate": 4.27043,
+        "FiscalPeriod": "2026-Q4",
+        "IsReported": false,
+        "Type": 10
+      },
+      {
+        "Actual": null,
+        "Estimate": 4.576144,
+        "FiscalPeriod": "2027-Q1",
+        "IsReported": false,
+        "Type": 10
+      },
+      {
+        "Actual": null,
+        "Estimate": 4.683596,
+        "FiscalPeriod": "2027-Q2",
+        "IsReported": false,
+        "Type": 10
+      },
+      {
+        "Actual": null,
+        "Estimate": 4.662605,
+        "FiscalPeriod": "2027-Q3",
+        "IsReported": false,
+        "Type": 10
+      },
+      {
+        "Actual": null,
+        "Estimate": 4.988178,
+        "FiscalPeriod": "2027-Q4",
+        "IsReported": false,
+        "Type": 10
+      },
+      {
+        "Actual": null,
+        "Estimate": 5.268878,
+        "FiscalPeriod": "2028-Q1",
+        "IsReported": false,
+        "Type": 10
+      },
+      {
+        "Actual": null,
+        "Estimate": 5.410019,
+        "FiscalPeriod": "2028-Q2",
+        "IsReported": false,
+        "Type": 10
+      },
+      {
+        "Actual": null,
+        "Estimate": 5.496113,
+        "FiscalPeriod": "2028-Q3",
+        "IsReported": false,
+        "Type": 10
+      },
+      {
+        "Actual": null,
+        "Estimate": 5.88953,
+        "FiscalPeriod": "2028-Q4",
+        "IsReported": false,
+        "Type": 10
+      }
+    ],
+    "yearly_revenue_data": [
+      {
+        "Actual": 96700000000,
+        "Estimate": 96254973077,
+        "FiscalPeriod": "2017",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 110360000000,
+        "Estimate": 109467064516,
+        "FiscalPeriod": "2018",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 125843000000,
+        "Estimate": 124903602666,
+        "FiscalPeriod": "2019",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 143015000000,
+        "Estimate": 141495464401,
+        "FiscalPeriod": "2020",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 168088000000,
+        "Estimate": 166227084187,
+        "FiscalPeriod": "2021",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 198270000000,
+        "Estimate": 198704709367,
+        "FiscalPeriod": "2022",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 211915000000,
+        "Estimate": 211548397686,
+        "FiscalPeriod": "2023",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 245122000000,
+        "Estimate": 244926973238,
+        "FiscalPeriod": "2024",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 281724000000,
+        "Estimate": 279211174019,
+        "FiscalPeriod": "2025",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": null,
+        "Estimate": 327590077717,
+        "FiscalPeriod": "2026",
+        "IsReported": false,
+        "Type": 10
+      },
+      {
+        "Actual": null,
+        "Estimate": 378047032471,
+        "FiscalPeriod": "2027",
+        "IsReported": false,
+        "Type": 10
+      },
+      {
+        "Actual": null,
+        "Estimate": 440189769470,
+        "FiscalPeriod": "2028",
+        "IsReported": false,
+        "Type": 10
+      },
+      {
+        "Actual": null,
+        "Estimate": 521837647784,
+        "FiscalPeriod": "2029",
+        "IsReported": false,
+        "Type": 10
+      },
+      {
+        "Actual": null,
+        "Estimate": 643734000000,
+        "FiscalPeriod": "2030",
+        "IsReported": false,
+        "Type": 10
+      }
+    ],
+    "quarterly_revenue_data": [
+      {
+        "Actual": 41706000000,
+        "Estimate": 41035485410,
+        "FiscalPeriod": "2021-Q3",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 46152000000,
+        "Estimate": 44221136327,
+        "FiscalPeriod": "2021-Q4",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 45317000000,
+        "Estimate": 44011798400,
+        "FiscalPeriod": "2022-Q1",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 51728000000,
+        "Estimate": 50738946323,
+        "FiscalPeriod": "2022-Q2",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 49360000000,
+        "Estimate": 49022594536,
+        "FiscalPeriod": "2022-Q3",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 51865000000,
+        "Estimate": 52384293387,
+        "FiscalPeriod": "2022-Q4",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 50122000000,
+        "Estimate": 49609203885,
+        "FiscalPeriod": "2023-Q1",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 52747000000,
+        "Estimate": 52986736747,
+        "FiscalPeriod": "2023-Q2",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 52857000000,
+        "Estimate": 51018607204,
+        "FiscalPeriod": "2023-Q3",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 56189000000,
+        "Estimate": 55485385195,
+        "FiscalPeriod": "2023-Q4",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 56517000000,
+        "Estimate": 54523411175,
+        "FiscalPeriod": "2024-Q1",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 62020000000,
+        "Estimate": 61140881926,
+        "FiscalPeriod": "2024-Q2",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 61858000000,
+        "Estimate": 60860359387,
+        "FiscalPeriod": "2024-Q3",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 64727000000,
+        "Estimate": 64382257202,
+        "FiscalPeriod": "2024-Q4",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 65585000000,
+        "Estimate": 64562402034,
+        "FiscalPeriod": "2025-Q1",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 69632000000,
+        "Estimate": 68865707131,
+        "FiscalPeriod": "2025-Q2",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 70066000000,
+        "Estimate": 68439856878.00001,
+        "FiscalPeriod": "2025-Q3",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 76441000000,
+        "Estimate": 73926767276,
+        "FiscalPeriod": "2025-Q4",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 77673000000,
+        "Estimate": 75494678452,
+        "FiscalPeriod": "2026-Q1",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": 81273000000,
+        "Estimate": 80308701686,
+        "FiscalPeriod": "2026-Q2",
+        "IsReported": true,
+        "Type": 22
+      },
+      {
+        "Actual": null,
+        "Estimate": 81296232408,
+        "FiscalPeriod": "2026-Q3",
+        "IsReported": false,
+        "Type": 10
+      },
+      {
+        "Actual": null,
+        "Estimate": 87582945288,
+        "FiscalPeriod": "2026-Q4",
+        "IsReported": false,
+        "Type": 10
+      },
+      {
+        "Actual": null,
+        "Estimate": 89044698997,
+        "FiscalPeriod": "2027-Q1",
+        "IsReported": false,
+        "Type": 10
+      },
+      {
+        "Actual": null,
+        "Estimate": 93374431729,
+        "FiscalPeriod": "2027-Q2",
+        "IsReported": false,
+        "Type": 10
+      },
+      {
+        "Actual": null,
+        "Estimate": 94020889291,
+        "FiscalPeriod": "2027-Q3",
+        "IsReported": false,
+        "Type": 10
+      },
+      {
+        "Actual": null,
+        "Estimate": 101439929991,
+        "FiscalPeriod": "2027-Q4",
+        "IsReported": false,
+        "Type": 10
+      },
+      {
+        "Actual": null,
+        "Estimate": 101773815378,
+        "FiscalPeriod": "2028-Q1",
+        "IsReported": false,
+        "Type": 10
+      },
+      {
+        "Actual": null,
+        "Estimate": 106325458591,
+        "FiscalPeriod": "2028-Q2",
+        "IsReported": false,
+        "Type": 10
+      },
+      {
+        "Actual": null,
+        "Estimate": 106962132626,
+        "FiscalPeriod": "2028-Q3",
+        "IsReported": false,
+        "Type": 10
+      },
+      {
+        "Actual": null,
+        "Estimate": 115153773756,
+        "FiscalPeriod": "2028-Q4",
+        "IsReported": false,
+        "Type": 10
+      }
+    ]
+  },
+  "metadata": {
+    "exchange": "NASDAQ",
+    "symbol": "MSFT",
+    "available_output_keys": [
+      "average_price_target",
+      "highest_price_target",
+      "lowest_price_target",
+      "median_price_target",
+      "previous_close_price",
+      "quarterly_eps_data",
+      "quarterly_revenue_data",
+      "revenue_currency",
+      "yearly_eps_data",
+      "yearly_revenue_data"
+    ]
+  },
+  "error": null
+}

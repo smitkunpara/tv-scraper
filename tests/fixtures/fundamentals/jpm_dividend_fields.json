@@ -1,0 +1,14 @@
+{
+  "status": "success",
+  "data": {
+    "symbol": "NYSE:JPM",
+    "dividends_yield": 2.1213406873143827,
+    "dividends_per_share_fq": null,
+    "dividend_payout_ratio_ttm": 28.985217539055082
+  },
+  "metadata": {
+    "exchange": "NYSE",
+    "symbol": "JPM"
+  },
+  "error": null
+}
