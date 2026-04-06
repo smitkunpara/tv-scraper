@@ -11,6 +11,7 @@ from collections.abc import Generator
 from typing import Any
 
 from tv_scraper.core.constants import STATUS_SUCCESS
+from tv_scraper.core.validation_data import EXCHANGE_LITERAL, TIMEFRAME_LITERAL
 from tv_scraper.core.validators import DataValidator
 from tv_scraper.streaming.base_streamer import BaseStreamer
 from tv_scraper.streaming.candle_streamer import CandleStreamer
@@ -60,9 +61,9 @@ class Streamer(BaseStreamer):
 
     def get_candles(
         self,
-        exchange: str,
+        exchange: EXCHANGE_LITERAL,
         symbol: str,
-        timeframe: str = "1m",
+        timeframe: TIMEFRAME_LITERAL = "1m",
         numb_candles: int = 10,
         indicators: list[tuple[str, str]] | None = None,
     ) -> dict[str, Any]:
@@ -90,7 +91,7 @@ class Streamer(BaseStreamer):
             self._export(result["data"], symbol, "get_candles")
         return result
 
-    def get_forecast(self, exchange: str, symbol: str) -> dict[str, Any]:
+    def get_forecast(self, exchange: EXCHANGE_LITERAL, symbol: str) -> dict[str, Any]:
         """Capture forecast data via TradingView WebSocket quote stream.
 
         This method captures qsd packets until all required forecast fields are
@@ -117,7 +118,7 @@ class Streamer(BaseStreamer):
 
     def stream_realtime_price(
         self,
-        exchange: str,
+        exchange: EXCHANGE_LITERAL,
         symbol: str,
     ) -> Generator[dict[str, Any], None, None]:
         """Persistent generator yielding normalized realtime price updates.
@@ -135,8 +136,8 @@ class Streamer(BaseStreamer):
         Yields:
             Normalised price update dicts.
         """
+        exchange, symbol = DataValidator().verify_symbol_exchange(exchange, symbol)
         exchange_symbol = format_symbol(exchange, symbol)
-        DataValidator().verify_symbol_exchange(exchange, symbol)
 
         handler = self.connect()
 

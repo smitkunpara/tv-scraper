@@ -7,6 +7,7 @@ from typing import Any
 from tv_scraper.core.constants import SCANNER_URL
 from tv_scraper.core.exceptions import ValidationError
 from tv_scraper.core.scanner import ScannerScraper
+from tv_scraper.core.validation_data import EXCHANGE_LITERAL, TIMEFRAME_LITERAL
 
 logger = logging.getLogger(__name__)
 
@@ -36,9 +37,9 @@ class Technicals(ScannerScraper):
 
     def get_technicals(
         self,
-        exchange: str,
+        exchange: EXCHANGE_LITERAL,
         symbol: str,
-        timeframe: str = "1d",
+        timeframe: TIMEFRAME_LITERAL = "1d",
         technical_indicators: list[str] | None = None,
         all_indicators: bool = False,
         fields: list[str] | None = None,
@@ -62,7 +63,7 @@ class Technicals(ScannerScraper):
 
         # --- Validation ---
         try:
-            self.validator.verify_symbol_exchange(exchange, symbol)
+            exchange, symbol = self.validator.verify_symbol_exchange(exchange, symbol)
             self.validator.validate_timeframe(timeframe)
         except ValidationError as exc:
             return self._error_response(

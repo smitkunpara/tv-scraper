@@ -1,9 +1,11 @@
 """Symbol Markets module for finding all exchanges where a symbol is traded."""
 
-from typing import Any
+from typing import Any, Literal
 
 from tv_scraper.core.constants import SCANNER_URL
 from tv_scraper.core.scanner import ScannerScraper
+
+SYMBOL_MARKET_SCANNER_LITERAL = Literal["global", "america", "crypto", "forex", "cfd"]
 
 
 class SymbolMarkets(ScannerScraper):
@@ -77,7 +79,7 @@ class SymbolMarkets(ScannerScraper):
         self,
         symbol: str,
         fields: list[str] | None = None,
-        scanner: str = "global",
+        scanner: SYMBOL_MARKET_SCANNER_LITERAL = "global",
         limit: int = 150,
     ) -> dict[str, Any]:
         """Scrape all markets/exchanges where a symbol is traded.

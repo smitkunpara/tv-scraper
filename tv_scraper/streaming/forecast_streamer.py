@@ -7,6 +7,7 @@ from typing import Any
 import requests
 
 from tv_scraper.core.constants import DEFAULT_USER_AGENT, SCANNER_URL
+from tv_scraper.core.validation_data import EXCHANGE_LITERAL
 from tv_scraper.core.validators import DataValidator
 from tv_scraper.streaming.base_streamer import BaseStreamer
 from tv_scraper.utils.helpers import format_symbol
@@ -54,7 +55,7 @@ class ForecastStreamer(BaseStreamer):
             cookie=cookie,
         )
 
-    def get_forecast(self, exchange: str, symbol: str) -> dict[str, Any]:
+    def get_forecast(self, exchange: EXCHANGE_LITERAL, symbol: str) -> dict[str, Any]:
         """Capture forecast data via TradingView WebSocket quote stream.
 
         This method captures qsd packets until all required forecast fields are
@@ -69,8 +70,8 @@ class ForecastStreamer(BaseStreamer):
             ``{"status", "data", "metadata", "error"}``.
         """
         try:
+            exchange, symbol = DataValidator().verify_symbol_exchange(exchange, symbol)
             exchange_symbol = format_symbol(exchange, symbol)
-            DataValidator().verify_symbol_exchange(exchange, symbol)
 
             symbol_type = self._get_symbol_type(exchange_symbol)
             if symbol_type != "stock":

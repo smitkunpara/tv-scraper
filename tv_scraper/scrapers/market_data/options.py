@@ -5,6 +5,7 @@ from typing import Any
 from tv_scraper.core.constants import SCANNER_URL
 from tv_scraper.core.exceptions import ValidationError
 from tv_scraper.core.scanner import ScannerScraper
+from tv_scraper.core.validation_data import EXCHANGE_LITERAL
 
 OPTIONS_SCANNER_URL = f"{SCANNER_URL}/options/scan2?label-product=symbols-options"
 
@@ -64,7 +65,7 @@ class Options(ScannerScraper):
 
     def get_options_by_expiry(
         self,
-        exchange: str,
+        exchange: EXCHANGE_LITERAL,
         symbol: str,
         expiration: int,
         root: str,
@@ -107,7 +108,7 @@ class Options(ScannerScraper):
 
     def get_options_by_strike(
         self,
-        exchange: str,
+        exchange: EXCHANGE_LITERAL,
         symbol: str,
         strike: int | float,
         columns: list[str] | None = None,
@@ -158,7 +159,7 @@ class Options(ScannerScraper):
     ) -> dict[str, Any] | None:
         """Validate exchange, symbol, and columns. Returns error dict or None."""
         try:
-            self.validator.verify_options_symbol(exchange, symbol)
+            exchange, symbol = self.validator.verify_options_symbol(exchange, symbol)
         except ValidationError as exc:
             return self._error_response(
                 str(exc),

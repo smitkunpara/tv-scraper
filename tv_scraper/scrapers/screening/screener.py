@@ -1,10 +1,49 @@
 """Screener module for screening financial instruments with custom filters."""
 
 import logging
-from typing import Any
+from typing import Any, Literal
 
 from tv_scraper.core.constants import SCANNER_URL
 from tv_scraper.core.scanner import ScannerScraper
+
+SCREENER_MARKET_LITERAL = Literal[
+    "america",
+    "australia",
+    "canada",
+    "germany",
+    "india",
+    "israel",
+    "italy",
+    "luxembourg",
+    "mexico",
+    "spain",
+    "turkey",
+    "uk",
+    "crypto",
+    "forex",
+    "cfd",
+    "futures",
+    "bonds",
+    "global",
+]
+SCREENER_OPERATION_LITERAL = Literal[
+    "greater",
+    "less",
+    "egreater",
+    "eless",
+    "equal",
+    "nequal",
+    "in_range",
+    "not_in_range",
+    "above",
+    "below",
+    "crosses",
+    "crosses_above",
+    "crosses_below",
+    "has",
+    "has_none_of",
+]
+SORT_ORDER_LITERAL = Literal["asc", "desc"]
 
 logger = logging.getLogger(__name__)
 
@@ -248,11 +287,11 @@ class Screener(ScannerScraper):
 
     def get_screener(
         self,
-        market: str = "america",
+        market: SCREENER_MARKET_LITERAL = "america",
         filters: list[dict[str, Any]] | None = None,
         fields: list[str] | None = None,
         sort_by: str | None = None,
-        sort_order: str = "desc",
+        sort_order: SORT_ORDER_LITERAL = "desc",
         limit: int = 50,
         symbols: dict[str, Any] | None = None,
         filter2: dict[str, Any] | None = None,

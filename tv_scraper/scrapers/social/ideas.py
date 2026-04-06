@@ -2,15 +2,17 @@
 
 import logging
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from typing import Any
+from typing import Any, Literal
 
 from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.constants import BASE_URL
 from tv_scraper.core.exceptions import ValidationError
+from tv_scraper.core.validation_data import EXCHANGE_LITERAL
 
 logger = logging.getLogger(__name__)
 
-ALLOWED_SORT_VALUES = {"popular", "recent"}
+IDEAS_SORT_LITERAL = Literal["popular", "recent"]
+ALLOWED_SORT_VALUES: set[IDEAS_SORT_LITERAL] = {"popular", "recent"}
 DEFAULT_MAX_WORKERS = 3
 
 
@@ -54,11 +56,11 @@ class Ideas(BaseScraper):
 
     def get_ideas(
         self,
-        exchange: str,
+        exchange: EXCHANGE_LITERAL,
         symbol: str,
         start_page: int = 1,
         end_page: int = 1,
-        sort_by: str = "popular",
+        sort_by: IDEAS_SORT_LITERAL = "popular",
     ) -> dict[str, Any]:
         """Scrape trading ideas for a symbol across one or more pages.
 
@@ -95,7 +97,7 @@ class Ideas(BaseScraper):
             )
 
         try:
-            self.validator.verify_symbol_exchange(exchange, symbol)
+            exchange, symbol = self.validator.verify_symbol_exchange(exchange, symbol)
             self.validator.validate_choice("sort_by", sort_by, ALLOWED_SORT_VALUES)
         except ValidationError as exc:
             return self._error_response(

@@ -1,10 +1,16 @@
 """News scraper for fetching headlines and article content from TradingView."""
 
 import logging
-from typing import Any
+from typing import Any, Literal
 
 from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.exceptions import ValidationError
+from tv_scraper.core.validation_data import (
+    AREA_LITERAL,
+    EXCHANGE_LITERAL,
+    LANGUAGE_LITERAL,
+    NEWS_PROVIDER_LITERAL,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -13,10 +19,22 @@ NEWS_HEADLINES_URL = "https://news-headlines.tradingview.com/v2/view/headlines/s
 NEWS_STORY_URL = "https://news-mediator.tradingview.com/public/news/v1/story"
 
 # Valid sort options
-VALID_SORT_OPTIONS = {"latest", "oldest", "most_urgent", "least_urgent"}
+SORT_BY_LITERAL = Literal["latest", "oldest", "most_urgent", "least_urgent"]
+VALID_SORT_OPTIONS: set[SORT_BY_LITERAL] = {
+    "latest",
+    "oldest",
+    "most_urgent",
+    "least_urgent",
+}
 
 # Valid section options
-VALID_SECTIONS = {"all", "esg", "press_release", "financial_statement"}
+NEWS_SECTION_LITERAL = Literal["all", "esg", "press_release", "financial_statement"]
+VALID_SECTIONS: set[NEWS_SECTION_LITERAL] = {
+    "all",
+    "esg",
+    "press_release",
+    "financial_statement",
+}
 
 
 class News(BaseScraper):
@@ -58,13 +76,13 @@ class News(BaseScraper):
 
     def get_news_headlines(
         self,
-        exchange: str,
+        exchange: EXCHANGE_LITERAL,
         symbol: str,
-        provider: str | None = None,
-        area: str | None = None,
-        sort_by: str = "latest",
-        section: str = "all",
-        language: str = "en",
+        provider: NEWS_PROVIDER_LITERAL | None = None,
+        area: AREA_LITERAL | None = None,
+        sort_by: SORT_BY_LITERAL = "latest",
+        section: NEWS_SECTION_LITERAL = "all",
+        language: LANGUAGE_LITERAL = "en",
     ) -> dict[str, Any]:
         """Scrape news headlines for a symbol.
 
@@ -95,8 +113,10 @@ class News(BaseScraper):
         if area is not None:
             meta["area"] = area
 
+        meta.update({"exchange": exchange, "symbol": symbol})
+
         try:
-            self.validator.verify_symbol_exchange(exchange, symbol)
+            exchange, symbol = self.validator.verify_symbol_exchange(exchange, symbol)
             self.validator.validate_choice("sort_by", sort_by, VALID_SORT_OPTIONS)
             self.validator.validate_choice("section", section, VALID_SECTIONS)
 

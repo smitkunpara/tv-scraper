@@ -4,6 +4,7 @@ from typing import Any
 
 from tv_scraper.core.exceptions import ValidationError
 from tv_scraper.core.scanner import ScannerScraper
+from tv_scraper.core.validation_data import EXCHANGE_LITERAL
 
 
 class Fundamentals(ScannerScraper):
@@ -138,7 +139,7 @@ class Fundamentals(ScannerScraper):
 
     def get_fundamentals(
         self,
-        exchange: str,
+        exchange: EXCHANGE_LITERAL,
         symbol: str,
         fields: list[str] | None = None,
     ) -> dict[str, Any]:

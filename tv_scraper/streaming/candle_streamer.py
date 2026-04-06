@@ -4,6 +4,7 @@ import json
 import logging
 from typing import Any
 
+from tv_scraper.core.validation_data import EXCHANGE_LITERAL, TIMEFRAME_LITERAL
 from tv_scraper.core.validators import DataValidator
 from tv_scraper.streaming.base_streamer import BaseStreamer
 from tv_scraper.streaming.stream_handler import StreamHandler
@@ -40,9 +41,9 @@ class CandleStreamer(BaseStreamer):
 
     def get_candles(  # noqa: PLR0915
         self,
-        exchange: str,
+        exchange: EXCHANGE_LITERAL,
         symbol: str,
-        timeframe: str = "1m",
+        timeframe: TIMEFRAME_LITERAL = "1m",
         numb_candles: int = 10,
         indicators: list[tuple[str, str]] | None = None,
     ) -> dict[str, Any]:
@@ -68,8 +69,8 @@ class CandleStreamer(BaseStreamer):
                     timeframe=timeframe,
                     numb_candles=numb_candles,
                 )
+            exchange, symbol = DataValidator().verify_symbol_exchange(exchange, symbol)
             exchange_symbol = format_symbol(exchange, symbol)
-            DataValidator().verify_symbol_exchange(exchange, symbol)
             self.study_id_to_name_map = {}
 
             ind_flag = bool(indicators)
@@ -191,7 +192,7 @@ class CandleStreamer(BaseStreamer):
         quote_session: str,
         chart_session: str,
         exchange_symbol: str,
-        timeframe: str = "1m",
+        timeframe: TIMEFRAME_LITERAL = "1m",
         numb_candles: int = 10,
     ) -> None:
         """Register symbol in both quote and chart sessions."""

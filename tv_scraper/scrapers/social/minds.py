@@ -6,6 +6,7 @@ from typing import Any
 
 from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.exceptions import ValidationError
+from tv_scraper.core.validation_data import EXCHANGE_LITERAL
 
 logger = logging.getLogger(__name__)
 
@@ -37,7 +38,7 @@ class Minds(BaseScraper):
 
     def get_minds(
         self,
-        exchange: str,
+        exchange: EXCHANGE_LITERAL,
         symbol: str,
         limit: int | None = None,
     ) -> dict[str, Any]:
@@ -54,7 +55,7 @@ class Minds(BaseScraper):
             ``status``, ``data``, ``metadata``, ``error``.
         """
         try:
-            self.validator.verify_symbol_exchange(exchange, symbol)
+            exchange, symbol = self.validator.verify_symbol_exchange(exchange, symbol)
         except ValidationError as exc:
             return self._error_response(
                 str(exc),
@@ -62,7 +63,7 @@ class Minds(BaseScraper):
                 symbol=symbol,
             )
 
-        combined_symbol = f"{exchange.upper()}:{symbol.upper()}"
+        combined_symbol = f"{exchange}:{symbol}"
 
         parsed_data: list[dict[str, Any]] = []
         next_cursor: str | None = None

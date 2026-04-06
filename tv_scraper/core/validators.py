@@ -221,12 +221,13 @@ class DataValidator:
 
     def verify_symbol_exchange(
         self, exchange: str, symbol: str, retries: int = 2
-    ) -> bool:
+    ) -> tuple[str, str]:
         """Verify exchange is valid, symbol is non-empty, and the combination
         exists on TradingView.
 
         Combines :meth:`validate_exchange` and :meth:`validate_symbol` with a
-        live check against the TradingView scanner API.
+        live check against the TradingView scanner API. Returns the uppercased
+        (exchange, symbol) if valid.
 
         Args:
             exchange: Exchange name (e.g. ``"NASDAQ"``).
@@ -234,7 +235,7 @@ class DataValidator:
             retries: Number of HTTP retry attempts on network errors. Must be >= 1.
 
         Returns:
-            True if the symbol:exchange combination is confirmed valid.
+            A tuple of (exchange, symbol) in uppercase.
 
         Raises:
             ValidationError: If the exchange, symbol, or their combination is
@@ -245,9 +246,10 @@ class DataValidator:
         if retries < 1:
             raise ValidationError(f"Retries must be at least 1, got {retries}.")
 
-        url = _SCANNER_SYMBOL_URL.format(
-            exchange=exchange.upper(), symbol=symbol.upper()
-        )
+        exchange_up = exchange.upper()
+        symbol_up = symbol.upper()
+
+        url = _SCANNER_SYMBOL_URL.format(exchange=exchange_up, symbol=symbol_up)
         last_exc: Exception | None = None
         for attempt in range(retries):
             try:
@@ -259,7 +261,7 @@ class DataValidator:
                         "SymbolMarkets to discover valid exchange listings."
                     )
                 resp.raise_for_status()
-                return True
+                return exchange_up, symbol_up
             except requests.RequestException as exc:
                 last_exc = exc
                 logger.warning(
@@ -273,28 +275,26 @@ class DataValidator:
             f"Could not verify '{exchange}:{symbol}' after {retries} attempt(s): {last_exc}"
         ) from last_exc
 
-    def verify_options_symbol(self, exchange: str, symbol: str) -> bool:
+    def verify_options_symbol(self, exchange: str, symbol: str) -> tuple[str, str]:
         """Verify the symbol:exchange combination exists and has options.
 
         First validates via :meth:`verify_symbol_exchange`, then queries the
         TradingView symbol-search API with ``only_has_options=true`` to confirm
-        options are available.
+        options are available. Returns the uppercased (exchange, symbol) if valid.
 
         Args:
             exchange: Exchange name (e.g. ``"NSE"``).
             symbol: Symbol name (e.g. ``"RELIANCE"``).
 
         Returns:
-            True if the symbol has options on the given exchange.
+            A tuple of (exchange, symbol) in uppercase.
 
         Raises:
             ValidationError: If the combination is invalid or no options exist.
         """
-        self.verify_symbol_exchange(exchange, symbol)
+        exchange_up, symbol_up = self.verify_symbol_exchange(exchange, symbol)
 
-        url = _OPTIONS_SEARCH_URL.format(
-            symbol=symbol.upper(), exchange=exchange.upper()
-        )
+        url = _OPTIONS_SEARCH_URL.format(symbol=symbol_up, exchange=exchange_up)
         try:
             resp = requests.get(url, headers=_OPTIONS_SEARCH_HEADERS, timeout=5)
             # A 403 means the endpoint rejected the request for this combination
@@ -311,8 +311,8 @@ class DataValidator:
             for item in items:
                 # Strip any HTML highlight tags (e.g. <em>RELIANCE</em> → RELIANCE)
                 clean_sym = _STRIP_HTML_TAGS.sub("", item.get("symbol", ""))
-                if clean_sym.upper() == symbol.upper():
-                    return True
+                if clean_sym.upper() == symbol_up:
+                    return exchange_up, symbol_up
 
             raise ValidationError(
                 f"Symbol '{symbol}' has no options available on exchange '{exchange}'. "

@@ -1,11 +1,33 @@
 """Market Movers module for scraping top gainers, losers, and active instruments."""
 
 import logging
-from typing import Any
+from typing import Any, Literal
 
 from tv_scraper.core.constants import SCANNER_URL
 from tv_scraper.core.scanner import ScannerScraper
 from tv_scraper.core.validators import DataValidator
+
+MOVER_MARKET_LITERAL = Literal[
+    "stocks-usa",
+    "stocks-uk",
+    "stocks-india",
+    "stocks-australia",
+    "stocks-canada",
+    "crypto",
+    "forex",
+    "bonds",
+    "futures",
+]
+MOVER_CATEGORY_LITERAL = Literal[
+    "gainers",
+    "losers",
+    "most-active",
+    "penny-stocks",
+    "pre-market-gainers",
+    "pre-market-losers",
+    "after-hours-gainers",
+    "after-hours-losers",
+]
 
 logger = logging.getLogger(__name__)
 
@@ -232,8 +254,8 @@ class MarketMovers(ScannerScraper):
 
     def get_market_movers(
         self,
-        market: str = "stocks-usa",
-        category: str = "gainers",
+        market: MOVER_MARKET_LITERAL = "stocks-usa",
+        category: MOVER_CATEGORY_LITERAL = "gainers",
         fields: list[str] | None = None,
         limit: int = 50,
         language: str = "en",
