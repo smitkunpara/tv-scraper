@@ -2,7 +2,7 @@
 
 import logging
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from typing import Any, Literal
+from typing import Any, Literal, cast
 
 from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.constants import BASE_URL
@@ -97,8 +97,9 @@ class Ideas(BaseScraper):
             )
 
         try:
-            exchange, symbol = self.validator.verify_symbol_exchange(exchange, symbol)
-            self.validator.validate_choice("sort_by", sort_by, ALLOWED_SORT_VALUES)
+            _exchange, _symbol = self.validator.verify_symbol_exchange(exchange, symbol)
+            exchange = cast(EXCHANGE_LITERAL, _exchange)
+            self.validator.validate_choice("sort_by", sort_by, ALLOWED_SORT_VALUES)  # type: ignore[arg-type]
         except ValidationError as exc:
             return self._error_response(
                 str(exc),

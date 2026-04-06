@@ -1,14 +1,13 @@
 """News scraper for fetching headlines and article content from TradingView."""
 
 import logging
-from typing import Any, Literal
+from typing import Any, Literal, cast
 
 from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.exceptions import ValidationError
 from tv_scraper.core.validation_data import (
     AREA_LITERAL,
     EXCHANGE_LITERAL,
-    LANGUAGE_LITERAL,
     NEWS_PROVIDER_LITERAL,
 )
 
@@ -82,7 +81,7 @@ class News(BaseScraper):
         area: AREA_LITERAL | None = None,
         sort_by: SORT_BY_LITERAL = "latest",
         section: NEWS_SECTION_LITERAL = "all",
-        language: LANGUAGE_LITERAL = "en",
+        language: str = "en",
     ) -> dict[str, Any]:
         """Scrape news headlines for a symbol.
 
@@ -116,9 +115,10 @@ class News(BaseScraper):
         meta.update({"exchange": exchange, "symbol": symbol})
 
         try:
-            exchange, symbol = self.validator.verify_symbol_exchange(exchange, symbol)
-            self.validator.validate_choice("sort_by", sort_by, VALID_SORT_OPTIONS)
-            self.validator.validate_choice("section", section, VALID_SECTIONS)
+            _exchange, _symbol = self.validator.verify_symbol_exchange(exchange, symbol)
+            exchange = cast(EXCHANGE_LITERAL, _exchange)
+            self.validator.validate_choice("sort_by", sort_by, set(VALID_SORT_OPTIONS))
+            self.validator.validate_choice("section", section, set(VALID_SECTIONS))
 
             languages = self.validator.get_languages()
             if language not in languages.values():

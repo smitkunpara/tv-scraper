@@ -2,7 +2,7 @@
 
 import logging
 from datetime import datetime
-from typing import Any
+from typing import Any, cast
 
 from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.exceptions import ValidationError
@@ -55,7 +55,8 @@ class Minds(BaseScraper):
             ``status``, ``data``, ``metadata``, ``error``.
         """
         try:
-            exchange, symbol = self.validator.verify_symbol_exchange(exchange, symbol)
+            _exchange, _symbol = self.validator.verify_symbol_exchange(exchange, symbol)
+            exchange = cast(EXCHANGE_LITERAL, _exchange)
         except ValidationError as exc:
             return self._error_response(
                 str(exc),

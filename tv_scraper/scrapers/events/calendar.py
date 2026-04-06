@@ -7,7 +7,6 @@ from typing import Any, Literal
 from tv_scraper.core.constants import SCANNER_URL
 from tv_scraper.core.exceptions import ValidationError
 from tv_scraper.core.scanner import ScannerScraper
-from tv_scraper.core.validation_data import LANGUAGE_LITERAL
 
 logger = logging.getLogger(__name__)
 
@@ -89,7 +88,7 @@ class Calendar(ScannerScraper):
         timestamp_to: int | None = None,
         markets: list[str] | None = None,
         fields: list[str] | None = None,
-        lang: LANGUAGE_LITERAL = "en",
+        lang: str = "en",
     ) -> dict[str, Any]:
         """Fetch dividend events from the TradingView calendar.
 
@@ -126,7 +125,7 @@ class Calendar(ScannerScraper):
         timestamp_to: int | None = None,
         markets: list[str] | None = None,
         fields: list[str] | None = None,
-        lang: LANGUAGE_LITERAL = "en",
+        lang: str = "en",
     ) -> dict[str, Any]:
         """Fetch earnings events from the TradingView calendar.
 
@@ -171,7 +170,7 @@ class Calendar(ScannerScraper):
         timestamp_to: int | None,
         markets: list[str] | None,
         data_category: Literal["dividends", "earnings"],
-        lang: LANGUAGE_LITERAL = "en",
+        lang: str = "en",
     ) -> dict[str, Any]:
         """Shared implementation for fetching calendar events.
 

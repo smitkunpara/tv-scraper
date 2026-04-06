@@ -2,7 +2,7 @@
 
 import json
 import logging
-from typing import Any
+from typing import Any, cast
 
 import requests
 
@@ -55,7 +55,7 @@ class ForecastStreamer(BaseStreamer):
             cookie=cookie,
         )
 
-    def get_forecast(self, exchange: EXCHANGE_LITERAL, symbol: str) -> dict[str, Any]:
+    def get_forecast(self, exchange: EXCHANGE_LITERAL, symbol: str) -> dict[str, Any]:  # noqa: PLR0915
         """Capture forecast data via TradingView WebSocket quote stream.
 
         This method captures qsd packets until all required forecast fields are
@@ -70,8 +70,11 @@ class ForecastStreamer(BaseStreamer):
             ``{"status", "data", "metadata", "error"}``.
         """
         try:
-            exchange, symbol = DataValidator().verify_symbol_exchange(exchange, symbol)
-            exchange_symbol = format_symbol(exchange, symbol)
+            _exchange, _symbol = DataValidator().verify_symbol_exchange(
+                exchange, symbol
+            )
+            exchange = cast(EXCHANGE_LITERAL, _exchange)
+            exchange_symbol = format_symbol(exchange, _symbol)
 
             symbol_type = self._get_symbol_type(exchange_symbol)
             if symbol_type != "stock":

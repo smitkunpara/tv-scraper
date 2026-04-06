@@ -2,7 +2,7 @@
 
 import json
 import logging
-from typing import Any
+from typing import Any, cast
 
 from tv_scraper.core.validation_data import EXCHANGE_LITERAL, TIMEFRAME_LITERAL
 from tv_scraper.core.validators import DataValidator
@@ -69,8 +69,11 @@ class CandleStreamer(BaseStreamer):
                     timeframe=timeframe,
                     numb_candles=numb_candles,
                 )
-            exchange, symbol = DataValidator().verify_symbol_exchange(exchange, symbol)
-            exchange_symbol = format_symbol(exchange, symbol)
+            _exchange, _symbol = DataValidator().verify_symbol_exchange(
+                exchange, symbol
+            )
+            exchange = cast(EXCHANGE_LITERAL, _exchange)
+            exchange_symbol = format_symbol(exchange, _symbol)
             self.study_id_to_name_map = {}
 
             ind_flag = bool(indicators)
@@ -176,15 +179,17 @@ class CandleStreamer(BaseStreamer):
 
         except Exception as exc:
             logger.error("get_candles unexpected error: %s", exc)
-            candle_err_meta: dict[str, Any] = {
+            candle_err_meta_exc: dict[str, Any] = {
                 "exchange": exchange,
                 "symbol": symbol,
                 "timeframe": timeframe,
                 "numb_candles": numb_candles,
             }
             if indicators is not None:
-                candle_err_meta["indicators"] = [list(t) for t in indicators]
-            return self._error_response(f"Unexpected error: {exc}", **candle_err_meta)
+                candle_err_meta_exc["indicators"] = [list(t) for t in indicators]
+            return self._error_response(
+                f"Unexpected error: {exc}", **candle_err_meta_exc
+            )
 
     def _add_symbol_to_sessions(
         self,

@@ -2,7 +2,7 @@
 
 import logging
 import re
-from typing import Any
+from typing import Any, cast
 
 from tv_scraper.core.constants import SCANNER_URL
 from tv_scraper.core.exceptions import ValidationError
@@ -63,7 +63,8 @@ class Technicals(ScannerScraper):
 
         # --- Validation ---
         try:
-            exchange, symbol = self.validator.verify_symbol_exchange(exchange, symbol)
+            _exchange, _symbol = self.validator.verify_symbol_exchange(exchange, symbol)
+            exchange = cast(EXCHANGE_LITERAL, _exchange)
             self.validator.validate_timeframe(timeframe)
         except ValidationError as exc:
             return self._error_response(

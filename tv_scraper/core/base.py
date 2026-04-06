@@ -113,11 +113,11 @@ class BaseScraper:
         method: str,
         url: str,
         *,
-        params: dict | None = None,
-        json_payload: dict | None = None,
-        data: dict | None = None,
-        files: dict | None = None,
-        headers: dict | None = None,
+        params: dict[str, Any] | None = None,
+        json_payload: dict[str, Any] | None = None,
+        data: dict[str, Any] | None = None,
+        files: dict[str, Any] | None = None,
+        headers: dict[str, Any] | None = None,
         check_captcha: bool = True,
     ) -> tuple[Any, str | None]:
         """Unified HTTP request with error handling.

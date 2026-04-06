@@ -10,7 +10,7 @@ import logging
 import re
 import threading
 import time
-from typing import Any
+from typing import Any, cast
 
 import requests
 
@@ -39,7 +39,7 @@ def _decode_jwt_payload(token: str) -> dict[str, Any] | None:
         if len(parts) != 3:
             return None
         payload_b64 = _pad_base64(parts[1])
-        return json.loads(base64.urlsafe_b64decode(payload_b64))
+        return cast(dict[str, Any], json.loads(base64.urlsafe_b64decode(payload_b64)))
     except Exception:
         return None
 
@@ -77,7 +77,7 @@ def extract_jwt_token(cookie: str) -> str | None:
         html_content = response.text
 
         jwt_pattern = r"eyJ[A-Za-z0-9-_]+\.eyJ[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+"
-        potential_tokens = re.findall(jwt_pattern, html_content)
+        potential_tokens: list[str] = re.findall(jwt_pattern, html_content)
 
         def _verify_jwt_format(token: str) -> bool:
             try:
@@ -145,7 +145,7 @@ def get_valid_jwt_token(cookie: str, force_refresh: bool = False) -> str:
         cached_expiry = _token_cache["expiry"]
 
         if not force_refresh and cached_token and cached_expiry > (current_time + 60):
-            return cached_token
+            return cast(str, cached_token)
 
         try:
             token = extract_jwt_token(cookie)

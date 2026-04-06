@@ -353,7 +353,7 @@ class Pine(BaseScraper):
     def _build_pine_headers(self) -> dict[str, str]:
         """Build headers expected by Pine facade endpoints."""
         headers = dict(self._headers)
-        headers["cookie"] = self.cookie
+        headers["cookie"] = self.cookie if self.cookie is not None else ""
         headers["accept"] = "*/*"
         headers["origin"] = PINE_ORIGIN
         headers["referer"] = f"{PINE_ORIGIN}/"
