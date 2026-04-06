@@ -4,8 +4,6 @@ import logging
 from datetime import datetime
 from typing import Any
 
-import requests
-
 from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.exceptions import ValidationError
 
@@ -37,7 +35,7 @@ class Minds(BaseScraper):
         result = scraper.get_minds(exchange="NASDAQ", symbol="AAPL")
     """
 
-    def get_minds(  # noqa: PLR0915
+    def get_minds(
         self,
         exchange: str,
         symbol: str,
@@ -71,105 +69,54 @@ class Minds(BaseScraper):
         pages = 0
         symbol_info: dict[str, Any] = {}
 
-        try:
-            while True:
-                if pages >= MAX_PAGES:
-                    logger.warning(
-                        "Max pages (%d) reached for %s:%s", MAX_PAGES, exchange, symbol
-                    )
-                    break
+        while True:
+            if pages >= MAX_PAGES:
+                logger.warning(
+                    "Max pages (%d) reached for %s:%s", MAX_PAGES, exchange, symbol
+                )
+                break
 
-                params: dict[str, str] = {"symbol": combined_symbol}
-                if next_cursor:
-                    params["c"] = next_cursor
+            params: dict[str, str] = {"symbol": combined_symbol}
+            if next_cursor:
+                params["c"] = next_cursor
 
-                response = requests.get(
-                    MINDS_API_URL,
-                    headers=self._headers,
-                    params=params,
-                    timeout=self.timeout,
+            json_response, error_msg = self._request(
+                "GET", MINDS_API_URL, params=params
+            )
+
+            if error_msg:
+                logger.error("Error for %s:%s - %s", exchange, symbol, error_msg)
+                return self._error_response(
+                    error_msg,
+                    exchange=exchange,
+                    symbol=symbol,
                 )
 
-                response.raise_for_status()
+            assert json_response is not None
 
-                if response.status_code != 200:
-                    logger.error(
-                        "HTTP error for %s:%s - Status: %d",
-                        exchange,
-                        symbol,
-                        response.status_code,
-                    )
-                    return self._error_response(
-                        f"HTTP {response.status_code}: {response.text}",
-                        exchange=exchange,
-                        symbol=symbol,
-                    )
+            results = json_response.get("results", [])
 
-                if "<title>Captcha Challenge</title>" in response.text:
-                    logger.error("Captcha detected for %s:%s", exchange, symbol)
-                    return self._error_response(
-                        "Captcha challenge encountered. Try again later.",
-                        exchange=exchange,
-                        symbol=symbol,
-                    )
+            if not results:
+                break
 
-                try:
-                    json_response = response.json()
-                except ValueError as exc:
-                    logger.error(
-                        "JSON parsing error for %s:%s: %s", exchange, symbol, exc
-                    )
-                    return self._error_response(
-                        f"Failed to parse JSON response: {exc}",
-                        exchange=exchange,
-                        symbol=symbol,
-                    )
+            parsed = [self._parse_mind(item) for item in results]
+            parsed_data.extend(parsed)
+            pages += 1
 
-                results = json_response.get("results", [])
+            # Extract symbol info from first page
+            if pages == 1:
+                meta_dict = json_response.get("meta", {})
+                symbol_info = meta_dict.get("symbols_info", {}).get(combined_symbol, {})
 
-                if not results:
-                    break
+            # Check for next page cursor
+            next_url = json_response.get("next", "")
+            if not next_url or "?c=" not in next_url:
+                break
 
-                parsed = [self._parse_mind(item) for item in results]
-                parsed_data.extend(parsed)
-                pages += 1
-
-                # Extract symbol info from first page
-                if pages == 1:
-                    meta = json_response.get("meta", {})
-                    symbol_info = meta.get("symbols_info", {}).get(combined_symbol, {})
-
-                # Check for next page cursor
-                next_url = json_response.get("next", "")
-                if not next_url or "?c=" not in next_url:
-                    break
-
-                cursor_part = next_url.split("?c=")[1].split("&")[0]
-                if not cursor_part:
-                    break
-                next_cursor = cursor_part
-
-        except requests.HTTPError as exc:
-            logger.error("HTTP error for %s:%s: %s", exchange, symbol, exc)
-            return self._error_response(
-                f"HTTP error: {exc}",
-                exchange=exchange,
-                symbol=symbol,
-            )
-        except requests.RequestException as exc:
-            logger.error("Request failed for %s:%s: %s", exchange, symbol, exc)
-            return self._error_response(
-                f"Request failed: {exc}",
-                exchange=exchange,
-                symbol=symbol,
-            )
-        except Exception as exc:
-            logger.error("Unexpected error for %s:%s: %s", exchange, symbol, exc)
-            return self._error_response(
-                f"Unexpected error: {exc}",
-                exchange=exchange,
-                symbol=symbol,
-            )
+            cursor_part = next_url.split("?c=")[1].split("&")[0]
+            if not cursor_part:
+                break
+            next_cursor = cursor_part
 
         # Apply limit
         if limit is not None and len(parsed_data) > limit:

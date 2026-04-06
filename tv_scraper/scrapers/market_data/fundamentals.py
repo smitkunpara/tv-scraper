@@ -2,10 +2,11 @@
 
 from typing import Any
 
-from tv_scraper.core.base import BaseScraper
+from tv_scraper.core.exceptions import ValidationError
+from tv_scraper.core.scanner import ScannerScraper
 
 
-class Fundamentals(BaseScraper):
+class Fundamentals(ScannerScraper):
     """Scraper for fundamental financial data from TradingView.
 
     Fetches income statement, balance sheet, cash flow, margins, profitability,
@@ -164,7 +165,7 @@ class Fundamentals(BaseScraper):
 
         try:
             self.validator.validate_fields(field_list, self.ALL_FIELDS, "field")
-        except Exception as e:
+        except ValidationError as e:
             return self._error_response(str(e), exchange=exchange, symbol=symbol)
 
         return self._fetch_symbol_fields(
@@ -172,204 +173,4 @@ class Fundamentals(BaseScraper):
             symbol=symbol,
             fields=field_list,
             data_category="fundamentals",
-        )
-
-    def compare_fundamentals(
-        self,
-        symbols: list[dict[str, str]],
-        fields: list[str] | None = None,
-    ) -> dict[str, Any]:
-        """Compare fundamental data across multiple symbols.
-
-        Args:
-            symbols: List of dicts with ``"exchange"`` and ``"symbol"`` keys.
-            fields: Specific fields to compare. If ``None``, uses
-                ``DEFAULT_COMPARISON_FIELDS``.
-
-        Returns:
-            Standardized response dict. On success, ``data`` contains
-            ``items`` (list of per-symbol dicts) and ``comparison`` (field →
-            symbol → value mapping).
-        """
-        if not symbols:
-            return self._error_response(
-                "No symbols provided for comparison.",
-                symbols=symbols,
-            )
-
-        for i, sym in enumerate(symbols):
-            if not isinstance(sym, dict):
-                return self._error_response(
-                    f"Symbol at index {i} must be a dict with 'exchange' and 'symbol' keys.",
-                    symbols=symbols,
-                )
-            if "exchange" not in sym or "symbol" not in sym:
-                missing = [k for k in ("exchange", "symbol") if k not in sym]
-                return self._error_response(
-                    f"Symbol dict at index {i} missing required keys: {missing}. "
-                    "Each symbol must have 'exchange' and 'symbol' keys.",
-                    symbols=symbols,
-                )
-
-        if fields is not None and not isinstance(fields, list):
-            return self._error_response(
-                "Fields must be a list of strings or None.",
-                symbols=symbols,
-            )
-
-        field_list = fields if fields else self.DEFAULT_COMPARISON_FIELDS
-
-        try:
-            self.validator.validate_fields(field_list, self.ALL_FIELDS, "field")
-        except Exception as e:
-            return self._error_response(str(e), symbols=symbols)
-
-        all_items: list[dict[str, Any]] = []
-        comparison: dict[str, dict[str, Any]] = {}
-        failed_symbols: list[dict[str, str]] = []
-
-        for sym in symbols:
-            exchange = sym["exchange"]
-            symbol = sym["symbol"]
-            result = self.get_fundamentals(
-                exchange=exchange, symbol=symbol, fields=field_list
-            )
-            if result["status"] != "success":
-                failed_symbols.append(sym)
-                continue
-
-            item_data = result["data"]
-            all_items.append(item_data)
-
-            combined = f"{exchange}:{symbol}"
-            for field in field_list:
-                comparison.setdefault(field, {})[combined] = item_data.get(field)
-
-        response_meta: dict[str, Any] = {"symbols": symbols}
-        if fields is not None:
-            response_meta["fields"] = fields
-
-        if not all_items:
-            response_meta["failed_symbols"] = failed_symbols
-            return self._error_response(
-                "No data retrieved for any symbols.",
-                **response_meta,
-            )
-
-        data: dict[str, Any] = {
-            "items": all_items,
-            "comparison": comparison,
-        }
-
-        if failed_symbols:
-            data["failed_symbols"] = failed_symbols
-
-        if self.export_result:
-            self._export(
-                data=data,
-                symbol="comparison",
-                data_category="fundamentals",
-            )
-
-        return self._success_response(data, **response_meta)
-
-    # ---- Category helpers ------------------------------------------------
-
-    def get_income_statement(self, exchange: str, symbol: str) -> dict[str, Any]:
-        """Get income statement data for a symbol.
-
-        Args:
-            exchange: Exchange name (e.g. ``"NASDAQ"``).
-            symbol: Trading symbol (e.g. ``"AAPL"``).
-
-        Returns:
-            Income statement data including revenue, profit, earnings.
-        """
-        return self.get_fundamentals(
-            exchange=exchange, symbol=symbol, fields=self.INCOME_STATEMENT_FIELDS
-        )
-
-    def get_balance_sheet(self, exchange: str, symbol: str) -> dict[str, Any]:
-        """Get balance sheet data for a symbol.
-
-        Args:
-            exchange: Exchange name (e.g. ``"NASDAQ"``).
-            symbol: Trading symbol (e.g. ``"AAPL"``).
-
-        Returns:
-            Balance sheet data including assets, debt, equity.
-        """
-        return self.get_fundamentals(
-            exchange=exchange, symbol=symbol, fields=self.BALANCE_SHEET_FIELDS
-        )
-
-    def get_cash_flow(self, exchange: str, symbol: str) -> dict[str, Any]:
-        """Get cash flow statement data for a symbol.
-
-        Args:
-            exchange: Exchange name (e.g. ``"NASDAQ"``).
-            symbol: Trading symbol (e.g. ``"AAPL"``).
-
-        Returns:
-            Cash flow data including operating, investing, financing activities.
-        """
-        return self.get_fundamentals(
-            exchange=exchange, symbol=symbol, fields=self.CASH_FLOW_FIELDS
-        )
-
-    def get_statistics(self, exchange: str, symbol: str) -> dict[str, Any]:
-        """Get statistics data for a symbol.
-
-        Combines liquidity, leverage, and valuation fields.
-
-        Args:
-            exchange: Exchange name (e.g. ``"NASDAQ"``).
-            symbol: Trading symbol (e.g. ``"AAPL"``).
-
-        Returns:
-            Statistics data including ratios and valuation metrics.
-        """
-        fields = self.LIQUIDITY_FIELDS + self.LEVERAGE_FIELDS + self.VALUATION_FIELDS
-        return self.get_fundamentals(exchange=exchange, symbol=symbol, fields=fields)
-
-    def get_dividends(self, exchange: str, symbol: str) -> dict[str, Any]:
-        """Get dividend information for a symbol.
-
-        Args:
-            exchange: Exchange name (e.g. ``"NASDAQ"``).
-            symbol: Trading symbol (e.g. ``"AAPL"``).
-
-        Returns:
-            Dividend data including yield, per share, payout ratio.
-        """
-        return self.get_fundamentals(
-            exchange=exchange, symbol=symbol, fields=self.DIVIDEND_FIELDS
-        )
-
-    def get_profitability(self, exchange: str, symbol: str) -> dict[str, Any]:
-        """Get profitability ratios for a symbol.
-
-        Args:
-            exchange: Exchange name (e.g. ``"NASDAQ"``).
-            symbol: Trading symbol (e.g. ``"AAPL"``).
-
-        Returns:
-            Profitability data including ROE, ROA, ROI.
-        """
-        return self.get_fundamentals(
-            exchange=exchange, symbol=symbol, fields=self.PROFITABILITY_FIELDS
-        )
-
-    def get_margins(self, exchange: str, symbol: str) -> dict[str, Any]:
-        """Get margin metrics for a symbol.
-
-        Args:
-            exchange: Exchange name (e.g. ``"NASDAQ"``).
-            symbol: Trading symbol (e.g. ``"AAPL"``).
-
-        Returns:
-            Margin data including gross, operating, net, EBITDA margins.
-        """
-        return self.get_fundamentals(
-            exchange=exchange, symbol=symbol, fields=self.MARGIN_FIELDS
         )

@@ -7,15 +7,15 @@ from typing import Any
 import requests
 
 from tv_scraper.core.constants import (
-    DEFAULT_TIMEOUT,
+    CAPTCHA_MARKER,
+    DEFAULT_USER_AGENT,
     EXPORT_TYPES,
-    SCANNER_URL,
+    REQUEST_TIMEOUT,
     STATUS_FAILED,
     STATUS_SUCCESS,
 )
-from tv_scraper.core.exceptions import ValidationError
+from tv_scraper.core.exceptions import CaptchaError
 from tv_scraper.core.validators import DataValidator
-from tv_scraper.utils.helpers import generate_user_agent
 from tv_scraper.utils.io import generate_export_filepath, save_csv_file, save_json_file
 
 logger = logging.getLogger(__name__)
@@ -40,7 +40,7 @@ class BaseScraper:
         self,
         export_result: bool = False,
         export_type: str = "json",
-        timeout: int = DEFAULT_TIMEOUT,
+        timeout: int = REQUEST_TIMEOUT,
         cookie: str | None = None,
     ) -> None:
         if export_type not in EXPORT_TYPES:
@@ -62,7 +62,7 @@ class BaseScraper:
 
         self.cookie = cookie or os.environ.get("TRADINGVIEW_COOKIE")
         self.validator = DataValidator()
-        self._headers: dict[str, str] = {"User-Agent": generate_user_agent()}
+        self._headers: dict[str, str] = {"User-Agent": DEFAULT_USER_AGENT}
         if self.cookie:
             self._headers["cookie"] = self.cookie
 
@@ -86,7 +86,9 @@ class BaseScraper:
             "error": None,
         }
 
-    def _error_response(self, error: str, **metadata: Any) -> dict[str, Any]:
+    def _error_response(
+        self, error: str, data: Any = None, **metadata: Any
+    ) -> dict[str, Any]:
         """Build a standardized error response.
 
         Args:
@@ -101,10 +103,62 @@ class BaseScraper:
         """
         return {
             "status": STATUS_FAILED,
-            "data": None,
+            "data": data,
             "metadata": dict(metadata),
             "error": error,
         }
+
+    def _request(
+        self,
+        method: str,
+        url: str,
+        *,
+        params: dict | None = None,
+        json_payload: dict | None = None,
+        data: dict | None = None,
+        files: dict | None = None,
+        headers: dict | None = None,
+        check_captcha: bool = True,
+    ) -> tuple[Any, str | None]:
+        """Unified HTTP request with error handling.
+
+        Returns:
+            (parsed_json, None) on success
+            (None, error_message) on failure
+        """
+        req_headers = self._headers.copy()
+        if headers:
+            req_headers.update(headers)
+
+        try:
+            response = requests.request(
+                method=method,
+                url=url,
+                params=params,
+                json=json_payload,
+                data=data,
+                files=files,
+                headers=req_headers,
+                timeout=self.timeout,
+            )
+
+            if check_captcha and CAPTCHA_MARKER in response.text:
+                raise CaptchaError("TradingView requested a captcha challenge.")
+
+            response.raise_for_status()
+
+            # Simple check if there's content. We usually expect JSON.
+            if not response.text.strip():
+                return None, "Empty response from server."
+
+            return response.json(), None
+
+        except CaptchaError as exc:
+            return None, str(exc)
+        except requests.RequestException as exc:
+            return None, f"Network error: {exc}"
+        except ValueError as exc:
+            return None, f"Failed to parse API response: {exc}"
 
     def _export(
         self,
@@ -130,115 +184,3 @@ class BaseScraper:
             save_csv_file(data, filepath)
         else:
             save_json_file(data, filepath)
-
-    def _fetch_symbol_fields(
-        self,
-        exchange: str,
-        symbol: str,
-        fields: list[str],
-        data_category: str,
-    ) -> dict[str, Any]:
-        """Fetch field values for a symbol from the TradingView scanner API.
-
-        This is a shared implementation for scrapers that query the
-        ``GET /symbol`` endpoint with a flat field list (e.g.
-        Fundamentals).
-
-        Args:
-            exchange: Exchange name (e.g. ``"NASDAQ"``).
-            symbol: Trading symbol (e.g. ``"AAPL"``).
-            fields: List of field names to retrieve.
-            data_category: Category prefix for export filenames.
-
-        Returns:
-            Standardized response dict.
-        """
-        try:
-            self.validator.verify_symbol_exchange(exchange, symbol)
-        except ValidationError as exc:
-            return self._error_response(str(exc), exchange=exchange, symbol=symbol)
-
-        url = f"{SCANNER_URL}/symbol"
-        params: dict[str, str] = {
-            "symbol": f"{exchange}:{symbol}",
-            "fields": ",".join(fields),
-            "no_404": "true",
-        }
-
-        try:
-            response = requests.get(
-                url, headers=self._headers, params=params, timeout=self.timeout
-            )
-            response.raise_for_status()
-            json_response: dict[str, Any] = response.json()
-        except requests.RequestException as exc:
-            return self._error_response(
-                f"Network error: {exc}", exchange=exchange, symbol=symbol
-            )
-        except (ValueError, KeyError) as exc:
-            return self._error_response(
-                f"Failed to parse API response: {exc}", exchange=exchange, symbol=symbol
-            )
-
-        if not json_response:
-            return self._error_response(
-                "No data returned from API.", exchange=exchange, symbol=symbol
-            )
-
-        error_indicator = (
-            json_response.get("error") or json_response.get("s") == "error"
-        )
-        if error_indicator:
-            error_msg = json_response.get("errmsg", "Unknown API error")
-            return self._error_response(
-                f"API error: {error_msg}", exchange=exchange, symbol=symbol
-            )
-
-        result: dict[str, Any] = {"symbol": f"{exchange}:{symbol}"}
-        for field in fields:
-            value = json_response.get(field)
-            if value is None:
-                logger.warning(
-                    "Field '%s' not found in response for %s:%s",
-                    field,
-                    exchange,
-                    symbol,
-                )
-            result[field] = value
-
-        if self.export_result:
-            self._export(
-                data=result,
-                symbol=f"{exchange}_{symbol}",
-                data_category=data_category,
-            )
-
-        return self._success_response(
-            result,
-            exchange=exchange,
-            symbol=symbol,
-        )
-
-    def _map_scanner_rows(
-        self, items: list[dict[str, Any]], fields: list[str]
-    ) -> list[dict[str, Any]]:
-        """Map TradingView scanner response rows to field-named dicts.
-
-        Scanner API returns items like ``{"s": "EXCHANGE:SYMBOL", "d": [val1, val2, ...]}``.
-        This maps the ``d`` values to their corresponding field names.
-
-        Args:
-            items: List of scanner response items.
-            fields: List of field names matching the ``d`` array positions.
-
-        Returns:
-            List of dicts with ``symbol`` key and field-named values.
-        """
-        result: list[dict[str, Any]] = []
-        for item in items:
-            row: dict[str, Any] = {"symbol": item.get("s", "")}
-            values = item.get("d", [])
-            for i, field in enumerate(fields):
-                row[field] = values[i] if i < len(values) else None
-            result.append(row)
-        return result

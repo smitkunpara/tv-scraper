@@ -1,15 +1,12 @@
 """Calendar scraper for dividend and earnings events."""
 
 import datetime
-import json
 import logging
 from typing import Any, Literal
 
-import requests
-
-from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.constants import SCANNER_URL
 from tv_scraper.core.exceptions import ValidationError
+from tv_scraper.core.scanner import ScannerScraper
 
 logger = logging.getLogger(__name__)
 
@@ -59,7 +56,7 @@ _DAYS_OFFSET: int = 3
 _SECONDS_PER_DAY: int = 86400
 
 
-class Calendar(BaseScraper):
+class Calendar(ScannerScraper):
     """Scraper for dividend and earnings events from TradingView calendar.
 
     Fetches calendar events via the TradingView scanner API and returns
@@ -233,27 +230,16 @@ class Calendar(BaseScraper):
         if markets:
             payload["markets"] = markets
 
-        try:
-            response = requests.post(
-                url,
-                headers=self._headers,
-                json=payload,
-                timeout=self.timeout,
-            )
-            response.raise_for_status()
-            json_response = response.json()
-        except requests.RequestException as exc:
-            return self._error_response(
-                f"Network error: {exc}", event_type=data_category
-            )
-        except json.JSONDecodeError as exc:
-            return self._error_response(
-                f"Failed to parse API response: {exc}", event_type=data_category
-            )
-        except (ValueError, KeyError) as exc:
-            return self._error_response(
-                f"Request failed: {exc}", event_type=data_category
-            )
+        json_response, error_msg = self._request(
+            "POST",
+            url,
+            json_payload=payload,
+        )
+
+        if error_msg:
+            return self._error_response(error_msg, event_type=data_category)
+
+        assert json_response is not None
 
         data_items: list[dict[str, Any]] = json_response.get("data", [])
         if not isinstance(data_items, list):

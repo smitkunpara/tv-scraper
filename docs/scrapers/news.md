@@ -81,6 +81,10 @@ Output:
   "metadata": {
     "exchange": "NASDAQ",
     "symbol": "AAPL",
+    "sort_by": "latest",
+    "section": "all",
+    "language": "en",
+    "provider": "reuters",
     "total": 1
   },
   "error": null
@@ -89,7 +93,8 @@ Output:
 
 Other details:
 
-- `metadata.total` reflects the number of returned items in this response.
+- `metadata.total` reflects the number of items matched and returned.
+- News results are filtered by provider, area, and section before being returned.
 - Use the headline `id` with `get_news_content()`.
 
 ### `get_news_content()`
@@ -125,13 +130,15 @@ Output:
 {
   "status": "success",
   "data": {
+    "id": "tag:reuters.com,2026:newsml_L4N3Z9104:0",
     "title": "Bitcoin Hits New High",
     "description": "Full article content with paragraphs separated by newlines.\nSecond paragraph here...",
     "published": 1643097623,
     "storyPath": "/news/story/12345"
   },
   "metadata": {
-    "story_id": "tag:reuters.com,2026:newsml_L4N3Z9104:0"
+    "story_id": "tag:reuters.com,2026:newsml_L4N3Z9104:0",
+    "language": "en"
   },
   "error": null
 }

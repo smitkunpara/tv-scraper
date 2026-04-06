@@ -125,7 +125,7 @@ class TestLiveScreenerEdgeCases:
 
         scraper = Screener()
         with patch.object(
-            requests, "post", side_effect=requests.RequestException("Network error")
+            requests, "request", side_effect=requests.RequestException("Network error")
         ):
             result = scraper.get_screener(market="america", limit=5)
             assert result["status"] == "failed"

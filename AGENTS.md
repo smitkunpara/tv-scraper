@@ -64,7 +64,8 @@ pytest tests/integration/  # Cross-module integration tests
 | Layer | Technology | Purpose |
 |-------|-----------|---------|
 | **WebSocket** | `websockets` (with custom framing) | Real-time streaming (candles, forecast) |
-| **HTTP** | `requests` | Social content scraping & validation |
+| **HTTP** | `requests` with `urllib3.util.retry` | Robust HTTP requests with auto-retries (`http.py`) |
+| **Object Model**| `ScannerScraper` / `BaseScraper` | Centralized network/error handling & inheritance hierarchy |
 | **Validation** | `DataValidator` singleton | Symbol/exchange verification |
 | **Data Mapping** | Hardcoded JSON mappings | Forecast key transformation, timeframe conversion |
 | **Export** | CSV/JSON writers | Optional data persistence |
@@ -118,6 +119,28 @@ Every public scraper method returns an identical envelope structure, regardless 
     "error": "Symbol 'AAPL' not found on exchange 'NASDAQ'"
 }
 ```
+
+---
+
+## Class Hierarchy & Core Architecture
+
+To standardize network requests and error handling, all scrapers extend from central base classes:
+
+### BaseScraper
+The root class for all HTTP operations. Provides:
+- **`self._request()`**: A unified wrapper around `requests` that handles timeouts, retries, and Captcha detection automatically.
+- **`self._success_response()` / `self._error_response()`**: Factory methods for generating the standardized response envelope.
+- **`self._export()`**: Handles auto-saving results to JSON / CSV.
+
+### ScannerScraper
+Extends `BaseScraper` for scrapers that interface directly with the `scanner.tradingview.com` API structure (e.g., `Fundamentals`, `Options`, `Technicals`, `Markets`, `Screener`, `MarketMovers`, `SymbolMarkets`, `Calendar`). Provides:
+- Default `Content-Type: application/x-www-form-urlencoded` headers.
+- Automatic payload formatting and response parsing for scanner tables.
+
+### BaseStreamer
+Extends `BaseScraper` for real-time WebSocket interactions. Provides:
+- Connection bootstrapping via `StreamHandler`.
+- JWT token authentication resolution natively baked into connection flows.
 
 ---
 
@@ -192,6 +215,7 @@ def generate_session(prefix="qs_"):
 ### Ideas Scraper
 
 **Source:** `tv_scraper/scrapers/social/ideas.py`
+Extends `BaseScraper`.
 
 **Endpoint:** `https://www.tradingview.com/symbols/{EXCHANGE}-{SYMBOL}/ideas/page-{N}/`
 

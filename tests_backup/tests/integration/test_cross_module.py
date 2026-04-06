@@ -5,13 +5,13 @@ export validation, and singleton consistency — all without network calls.
 """
 
 import pytest
+from tv_scraper.scrapers.market_data.overview import Overview
 
 from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.constants import STATUS_FAILED, STATUS_SUCCESS
 from tv_scraper.scrapers.events.calendar import Calendar
 from tv_scraper.scrapers.market_data.fundamentals import Fundamentals
 from tv_scraper.scrapers.market_data.markets import Markets
-from tv_scraper.scrapers.market_data.overview import Overview
 from tv_scraper.scrapers.market_data.technicals import Technicals
 from tv_scraper.scrapers.screening.market_movers import MarketMovers
 from tv_scraper.scrapers.screening.screener import Screener

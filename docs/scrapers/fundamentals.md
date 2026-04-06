@@ -17,15 +17,6 @@ print(result["data"])
 
 # Income statement only
 income = scraper.get_income_statement(exchange="NASDAQ", symbol="AAPL")
-
-# Compare multiple symbols
-comparison = scraper.compare_fundamentals(
-    symbols=[
-        {"exchange": "NASDAQ", "symbol": "AAPL"},
-        {"exchange": "NASDAQ", "symbol": "MSFT"},
-    ],
-    fields=["total_revenue", "net_income", "market_cap_basic"],
-)
 ```
 
 ## Constructor
@@ -64,39 +55,6 @@ Returns a standardized response envelope:
     "error": None,
 }
 ```
-
-### `compare_fundamentals(symbols, fields=None)`
-
-Compare fundamental data across multiple symbols.
-
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `symbols` | `list[dict]` | — | List of `{"exchange": "...", "symbol": "..."}` dicts |
-| `fields` | `list[str] \| None` | `None` | Specific fields. `None` → key comparison metrics. |
-
-**Validation:**
-- `symbols` must be a non-empty list
-- Each symbol must be a dict with `"exchange"` and `"symbol"` keys
-- `fields` must be a list of strings or `None`
-- Each field name is validated against known field names
-
-**Partial Failures:**
-- If some symbols fail to fetch, they are tracked in `failed_symbols`
-- Results include successful items only, with failed symbols listed in metadata
-
-Returns:
-
-```python
-{
-    "status": "success",
-    "data": {
-        "items": [...],                    # Per-symbol data dicts
-        "comparison": {...},                # field -> symbol -> value mapping
-        "failed_symbols": [...]            # Only if some symbols failed
-    },
-    "metadata": {"symbols": [...], "fields": [...]},
-    "error": None,
-}
 
 ### Category Helpers
 

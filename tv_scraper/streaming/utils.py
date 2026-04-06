@@ -5,7 +5,7 @@ from typing import Any
 
 import requests
 
-from tv_scraper.core.constants import STATUS_FAILED, STATUS_SUCCESS
+from tv_scraper.core.base import BaseScraper
 
 logger = logging.getLogger(__name__)
 
@@ -53,21 +53,11 @@ def fetch_tradingview_indicators(query: str) -> dict[str, Any]:
                         "version": indicator.get("version"),
                     }
                 )
-        return {
-            "status": STATUS_SUCCESS,
-            "data": filtered,
-            "metadata": {"query": query},
-            "error": None,
-        }
+        return BaseScraper()._success_response(filtered, query=query)
 
     except requests.RequestException as exc:
         logger.error("Error fetching TradingView indicators: %s", exc)
-        return {
-            "status": STATUS_FAILED,
-            "data": None,
-            "metadata": {"query": query},
-            "error": str(exc),
-        }
+        return BaseScraper()._error_response(str(exc), query=query)
 
 
 def fetch_indicator_metadata(
@@ -100,27 +90,20 @@ def fetch_indicator_metadata(
         metainfo = json_data.get("result", {}).get("metaInfo")
         if metainfo:
             data = prepare_indicator_metadata(script_id, metainfo, chart_session)
-            return {
-                "status": STATUS_SUCCESS,
-                "data": data,
-                "metadata": {"script_id": script_id, "script_version": script_version},
-                "error": None,
-            }
-        return {
-            "status": STATUS_FAILED,
-            "data": None,
-            "metadata": {"script_id": script_id, "script_version": script_version},
-            "error": "No metaInfo found in response",
-        }
+            return BaseScraper()._success_response(
+                data, script_id=script_id, script_version=script_version
+            )
+        return BaseScraper()._error_response(
+            "No metaInfo found in response",
+            script_id=script_id,
+            script_version=script_version,
+        )
 
     except requests.RequestException as exc:
         logger.error("Error fetching indicator metadata: %s", exc)
-        return {
-            "status": STATUS_FAILED,
-            "data": None,
-            "metadata": {"script_id": script_id, "script_version": script_version},
-            "error": str(exc),
-        }
+        return BaseScraper()._error_response(
+            str(exc), script_id=script_id, script_version=script_version
+        )
 
 
 def prepare_indicator_metadata(
@@ -205,12 +188,9 @@ def fetch_available_indicators() -> dict[str, Any]:
         data = resp.json()
 
         if not isinstance(data, list):
-            return {
-                "status": STATUS_FAILED,
-                "data": None,
-                "metadata": {},
-                "error": "Unexpected available indicators response format",
-            }
+            return BaseScraper()._error_response(
+                "Unexpected available indicators response format"
+            )
 
         indicators = [
             {
@@ -221,26 +201,13 @@ def fetch_available_indicators() -> dict[str, Any]:
             for item in data
             if isinstance(item, dict)
         ]
-        return {
-            "status": STATUS_SUCCESS,
-            "data": indicators,
-            "metadata": {},
-            "error": None,
-        }
+        return BaseScraper()._success_response(indicators)
 
     except requests.RequestException as exc:
         logger.error("Error fetching available indicators: %s", exc)
-        return {
-            "status": STATUS_FAILED,
-            "data": None,
-            "metadata": {},
-            "error": str(exc),
-        }
+        return BaseScraper()._error_response(str(exc))
     except ValueError as exc:
         logger.error("Error parsing available indicators response: %s", exc)
-        return {
-            "status": STATUS_FAILED,
-            "data": None,
-            "metadata": {},
-            "error": f"Failed to parse available indicators response as JSON: {exc}",
-        }
+        return BaseScraper()._error_response(
+            f"Failed to parse available indicators response as JSON: {exc}"
+        )

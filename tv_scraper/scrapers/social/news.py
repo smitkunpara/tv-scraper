@@ -1,10 +1,7 @@
 """News scraper for fetching headlines and article content from TradingView."""
 
-import json
 import logging
 from typing import Any
-
-import requests
 
 from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.exceptions import ValidationError
@@ -59,12 +56,6 @@ class News(BaseScraper):
             cookie=cookie,
         )
 
-        # Cache validation data
-        self._news_providers: list[str] = self.validator.get_news_providers()
-        self._languages: dict[str, str] = self.validator.get_languages()
-        self._areas: dict[str, str] = self.validator.get_areas()
-        self._language_codes: list[str] = list(self._languages.values())
-
     def get_news_headlines(
         self,
         exchange: str,
@@ -109,22 +100,25 @@ class News(BaseScraper):
             self.validator.validate_choice("sort_by", sort_by, VALID_SORT_OPTIONS)
             self.validator.validate_choice("section", section, VALID_SECTIONS)
 
-            if language not in self._language_codes:
+            languages = self.validator.get_languages()
+            if language not in languages.values():
                 raise ValidationError(
                     f"Invalid language: '{language}'. "
-                    f"Allowed values: {', '.join(sorted(self._language_codes))}"
+                    f"Allowed values: {', '.join(sorted(languages.values()))}"
                 )
 
-            if provider is not None and provider not in self._news_providers:
+            providers = self.validator.get_news_providers()
+            if provider is not None and provider not in providers:
                 raise ValidationError(
                     f"Invalid provider: '{provider}'. "
-                    f"Allowed values: {', '.join(sorted(self._news_providers))}"
+                    f"Allowed values: {', '.join(sorted(providers))}"
                 )
 
-            if area is not None and area not in self._areas:
+            areas = self.validator.get_areas()
+            if area is not None and area not in areas:
                 raise ValidationError(
                     f"Invalid area: '{area}'. "
-                    f"Allowed values: {', '.join(sorted(self._areas.keys()))}"
+                    f"Allowed values: {', '.join(sorted(areas.keys()))}"
                 )
         except ValidationError as exc:
             return self._error_response(str(exc), **meta)
@@ -132,76 +126,40 @@ class News(BaseScraper):
         params: dict[str, Any] = {
             "client": "web",
             "lang": language,
-            "area": self._areas[area] if area else "",
+            "area": areas[area] if area else "",
             "provider": provider.replace(".", "_") if provider else "",
             "section": "" if section == "all" else section,
             "streaming": "",
             "symbol": f"{exchange}:{symbol}",
         }
 
-        try:
-            response = requests.get(
-                NEWS_HEADLINES_URL,
-                headers=self._headers,
-                params=params,
-                timeout=self.timeout,
-            )
-            response.raise_for_status()
+        response_json, error_msg = self._request(
+            "GET",
+            NEWS_HEADLINES_URL,
+            params=params,
+        )
 
-            if "<title>Captcha Challenge</title>" in response.text:
-                logger.error(
-                    "Captcha Challenge encountered for %s on %s.",
-                    symbol,
-                    exchange,
-                )
-                return self._error_response(
-                    f"Captcha challenge encountered for {symbol} on {exchange}. "
-                    "Try updating the TRADINGVIEW_COOKIE.",
-                    **meta,
-                )
+        if error_msg:
+            return self._error_response(error_msg, **meta)
 
-            try:
-                response_json = response.json()
-            except (ValueError, json.JSONDecodeError) as exc:
-                logger.error(
-                    "Invalid JSON response for %s on %s: %s", symbol, exchange, exc
-                )
-                return self._error_response(f"Invalid JSON response: {exc}", **meta)
+        assert response_json is not None
 
-            items: list[dict[str, Any]] = response_json.get("items", [])
+        items: list[dict[str, Any]] = response_json.get("items", [])
 
-            if not items:
-                return self._success_response([], total=0, **meta)
+        if not items:
+            return self._success_response([], total=0, **meta)
 
-            items = self._sort_news(items, sort_by)
-            cleaned_items = [self._clean_headline(item) for item in items]
+        items = self._sort_news(items, sort_by)
+        cleaned_items = [self._clean_headline(item) for item in items]
 
-            if self.export_result:
-                self._export(
-                    data=cleaned_items,
-                    symbol=f"{exchange}_{symbol}",
-                    data_category="news",
-                )
-
-            return self._success_response(
-                cleaned_items, total=len(cleaned_items), **meta
+        if self.export_result:
+            self._export(
+                data=cleaned_items,
+                symbol=f"{exchange}_{symbol}",
+                data_category="news",
             )
 
-        except requests.exceptions.Timeout as exc:
-            logger.error("Timeout fetching headlines for %s on %s.", symbol, exchange)
-            return self._error_response(f"Request timeout: {exc}", **meta)
-        except requests.exceptions.ConnectionError as exc:
-            logger.error("Connection error for %s on %s: %s", symbol, exchange, exc)
-            return self._error_response(f"Connection error: {exc}", **meta)
-        except requests.exceptions.HTTPError as exc:
-            logger.error("HTTP error for %s on %s: %s", symbol, exchange, exc)
-            return self._error_response(f"HTTP error: {exc}", **meta)
-        except requests.exceptions.RequestException as exc:
-            logger.error("Request failed for %s on %s: %s", symbol, exchange, exc)
-            return self._error_response(f"Request failed: {exc}", **meta)
-        except Exception as exc:
-            logger.error("Unexpected error for %s on %s: %s", symbol, exchange, exc)
-            return self._error_response(f"Unexpected error: {exc}", **meta)
+        return self._success_response(cleaned_items, total=len(cleaned_items), **meta)
 
     def get_news_content(
         self,
@@ -227,10 +185,11 @@ class News(BaseScraper):
         if not story_id or not story_id.strip():
             return self._error_response("story_id cannot be empty", **meta)
 
-        if language not in self._language_codes:
+        languages = self.validator.get_languages()
+        if language not in languages.values():
             return self._error_response(
                 f"Invalid language: '{language}'. "
-                f"Allowed values: {', '.join(sorted(self._language_codes))}",
+                f"Allowed values: {', '.join(sorted(languages.values()))}",
                 **meta,
             )
 
@@ -240,44 +199,24 @@ class News(BaseScraper):
             "user_prostatus": "non_pro",
         }
 
-        try:
-            response = requests.get(
-                NEWS_STORY_URL,
-                headers=self._headers,
-                params=params,
-                timeout=self.timeout,
-            )
-            response.raise_for_status()
+        story_data, error_msg = self._request(
+            "GET",
+            NEWS_STORY_URL,
+            params=params,
+        )
 
-            try:
-                story_data = response.json()
-            except (ValueError, json.JSONDecodeError) as exc:
-                logger.error("Invalid JSON response for story %s: %s", story_id, exc)
-                return self._error_response(f"Invalid JSON response: {exc}", **meta)
+        if error_msg:
+            return self._error_response(error_msg, **meta)
 
-            article_data = self._parse_story(story_data)
+        assert story_data is not None
 
-            return self._success_response(
-                article_data,
-                story_id=story_id,
-                language=language,
-            )
+        article_data = self._parse_story(story_data)
 
-        except requests.exceptions.Timeout as exc:
-            logger.error("Timeout fetching content for story %s.", story_id)
-            return self._error_response(f"Request timeout: {exc}", **meta)
-        except requests.exceptions.ConnectionError as exc:
-            logger.error("Connection error for story %s: %s", story_id, exc)
-            return self._error_response(f"Connection error: {exc}", **meta)
-        except requests.exceptions.HTTPError as exc:
-            logger.error("HTTP error for story %s: %s", story_id, exc)
-            return self._error_response(f"HTTP error: {exc}", **meta)
-        except requests.exceptions.RequestException as exc:
-            logger.error("Request failed for story %s: %s", story_id, exc)
-            return self._error_response(f"Request failed: {exc}", **meta)
-        except Exception as exc:
-            logger.error("Unexpected error for story %s: %s", story_id, exc)
-            return self._error_response(f"Unexpected error: {exc}", **meta)
+        return self._success_response(
+            article_data,
+            story_id=story_id,
+            language=language,
+        )
 
     def _sort_news(
         self,

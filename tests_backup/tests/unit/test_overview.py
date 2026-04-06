@@ -4,10 +4,10 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 import requests
+from tv_scraper.scrapers.market_data.overview import Overview
 
 from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.constants import STATUS_FAILED, STATUS_SUCCESS
-from tv_scraper.scrapers.market_data.overview import Overview
 
 
 @pytest.fixture

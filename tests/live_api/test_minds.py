@@ -76,7 +76,7 @@ class TestLiveMindsEdgeCases:
 
         scraper = Minds()
         with patch.object(
-            requests, "get", side_effect=requests.RequestException("Network error")
+            requests, "request", side_effect=requests.RequestException("Network error")
         ):
             result = scraper.get_minds(exchange="NASDAQ", symbol="AAPL")
             assert result["status"] == "failed"
@@ -89,7 +89,7 @@ class TestLiveMindsEdgeCases:
         import requests
 
         scraper = Minds()
-        with patch.object(requests, "get", side_effect=requests.Timeout("Timeout")):
+        with patch.object(requests, "request", side_effect=requests.Timeout("Timeout")):
             result = scraper.get_minds(exchange="NASDAQ", symbol="AAPL")
             assert result["status"] == "failed"
 
@@ -102,5 +102,6 @@ class TestLiveMindsEdgeCases:
         for _ in range(2):
             result = scraper.get_minds(exchange="NASDAQ", symbol="AAPL", limit=3)
             assert result["status"] == STATUS_SUCCESS
+            time.sleep(1)
         elapsed = time.time() - start
         assert elapsed > 0

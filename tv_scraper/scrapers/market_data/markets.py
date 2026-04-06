@@ -6,13 +6,11 @@ across supported markets, sorted by market cap, volume, change, etc.
 
 from typing import Any
 
-import requests
-
-from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.constants import SCANNER_URL
+from tv_scraper.core.scanner import ScannerScraper
 
 
-class Markets(BaseScraper):
+class Markets(ScannerScraper):
     """Scraper for market-wide stock rankings.
 
     Fetches top stocks from the TradingView scanner API, optionally
@@ -149,32 +147,22 @@ class Markets(BaseScraper):
 
         url = f"{SCANNER_URL}/{market}/scan"
 
-        # --- request ---------------------------------------------------
-        try:
-            response = requests.post(
-                url,
-                headers=self._headers,
-                json=payload,
-                timeout=self.timeout,
-            )
-            response.raise_for_status()
-            json_data = response.json()
-        except requests.RequestException as exc:
+        json_data, error_msg = self._request(
+            "POST",
+            url,
+            json_payload=payload,
+        )
+
+        if error_msg:
             return self._error_response(
-                f"Network error: {exc}",
+                error_msg,
                 market=market,
                 sort_by=sort_by,
                 sort_order=sort_order,
                 limit=limit,
             )
-        except ValueError as exc:
-            return self._error_response(
-                f"JSON parse error: {exc}",
-                market=market,
-                sort_by=sort_by,
-                sort_order=sort_order,
-                limit=limit,
-            )
+
+        assert json_data is not None
 
         items: list[dict[str, Any]] = json_data.get("data", [])
         total_count: int = json_data.get("totalCount", len(items))

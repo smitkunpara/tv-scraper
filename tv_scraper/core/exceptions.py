@@ -15,3 +15,11 @@ class DataNotFoundError(TvScraperError):
 
 class ExportError(TvScraperError):
     """Raised for export failures."""
+
+
+class NetworkError(TvScraperError):
+    """Raised for HTTP/network failures."""
+
+
+class CaptchaError(TvScraperError):
+    """Raised when TradingView returns a captcha challenge."""

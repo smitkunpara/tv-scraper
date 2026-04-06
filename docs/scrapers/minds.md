@@ -61,9 +61,14 @@ All responses use the standard envelope:
     ...
   ],
   "metadata": {
+    "exchange": "NASDAQ",
+    "symbol": "AAPL",
     "total": 42,
     "pages": 2,
-    "symbol_info": {"short_name": "AAPL", "exchange": "NASDAQ"}
+    "symbol_info": {
+        "short_name": "AAPL",
+        "exchange": "NASDAQ"
+    }
   },
   "error": null
 }

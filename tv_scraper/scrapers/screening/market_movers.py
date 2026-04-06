@@ -3,16 +3,14 @@
 import logging
 from typing import Any
 
-import requests
-
-from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.constants import SCANNER_URL
+from tv_scraper.core.scanner import ScannerScraper
 from tv_scraper.core.validators import DataValidator
 
 logger = logging.getLogger(__name__)
 
 
-class MarketMovers(BaseScraper):
+class MarketMovers(ScannerScraper):
     """Scrape market movers (gainers, losers, most active, etc.) from TradingView.
 
     Supports multiple stock markets, crypto, forex, bonds, and futures.
@@ -319,62 +317,47 @@ class MarketMovers(BaseScraper):
         )
         url = self._get_scanner_url(market)
 
-        try:
-            response = requests.post(
-                url,
-                headers=self._headers,
-                json=payload,
-                timeout=self.timeout,
-            )
-            response.raise_for_status()
-            json_response = response.json()
+        json_response, error_msg = self._request(
+            "POST",
+            url,
+            json_payload=payload,
+        )
 
-            # Validate JSON response structure
-            if not isinstance(json_response, dict):
-                return self._error_response(
-                    f"Invalid response format: expected dict, got {type(json_response).__name__}",
-                    market=market,
-                    category=category,
-                    limit=limit,
-                )
-
-            raw_items = json_response.get("data", [])
-            total_count = json_response.get("totalCount", 0)
-            formatted_data = self._map_scanner_rows(raw_items, resolved_fields)
-
-            if self.export_result:
-                self._export(
-                    data=formatted_data,
-                    symbol=f"{market}_{category}",
-                    data_category="market_movers",
-                )
-
-            return self._success_response(
-                formatted_data,
-                market=market,
-                category=category,
-                limit=limit,
-                total=len(formatted_data),
-                totalCount=total_count,
-            )
-        except requests.HTTPError as exc:
+        if error_msg:
             return self._error_response(
-                f"HTTP error: {exc}",
+                error_msg,
                 market=market,
                 category=category,
                 limit=limit,
             )
-        except requests.RequestException as exc:
+
+        assert json_response is not None
+
+        # Validate JSON response structure
+        if not isinstance(json_response, dict):
             return self._error_response(
-                f"Network error: {exc}",
+                f"Invalid response format: expected dict, got {type(json_response).__name__}",
                 market=market,
                 category=category,
                 limit=limit,
             )
-        except (ValueError, KeyError) as exc:
-            return self._error_response(
-                f"Failed to parse API response: {exc}",
-                market=market,
-                category=category,
-                limit=limit,
+
+        raw_items = json_response.get("data", [])
+        total_count = json_response.get("totalCount", 0)
+        formatted_data = self._map_scanner_rows(raw_items, resolved_fields)
+
+        if self.export_result:
+            self._export(
+                data=formatted_data,
+                symbol=f"{market}_{category}",
+                data_category="market_movers",
             )
+
+        return self._success_response(
+            formatted_data,
+            market=market,
+            category=category,
+            limit=limit,
+            total=len(formatted_data),
+            totalCount=total_count,
+        )

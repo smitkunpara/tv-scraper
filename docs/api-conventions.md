@@ -59,9 +59,9 @@ Every public scraper method returns a standardized response dict:
 
 ### Error Response
 - `status` is always `"failed"`
-- `data` is always `None`
+- `data` is usually `None`, but may contain partial data (e.g. in `get_forecast` timeouts)
 - `error` contains a descriptive error message
-- `metadata` may contain partial context
+- `metadata` contains relevant context (symbol, exchange, provided parameters)
 
 ## Error Handling
 

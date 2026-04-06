@@ -42,8 +42,8 @@ All methods return a standardized envelope:
 
 ```python
 {
-    "status": "success",          # or "failed"
-    "data": [                     # list of event dicts, or None on error
+    "status": "success",
+    "data": [
         {
             "symbol": "NASDAQ:AAPL",
             "name": "Apple Inc.",
@@ -52,10 +52,13 @@ All methods return a standardized envelope:
         }
     ],
     "metadata": {
-        "event_type": "dividends",  # or "earnings"
+        "event_type": "dividends",
         "total": 42,
+        "timestamp_from": 1705350000,
+        "timestamp_to": 1706041199,
+        "markets": ["america"]
     },
-    "error": None                 # error message string on failure
+    "error": None
 }
 ```
 

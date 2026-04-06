@@ -1,20 +1,17 @@
 """Technicals scraper for fetching technical analysis indicators."""
 
-import json
 import logging
 import re
 from typing import Any
 
-import requests
-
-from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.constants import SCANNER_URL
 from tv_scraper.core.exceptions import ValidationError
+from tv_scraper.core.scanner import ScannerScraper
 
 logger = logging.getLogger(__name__)
 
 
-class Technicals(BaseScraper):
+class Technicals(ScannerScraper):
     """Scraper for technical analysis indicators from TradingView.
 
     Fetches indicator values (RSI, MACD, EMA, etc.) for a given symbol
@@ -120,30 +117,21 @@ class Technicals(BaseScraper):
 
         url = f"{SCANNER_URL}/symbol"
 
-        # --- Execute request ---
-        try:
-            response = requests.get(
-                url,
-                headers=self._headers,
-                params=params,
-                timeout=self.timeout,
-            )
-            response.raise_for_status()
-            json_response = response.json()
-        except requests.RequestException as exc:
+        json_response, error_msg = self._request(
+            "GET",
+            url,
+            params=params,
+        )
+
+        if error_msg:
             return self._error_response(
-                f"Network error: {exc}",
+                error_msg,
                 exchange=exchange,
                 symbol=symbol,
                 timeframe=timeframe,
             )
-        except (ValueError, KeyError, json.JSONDecodeError) as exc:
-            return self._error_response(
-                f"Failed to parse API response: {exc}",
-                exchange=exchange,
-                symbol=symbol,
-                timeframe=timeframe,
-            )
+
+        assert json_response is not None
 
         # --- Parse response ---
         # API returns indicators directly as a dict, not wrapped in "data"

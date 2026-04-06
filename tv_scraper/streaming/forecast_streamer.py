@@ -10,10 +10,6 @@ from tv_scraper.core.constants import DEFAULT_USER_AGENT, SCANNER_URL
 from tv_scraper.core.validators import DataValidator
 from tv_scraper.streaming.base_streamer import BaseStreamer
 from tv_scraper.utils.helpers import format_symbol
-from tv_scraper.utils.io import (  # noqa: F401 (used via _export)
-    save_csv_file,
-    save_json_file,
-)
 
 logger = logging.getLogger(__name__)
 
@@ -149,16 +145,13 @@ class ForecastStreamer(BaseStreamer):
             )
 
             if missing_output_keys:
-                return {
-                    "status": "failed",
-                    "data": cleaned_data,
-                    "metadata": {
-                        "exchange": exchange,
-                        "symbol": symbol,
-                        "available_output_keys": sorted(available_output_keys),
-                    },
-                    "error": "failed to fetch keys: " + ", ".join(missing_output_keys),
-                }
+                return self._error_response(
+                    "failed to fetch keys: " + ", ".join(missing_output_keys),
+                    data=cleaned_data,
+                    exchange=exchange,
+                    symbol=symbol,
+                    available_output_keys=sorted(available_output_keys),
+                )
 
             if self.export_result:
                 self._export(cleaned_data, symbol, "forecast")
@@ -170,10 +163,17 @@ class ForecastStreamer(BaseStreamer):
                 available_output_keys=sorted(available_output_keys),
             )
 
-        except Exception as exc:
-            logger.error("get_forecast error: %s", exc)
+        except requests.RequestException as exc:
+            logger.error("get_forecast network error: %s", exc)
             return self._error_response(
-                str(exc),
+                f"Network error: {exc}",
+                exchange=exchange,
+                symbol=symbol,
+            )
+        except Exception as exc:
+            logger.error("get_forecast unexpected error: %s", exc)
+            return self._error_response(
+                f"Unexpected error: {exc}",
                 exchange=exchange,
                 symbol=symbol,
             )

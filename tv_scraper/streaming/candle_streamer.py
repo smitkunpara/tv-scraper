@@ -9,10 +9,6 @@ from tv_scraper.streaming.base_streamer import BaseStreamer
 from tv_scraper.streaming.stream_handler import StreamHandler
 from tv_scraper.streaming.utils import fetch_indicator_metadata
 from tv_scraper.utils.helpers import format_symbol
-from tv_scraper.utils.io import (  # noqa: F401 (used via _export)
-    save_csv_file,
-    save_json_file,
-)
 
 logger = logging.getLogger(__name__)
 
@@ -42,7 +38,7 @@ class CandleStreamer(BaseStreamer):
             cookie=cookie,
         )
 
-    def get_candles(
+    def get_candles(  # noqa: PLR0915
         self,
         exchange: str,
         symbol: str,
@@ -165,8 +161,8 @@ class CandleStreamer(BaseStreamer):
                 candle_meta["indicators"] = [list(t) for t in indicators]
             return self._success_response(result_data, **candle_meta)
 
-        except Exception as exc:
-            logger.error("get_candles error: %s", exc)
+        except RuntimeError as exc:
+            logger.error("get_candles runtime error: %s", exc)
             candle_err_meta: dict[str, Any] = {
                 "exchange": exchange,
                 "symbol": symbol,
@@ -176,6 +172,18 @@ class CandleStreamer(BaseStreamer):
             if indicators is not None:
                 candle_err_meta["indicators"] = [list(t) for t in indicators]
             return self._error_response(str(exc), **candle_err_meta)
+
+        except Exception as exc:
+            logger.error("get_candles unexpected error: %s", exc)
+            candle_err_meta: dict[str, Any] = {
+                "exchange": exchange,
+                "symbol": symbol,
+                "timeframe": timeframe,
+                "numb_candles": numb_candles,
+            }
+            if indicators is not None:
+                candle_err_meta["indicators"] = [list(t) for t in indicators]
+            return self._error_response(f"Unexpected error: {exc}", **candle_err_meta)
 
     def _add_symbol_to_sessions(
         self,

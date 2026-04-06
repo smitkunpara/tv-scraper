@@ -107,6 +107,8 @@ All responses use the standardized envelope:
     ],
     "metadata": {
         "market": "america",
+        "sort_order": "desc",
+        "limit": 10,
         "total": 2,
         "total_available": 1500
     },

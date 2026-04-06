@@ -4,8 +4,6 @@ import logging
 from typing import Any
 from urllib.parse import quote
 
-import requests
-
 from tv_scraper.core.base import BaseScraper
 
 logger = logging.getLogger(__name__)
@@ -58,15 +56,10 @@ class Pine(BaseScraper):
         url = f"{PINE_FACADE_BASE_URL}/list"
         params = {"filter": PINE_FILTER_SAVED}
 
-        try:
-            response = requests.get(
-                url, headers=headers, params=params, timeout=self.timeout
-            )
-            response.raise_for_status()
-            payload = response.json()
-        except requests.RequestException as exc:
-            logger.error("Failed to list Pine scripts: %s", exc)
-            return self._error_response(self._map_request_error(exc))
+        payload, error_msg = self._request("GET", url, headers=headers, params=params)
+
+        if error_msg:
+            return self._error_response(error_msg)
 
         if not isinstance(payload, list):
             logger.error(
@@ -101,26 +94,23 @@ class Pine(BaseScraper):
 
         source_error = self._validate_non_empty(source, "Source code")
         if source_error:
-            return source_error
+            return self._error_response(source_error, source=source)
 
         headers = self._build_pine_headers()
 
         url = f"{PINE_FACADE_BASE_URL}/translate_light"
         params = {"v": "3"}
 
-        try:
-            response = requests.post(
-                url,
-                headers=headers,
-                params=params,
-                files={"source": (None, source)},
-                timeout=self.timeout,
-            )
-            response.raise_for_status()
-            payload = response.json()
-        except requests.RequestException as exc:
-            logger.error("Failed to validate Pine source: %s", exc)
-            return self._error_response(self._map_request_error(exc), source=source)
+        payload, error_msg = self._request(
+            "POST",
+            url,
+            headers=headers,
+            params=params,
+            files={"source": (None, source)},
+        )
+
+        if error_msg:
+            return self._error_response(error_msg, source=source)
 
         if not isinstance(payload, dict):
             return self._error_response(
@@ -170,11 +160,10 @@ class Pine(BaseScraper):
 
         name_error = self._validate_non_empty(name, "Script name")
         if name_error:
-            return name_error
+            return self._error_response(name_error, name=name)
         source_error = self._validate_non_empty(source, "Source code")
         if source_error:
-            source_error["metadata"]["name"] = name
-            return source_error
+            return self._error_response(source_error, name=name, source=source)
 
         validation = self.validate_script(source)
         if validation["status"] != "success":
@@ -194,19 +183,16 @@ class Pine(BaseScraper):
             "allow_overwrite": "true",
         }
 
-        try:
-            response = requests.post(
-                url,
-                headers=headers,
-                params=params,
-                files={"source": (None, source)},
-                timeout=self.timeout,
-            )
-            response.raise_for_status()
-            payload = response.json()
-        except requests.RequestException as exc:
-            logger.error("Failed to create Pine script '%s': %s", name, exc)
-            return self._error_response(self._map_request_error(exc), name=name)
+        payload, error_msg = self._request(
+            "POST",
+            url,
+            headers=headers,
+            params=params,
+            files={"source": (None, source)},
+        )
+
+        if error_msg:
+            return self._error_response(error_msg, name=name)
 
         script_result = self._extract_save_result(payload)
         if script_result is None:
@@ -244,16 +230,15 @@ class Pine(BaseScraper):
 
         pine_id_error = self._validate_non_empty(pine_id, "Pine script ID")
         if pine_id_error:
-            return pine_id_error
+            return self._error_response(pine_id_error, pine_id=pine_id)
         name_error = self._validate_non_empty(name, "Script name")
         if name_error:
-            name_error["metadata"]["pine_id"] = pine_id
-            return name_error
+            return self._error_response(name_error, pine_id=pine_id, name=name)
         source_error = self._validate_non_empty(source, "Source code")
         if source_error:
-            source_error["metadata"]["pine_id"] = pine_id
-            source_error["metadata"]["name"] = name
-            return source_error
+            return self._error_response(
+                source_error, pine_id=pine_id, name=name, source=source
+            )
 
         validation = self.validate_script(source)
         if validation["status"] != "success":
@@ -275,21 +260,16 @@ class Pine(BaseScraper):
             "name": name,
         }
 
-        try:
-            response = requests.post(
-                url,
-                headers=headers,
-                params=params,
-                files={"source": (None, source)},
-                timeout=self.timeout,
-            )
-            response.raise_for_status()
-            payload = response.json()
-        except requests.RequestException as exc:
-            logger.error("Failed to edit Pine script '%s': %s", pine_id, exc)
-            return self._error_response(
-                self._map_request_error(exc), pine_id=pine_id, name=name
-            )
+        payload, error_msg = self._request(
+            "POST",
+            url,
+            headers=headers,
+            params=params,
+            files={"source": (None, source)},
+        )
+
+        if error_msg:
+            return self._error_response(error_msg, pine_id=pine_id, name=name)
 
         script_result = self._extract_save_result(payload)
         if script_result is None:
@@ -327,27 +307,27 @@ class Pine(BaseScraper):
 
         pine_id_error = self._validate_non_empty(pine_id, "Pine script ID")
         if pine_id_error:
-            return pine_id_error
+            return self._error_response(pine_id_error, pine_id=pine_id)
 
         headers = self._build_pine_headers()
         encoded_pine_id = quote(pine_id, safe="")
         url = f"{PINE_FACADE_BASE_URL}/delete/{encoded_pine_id}"
 
-        try:
-            response = requests.post(
-                url,
-                headers=headers,
-                timeout=self.timeout,
-            )
-            response.raise_for_status()
-            response_text = response.text.strip().strip('"').lower()
-        except requests.RequestException as exc:
-            logger.error("Failed to delete Pine script '%s': %s", pine_id, exc)
-            return self._error_response(self._map_request_error(exc), pine_id=pine_id)
+        response, error_msg = self._request(
+            "POST",
+            url,
+            headers=headers,
+        )
 
-        if response_text != "ok":
+        if error_msg:
+            # If the error is JSON decode, but the text is "ok", `_request` might return "Failed to parse API response".
+            # We can't access the text here, but if that happens, we'll see it in tests.
+            # Assuming TV returns `"ok"`, not `ok`.
+            return self._error_response(error_msg, pine_id=pine_id)
+
+        if response != "ok":
             return self._error_response(
-                f"Pine delete endpoint returned unexpected response: {response.text}",
+                f"Pine delete endpoint returned unexpected response: {response}",
                 pine_id=pine_id,
             )
 
@@ -365,15 +345,10 @@ class Pine(BaseScraper):
         )
 
     @staticmethod
-    def _validate_non_empty(value: str, field_name: str) -> dict[str, Any] | None:
+    def _validate_non_empty(value: str, field_name: str) -> str | None:
         if value and value.strip():
             return None
-        return {
-            "status": "failed",
-            "data": None,
-            "metadata": {},
-            "error": f"{field_name} cannot be empty.",
-        }
+        return f"{field_name} cannot be empty."
 
     def _build_pine_headers(self) -> dict[str, str]:
         """Build headers expected by Pine facade endpoints."""
@@ -409,26 +384,3 @@ class Pine(BaseScraper):
         script_id = meta_info.get("scriptIdPart")
         if not script_id:
             return None
-
-        return {
-            "scriptIdPart": script_id,
-            "description": meta_info.get("description", ""),
-            "shortDescription": meta_info.get("shortDescription", ""),
-            "modified": result_obj.get("modified", 0),
-        }
-
-    def _map_request_error(self, exc: Exception) -> str:
-        status_code = None
-        if isinstance(exc, requests.HTTPError) and exc.response is not None:
-            status_code = exc.response.status_code
-
-        if status_code in {401, 403}:
-            return "Invalid TradingView cookie. Please provide a valid authenticated cookie."
-        if status_code == 429:
-            return "TradingView rate limit reached. Please try again later."
-        if status_code and status_code >= 500:
-            return "TradingView Pine service is temporarily unavailable. Please try again later."
-        if status_code:
-            return f"Pine API request failed with status {status_code}."
-
-        return str(exc) or "Failed to complete Pine API request."

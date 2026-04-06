@@ -2,13 +2,11 @@
 
 from typing import Any
 
-import requests
-
-from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.constants import SCANNER_URL
+from tv_scraper.core.scanner import ScannerScraper
 
 
-class SymbolMarkets(BaseScraper):
+class SymbolMarkets(ScannerScraper):
     """Find all markets/exchanges where a symbol is traded.
 
     Queries the TradingView scanner API using a name-match filter to
@@ -127,29 +125,21 @@ class SymbolMarkets(BaseScraper):
 
         url = f"{SCANNER_URL}/{scanner}/scan"
 
-        try:
-            response = requests.post(
-                url,
-                headers=self._headers,
-                json=payload,
-                timeout=self.timeout,
-            )
-            response.raise_for_status()
-            json_response = response.json()
-        except requests.RequestException as exc:
+        json_response, error_msg = self._request(
+            "POST",
+            url,
+            json_payload=payload,
+        )
+
+        if error_msg:
             return self._error_response(
-                f"Network error: {exc}",
+                error_msg,
                 symbol=symbol,
                 scanner=scanner,
                 limit=limit,
             )
-        except ValueError as exc:
-            return self._error_response(
-                f"JSON parse error: {exc}",
-                symbol=symbol,
-                scanner=scanner,
-                limit=limit,
-            )
+
+        assert json_response is not None
 
         raw_items = json_response.get("data", [])
         formatted_data = self._map_scanner_rows(raw_items, resolved_fields)

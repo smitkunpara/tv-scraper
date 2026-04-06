@@ -4,8 +4,6 @@ import logging
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Any
 
-import requests
-
 from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.constants import BASE_URL
 from tv_scraper.core.exceptions import ValidationError
@@ -111,34 +109,30 @@ class Ideas(BaseScraper):
 
         url_slug = f"{exchange}-{symbol}"
 
-        headers = dict(self._headers)
-        if self.cookie:
-            headers["cookie"] = self.cookie
-
         page_list = range(start_page, end_page + 1)
         articles: list[dict[str, Any]] = []
         failed_pages: list[tuple[int, str]] = []
 
         with ThreadPoolExecutor(max_workers=self._max_workers) as executor:
             futures = {
-                executor.submit(
-                    self._scrape_page, url_slug, page, sort_by, headers
-                ): page
+                executor.submit(self._scrape_page, url_slug, page, sort_by): page
                 for page in page_list
             }
             for future in as_completed(futures, timeout=self.timeout * 2):
                 page = futures[future]
                 try:
-                    result = future.result(timeout=self.timeout)
-                    if result is None:
+                    result, error_msg = future.result(timeout=self.timeout)
+                    if error_msg:
                         logger.error(
-                            "Captcha challenge on page %d of %s",
+                            "Failed to scrape page %d of %s: %s",
                             page,
                             url_slug,
+                            error_msg,
                         )
-                        failed_pages.append((page, f"Captcha challenge on page {page}"))
+                        failed_pages.append((page, error_msg))
                         continue
-                    articles.extend(result)
+                    if result is not None:
+                        articles.extend(result)
                 except Exception as exc:
                     logger.error("Failed to scrape page %d: %s", page, exc)
                     failed_pages.append((page, str(exc)))
@@ -180,18 +174,17 @@ class Ideas(BaseScraper):
         url_slug: str,
         page: int,
         sort_by: str,
-        headers: dict[str, str],
-    ) -> list[dict[str, Any]] | None:
+    ) -> tuple[list[dict[str, Any]] | None, str | None]:
         """Scrape a single page of ideas from the TradingView API.
 
         Args:
             url_slug: Trading symbol slug (possibly combined with exchange).
             page: Page number to scrape (1-based).
             sort_by: Sorting criteria.
-            headers: HTTP headers dict (including cookie if set).
 
         Returns:
-            List of mapped idea dicts, or ``None`` if a captcha was detected.
+            Tuple of (List of mapped idea dicts, None) on success.
+            Tuple of (None, error_message) on failure.
         """
         if page == 1:
             url = f"{BASE_URL}/symbols/{url_slug}/ideas/"
@@ -202,61 +195,34 @@ class Ideas(BaseScraper):
         if sort_by == "recent":
             params["sort"] = "recent"
 
-        try:
-            response = requests.get(
-                url, headers=headers, params=params, timeout=self.timeout
-            )
+        response_data, error_msg = self._request("GET", url, params=params)
 
-            if response.status_code != 200:
-                logger.error(
-                    "HTTP %d: Failed to fetch page %d for %s",
-                    response.status_code,
-                    page,
-                    url_slug,
-                )
-                raise Exception(f"HTTP {response.status_code}")
+        if error_msg:
+            return None, error_msg
 
-            if "<title>Captcha Challenge</title>" in response.text:
-                logger.error(
-                    "Captcha challenge on page %d of %s",
-                    page,
-                    url_slug,
-                )
-                return None
-
-            response_data = response.json()
-            if not isinstance(response_data, dict):
-                logger.error(
-                    "Unexpected response type for page %d of %s: %s",
-                    page,
-                    url_slug,
-                    type(response_data).__name__,
-                )
-                return []
-
-            ideas_data = response_data.get("data")
-            if not isinstance(ideas_data, dict):
-                ideas_data = {}
-            ideas_inner = ideas_data.get("ideas")
-            if not isinstance(ideas_inner, dict):
-                ideas_inner = {}
-            items_container = ideas_inner.get("data")
-            if not isinstance(items_container, dict):
-                items_container = {}
-            items = items_container.get("items")
-            if not isinstance(items, list):
-                items = []
-
-            return [self._map_idea(item) for item in items]
-
-        except requests.RequestException as exc:
+        if not isinstance(response_data, dict):
             logger.error(
-                "Request failed for page %d of %s: %s",
+                "Unexpected response type for page %d of %s: %s",
                 page,
                 url_slug,
-                exc,
+                type(response_data).__name__,
             )
-            raise
+            return [], None
+
+        ideas_data = response_data.get("data")
+        if not isinstance(ideas_data, dict):
+            ideas_data = {}
+        ideas_inner = ideas_data.get("ideas")
+        if not isinstance(ideas_inner, dict):
+            ideas_inner = {}
+        items_container = ideas_inner.get("data")
+        if not isinstance(items_container, dict):
+            items_container = {}
+        items = items_container.get("items")
+        if not isinstance(items, list):
+            items = []
+
+        return [self._map_idea(item) for item in items], None
 
     @staticmethod
     def _map_idea(item: dict[str, Any]) -> dict[str, Any]:

@@ -20,8 +20,6 @@ from tv_scraper.core.validation_data import (
 
 logger = logging.getLogger(__name__)
 
-_EXPORT_TYPES: set[str] = {"json", "csv"}
-
 
 # TradingView scanner API for live symbol:exchange combination validation
 _SCANNER_SYMBOL_URL = (

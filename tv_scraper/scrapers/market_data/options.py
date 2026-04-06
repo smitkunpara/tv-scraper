@@ -2,11 +2,9 @@
 
 from typing import Any
 
-import requests
-
-from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.constants import SCANNER_URL
 from tv_scraper.core.exceptions import ValidationError
+from tv_scraper.core.scanner import ScannerScraper
 
 OPTIONS_SCANNER_URL = f"{SCANNER_URL}/options/scan2?label-product=symbols-options"
 
@@ -33,7 +31,7 @@ DEFAULT_OPTION_COLUMNS = [
 VALID_OPTION_COLUMNS = set(DEFAULT_OPTION_COLUMNS)
 
 
-class Options(BaseScraper):
+class Options(ScannerScraper):
     """Scraper for option chain data from TradingView.
 
     Fetches option chains for a given underlying symbol, filtered by
@@ -203,15 +201,15 @@ class Options(BaseScraper):
         filter_value: int | float,
     ) -> dict[str, Any]:
         """Internal helper to execute the POST request and format response."""
-        try:
-            response = requests.post(
-                OPTIONS_SCANNER_URL,
-                json=payload,
-                headers=self._headers,
-                timeout=self.timeout,
-            )
+        json_response, error_msg = self._request(
+            "POST",
+            OPTIONS_SCANNER_URL,
+            json_payload=payload,
+        )
 
-            if response.status_code == 404:
+        if error_msg:
+            # Check if it's potentially a 404
+            if "404" in error_msg:
                 return self._error_response(
                     f"Options chain not found for symbol '{exchange}:{symbol}'. "
                     "This symbol may not have options available on TradingView.",
@@ -219,30 +217,14 @@ class Options(BaseScraper):
                     symbol=symbol,
                     filter_value=filter_value,
                 )
+            return self._error_response(
+                error_msg,
+                exchange=exchange,
+                symbol=symbol,
+                filter_value=filter_value,
+            )
 
-            response.raise_for_status()
-            json_response = response.json()
-        except requests.RequestException as exc:
-            return self._error_response(
-                f"Request failed: {exc}",
-                exchange=exchange,
-                symbol=symbol,
-                filter_value=filter_value,
-            )
-        except (ValueError, KeyError) as exc:
-            return self._error_response(
-                f"Failed to parse API response: {exc}",
-                exchange=exchange,
-                symbol=symbol,
-                filter_value=filter_value,
-            )
-        except Exception as exc:
-            return self._error_response(
-                f"Unexpected error: {exc}",
-                exchange=exchange,
-                symbol=symbol,
-                filter_value=filter_value,
-            )
+        assert json_response is not None
 
         if not isinstance(json_response, dict):
             return self._error_response(

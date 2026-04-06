@@ -60,6 +60,8 @@ class BaseStreamer(BaseScraper):
                 logger.debug("JWT token resolved successfully.")
             except Exception as exc:
                 logger.error("Failed to resolve JWT token from cookie: %s", exc)
-                raise
+                raise RuntimeError(
+                    f"Failed to resolve JWT token from cookie: {exc}"
+                ) from exc
 
         return StreamHandler(jwt_token=websocket_jwt_token)

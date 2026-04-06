@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Core**: New `ScannerScraper` base class (inherits from `BaseScraper`) to standardize interactions with TradingView's scanner API, providing automatic payload formatting and table parsing.
+- **Core**: New `http.py` module implementing a centralized `requests.Session` with automatic retry logic (exponential backoff) for improved network reliability.
+- **Streaming**: `BaseStreamer` now catching and raising normalized `RuntimeError` for authentication and connection failures.
+
+### Refactor
+- **Scanner Migration**: Migrated 8 modules (`Fundamentals`, `Options`, `Markets`, `Technicals`, `Screener`, `MarketMovers`, `SymbolMarkets`, `Calendar`) to inherit from `ScannerScraper`, eliminating thousands of lines of boilerplate and unifying error handling.
+- **Social Scrapers**: Refactored `minds.py`, `news.py`, and `pine.py` to use `BaseScraper._request()` for consistent HTTP handling, timeout management, and Captcha detection.
+- **Streaming Class Hierarchy**:
+  - `Streamer` now correctly extends `BaseStreamer` and delegates to internal sub-streamers.
+  - Removed redundant `_get_fresh_handler` implementations, centralizing token resolution in `BaseStreamer.connect()`.
+  - Finalized migration of `CandleStreamer` and `ForecastStreamer` to the new architecture.
+- **Standardized Dictionaries**: Converted all remaining manual dictionary returns in `streaming/utils.py` and `forecast_streamer.py` to use `_success_response()` and `_error_response()` helpers.
+
+### Fixed
+- **Test Suite**: Fixed flakiness in `test_minds.py` rate-limiting tests by adding graceful 1s delays between high-frequency calls.
+- **Test Suite**: Corrected API test mocks in `live_api` tests, moving from `requests.post` to `requests.request` to match the new unified network layer.
+- **Fundamentals**: Correctly removed deprecated `compare_fundamentals()` in favor of the standardized `get_fundamentals()` scanner logic.
+- **IO Utilities**: Fixed a syntax error in `io.py` and restored missing `generate_user_agent` functionality in `helpers.py`.
+- **Linting**: Suppressed `PLR0915` (too many statements) in `get_candles` and resolved sorted `__all__` issues across core modules.
+- **Error Responses**: `_error_response` now supports passing partial `data` alongside the error message (critical for `get_forecast` timeouts).
+
 ### Performance
 - **Data Loading**: Significantly reduced `DataValidator` startup time and eliminated disk I/O by migrating static validation data (exchanges, indicators, timeframes, etc.) from JSON files to a consolidated Python module (`validation_data.py`).
 

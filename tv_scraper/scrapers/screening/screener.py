@@ -3,10 +3,8 @@
 import logging
 from typing import Any
 
-import requests
-
-from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.constants import SCANNER_URL
+from tv_scraper.core.scanner import ScannerScraper
 
 logger = logging.getLogger(__name__)
 
@@ -15,7 +13,7 @@ MIN_LIMIT = 1
 MAX_LIMIT = 10000
 
 
-class Screener(BaseScraper):
+class Screener(ScannerScraper):
     """Screen financial instruments across markets with custom filters.
 
     Supports stocks, crypto, forex, bonds, futures, and CFDs via the
@@ -337,38 +335,21 @@ class Screener(BaseScraper):
 
         url = f"{SCANNER_URL}/{market}/scan"
 
-        try:
-            response = requests.post(
-                url,
-                headers=self._headers,
-                json=payload,
-                timeout=self.timeout,
-            )
-            response.raise_for_status()
-        except requests.HTTPError as exc:
+        json_response, error_msg = self._request(
+            "POST",
+            url,
+            json_payload=payload,
+        )
+
+        if error_msg:
             return self._error_response(
-                f"HTTP error: {exc}",
-                **self._build_metadata(
-                    market, sort_order, limit, filters, sort_by, symbols, filter2
-                ),
-            )
-        except requests.RequestException as exc:
-            return self._error_response(
-                f"Network error: {exc}",
+                error_msg,
                 **self._build_metadata(
                     market, sort_order, limit, filters, sort_by, symbols, filter2
                 ),
             )
 
-        try:
-            json_response = response.json()
-        except ValueError as exc:
-            return self._error_response(
-                f"Failed to parse JSON response: {exc}",
-                **self._build_metadata(
-                    market, sort_order, limit, filters, sort_by, symbols, filter2
-                ),
-            )
+        assert json_response is not None
 
         raw_items = json_response.get("data", [])
         formatted_data = self._map_scanner_rows(raw_items, resolved_fields)

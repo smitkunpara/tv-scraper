@@ -10,12 +10,11 @@ import logging
 from collections.abc import Generator
 from typing import Any
 
-from tv_scraper.core.base import BaseScraper
 from tv_scraper.core.constants import STATUS_SUCCESS
 from tv_scraper.core.validators import DataValidator
+from tv_scraper.streaming.base_streamer import BaseStreamer
 from tv_scraper.streaming.candle_streamer import CandleStreamer
 from tv_scraper.streaming.forecast_streamer import ForecastStreamer
-from tv_scraper.streaming.stream_handler import StreamHandler
 from tv_scraper.streaming.utils import (
     fetch_available_indicators,
 )
@@ -24,7 +23,7 @@ from tv_scraper.utils.helpers import format_symbol
 logger = logging.getLogger(__name__)
 
 
-class Streamer(BaseScraper):
+class Streamer(BaseStreamer):
     """Stream OHLCV candles, indicators, forecast data, and realtime prices from TradingView.
 
     This class combines all streaming functionality in a single convenient interface.
@@ -139,7 +138,7 @@ class Streamer(BaseScraper):
         exchange_symbol = format_symbol(exchange, symbol)
         DataValidator().verify_symbol_exchange(exchange, symbol)
 
-        handler = self._get_fresh_handler()
+        handler = self.connect()
 
         resolve_symbol = json.dumps({"adjustment": "splits", "symbol": exchange_symbol})
         qs = handler.quote_session
@@ -216,21 +215,6 @@ class Streamer(BaseScraper):
                                 "bid": None,
                                 "ask": None,
                             }
-
-    def _get_fresh_handler(self) -> StreamHandler:
-        """Resolve a valid JWT token and return a new connected StreamHandler."""
-        from tv_scraper.streaming.auth import get_valid_jwt_token
-
-        websocket_jwt_token = "unauthorized_user_token"
-        if self.cookie:
-            try:
-                websocket_jwt_token = get_valid_jwt_token(self.cookie)
-                logger.debug("JWT token resolved successfully.")
-            except Exception as exc:
-                logger.error("Failed to resolve JWT token from cookie: %s", exc)
-                raise
-
-        return StreamHandler(jwt_token=websocket_jwt_token)
 
     @staticmethod
     def get_available_indicators() -> dict[str, Any]:

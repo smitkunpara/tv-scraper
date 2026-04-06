@@ -120,7 +120,7 @@ class TestLiveMarketMoversEdgeCases:
 
         scraper = MarketMovers()
         with patch.object(
-            requests, "post", side_effect=requests.RequestException("Network error")
+            requests, "request", side_effect=requests.RequestException("Network error")
         ):
             result = scraper.get_market_movers(
                 market="stocks-usa", category="gainers", limit=5
