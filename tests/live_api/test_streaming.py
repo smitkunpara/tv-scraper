@@ -240,6 +240,100 @@ class TestLiveStreamingRealtimePrice:
 
 
 @pytest.mark.live
+class TestLiveStreamingRealtimePrices:
+    """Test real-time price streaming for multiple symbols."""
+
+    def test_live_stream_realtime_prices_single(self) -> None:
+        """Verify streaming a single symbol via stream_realtime_prices."""
+        streamer = Streamer()
+        gen = streamer.stream_realtime_prices(["BINANCE:BTCUSDT"])
+
+        updates: list[dict[str, Any]] = []
+        start_time = time.time()
+        timeout = 30
+
+        for update in gen:
+            updates.append(update)
+            if len(updates) >= 3:
+                break
+            if time.time() - start_time > timeout:
+                break
+
+        assert len(updates) >= 1, "No updates received within timeout"
+
+        first_update = updates[0]
+        assert first_update["price"] is not None
+        assert first_update["price"] > 0
+        assert first_update["exchange"] != ""
+        assert first_update["symbol"] != ""
+
+    def test_live_stream_realtime_prices_multiple(self) -> None:
+        """Verify streaming multiple symbols at once."""
+        streamer = Streamer()
+        gen = streamer.stream_realtime_prices(
+            ["BINANCE:BTCUSDT", "BINANCE:ETHUSDT"]
+        )
+
+        updates: list[dict[str, Any]] = []
+        seen_symbols: set[str] = set()
+        start_time = time.time()
+        timeout = 30
+
+        for update in gen:
+            updates.append(update)
+            seen_symbols.add(update["symbol"])
+            if len(updates) >= 5:
+                break
+            if time.time() - start_time > timeout:
+                break
+
+        assert len(updates) >= 2, "Not enough updates received"
+
+        for update in updates:
+            assert update["price"] is not None
+            assert update["price"] > 0
+            assert update["exchange"] != ""
+            assert update["symbol"] != ""
+
+    def test_live_stream_realtime_prices_data_fields(self) -> None:
+        """Verify all expected fields are present in multi-symbol updates."""
+        streamer = Streamer()
+        gen = streamer.stream_realtime_prices(["BINANCE:ETHUSDT"])
+
+        update = next(gen)
+
+        expected_fields = [
+            "exchange", "symbol", "price", "volume",
+            "change", "change_percent", "high", "low", "open",
+            "prev_close", "bid", "ask",
+        ]
+        for field in expected_fields:
+            assert field in update, f"Missing field: {field}"
+
+    def test_live_stream_realtime_prices_mixed_exchanges(self) -> None:
+        """Verify streaming symbols from different exchanges."""
+        streamer = Streamer()
+        gen = streamer.stream_realtime_prices(
+            ["BINANCE:BTCUSDT", "FX_IDC:EURUSD"]
+        )
+
+        updates: list[dict[str, Any]] = []
+        start_time = time.time()
+        timeout = 30
+
+        for update in gen:
+            updates.append(update)
+            if len(updates) >= 4:
+                break
+            if time.time() - start_time > timeout:
+                break
+
+        assert len(updates) >= 1, "No updates received"
+        for update in updates:
+            assert update["price"] > 0
+
+
+@pytest.mark.live
 class TestLiveStreamingForecast:
     """Test forecast data retrieval via WebSocket."""
 

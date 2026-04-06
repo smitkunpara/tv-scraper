@@ -19,7 +19,6 @@ from tv_scraper.streaming.stream_handler import StreamHandler
 from tv_scraper.streaming.utils import (
     fetch_available_indicators,
 )
-from tv_scraper.utils.helpers import format_symbol
 
 logger = logging.getLogger(__name__)
 
@@ -111,7 +110,8 @@ class Streamer(BaseScraper):
             ``{"status", "data", "metadata", "error"}``.
             ``data`` contains ``raw_packets`` and merged ``snapshot``.
         """
-        result = self._forecast_streamer.get_forecast(exchange=exchange, symbol=symbol)
+        result = self._forecast_streamer.get_forecast(
+            exchange=exchange, symbol=symbol)
         if self.export_result and result.get("status") == STATUS_SUCCESS:
             self._export(result["data"], symbol, "forecast")
         return result
@@ -121,101 +121,148 @@ class Streamer(BaseScraper):
         exchange: str,
         symbol: str,
     ) -> Generator[dict[str, Any], None, None]:
-        """Persistent generator yielding normalized realtime price updates.
+        """Stream realtime price updates for a single symbol.
 
-        Yields ``qsd`` (quote session data) and ``du`` (data update) packets
-        as normalised dicts::
-
-            {"exchange": ..., "symbol": ..., "price": ..., "volume": ...,
-             "change": ..., "change_percent": ..., ...}
+        Convenience wrapper around :meth:`stream_realtime_prices`.
 
         Args:
-            exchange: Exchange name.
-            symbol: Symbol name.
+            exchange: Exchange name (e.g. ``"BINANCE"``).
+            symbol: Symbol name (e.g. ``"BTCUSDT"``).
 
         Yields:
             Normalised price update dicts.
         """
-        exchange_symbol = format_symbol(exchange, symbol)
-        DataValidator().verify_symbol_exchange(exchange, symbol)
+        yield from self.stream_realtime_prices([f"{exchange}:{symbol}"])
+
+    def stream_realtime_prices(
+        self,
+        symbols: list[str],
+    ) -> Generator[dict[str, Any], None, None]:
+        """Persistent generator yielding normalized realtime price updates.
+
+        Supports single or multiple symbols. Each symbol must be in
+        ``"EXCHANGE:SYMBOL"`` format (e.g. ``"BINANCE:BTCUSDT"``).
+
+        For a single symbol, ``du`` (data update) packets are also yielded
+        alongside ``qsd`` packets. For multiple symbols only ``qsd`` packets
+        are processed.
+
+        Args:
+            symbols: List of symbols in ``"EXCHANGE:SYMBOL"`` format.
+
+        Yields:
+            Normalised price update dicts.
+        """
+        symbol_map = {}
+        for s in symbols:
+            ex, sym = s.split(":", 1)
+            symbol_map[s] = (ex, sym)
 
         handler = self._get_fresh_handler()
-
-        resolve_symbol = json.dumps({"adjustment": "splits", "symbol": exchange_symbol})
         qs = handler.quote_session
-        cs = handler.chart_session
+        single = len(symbols) == 1
 
-        handler.send_message("quote_add_symbols", [qs, f"={resolve_symbol}"])
-        handler.send_message("quote_fast_symbols", [qs, exchange_symbol])
+        self._subscribe_symbols(handler, qs, symbols)
 
-        mapped_tf = DataValidator().get_timeframes().get("1m", "1")
-        handler.send_message("resolve_symbol", [cs, "sds_sym_1", f"={resolve_symbol}"])
-        handler.send_message(
-            "create_series", [cs, "sds_1", "s1", "sds_sym_1", mapped_tf, 1, ""]
-        )
+        if single:
+            cs = handler.chart_session
+            resolve = json.dumps(
+                {"adjustment": "splits", "symbol": symbols[0]})
+            mapped_tf = DataValidator().get_timeframes().get("1m", "1")
+            handler.send_message("resolve_symbol", [
+                                 cs, "sds_sym_1", f"={resolve}"])
+            handler.send_message(
+                "create_series", [cs, "sds_1", "s1",
+                                  "sds_sym_1", mapped_tf, 1, ""]
+            )
 
-        last_price = None
+        last_prices: dict[str, float] = {}
 
         for pkt in handler.receive_packets():
             if pkt.get("m") == "qsd":
+                result = self._extract_qsd(pkt, symbol_map)
+                if result:
+                    key = f"{result['exchange']}:{result['symbol']}"
+                    last_prices[key] = result["price"]
+                    yield result
+
+            elif single and pkt.get("m") == "du":
                 p_data = pkt.get("p", [])
-                if len(p_data) > 1 and isinstance(p_data[1], dict):
-                    v = p_data[1].get("v", {})
-                    price = v.get("lp")
-                    if price is not None:
-                        last_price = price
-                        yield {
-                            "exchange": v.get("exchange", exchange),
-                            "symbol": v.get("short_name", symbol),
-                            "price": price,
-                            "volume": v.get("volume"),
-                            "change": v.get("ch"),
-                            "change_percent": v.get("chp"),
-                            "high": v.get("high_price"),
-                            "low": v.get("low_price"),
-                            "open": v.get("open_price"),
-                            "prev_close": v.get("prev_close_price"),
-                            "bid": v.get("bid"),
-                            "ask": v.get("ask"),
-                        }
+                if len(p_data) <= 1 or not isinstance(p_data[1], dict):
+                    continue
+                ex, sym = symbol_map[symbols[0]]
+                last_price = last_prices.get(symbols[0])
+                for entry in p_data[1].get("sds_1", {}).get("s", []):
+                    if "v" not in entry or len(entry["v"]) < 5:
+                        continue
+                    v = entry["v"]
+                    close_price = v[4]
+                    change = None
+                    change_pct = None
+                    if last_price is not None and last_price != 0:
+                        change = close_price - last_price
+                        change_pct = change / last_price * 100
+                    last_price = close_price
+                    last_prices[symbols[0]] = close_price
+                    yield {
+                        "exchange": ex,
+                        "symbol": sym,
+                        "price": close_price,
+                        "volume": v[5] if len(v) > 5 else None,
+                        "change": change,
+                        "change_percent": change_pct,
+                        "high": v[2],
+                        "low": v[3],
+                        "open": v[1],
+                        "prev_close": None,
+                        "bid": None,
+                        "ask": None,
+                    }
 
-            elif pkt.get("m") == "du":
-                p_data = pkt.get("p", [])
-                if len(p_data) > 1 and isinstance(p_data[1], dict):
-                    sds_data = p_data[1].get("sds_1", {})
-                    series = sds_data.get("s", [])
+    def _subscribe_symbols(
+        self, handler: StreamHandler, qs: str, symbols: list[str]
+    ) -> None:
+        first = symbols[0]
+        resolve = json.dumps(
+            {
+                "adjustment": "splits",
+                "currency-id": "USD",
+                "session": "regular",
+                "symbol": first,
+            }
+        )
+        handler.send_message("quote_add_symbols", [qs, f"={resolve}"])
+        handler.send_message("quote_fast_symbols", [qs, f"={resolve}"])
+        handler.send_message("quote_add_symbols", [qs, *symbols])
+        handler.send_message("quote_fast_symbols", [qs, *symbols])
 
-                    for entry in series:
-                        if "v" in entry and len(entry["v"]) >= 5:
-                            close_price = entry["v"][4]
-                            volume = entry["v"][5] if len(entry["v"]) > 5 else None
-
-                            change = None
-                            change_percent = None
-                            if last_price is not None:
-                                change = close_price - last_price
-                                change_percent = (
-                                    (change / last_price * 100)
-                                    if last_price != 0
-                                    else 0
-                                )
-
-                            last_price = close_price
-
-                            yield {
-                                "exchange": exchange,
-                                "symbol": symbol,
-                                "price": close_price,
-                                "volume": volume,
-                                "change": change,
-                                "change_percent": change_percent,
-                                "high": entry["v"][2],
-                                "low": entry["v"][3],
-                                "open": entry["v"][1],
-                                "prev_close": None,
-                                "bid": None,
-                                "ask": None,
-                            }
+    @staticmethod
+    def _extract_qsd(
+        pkt: dict[str, Any], symbol_map: dict[str, tuple[str, str]]
+    ) -> dict[str, Any] | None:
+        p_data = pkt.get("p", [])
+        if len(p_data) <= 1 or not isinstance(p_data[1], dict):
+            return None
+        v = p_data[1].get("v", {})
+        price = v.get("lp")
+        if price is None:
+            return None
+        n = p_data[1].get("n", "")
+        ex, sym = symbol_map.get(n, ("", ""))
+        return {
+            "exchange": v.get("exchange", ex),
+            "symbol": v.get("short_name", sym),
+            "price": price,
+            "volume": v.get("volume"),
+            "change": v.get("ch"),
+            "change_percent": v.get("chp"),
+            "high": v.get("high_price"),
+            "low": v.get("low_price"),
+            "open": v.get("open_price"),
+            "prev_close": v.get("prev_close_price"),
+            "bid": v.get("bid"),
+            "ask": v.get("ask"),
+        }
 
     def _get_fresh_handler(self) -> StreamHandler:
         """Resolve a valid JWT token and return a new connected StreamHandler."""
@@ -227,7 +274,8 @@ class Streamer(BaseScraper):
                 websocket_jwt_token = get_valid_jwt_token(self.cookie)
                 logger.debug("JWT token resolved successfully.")
             except Exception as exc:
-                logger.error("Failed to resolve JWT token from cookie: %s", exc)
+                logger.error(
+                    "Failed to resolve JWT token from cookie: %s", exc)
                 raise
 
         return StreamHandler(jwt_token=websocket_jwt_token)
