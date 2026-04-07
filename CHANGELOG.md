@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- **Standardized Validation Architecture**: Refactored the entire scrapers validation logic to use a declarative, decorator-based approach.
+- **Core**: Introduced `@catch_errors` decorator in `BaseScraper` for automated metadata capture and standardized response envelopes.
+- **Core**: Replaced singleton-based `DataValidator` calls with direct module-level validation functions (`validate_choice`, `validate_range`, `validate_fields`).
+- **Core**: Added `validate_range` utility for consistent numeric range validation.
+- **Scrapers**: Refactored `Fundamentals`, `Markets`, `Options`, `Technicals`, and `Screener` to use the new decorator-based validation, eliminating redundant boilerplate.
+- **Metadata**: Standardized metadata capture using `inspect.signature` to automatically bind function arguments to the response envelope.
+- **Documentation**: Updated `AGENTS.md` to reflect the new validation and error handling architecture.
 
 ### Added
 - **Core**: New `ScannerScraper` base class (inherits from `BaseScraper`) to standardize interactions with TradingView's scanner API, providing automatic payload formatting and table parsing.

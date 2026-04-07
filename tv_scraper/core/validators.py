@@ -1,10 +1,12 @@
 """DataValidator singleton for validating exchanges, indicators, timeframes, etc."""
 
+import functools
+import inspect
 import logging
 import re
 import threading
 from difflib import get_close_matches
-from typing import Any, Optional
+from typing import Any, Callable, Optional, TypeVar
 
 import requests
 
@@ -19,6 +21,8 @@ from tv_scraper.core.validation_data import (
 )
 
 logger = logging.getLogger(__name__)
+
+T = TypeVar("T")
 
 
 # TradingView scanner API for live symbol:exchange combination validation
@@ -78,8 +82,11 @@ class DataValidator:
 
         self._timeframes: dict[str, Any] = TIMEFRAMES
         self._languages: dict[str, str] = LANGUAGES
+        self._languages_set: set[str] = set(self._languages.values())
         self._areas: dict[str, str] = AREAS
+        self._areas_set: set[str] = set(self._areas.values())
         self._news_providers: list[str] = NEWS_PROVIDERS
+        self._news_providers_set: set[str] = set(self._news_providers)
 
     def validate_exchange(self, exchange: str) -> bool:
         """Validate exchange exists.
@@ -174,7 +181,30 @@ class DataValidator:
             f"Invalid timeframe: '{timeframe}'. Valid timeframes: {valid}"
         )
 
-    def validate_choice(self, field_name: str, value: str, allowed: set[str]) -> bool:
+    def validate_language(self, language: str) -> bool:
+        """Validate language code exists (e.g. 'en', 'es')."""
+        if language in self._languages_set:
+            return True
+        valid = ", ".join(sorted(self._languages_set))
+        raise ValidationError(
+            f"Invalid language: '{language}'. Allowed values: {valid}"
+        )
+
+    def validate_area(self, area: str) -> bool:
+        """Validate area code exists (e.g. 'world', 'europe')."""
+        if area in self._areas_set or area in self._areas:
+            return True
+        valid = ", ".join(sorted(self._areas.keys()))
+        raise ValidationError(f"Invalid area: '{area}'. Allowed values: {valid}")
+
+    def validate_news_provider(self, provider: str) -> bool:
+        """Validate news provider exists."""
+        if provider in self._news_providers_set:
+            return True
+        valid = ", ".join(sorted(self._news_providers_set))
+        raise ValidationError(f"Invalid news provider: '{provider}'. Allowed values: {valid}")
+
+    def validate_choice(self, field_name: str, value: str, allowed: set[str] | list[str]) -> bool:
         """Generic validator for choice fields.
 
         Args:
@@ -192,6 +222,29 @@ class DataValidator:
             return True
         raise ValidationError(
             f"Invalid {field_name}: '{value}'. Allowed values: {', '.join(sorted(allowed))}"
+        )
+
+    def validate_range(
+        self, field_name: str, value: int, min_val: int, max_val: int
+    ) -> bool:
+        """Validate numeric range.
+
+        Args:
+            field_name: Name of field for error messages.
+            value: Value to check.
+            min_val: Minimum allowed value.
+            max_val: Maximum allowed value.
+
+        Returns:
+            True if within range.
+
+        Raises:
+            ValidationError: If value is outside [min_val, max_val].
+        """
+        if min_val <= value <= max_val:
+            return True
+        raise ValidationError(
+            f"Invalid {field_name}: {value}. Must be between {min_val} and {max_val}."
         )
 
     def validate_fields(
@@ -352,3 +405,72 @@ class DataValidator:
         """Reset singleton for testing."""
         with cls._lock:
             cls._instance = None
+
+
+# --- Shared Instance and Module-Level Functions ---
+
+_validator = DataValidator()
+
+
+def validate_exchange(exchange: str) -> bool:
+    """Directly validate exchange."""
+    return _validator.validate_exchange(exchange)
+
+
+def validate_symbol(exchange: str, symbol: str) -> bool:
+    """Directly validate symbol."""
+    return _validator.validate_symbol(exchange, symbol)
+
+
+def validate_indicators(indicators: list[str]) -> bool:
+    """Directly validate indicators."""
+    return _validator.validate_indicators(indicators)
+
+
+def validate_timeframe(timeframe: str) -> bool:
+    """Directly validate timeframe."""
+    return _validator.validate_timeframe(timeframe)
+
+
+def validate_language(language: str) -> bool:
+    """Directly validate language."""
+    return _validator.validate_language(language)
+
+
+def validate_area(area: str) -> bool:
+    """Directly validate area."""
+    return _validator.validate_area(area)
+
+
+def validate_news_provider(provider: str) -> bool:
+    """Directly validate news provider."""
+    return _validator.validate_news_provider(provider)
+
+
+def validate_choice(field_name: str, value: str, allowed: set[str] | list[str]) -> bool:
+    """Directly validate choice."""
+    return _validator.validate_choice(field_name, value, allowed)
+
+
+def validate_range(field_name: str, value: int, min_val: int, max_val: int) -> bool:
+    """Directly validate range."""
+    return _validator.validate_range(field_name, value, min_val, max_val)
+
+
+def validate_fields(
+    fields: list[str], allowed: list[str], field_name: str = "fields"
+) -> bool:
+    """Directly validate fields."""
+    return _validator.validate_fields(fields, allowed, field_name)
+
+
+def verify_symbol_exchange(
+    exchange: str, symbol: str, retries: int = 2
+) -> tuple[str, str]:
+    """Directly verify symbol and exchange."""
+    return _validator.verify_symbol_exchange(exchange, symbol, retries)
+
+
+def verify_options_symbol(exchange: str, symbol: str) -> tuple[str, str]:
+    """Directly verify symbol for options."""
+    return _validator.verify_options_symbol(exchange, symbol)

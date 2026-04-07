@@ -2,10 +2,12 @@
 
 from typing import Any
 
+from tv_scraper.core.base import catch_errors
 from tv_scraper.core.constants import SCANNER_URL
 from tv_scraper.core.exceptions import ValidationError
 from tv_scraper.core.scanner import ScannerScraper
 from tv_scraper.core.validation_data import EXCHANGE_LITERAL
+from tv_scraper.core.validators import validate_fields, verify_options_symbol
 
 OPTIONS_SCANNER_URL = f"{SCANNER_URL}/options/scan2?label-product=symbols-options"
 
@@ -63,6 +65,7 @@ class Options(ScannerScraper):
         )
     """
 
+    @catch_errors
     def get_options_by_expiry(
         self,
         exchange: EXCHANGE_LITERAL,
@@ -85,9 +88,9 @@ class Options(ScannerScraper):
             Standardized response dict with keys
             ``status``, ``data``, ``metadata``, ``error``.
         """
-        error = self._validate_inputs(exchange, symbol, columns)
-        if error:
-            return error
+        verify_options_symbol(exchange, symbol)
+        if columns is not None:
+            validate_fields(columns, list(VALID_OPTION_COLUMNS), "columns")
 
         underlying = f"{exchange}:{symbol}"
         cols = columns if columns is not None else DEFAULT_OPTION_COLUMNS
@@ -106,6 +109,7 @@ class Options(ScannerScraper):
 
         return self._execute_request(payload, exchange, symbol, expiration)
 
+    @catch_errors
     def get_options_by_strike(
         self,
         exchange: EXCHANGE_LITERAL,
@@ -126,16 +130,13 @@ class Options(ScannerScraper):
             Standardized response dict with keys
             ``status``, ``data``, ``metadata``, ``error``.
         """
-        error = self._validate_inputs(exchange, symbol, columns)
-        if error:
-            return error
+        verify_options_symbol(exchange, symbol)
+        if columns is not None:
+            validate_fields(columns, list(VALID_OPTION_COLUMNS), "columns")
 
         if not isinstance(strike, (int, float)):
-            return self._error_response(
-                f"Invalid strike value: {strike!r}. Must be int or float.",
-                exchange=exchange,
-                symbol=symbol,
-                strike=strike,
+            raise ValidationError(
+                f"Invalid strike value: {strike!r}. Must be int or float."
             )
 
         underlying = f"{exchange}:{symbol}"
@@ -154,30 +155,6 @@ class Options(ScannerScraper):
 
         return self._execute_request(payload, exchange, symbol, strike)
 
-    def _validate_inputs(
-        self, exchange: str, symbol: str, columns: list[str] | None
-    ) -> dict[str, Any] | None:
-        """Validate exchange, symbol, and columns. Returns error dict or None."""
-        try:
-            exchange, symbol = self.validator.verify_options_symbol(exchange, symbol)
-        except ValidationError as exc:
-            return self._error_response(
-                str(exc),
-                exchange=exchange,
-                symbol=symbol,
-            )
-
-        if columns is not None:
-            invalid_cols = [c for c in columns if c not in VALID_OPTION_COLUMNS]
-            if invalid_cols:
-                return self._error_response(
-                    f"Invalid column names: {invalid_cols}. "
-                    f"Valid columns: {sorted(VALID_OPTION_COLUMNS)}",
-                    exchange=exchange,
-                    symbol=symbol,
-                )
-
-        return None
 
     def _build_payload(
         self,
@@ -214,14 +191,10 @@ class Options(ScannerScraper):
                 return self._error_response(
                     f"Options chain not found for symbol '{exchange}:{symbol}'. "
                     "This symbol may not have options available on TradingView.",
-                    exchange=exchange,
-                    symbol=symbol,
                     filter_value=filter_value,
                 )
             return self._error_response(
                 error_msg,
-                exchange=exchange,
-                symbol=symbol,
                 filter_value=filter_value,
             )
 
@@ -230,8 +203,6 @@ class Options(ScannerScraper):
         if not isinstance(json_response, dict):
             return self._error_response(
                 "Invalid API response format: expected a dictionary",
-                exchange=exchange,
-                symbol=symbol,
                 filter_value=filter_value,
             )
 
@@ -241,8 +212,6 @@ class Options(ScannerScraper):
         if not isinstance(fields, list) or not isinstance(raw_symbols, list):
             return self._error_response(
                 "Invalid API response: 'fields' and 'symbols' must be lists",
-                exchange=exchange,
-                symbol=symbol,
                 filter_value=filter_value,
             )
 
@@ -250,8 +219,6 @@ class Options(ScannerScraper):
             return self._error_response(
                 f"No options found for symbol '{exchange}:{symbol}'. "
                 "This symbol may not have options available on TradingView.",
-                exchange=exchange,
-                symbol=symbol,
                 filter_value=filter_value,
             )
 
@@ -275,8 +242,6 @@ class Options(ScannerScraper):
 
         return self._success_response(
             formatted_data,
-            exchange=exchange,
-            symbol=symbol,
             total=json_response.get("totalCount", len(formatted_data)),
             filter_value=filter_value,
         )

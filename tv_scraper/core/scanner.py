@@ -3,10 +3,10 @@
 import logging
 from typing import Any, cast
 
-from tv_scraper.core.base import BaseScraper
+from tv_scraper.core.base import BaseScraper, catch_errors
 from tv_scraper.core.constants import SCANNER_URL
-from tv_scraper.core.exceptions import ValidationError
 from tv_scraper.core.validation_data import EXCHANGE_LITERAL
+from tv_scraper.core.validators import verify_symbol_exchange
 
 logger = logging.getLogger(__name__)
 
@@ -14,6 +14,7 @@ logger = logging.getLogger(__name__)
 class ScannerScraper(BaseScraper):
     """Base class for scrapers that utilize the TradingView scanner API."""
 
+    @catch_errors
     def _fetch_symbol_fields(
         self,
         exchange: EXCHANGE_LITERAL,
@@ -36,11 +37,7 @@ class ScannerScraper(BaseScraper):
         Returns:
             Standardized response dict.
         """
-        try:
-            _exchange, _symbol = self.validator.verify_symbol_exchange(exchange, symbol)
-            exchange = cast(EXCHANGE_LITERAL, _exchange)
-        except ValidationError as exc:
-            return self._error_response(str(exc), exchange=exchange, symbol=symbol)
+        exchange, symbol = verify_symbol_exchange(exchange, symbol)
 
         url = f"{SCANNER_URL}/symbol"
         params: dict[str, str] = {
@@ -52,21 +49,17 @@ class ScannerScraper(BaseScraper):
         json_response, error_msg = self._request("GET", url, params=params)
 
         if error_msg:
-            return self._error_response(error_msg, exchange=exchange, symbol=symbol)
+            return self._error_response(error_msg)
 
         if not json_response:
-            return self._error_response(
-                "No data returned from API.", exchange=exchange, symbol=symbol
-            )
+            return self._error_response("No data returned from API.")
 
         error_indicator = (
             json_response.get("error") or json_response.get("s") == "error"
         )
         if error_indicator:
             errmsg = json_response.get("errmsg", "Unknown API error")
-            return self._error_response(
-                f"API error: {errmsg}", exchange=exchange, symbol=symbol
-            )
+            return self._error_response(f"API error: {errmsg}")
 
         result: dict[str, Any] = {"symbol": f"{exchange}:{symbol}"}
         for field in fields:
@@ -87,11 +80,7 @@ class ScannerScraper(BaseScraper):
                 data_category=data_category,
             )
 
-        return self._success_response(
-            result,
-            exchange=exchange,
-            symbol=symbol,
-        )
+        return self._success_response(result)
 
     def _map_scanner_rows(
         self, items: list[dict[str, Any]], fields: list[str]

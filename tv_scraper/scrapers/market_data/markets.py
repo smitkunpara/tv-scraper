@@ -6,6 +6,7 @@ across supported markets, sorted by market cap, volume, change, etc.
 
 from typing import Any, Literal
 
+from tv_scraper.core.base import catch_errors
 from tv_scraper.core.constants import SCANNER_URL
 from tv_scraper.core.scanner import ScannerScraper
 
@@ -82,6 +83,7 @@ class Markets(ScannerScraper):
         {"left": "market_cap_basic", "operation": "nempty"},
     ]
 
+    @catch_errors
     def get_markets(
         self,
         market: MARKET_LITERAL = "america",
@@ -106,43 +108,12 @@ class Markets(ScannerScraper):
             ``metadata``, and ``error`` keys.
         """
         # --- validation ------------------------------------------------
-        if market not in self.VALID_MARKETS:
-            return self._error_response(
-                f"Unsupported market: '{market}'. "
-                f"Valid markets: {', '.join(self.VALID_MARKETS)}",
-                market=market,
-                sort_by=sort_by,
-                sort_order=sort_order,
-                limit=limit,
-            )
+        from tv_scraper.core.validators import validate_choice, validate_range
 
-        if sort_by not in self.SORT_CRITERIA:
-            return self._error_response(
-                f"Unsupported sort criterion: '{sort_by}'. "
-                f"Valid sort criteria: {', '.join(self.SORT_CRITERIA.keys())}",
-                market=market,
-                sort_by=sort_by,
-                sort_order=sort_order,
-                limit=limit,
-            )
-
-        if sort_order not in ("asc", "desc"):
-            return self._error_response(
-                f"Invalid sort_order: '{sort_order}'. Must be 'asc' or 'desc'.",
-                market=market,
-                sort_by=sort_by,
-                sort_order=sort_order,
-                limit=limit,
-            )
-
-        if limit <= 0 or limit > 1000:
-            return self._error_response(
-                f"Invalid limit: {limit}. Must be between 1 and 1000.",
-                market=market,
-                sort_by=sort_by,
-                sort_order=sort_order,
-                limit=limit,
-            )
+        validate_choice("market", market, self.VALID_MARKETS)
+        validate_choice("sort_by", sort_by, list(self.SORT_CRITERIA.keys()))
+        validate_choice("sort_order", sort_order, ["asc", "desc"])
+        validate_range("limit", limit, 1, 1000)
 
         # --- build payload ---------------------------------------------
         used_fields = fields if fields is not None else self.DEFAULT_FIELDS
@@ -168,13 +139,7 @@ class Markets(ScannerScraper):
         )
 
         if error_msg:
-            return self._error_response(
-                error_msg,
-                market=market,
-                sort_by=sort_by,
-                sort_order=sort_order,
-                limit=limit,
-            )
+            return self._error_response(error_msg)
 
         assert json_data is not None
 
@@ -182,13 +147,7 @@ class Markets(ScannerScraper):
         total_count: int = json_data.get("totalCount", len(items))
 
         if not items:
-            return self._error_response(
-                f"No data found for market: {market}",
-                market=market,
-                sort_by=sort_by,
-                sort_order=sort_order,
-                limit=limit,
-            )
+            return self._error_response(f"No data found for market: {market}")
 
         # --- map rows --------------------------------------------------
         mapped = self._map_scanner_rows(items, used_fields)
@@ -203,10 +162,6 @@ class Markets(ScannerScraper):
 
         return self._success_response(
             mapped,
-            market=market,
-            sort_by=sort_by,
-            sort_order=sort_order,
-            limit=limit,
             total=len(mapped),
             total_count=total_count,
         )

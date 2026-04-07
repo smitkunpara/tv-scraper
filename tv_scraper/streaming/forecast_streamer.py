@@ -6,9 +6,11 @@ from typing import Any, cast
 
 import requests
 
+from tv_scraper.core.base import catch_errors
 from tv_scraper.core.constants import DEFAULT_USER_AGENT, SCANNER_URL
+from tv_scraper.core.exceptions import ValidationError
 from tv_scraper.core.validation_data import EXCHANGE_LITERAL
-from tv_scraper.core.validators import DataValidator
+from tv_scraper.core.validators import verify_symbol_exchange
 from tv_scraper.streaming.base_streamer import BaseStreamer
 from tv_scraper.utils.helpers import format_symbol
 
@@ -55,6 +57,7 @@ class ForecastStreamer(BaseStreamer):
             cookie=cookie,
         )
 
+    @catch_errors
     def get_forecast(self, exchange: EXCHANGE_LITERAL, symbol: str) -> dict[str, Any]:  # noqa: PLR0915
         """Capture forecast data via TradingView WebSocket quote stream.
 
@@ -69,118 +72,93 @@ class ForecastStreamer(BaseStreamer):
             Standardized response dict with
             ``{"status", "data", "metadata", "error"}``.
         """
-        try:
-            _exchange, _symbol = DataValidator().verify_symbol_exchange(
-                exchange, symbol
-            )
-            exchange = cast(EXCHANGE_LITERAL, _exchange)
-            exchange_symbol = format_symbol(exchange, _symbol)
+        exchange, _symbol = verify_symbol_exchange(exchange, symbol)
+        exchange_symbol = format_symbol(exchange, _symbol)
 
-            symbol_type = self._get_symbol_type(exchange_symbol)
-            if symbol_type != "stock":
-                return self._error_response(
-                    "forecast is not available for this symbol because it is type: "
-                    f"{symbol_type}",
-                    exchange=exchange,
-                    symbol=symbol,
+        symbol_type = self._get_symbol_type(exchange_symbol)
+        if symbol_type != "stock":
+            raise ValidationError(
+                "forecast is not available for this symbol because it is type: "
+                f"{symbol_type}"
+            )
+
+        handler = self.connect()
+
+        qs = handler.quote_session
+        resolve_symbol = json.dumps(
+            {"adjustment": "splits", "symbol": exchange_symbol}
+        )
+
+        capture_fields = sorted(set(_FORECAST_SOURCE_KEY_MAP.values()))
+        handler.send_message("set_data_quality", ["low"])
+        handler.send_message("quote_set_fields", [qs, *capture_fields])
+        handler.send_message("quote_hibernate_all", [qs])
+        handler.send_message("quote_add_symbols", [qs, f"={resolve_symbol}"])
+        handler.send_message("quote_fast_symbols", [qs, exchange_symbol])
+
+        raw_packets: list[dict[str, Any]] = []
+        snapshot: dict[str, Any] = {}
+        required_output_keys = set(_FORECAST_SOURCE_KEY_MAP.keys())
+        found_output_keys: set[str] = set()
+        packet_count = 0
+
+        for pkt in handler.receive_packets():
+            packet_count += 1
+            raw_packets.append(pkt)
+
+            if pkt.get("m") != "qsd":
+                continue
+
+            p_data = pkt.get("p", [])
+            if len(p_data) < 2 or not isinstance(p_data[1], dict):
+                continue
+
+            block = p_data[1]
+            values = block.get("v", {})
+            if not isinstance(values, dict):
+                continue
+
+            snapshot.update(values)
+            for out_key, src_key in _FORECAST_SOURCE_KEY_MAP.items():
+                if src_key in snapshot and snapshot[src_key] is not None:
+                    found_output_keys.add(out_key)
+
+            if required_output_keys.issubset(found_output_keys):
+                break
+            if packet_count > 15:
+                logger.warning(
+                    "get_forecast timeout after %d packets. Found keys: %s",
+                    packet_count,
+                    sorted(found_output_keys),
                 )
+                break
 
-            handler = self.connect()
+        cleaned_data = {
+            out_key: snapshot.get(src_key)
+            for out_key, src_key in _FORECAST_SOURCE_KEY_MAP.items()
+        }
+        available_output_keys = [
+            k for k, v in cleaned_data.items() if v is not None
+        ]
 
-            qs = handler.quote_session
-            resolve_symbol = json.dumps(
-                {"adjustment": "splits", "symbol": exchange_symbol}
-            )
+        missing_output_keys = sorted(
+            required_output_keys.difference(available_output_keys)
+        )
 
-            capture_fields = sorted(set(_FORECAST_SOURCE_KEY_MAP.values()))
-            handler.send_message("set_data_quality", ["low"])
-            handler.send_message("quote_set_fields", [qs, *capture_fields])
-            handler.send_message("quote_hibernate_all", [qs])
-            handler.send_message("quote_add_symbols", [qs, f"={resolve_symbol}"])
-            handler.send_message("quote_fast_symbols", [qs, exchange_symbol])
-
-            raw_packets: list[dict[str, Any]] = []
-            snapshot: dict[str, Any] = {}
-            required_output_keys = set(_FORECAST_SOURCE_KEY_MAP.keys())
-            found_output_keys: set[str] = set()
-            packet_count = 0
-
-            for pkt in handler.receive_packets():
-                packet_count += 1
-                raw_packets.append(pkt)
-
-                if pkt.get("m") != "qsd":
-                    continue
-
-                p_data = pkt.get("p", [])
-                if len(p_data) < 2 or not isinstance(p_data[1], dict):
-                    continue
-
-                block = p_data[1]
-                values = block.get("v", {})
-                if not isinstance(values, dict):
-                    continue
-
-                snapshot.update(values)
-                for out_key, src_key in _FORECAST_SOURCE_KEY_MAP.items():
-                    if src_key in snapshot and snapshot[src_key] is not None:
-                        found_output_keys.add(out_key)
-
-                if required_output_keys.issubset(found_output_keys):
-                    break
-                if packet_count > 15:
-                    logger.warning(
-                        "get_forecast timeout after %d packets. Found keys: %s",
-                        packet_count,
-                        sorted(found_output_keys),
-                    )
-                    break
-
-            cleaned_data = {
-                out_key: snapshot.get(src_key)
-                for out_key, src_key in _FORECAST_SOURCE_KEY_MAP.items()
-            }
-            available_output_keys = [
-                k for k, v in cleaned_data.items() if v is not None
-            ]
-
-            missing_output_keys = sorted(
-                required_output_keys.difference(available_output_keys)
-            )
-
-            if missing_output_keys:
-                return self._error_response(
-                    "failed to fetch keys: " + ", ".join(missing_output_keys),
-                    data=cleaned_data,
-                    exchange=exchange,
-                    symbol=symbol,
-                    available_output_keys=sorted(available_output_keys),
-                )
-
-            if self.export_result:
-                self._export(cleaned_data, symbol, "forecast")
-
-            return self._success_response(
-                cleaned_data,
-                exchange=exchange,
-                symbol=symbol,
+        if missing_output_keys:
+            return self._error_response(
+                "failed to fetch keys: " + ", ".join(missing_output_keys),
+                data=cleaned_data,
                 available_output_keys=sorted(available_output_keys),
             )
 
-        except requests.RequestException as exc:
-            logger.error("get_forecast network error: %s", exc)
-            return self._error_response(
-                f"Network error: {exc}",
-                exchange=exchange,
-                symbol=symbol,
-            )
-        except Exception as exc:
-            logger.error("get_forecast unexpected error: %s", exc)
-            return self._error_response(
-                f"Unexpected error: {exc}",
-                exchange=exchange,
-                symbol=symbol,
-            )
+        if self.export_result:
+            self._export(cleaned_data, symbol, "forecast")
+
+        return self._success_response(
+            cleaned_data,
+            available_output_keys=sorted(available_output_keys),
+        )
 
     def _get_symbol_type(self, exchange_symbol: str) -> str | None:
         """Fetch the symbol type (e.g. 'stock', 'crypto', 'spot') from TradingView scanner."""

@@ -4,10 +4,16 @@ import logging
 import re
 from typing import Any, cast
 
+from tv_scraper.core.base import catch_errors
 from tv_scraper.core.constants import SCANNER_URL
 from tv_scraper.core.exceptions import ValidationError
 from tv_scraper.core.scanner import ScannerScraper
 from tv_scraper.core.validation_data import EXCHANGE_LITERAL, TIMEFRAME_LITERAL
+from tv_scraper.core.validators import (
+    validate_indicators,
+    validate_timeframe,
+    verify_symbol_exchange,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -35,6 +41,7 @@ class Technicals(ScannerScraper):
         )
     """
 
+    @catch_errors
     def get_technicals(
         self,
         exchange: EXCHANGE_LITERAL,
@@ -62,40 +69,19 @@ class Technicals(ScannerScraper):
         """
 
         # --- Validation ---
-        try:
-            _exchange, _symbol = self.validator.verify_symbol_exchange(exchange, symbol)
-            exchange = cast(EXCHANGE_LITERAL, _exchange)
-            self.validator.validate_timeframe(timeframe)
-        except ValidationError as exc:
-            return self._error_response(
-                str(exc),
-                exchange=exchange,
-                symbol=symbol,
-                timeframe=timeframe,
-            )
+        verify_symbol_exchange(exchange, symbol)
+        validate_timeframe(timeframe)
 
         # Resolve indicator list
         if all_indicators:
             indicators = self.validator.get_indicators()
         elif technical_indicators:
-            try:
-                self.validator.validate_indicators(technical_indicators)
-            except ValidationError as exc:
-                return self._error_response(
-                    str(exc),
-                    exchange=exchange,
-                    symbol=symbol,
-                    timeframe=timeframe,
-                    technical_indicators=technical_indicators,
-                )
+            validate_indicators(technical_indicators)
             indicators = technical_indicators
         else:
-            return self._error_response(
+            raise ValidationError(
                 "No indicators provided. "
-                "Use technical_indicators or set all_indicators=True.",
-                exchange=exchange,
-                symbol=symbol,
-                timeframe=timeframe,
+                "Use technical_indicators or set all_indicators=True."
             )
 
         # --- Build API request ---
@@ -126,12 +112,7 @@ class Technicals(ScannerScraper):
         )
 
         if error_msg:
-            return self._error_response(
-                error_msg,
-                exchange=exchange,
-                symbol=symbol,
-                timeframe=timeframe,
-            )
+            return self._error_response(error_msg)
 
         assert json_response is not None
 
@@ -140,10 +121,7 @@ class Technicals(ScannerScraper):
         if not json_response:
             return self._error_response(
                 f"Empty response for {exchange}:{symbol} with timeframe {timeframe}. "
-                "This may indicate an invalid symbol or no data available for the requested timeframe.",
-                exchange=exchange,
-                symbol=symbol,
-                timeframe=timeframe,
+                "This may indicate an invalid symbol or no data available for the requested timeframe."
             )
 
         result: dict[str, Any] = {}
@@ -168,16 +146,7 @@ class Technicals(ScannerScraper):
                 timeframe=timeframe,
             )
 
-        tech_meta: dict[str, Any] = {
-            "exchange": exchange,
-            "symbol": symbol,
-            "timeframe": timeframe,
-            "all_indicators": all_indicators,
-        }
-        if technical_indicators is not None:
-            tech_meta["technical_indicators"] = technical_indicators
-
-        return self._success_response(result, **tech_meta)
+        return self._success_response(result)
 
     def _revise_response(
         self, data: dict[str, Any], timeframe_value: str

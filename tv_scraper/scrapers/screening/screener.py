@@ -1,10 +1,11 @@
-"""Screener module for screening financial instruments with custom filters."""
-
 import logging
 from typing import Any, Literal
 
+from tv_scraper.core.base import catch_errors
 from tv_scraper.core.constants import SCANNER_URL
+from tv_scraper.core.exceptions import ValidationError
 from tv_scraper.core.scanner import ScannerScraper
+from tv_scraper.core.validators import validate_choice, validate_range
 
 SCREENER_MARKET_LITERAL = Literal[
     "america",
@@ -160,82 +161,44 @@ class Screener(ScannerScraper):
             return list(self.DEFAULT_FOREX_FIELDS)
         return list(self.DEFAULT_STOCK_FIELDS)
 
-    def _validate_filter(self, filters: list[dict[str, Any]]) -> str | None:
+    def _validate_filter(self, filters: list[dict[str, Any]]) -> None:
         """Validate filter structure.
 
         Args:
             filters: List of filter dicts to validate.
 
-        Returns:
-            Error message if validation fails, None otherwise.
+        Raises:
+            ValidationError: If validation fails.
         """
         for i, f in enumerate(filters):
             if not isinstance(f, dict):
-                return f"Filter at index {i} must be a dictionary"
+                raise ValidationError(f"Filter at index {i} must be a dictionary")
             if "left" not in f:
-                return f"Filter at index {i} missing required 'left' key"
+                raise ValidationError(f"Filter at index {i} missing required 'left' key")
             if "operation" not in f:
-                return f"Filter at index {i} missing required 'operation' key"
+                raise ValidationError(
+                    f"Filter at index {i} missing required 'operation' key"
+                )
             if f["operation"] not in self.OPERATIONS:
-                return (
+                raise ValidationError(
                     f"Invalid operation '{f['operation']}' in filter at index {i}. "
                     f"Valid operations: {', '.join(sorted(self.OPERATIONS))}"
                 )
-        return None
 
-    def _validate_filter2(self, filter2: dict[str, Any]) -> str | None:
+    def _validate_filter2(self, filter2: dict[str, Any]) -> None:
         """Validate filter2 structure.
 
         Args:
             filter2: Filter2 dict to validate.
 
-        Returns:
-            Error message if validation fails, None otherwise.
+        Raises:
+            ValidationError: If validation fails.
         """
         if not isinstance(filter2, dict):
-            return "filter2 must be a dictionary"
+            raise ValidationError("filter2 must be a dictionary")
         if "operator" not in filter2:
-            return "filter2 missing required 'operator' key"
-        return None
+            raise ValidationError("filter2 missing required 'operator' key")
 
-    def _build_metadata(
-        self,
-        market: str,
-        sort_order: str,
-        limit: int,
-        filters: list[dict[str, Any]] | None = None,
-        sort_by: str | None = None,
-        symbols: dict[str, Any] | None = None,
-        filter2: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
-        """Build metadata dict for response envelope.
-
-        Args:
-            market: Market identifier.
-            sort_order: Sort direction.
-            limit: Result limit.
-            filters: Optional filters list.
-            sort_by: Optional sort field.
-            symbols: Optional symbols filter.
-            filter2: Optional complex filter.
-
-        Returns:
-            Metadata dict for response envelope.
-        """
-        meta: dict[str, Any] = {
-            "market": market,
-            "sort_order": sort_order,
-            "limit": limit,
-        }
-        if filters is not None:
-            meta["filters"] = filters
-        if sort_by is not None:
-            meta["sort_by"] = sort_by
-        if symbols is not None:
-            meta["symbols"] = symbols
-        if filter2 is not None:
-            meta["filter2"] = filter2
-        return meta
 
     def _build_payload(
         self,
@@ -285,6 +248,7 @@ class Screener(ScannerScraper):
             payload["filter2"] = filter2
         return payload
 
+    @catch_errors
     def get_screener(
         self,
         market: SCREENER_MARKET_LITERAL = "america",
@@ -318,44 +282,16 @@ class Screener(ScannerScraper):
             Standardized response envelope with ``status``, ``data``,
             ``metadata``, and ``error`` keys.
         """
-        if market not in self.SUPPORTED_MARKETS:
-            return self._error_response(
-                f"Unsupported market: '{market}'. "
-                f"Supported markets: {', '.join(sorted(self.SUPPORTED_MARKETS))}",
-                market=market,
-                sort_order=sort_order,
-                limit=limit,
-            )
-
-        if sort_order not in SORT_ORDERS:
-            return self._error_response(
-                f"Invalid sort_order: '{sort_order}'. Must be 'asc' or 'desc'.",
-                market=market,
-                sort_order=sort_order,
-                limit=limit,
-            )
-
-        if not isinstance(limit, int) or limit < MIN_LIMIT or limit > MAX_LIMIT:
-            return self._error_response(
-                f"Invalid limit: {limit}. Must be an integer between {MIN_LIMIT} and {MAX_LIMIT}.",
-                market=market,
-                sort_order=sort_order,
-                limit=limit,
-            )
+        # --- Validation ---
+        validate_choice("market", market, list(self.SUPPORTED_MARKETS))
+        validate_choice("sort_order", sort_order, ["asc", "desc"])
+        validate_range("limit", limit, MIN_LIMIT, MAX_LIMIT)
 
         if filters is not None:
-            filter_error = self._validate_filter(filters)
-            if filter_error:
-                return self._error_response(
-                    filter_error, market=market, sort_order=sort_order, limit=limit
-                )
+            self._validate_filter(filters)
 
         if filter2 is not None:
-            filter2_error = self._validate_filter2(filter2)
-            if filter2_error:
-                return self._error_response(
-                    filter2_error, market=market, sort_order=sort_order, limit=limit
-                )
+            self._validate_filter2(filter2)
 
         resolved_fields = (
             fields if fields is not None else self._get_default_fields(market)
@@ -381,12 +317,7 @@ class Screener(ScannerScraper):
         )
 
         if error_msg:
-            return self._error_response(
-                error_msg,
-                **self._build_metadata(
-                    market, sort_order, limit, filters, sort_by, symbols, filter2
-                ),
-            )
+            return self._error_response(error_msg)
 
         assert json_response is not None
 
@@ -402,9 +333,8 @@ class Screener(ScannerScraper):
                 data_category="screener",
             )
 
-        screener_meta = self._build_metadata(
-            market, sort_order, limit, filters, sort_by, symbols, filter2
+        return self._success_response(
+            formatted_data,
+            total=len(formatted_data),
+            total_available=total_count,
         )
-        screener_meta["total"] = len(formatted_data)
-        screener_meta["total_available"] = total_count
-        return self._success_response(formatted_data, **screener_meta)

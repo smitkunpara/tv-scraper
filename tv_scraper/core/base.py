@@ -1,8 +1,10 @@
 """Base scraper class for tv_scraper."""
 
+import functools
+import inspect
 import logging
 import os
-from typing import Any
+from typing import Any, Callable, TypeVar
 
 import requests
 
@@ -14,7 +16,7 @@ from tv_scraper.core.constants import (
     STATUS_FAILED,
     STATUS_SUCCESS,
 )
-from tv_scraper.core.exceptions import CaptchaError
+from tv_scraper.core.exceptions import CaptchaError, ValidationError
 from tv_scraper.core.validators import DataValidator
 from tv_scraper.utils.io import generate_export_filepath, save_csv_file, save_json_file
 
@@ -22,6 +24,43 @@ logger = logging.getLogger(__name__)
 
 _MIN_TIMEOUT: int = 1
 _MAX_TIMEOUT: int = 300
+
+F = TypeVar("F", bound=Callable[..., Any])
+
+
+def catch_errors(func: F) -> F:
+    """Decorator to catch ValidationErrors and return a standardized error response.
+
+    Automatically captures all function arguments into the metadata field
+    of the response envelope.
+    """
+
+    @functools.wraps(func)
+    def wrapper(self: "BaseScraper", *args: Any, **kwargs: Any) -> Any:
+        # Capture metadata for the response envelope
+        sig = inspect.signature(func)
+        try:
+            bound_args = sig.bind(self, *args, **kwargs)
+            bound_args.apply_defaults()
+            # Exclude 'self' and store for use in _success_response / _error_response
+            self._last_metadata = {
+                k: v for k, v in bound_args.arguments.items() if k != "self"
+            }
+        except ValueError:
+            # Fallback if signature binding fails (e.g. invalid arguments)
+            self._last_metadata = kwargs.copy()
+
+        try:
+            return func(self, *args, **kwargs)
+        except ValidationError as exc:
+            return self._error_response(str(exc), **self._last_metadata)
+        except Exception as exc:
+            logger.exception("Unexpected error in %s", func.__name__)
+            return self._error_response(
+                f"Unexpected error: {exc}", **self._last_metadata
+            )
+
+    return wrapper  # type: ignore
 
 
 class BaseScraper:
@@ -62,6 +101,7 @@ class BaseScraper:
 
         self.cookie = cookie or os.environ.get("TRADINGVIEW_COOKIE")
         self.validator = DataValidator()
+        self._last_metadata: dict[str, Any] = {}
         self._headers: dict[str, str] = {"User-Agent": DEFAULT_USER_AGENT}
         if self.cookie:
             self._headers["cookie"] = self.cookie
@@ -79,10 +119,12 @@ class BaseScraper:
             Response dict with status, data, metadata (``dict[str, Any]``),
             and error fields.
         """
+        combined_meta = self._last_metadata.copy()
+        combined_meta.update(metadata)
         return {
             "status": STATUS_SUCCESS,
             "data": data,
-            "metadata": dict(metadata),
+            "metadata": combined_meta,
             "error": None,
         }
 
@@ -101,10 +143,12 @@ class BaseScraper:
             Response dict with status="failed", data=None,
             metadata (``dict[str, Any]``), and error message.
         """
+        combined_meta = self._last_metadata.copy()
+        combined_meta.update(metadata)
         return {
             "status": STATUS_FAILED,
             "data": data,
-            "metadata": dict(metadata),
+            "metadata": combined_meta,
             "error": error,
         }
 

@@ -4,8 +4,8 @@ import logging
 from datetime import datetime
 from typing import Any, cast
 
-from tv_scraper.core.base import BaseScraper
-from tv_scraper.core.exceptions import ValidationError
+from tv_scraper.core.base import BaseScraper, catch_errors
+from tv_scraper.core.validators import verify_symbol_exchange
 from tv_scraper.core.validation_data import EXCHANGE_LITERAL
 
 logger = logging.getLogger(__name__)
@@ -36,6 +36,7 @@ class Minds(BaseScraper):
         result = scraper.get_minds(exchange="NASDAQ", symbol="AAPL")
     """
 
+    @catch_errors
     def get_minds(
         self,
         exchange: EXCHANGE_LITERAL,
@@ -54,15 +55,7 @@ class Minds(BaseScraper):
             Standardized response dict with keys
             ``status``, ``data``, ``metadata``, ``error``.
         """
-        try:
-            _exchange, _symbol = self.validator.verify_symbol_exchange(exchange, symbol)
-            exchange = cast(EXCHANGE_LITERAL, _exchange)
-        except ValidationError as exc:
-            return self._error_response(
-                str(exc),
-                exchange=exchange,
-                symbol=symbol,
-            )
+        exchange, symbol = verify_symbol_exchange(exchange, symbol)
 
         combined_symbol = f"{exchange}:{symbol}"
 
@@ -88,11 +81,7 @@ class Minds(BaseScraper):
 
             if error_msg:
                 logger.error("Error for %s:%s - %s", exchange, symbol, error_msg)
-                return self._error_response(
-                    error_msg,
-                    exchange=exchange,
-                    symbol=symbol,
-                )
+                return self._error_response(error_msg)
 
             assert json_response is not None
 
@@ -136,19 +125,11 @@ class Minds(BaseScraper):
                 data_category="minds",
             )
 
-        meta: dict[str, Any] = {
-            "exchange": exchange,
-            "symbol": symbol,
-            "total": len(parsed_data),
-            "pages": pages,
-            "symbol_info": symbol_info,
-        }
-        if limit is not None:
-            meta["limit"] = limit
-
         return self._success_response(
             parsed_data,
-            **meta,
+            total=len(parsed_data),
+            pages=pages,
+            symbol_info=symbol_info,
         )
 
     def _parse_mind(self, item: dict[str, Any]) -> dict[str, Any]:

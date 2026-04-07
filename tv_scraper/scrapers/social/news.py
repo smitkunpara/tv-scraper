@@ -3,12 +3,18 @@
 import logging
 from typing import Any, Literal, cast
 
-from tv_scraper.core.base import BaseScraper
-from tv_scraper.core.exceptions import ValidationError
+from tv_scraper.core.base import BaseScraper, catch_errors
 from tv_scraper.core.validation_data import (
     AREA_LITERAL,
     EXCHANGE_LITERAL,
     NEWS_PROVIDER_LITERAL,
+)
+from tv_scraper.core.validators import (
+    validate_area,
+    validate_choice,
+    validate_language,
+    validate_news_provider,
+    verify_symbol_exchange,
 )
 
 logger = logging.getLogger(__name__)
@@ -73,6 +79,7 @@ class News(BaseScraper):
             cookie=cookie,
         )
 
+    @catch_errors
     def get_news_headlines(
         self,
         exchange: EXCHANGE_LITERAL,
@@ -100,53 +107,19 @@ class News(BaseScraper):
             Standardized response dict with keys
             ``status``, ``data``, ``metadata``, ``error``.
         """
-        meta: dict[str, Any] = {
-            "exchange": exchange,
-            "symbol": symbol,
-            "sort_by": sort_by,
-            "section": section,
-            "language": language,
-        }
-        if provider is not None:
-            meta["provider"] = provider
-        if area is not None:
-            meta["area"] = area
-
-        meta.update({"exchange": exchange, "symbol": symbol})
-
-        try:
-            _exchange, _symbol = self.validator.verify_symbol_exchange(exchange, symbol)
-            exchange = cast(EXCHANGE_LITERAL, _exchange)
-            self.validator.validate_choice("sort_by", sort_by, set(VALID_SORT_OPTIONS))
-            self.validator.validate_choice("section", section, set(VALID_SECTIONS))
-
-            languages = self.validator.get_languages()
-            if language not in languages.values():
-                raise ValidationError(
-                    f"Invalid language: '{language}'. "
-                    f"Allowed values: {', '.join(sorted(languages.values()))}"
-                )
-
-            providers = self.validator.get_news_providers()
-            if provider is not None and provider not in providers:
-                raise ValidationError(
-                    f"Invalid provider: '{provider}'. "
-                    f"Allowed values: {', '.join(sorted(providers))}"
-                )
-
-            areas = self.validator.get_areas()
-            if area is not None and area not in areas:
-                raise ValidationError(
-                    f"Invalid area: '{area}'. "
-                    f"Allowed values: {', '.join(sorted(areas.keys()))}"
-                )
-        except ValidationError as exc:
-            return self._error_response(str(exc), **meta)
+        exchange, symbol = verify_symbol_exchange(exchange, symbol)
+        validate_choice("sort_by", sort_by, VALID_SORT_OPTIONS)
+        validate_choice("section", section, VALID_SECTIONS)
+        validate_language(language)
+        if provider:
+            validate_news_provider(provider)
+        if area:
+            validate_area(area)
 
         params: dict[str, Any] = {
             "client": "web",
             "lang": language,
-            "area": areas[area] if area else "",
+            "area": self.validator.get_areas().get(area) if area else "",
             "provider": provider.replace(".", "_") if provider else "",
             "section": "" if section == "all" else section,
             "streaming": "",
@@ -160,14 +133,14 @@ class News(BaseScraper):
         )
 
         if error_msg:
-            return self._error_response(error_msg, **meta)
+            return self._error_response(error_msg)
 
         assert response_json is not None
 
         items: list[dict[str, Any]] = response_json.get("items", [])
 
         if not items:
-            return self._success_response([], total=0, **meta)
+            return self._success_response([], total=0)
 
         items = self._sort_news(items, sort_by)
         cleaned_items = [self._clean_headline(item) for item in items]
@@ -179,8 +152,9 @@ class News(BaseScraper):
                 data_category="news",
             )
 
-        return self._success_response(cleaned_items, total=len(cleaned_items), **meta)
+        return self._success_response(cleaned_items, total=len(cleaned_items))
 
+    @catch_errors
     def get_news_content(
         self,
         story_id: str,
@@ -197,21 +171,10 @@ class News(BaseScraper):
             Standardized response dict with keys
             ``status``, ``data``, ``metadata``, ``error``.
         """
-        meta: dict[str, Any] = {
-            "story_id": story_id,
-            "language": language,
-        }
-
         if not story_id or not story_id.strip():
-            return self._error_response("story_id cannot be empty", **meta)
+            return self._error_response("story_id cannot be empty")
 
-        languages = self.validator.get_languages()
-        if language not in languages.values():
-            return self._error_response(
-                f"Invalid language: '{language}'. "
-                f"Allowed values: {', '.join(sorted(languages.values()))}",
-                **meta,
-            )
+        validate_language(language)
 
         params: dict[str, str] = {
             "id": story_id,
@@ -226,17 +189,13 @@ class News(BaseScraper):
         )
 
         if error_msg:
-            return self._error_response(error_msg, **meta)
+            return self._error_response(error_msg)
 
         assert story_data is not None
 
         article_data = self._parse_story(story_data)
 
-        return self._success_response(
-            article_data,
-            story_id=story_id,
-            language=language,
-        )
+        return self._success_response(article_data)
 
     def _sort_news(
         self,

@@ -66,7 +66,8 @@ pytest tests/integration/  # Cross-module integration tests
 | **WebSocket** | `websockets` (with custom framing) | Real-time streaming (candles, forecast) |
 | **HTTP** | `requests` with `urllib3.util.retry` | Robust HTTP requests with auto-retries (`http.py`) |
 | **Object Model**| `ScannerScraper` / `BaseScraper` | Centralized network/error handling & inheritance hierarchy |
-| **Validation** | `DataValidator` singleton | Symbol/exchange verification |
+| **Error Handling**| `@catch_errors` decorator | Automated metadata capture and standardized response envelopes |
+| **Validation** | Module-level functions | Symbolic/exchange verification via `tv_scraper.core.validators` |
 | **Data Mapping** | Hardcoded JSON mappings | Forecast key transformation, timeframe conversion |
 | **Export** | CSV/JSON writers | Optional data persistence |
 | **Parallelization** | `ThreadPoolExecutor` | Concurrent page scraping (ideas, minds) |
@@ -620,7 +621,30 @@ def get_forecast(
 
 ---
 
-## DataValidator Singleton
+## Validation & Error Architecture
+
+### @catch_errors Decorator
+The primary mechanism for standardizing responses. Every public scraper method is decorated with `@catch_errors`, which:
+1. **Captures Metadata**: Uses `inspect.signature` to automatically bind all function arguments (e.g., `symbol`, `exchange`, `limit`) into the response's `metadata` field.
+2. **Standardizes Envelopes**: Wraps the function's return value in a `success` envelope or catches `ValidationError` / network exceptions to return a `failed` envelope.
+3. **Eliminates Boilerplate**: Removes the need for manual `try/except` blocks and manual metadata dictionary construction in every method.
+
+### DataValidator & Module Functions
+Validation logic is centralized in `tv_scraper/core/validators.py`. While a `DataValidator` singleton exists internally to manage data loading, developers should use the exposed **module-level functions** for direct validation:
+
+| Function | Purpose |
+|----------|---------|
+| `verify_symbol_exchange(exc, sym)` | Live check against TradingView for symbol existence. |
+| `verify_options_symbol(exc, sym)` | Specifically verifies if a symbol has an options market. |
+| `validate_exchange(exc)` | Offline check against known exchange list. |
+| `validate_timeframe(tf)` | Validates TradingView-compatible timeframe strings. |
+| `validate_choice(name, val, choices)`| Generic validator for string literal choices. |
+| `validate_range(name, val, min, max)` | Generic numeric range validator. |
+| `validate_fields(fields, allowed)` | Validates a list of requested data fields. |
+
+**Design Rule:** Public methods should perform validation at the very beginning by calling these functions. Any `ValidationError` raised will be automatically caught by `@catch_errors` and formatted into a standardized error response.
+
+---
 
 **Source:** `tv_scraper/core/validators.py`
 

@@ -4,8 +4,10 @@ import json
 import logging
 from typing import Any, cast
 
+from tv_scraper.core.base import catch_errors
+from tv_scraper.core.exceptions import ValidationError
 from tv_scraper.core.validation_data import EXCHANGE_LITERAL, TIMEFRAME_LITERAL
-from tv_scraper.core.validators import DataValidator
+from tv_scraper.core.validators import verify_symbol_exchange
 from tv_scraper.streaming.base_streamer import BaseStreamer
 from tv_scraper.streaming.stream_handler import StreamHandler
 from tv_scraper.streaming.utils import fetch_indicator_metadata
@@ -39,6 +41,7 @@ class CandleStreamer(BaseStreamer):
             cookie=cookie,
         )
 
+    @catch_errors
     def get_candles(  # noqa: PLR0915
         self,
         exchange: EXCHANGE_LITERAL,
@@ -60,136 +63,83 @@ class CandleStreamer(BaseStreamer):
             Standardized response dict with
             ``{"status", "data": {"ohlcv": [...], "indicators": {...}}, "metadata", "error"}``.
         """
-        try:
-            if not isinstance(numb_candles, int) or numb_candles <= 0:
-                return self._error_response(
-                    f"numb_candles must be a positive integer, got {numb_candles!r}.",
-                    exchange=exchange,
-                    symbol=symbol,
-                    timeframe=timeframe,
-                    numb_candles=numb_candles,
+        if not isinstance(numb_candles, int) or numb_candles <= 0:
+            raise ValidationError(
+                f"numb_candles must be a positive integer, got {numb_candles!r}."
+            )
+        exchange, _symbol = verify_symbol_exchange(exchange, symbol)
+        exchange_symbol = format_symbol(exchange, _symbol)
+        self.study_id_to_name_map = {}
+
+        ind_flag = bool(indicators)
+        handler = self.connect()
+
+        self._add_symbol_to_sessions(
+            handler,
+            handler.quote_session,
+            handler.chart_session,
+            exchange_symbol,
+            timeframe,
+            numb_candles,
+        )
+
+        if ind_flag and indicators:
+            self._add_indicators(handler, indicators)
+
+        ohlcv_data: list[dict[str, Any]] = []
+        indicator_data: dict[str, Any] = {}
+        expected_ind_count = len(indicators) if ind_flag and indicators else 0
+
+        for i, pkt in enumerate(handler.receive_packets()):
+            received_ohlcv = self._extract_ohlcv_from_stream(pkt)
+            if received_ohlcv:
+                ohlcv_data = received_ohlcv
+
+            received_ind = self._extract_indicator_from_stream(pkt)
+            if received_ind:
+                indicator_data.update(received_ind)
+
+            ohlcv_ready = len(ohlcv_data) >= numb_candles
+            ind_ready = not ind_flag or len(indicator_data) >= expected_ind_count
+            if ohlcv_ready and ind_ready:
+                break
+            if i > 15:
+                logger.warning(
+                    "Timeout after %d packets. OHLCV=%d, Indicators=%d",
+                    i,
+                    len(ohlcv_data),
+                    len(indicator_data),
                 )
-            _exchange, _symbol = DataValidator().verify_symbol_exchange(
-                exchange, symbol
-            )
-            exchange = cast(EXCHANGE_LITERAL, _exchange)
-            exchange_symbol = format_symbol(exchange, _symbol)
-            self.study_id_to_name_map = {}
+                break
 
-            ind_flag = bool(indicators)
-            handler = self.connect()
+        ohlcv_data = sorted(ohlcv_data, key=lambda x: x["index"])[-numb_candles:]
+        for name in indicator_data:
+            indicator_data[name] = sorted(
+                indicator_data[name], key=lambda x: x["index"]
+            )[-numb_candles:]
 
-            self._add_symbol_to_sessions(
-                handler,
-                handler.quote_session,
-                handler.chart_session,
-                exchange_symbol,
-                timeframe,
-                numb_candles,
-            )
+        if not ohlcv_data:
+            return self._error_response("No OHLCV data received from stream.")
 
-            if ind_flag and indicators:
-                self._add_indicators(handler, indicators)
-
-            ohlcv_data: list[dict[str, Any]] = []
-            indicator_data: dict[str, Any] = {}
-            expected_ind_count = len(indicators) if ind_flag and indicators else 0
-
-            for i, pkt in enumerate(handler.receive_packets()):
-                received_ohlcv = self._extract_ohlcv_from_stream(pkt)
-                if received_ohlcv:
-                    ohlcv_data = received_ohlcv
-
-                received_ind = self._extract_indicator_from_stream(pkt)
-                if received_ind:
-                    indicator_data.update(received_ind)
-
-                ohlcv_ready = len(ohlcv_data) >= numb_candles
-                ind_ready = not ind_flag or len(indicator_data) >= expected_ind_count
-                if ohlcv_ready and ind_ready:
-                    break
-                if i > 15:
-                    logger.warning(
-                        "Timeout after %d packets. OHLCV=%d, Indicators=%d",
-                        i,
-                        len(ohlcv_data),
-                        len(indicator_data),
-                    )
-                    break
-
-            ohlcv_data = sorted(ohlcv_data, key=lambda x: x["index"])[-numb_candles:]
-            for name in indicator_data:
-                indicator_data[name] = sorted(
-                    indicator_data[name], key=lambda x: x["index"]
-                )[-numb_candles:]
-
-            if not ohlcv_data:
+        if ind_flag and indicators:
+            requested_ids = [script_id for script_id, _ in indicators]
+            missing_indicators = [
+                script_id
+                for script_id in requested_ids
+                if script_id not in indicator_data
+            ]
+            if missing_indicators:
                 return self._error_response(
-                    "No OHLCV data received from stream.",
-                    exchange=exchange,
-                    symbol=symbol,
-                    timeframe=timeframe,
-                    numb_candles=numb_candles,
+                    "Failed to fetch indicator data for: "
+                    + ", ".join(missing_indicators)
                 )
 
-            if ind_flag and indicators:
-                requested_ids = [script_id for script_id, _ in indicators]
-                missing_indicators = [
-                    script_id
-                    for script_id in requested_ids
-                    if script_id not in indicator_data
-                ]
-                if missing_indicators:
-                    return self._error_response(
-                        "Failed to fetch indicator data for: "
-                        + ", ".join(missing_indicators),
-                        exchange=exchange,
-                        symbol=symbol,
-                        timeframe=timeframe,
-                        numb_candles=numb_candles,
-                        indicators=[list(t) for t in indicators],
-                    )
+        result_data = {"ohlcv": ohlcv_data, "indicators": indicator_data}
 
-            result_data = {"ohlcv": ohlcv_data, "indicators": indicator_data}
+        if self.export_result:
+            self._export(result_data, symbol, "get_candles")
 
-            if self.export_result:
-                self._export(result_data, symbol, "get_candles")
-
-            candle_meta: dict[str, Any] = {
-                "exchange": exchange,
-                "symbol": symbol,
-                "timeframe": timeframe,
-                "numb_candles": numb_candles,
-            }
-            if indicators is not None:
-                candle_meta["indicators"] = [list(t) for t in indicators]
-            return self._success_response(result_data, **candle_meta)
-
-        except RuntimeError as exc:
-            logger.error("get_candles runtime error: %s", exc)
-            candle_err_meta: dict[str, Any] = {
-                "exchange": exchange,
-                "symbol": symbol,
-                "timeframe": timeframe,
-                "numb_candles": numb_candles,
-            }
-            if indicators is not None:
-                candle_err_meta["indicators"] = [list(t) for t in indicators]
-            return self._error_response(str(exc), **candle_err_meta)
-
-        except Exception as exc:
-            logger.error("get_candles unexpected error: %s", exc)
-            candle_err_meta_exc: dict[str, Any] = {
-                "exchange": exchange,
-                "symbol": symbol,
-                "timeframe": timeframe,
-                "numb_candles": numb_candles,
-            }
-            if indicators is not None:
-                candle_err_meta_exc["indicators"] = [list(t) for t in indicators]
-            return self._error_response(
-                f"Unexpected error: {exc}", **candle_err_meta_exc
-            )
+        return self._success_response(result_data)
 
     def _add_symbol_to_sessions(
         self,
@@ -201,8 +151,7 @@ class CandleStreamer(BaseStreamer):
         numb_candles: int = 10,
     ) -> None:
         """Register symbol in both quote and chart sessions."""
-        timeframes = DataValidator().get_timeframes()
-        mapped_tf = timeframes.get(timeframe, "1")
+        mapped_tf = self.validator.get_timeframes().get(timeframe, "1")
         resolve_symbol = json.dumps({"adjustment": "splits", "symbol": exchange_symbol})
         handler.send_message("quote_add_symbols", [quote_session, f"={resolve_symbol}"])
         handler.send_message(

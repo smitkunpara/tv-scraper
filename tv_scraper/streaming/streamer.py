@@ -10,9 +10,10 @@ import logging
 from collections.abc import Generator
 from typing import Any, cast
 
+from tv_scraper.core.base import catch_errors
 from tv_scraper.core.constants import STATUS_SUCCESS
 from tv_scraper.core.validation_data import EXCHANGE_LITERAL, TIMEFRAME_LITERAL
-from tv_scraper.core.validators import DataValidator
+from tv_scraper.core.validators import verify_symbol_exchange, validate_timeframe
 from tv_scraper.streaming.base_streamer import BaseStreamer
 from tv_scraper.streaming.candle_streamer import CandleStreamer
 from tv_scraper.streaming.forecast_streamer import ForecastStreamer
@@ -59,6 +60,7 @@ class Streamer(BaseStreamer):
             cookie=self.cookie,
         )
 
+    @catch_errors
     def get_candles(
         self,
         exchange: EXCHANGE_LITERAL,
@@ -91,6 +93,7 @@ class Streamer(BaseStreamer):
             self._export(result["data"], symbol, "get_candles")
         return result
 
+    @catch_errors
     def get_forecast(self, exchange: EXCHANGE_LITERAL, symbol: str) -> dict[str, Any]:
         """Capture forecast data via TradingView WebSocket quote stream.
 
@@ -136,8 +139,7 @@ class Streamer(BaseStreamer):
         Yields:
             Normalised price update dicts.
         """
-        _exchange, _symbol = DataValidator().verify_symbol_exchange(exchange, symbol)
-        exchange = cast(EXCHANGE_LITERAL, _exchange)
+        exchange, _symbol = verify_symbol_exchange(exchange, symbol)
         exchange_symbol = format_symbol(exchange, _symbol)
 
         handler = self.connect()
@@ -149,7 +151,7 @@ class Streamer(BaseStreamer):
         handler.send_message("quote_add_symbols", [qs, f"={resolve_symbol}"])
         handler.send_message("quote_fast_symbols", [qs, exchange_symbol])
 
-        mapped_tf = DataValidator().get_timeframes().get("1m", "1")
+        mapped_tf = self.validator.get_timeframes().get("1m", "1")
         handler.send_message("resolve_symbol", [cs, "sds_sym_1", f"={resolve_symbol}"])
         handler.send_message(
             "create_series", [cs, "sds_1", "s1", "sds_sym_1", mapped_tf, 1, ""]

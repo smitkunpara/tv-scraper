@@ -2,9 +2,11 @@
 
 from typing import Any
 
+from tv_scraper.core.base import catch_errors
 from tv_scraper.core.exceptions import ValidationError
 from tv_scraper.core.scanner import ScannerScraper
 from tv_scraper.core.validation_data import EXCHANGE_LITERAL
+from tv_scraper.core.validators import validate_fields
 
 
 class Fundamentals(ScannerScraper):
@@ -137,6 +139,7 @@ class Fundamentals(ScannerScraper):
         "debt_to_equity_fq",
     ]
 
+    @catch_errors
     def get_fundamentals(
         self,
         exchange: EXCHANGE_LITERAL,
@@ -156,18 +159,10 @@ class Fundamentals(ScannerScraper):
             ``status``, ``data``, ``metadata``, ``error``.
         """
         if fields is not None and not isinstance(fields, list):
-            return self._error_response(
-                "Fields must be a list of strings or None.",
-                exchange=exchange,
-                symbol=symbol,
-            )
+            raise ValidationError("Fields must be a list of strings or None.")
 
         field_list = fields if fields else self.ALL_FIELDS
-
-        try:
-            self.validator.validate_fields(field_list, self.ALL_FIELDS, "field")
-        except ValidationError as e:
-            return self._error_response(str(e), exchange=exchange, symbol=symbol)
+        validate_fields(field_list, self.ALL_FIELDS, "field")
 
         return self._fetch_symbol_fields(
             exchange=exchange,

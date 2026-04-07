@@ -4,10 +4,11 @@ import logging
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Any, Literal, cast
 
-from tv_scraper.core.base import BaseScraper
+from tv_scraper.core.base import BaseScraper, catch_errors
 from tv_scraper.core.constants import BASE_URL
 from tv_scraper.core.exceptions import ValidationError
 from tv_scraper.core.validation_data import EXCHANGE_LITERAL
+from tv_scraper.core.validators import validate_choice, verify_symbol_exchange
 
 logger = logging.getLogger(__name__)
 
@@ -54,6 +55,7 @@ class Ideas(BaseScraper):
         )
         self._max_workers: int = max(1, max_workers)
 
+    @catch_errors
     def get_ideas(
         self,
         exchange: EXCHANGE_LITERAL,
@@ -78,37 +80,14 @@ class Ideas(BaseScraper):
 
         # --- Validation ---
         if start_page < 1:
-            return self._error_response(
-                f"start_page must be >= 1, got {start_page}",
-                exchange=exchange,
-                symbol=symbol,
-                start_page=start_page,
-                end_page=end_page,
-                sort_by=sort_by,
-            )
+            raise ValidationError(f"start_page must be >= 1, got {start_page}")
         if end_page < start_page:
-            return self._error_response(
-                f"end_page ({end_page}) must be >= start_page ({start_page})",
-                exchange=exchange,
-                symbol=symbol,
-                start_page=start_page,
-                end_page=end_page,
-                sort_by=sort_by,
+            raise ValidationError(
+                f"end_page ({end_page}) must be >= start_page ({start_page})"
             )
 
-        try:
-            _exchange, _symbol = self.validator.verify_symbol_exchange(exchange, symbol)
-            exchange = cast(EXCHANGE_LITERAL, _exchange)
-            self.validator.validate_choice("sort_by", sort_by, ALLOWED_SORT_VALUES)  # type: ignore[arg-type]
-        except ValidationError as exc:
-            return self._error_response(
-                str(exc),
-                exchange=exchange,
-                symbol=symbol,
-                start_page=start_page,
-                end_page=end_page,
-                sort_by=sort_by,
-            )
+        exchange, symbol = verify_symbol_exchange(exchange, symbol)
+        validate_choice("sort_by", sort_by, ALLOWED_SORT_VALUES)
 
         url_slug = f"{exchange}-{symbol}"
 
@@ -143,11 +122,6 @@ class Ideas(BaseScraper):
         if failed_pages:
             return self._error_response(
                 f"Failed pages: {failed_pages}. Articles collected so far: {len(articles)}",
-                exchange=exchange,
-                symbol=symbol,
-                start_page=start_page,
-                end_page=end_page,
-                sort_by=sort_by,
                 total=len(articles),
                 pages=len(page_list),
                 failed_pages=failed_pages,
@@ -163,11 +137,6 @@ class Ideas(BaseScraper):
 
         return self._success_response(
             articles,
-            exchange=exchange,
-            symbol=symbol,
-            start_page=start_page,
-            end_page=end_page,
-            sort_by=sort_by,
             total=len(articles),
             pages=len(page_list),
         )
