@@ -99,7 +99,7 @@ class TestLiveSymbolMarketsEdgeCases:
         assert result["status"] == "failed"
         assert result["data"] is None
         assert result["error"] is not None
-        assert "Invalid scanner" in result["error"]
+        assert "Unsupported scanner" in result["error"]
 
     def test_live_blank_symbol(self) -> None:
         """Test blank symbol returns error."""

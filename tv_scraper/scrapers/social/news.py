@@ -7,6 +7,7 @@ from tv_scraper.core import validators
 from tv_scraper.core.base import BaseScraper, catch_errors
 from tv_scraper.core.validation_data import (
     AREA_LITERAL,
+    AREAS,
     EXCHANGE_LITERAL,
     NEWS_PROVIDER_LITERAL,
 )
@@ -117,7 +118,7 @@ class News(BaseScraper):
         params: dict[str, Any] = {
             "client": "web",
             "lang": language,
-            "area": validators.get_areas().get(area) if area else "",
+            "area": AREAS.get(area, "") if area else "",
             "provider": provider.replace(".", "_") if provider else "",
             "section": "" if section == "all" else section,
             "streaming": "",

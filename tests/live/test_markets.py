@@ -142,7 +142,7 @@ class TestLiveMarketsValidation:
         assert result["status"] == "failed"
         assert result["data"] is None
         assert result["error"] is not None
-        assert "Invalid market" in result["error"]
+        assert "Unsupported market" in result["error"]
 
     def test_live_invalid_sort_by(self) -> None:
         """Test invalid sort_by returns failed status."""
@@ -152,7 +152,7 @@ class TestLiveMarketsValidation:
         assert result["status"] == "failed"
         assert result["data"] is None
         assert result["error"] is not None
-        assert "Invalid sort_by" in result["error"]
+        assert "Unsupported sort_by" in result["error"]
 
     def test_live_invalid_sort_order(self) -> None:
         """Test invalid sort_order returns failed status."""
@@ -162,7 +162,7 @@ class TestLiveMarketsValidation:
         assert result["status"] == "failed"
         assert result["data"] is None
         assert result["error"] is not None
-        assert "Invalid sort_order" in result["error"]
+        assert "Unsupported sort_order" in result["error"]
 
     def test_live_invalid_limit_zero(self) -> None:
         """Test limit=0 returns failed status."""

@@ -367,15 +367,13 @@ class TestMockTechnicalsAllIndicators:
 
     @patch("tv_scraper.core.validators.verify_symbol_exchange")
     @patch("tv_scraper.core.validators.validate_timeframe")
-    @patch("tv_scraper.core.validators.get_indicators")
     @patch("tv_scraper.core.base.requests.request")
     def test_nasdaq_aapl_all_indicators(
-        self, mock_request, mock_get_ind, mock_validate_tf, mock_verify
+        self, mock_request, mock_validate_tf, mock_verify
     ):
         """Test NASDAQ:AAPL with all indicators."""
         mock_verify.return_value = ("NASDAQ", "AAPL")
         mock_validate_tf.return_value = True
-        mock_get_ind.return_value = ["RSI", "MACD.macd", "MACD.signal"]
         mock_request.return_value = _mock_response("nasdaq_aapl_all_indicators.json")
 
         t = Technicals()

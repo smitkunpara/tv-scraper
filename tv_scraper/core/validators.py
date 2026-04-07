@@ -191,8 +191,11 @@ def validate_choice(field_name: str, value: str, allowed: set[str] | list[str]) 
     """
     if value in allowed:
         return True
+    allowed_values = ", ".join(sorted(allowed))
     raise ValidationError(
-        f"Invalid {field_name}: '{value}'. Allowed values: {', '.join(sorted(allowed))}"
+        f"Invalid {field_name}: '{value}'. "
+        f"Unsupported {field_name}. "
+        f"Allowed values: {allowed_values}"
     )
 
 
