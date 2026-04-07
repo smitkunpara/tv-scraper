@@ -10,7 +10,6 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 from tv_scraper.core.constants import STATUS_SUCCESS
-from tv_scraper.core.validators import DataValidator
 from tv_scraper.scrapers.market_data.fundamentals import Fundamentals
 
 FIXTURES_DIR = Path(__file__).parent.parent / "fixtures" / "fundamentals"
@@ -28,9 +27,7 @@ def _load_fixture(name: str) -> dict:
 @pytest.fixture(autouse=True)
 def setup():
     """Reset validator singleton before each test."""
-    DataValidator.reset()
     yield
-    DataValidator.reset()
 
 
 class TestFundamentalsWithScreener:

@@ -6,7 +6,11 @@ from typing import Any
 
 from tv_scraper.core import validators
 from tv_scraper.core.base import catch_errors
-from tv_scraper.core.validation_data import EXCHANGE_LITERAL, TIMEFRAME_LITERAL
+from tv_scraper.core.validation_data import (
+    EXCHANGE_LITERAL,
+    TIMEFRAME_LITERAL,
+    TIMEFRAMES,
+)
 from tv_scraper.streaming.base_streamer import BaseStreamer
 from tv_scraper.streaming.stream_handler import StreamHandler
 from tv_scraper.streaming.utils import fetch_indicator_metadata
@@ -149,7 +153,7 @@ class CandleStreamer(BaseStreamer):
         numb_candles: int = 10,
     ) -> None:
         """Register symbol in both quote and chart sessions."""
-        mapped_tf = self.validator.get_timeframes().get(timeframe, "1")
+        mapped_tf = TIMEFRAMES.get(timeframe, "1")
         resolve_symbol = json.dumps({"adjustment": "splits", "symbol": exchange_symbol})
         handler.send_message("quote_add_symbols", [quote_session, f"={resolve_symbol}"])
         handler.send_message(

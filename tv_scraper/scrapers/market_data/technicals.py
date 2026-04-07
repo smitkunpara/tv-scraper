@@ -9,7 +9,12 @@ from tv_scraper.core.base import catch_errors
 from tv_scraper.core.constants import SCANNER_URL
 from tv_scraper.core.exceptions import ValidationError
 from tv_scraper.core.scanner import ScannerScraper
-from tv_scraper.core.validation_data import EXCHANGE_LITERAL, TIMEFRAME_LITERAL
+from tv_scraper.core.validation_data import (
+    EXCHANGE_LITERAL,
+    INDICATORS,
+    TIMEFRAME_LITERAL,
+    TIMEFRAMES,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -68,7 +73,7 @@ class Technicals(ScannerScraper):
         validators.verify_symbol_exchange(exchange, symbol)
         validators.validate_timeframe(timeframe)
         if all_indicators:
-            indicators = self.validator.get_indicators()
+            indicators = INDICATORS
         elif technical_indicators:
             validators.validate_indicators(technical_indicators)
             indicators = technical_indicators
@@ -79,8 +84,7 @@ class Technicals(ScannerScraper):
             )
 
         # --- Build API request ---
-        timeframes = self.validator.get_timeframes()
-        timeframe_value: str = timeframes.get(timeframe, "")
+        timeframe_value: str = TIMEFRAMES.get(timeframe, "")
 
         # Scanner API expects no suffix for daily indicators regardless of timeframe mapping
         if timeframe_value and timeframe_value != "1D":

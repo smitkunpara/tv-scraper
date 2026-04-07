@@ -51,7 +51,6 @@ class TestInheritance:
         assert hasattr(cs, "_success_response")
         assert hasattr(cs, "_error_response")
         assert hasattr(cs, "_export")
-        assert hasattr(cs, "validator")
 
     def test_inherits_connect_method(self):
         """Verify connect method exists."""

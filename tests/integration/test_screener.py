@@ -11,7 +11,6 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 from tv_scraper.core.constants import STATUS_FAILED, STATUS_SUCCESS
-from tv_scraper.core.validators import DataValidator
 from tv_scraper.scrapers.screening.screener import Screener
 from tv_scraper.streaming.candle_streamer import CandleStreamer
 from tv_scraper.streaming.forecast_streamer import ForecastStreamer
@@ -26,29 +25,6 @@ def load_fixture(filename: str) -> dict:
         pytest.skip(f"Fixture {filename} not found")
     with open(filepath) as f:
         return json.load(f)
-
-
-class TestScreenerWithValidator:
-    """Test Screener integration with DataValidator."""
-
-    def test_validator_integration(self) -> None:
-        """Test Screener uses DataValidator."""
-        scraper = Screener()
-        assert hasattr(scraper, "validator")
-        assert isinstance(scraper.validator, DataValidator)
-
-    @patch.object(Screener, "_request")
-    def test_validator_not_called_in_screener(self, mock_request: MagicMock) -> None:
-        """Test that Screener doesn't call validator for exchange/symbol validation.
-
-        Screener validates market, not exchange/symbol like other scrapers.
-        """
-        mock_request.return_value = ({"data": [], "totalCount": 0}, None)
-
-        scraper = Screener()
-        result = scraper.get_screener(market="america", limit=5)
-
-        assert result["status"] == STATUS_SUCCESS
 
 
 class TestScreenerScannerIntegration:

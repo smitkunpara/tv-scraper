@@ -34,7 +34,6 @@ class TestMindsInit:
         assert hasattr(scraper, "_error_response")
         assert hasattr(scraper, "_request")
         assert hasattr(scraper, "_export")
-        assert hasattr(scraper, "validator")
 
 
 class TestParseMind:

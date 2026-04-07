@@ -40,7 +40,6 @@ class TestCalendarInit:
         assert hasattr(cal, "_error_response")
         assert hasattr(cal, "_export")
         assert hasattr(cal, "_request")
-        assert hasattr(cal, "validator")
 
 
 class TestCalendarConstants:

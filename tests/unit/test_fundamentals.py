@@ -23,7 +23,6 @@ class TestFundamentalsInit:
         assert fund.export_result is False
         assert fund.export_type == "json"
         assert fund.cookie is None
-        assert hasattr(fund, "validator")
 
     def test_custom_init(self) -> None:
         """Test custom initialization."""
@@ -74,12 +73,6 @@ class TestInheritance:
         assert hasattr(fund, "_export")
         assert hasattr(fund, "_request")
         assert hasattr(fund, "_fetch_symbol_fields")
-
-    def test_has_validator(self) -> None:
-        """Verify validator is available."""
-        fund = Fundamentals()
-        assert hasattr(fund, "validator")
-        assert fund.validator is not None
 
 
 class TestFundamentalsFieldGroups:

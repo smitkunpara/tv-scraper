@@ -36,7 +36,6 @@ class TestInheritance:
         assert hasattr(t, "_success_response")
         assert hasattr(t, "_error_response")
         assert hasattr(t, "_export")
-        assert hasattr(t, "validator")
 
 
 class TestGetTechnicalsInvalidInputs:
@@ -217,15 +216,14 @@ class TestGetTechnicalsValidInputs:
 
     @patch("tv_scraper.core.validators.verify_symbol_exchange")
     @patch("tv_scraper.core.validators.validate_timeframe")
-    @patch("tv_scraper.core.validators.get_indicators")
+    @patch(
+        "tv_scraper.scrapers.market_data.technicals.INDICATORS", ["RSI", "MACD.macd"]
+    )
     @patch("tv_scraper.core.base.requests.request")
-    def test_all_indicators_success(
-        self, mock_request, mock_get_ind, mock_validate_tf, mock_verify
-    ):
+    def test_all_indicators_success(self, mock_request, mock_validate_tf, mock_verify):
         """Test all_indicators=True returns success."""
         mock_verify.return_value = ("NASDAQ", "AAPL")
         mock_validate_tf.return_value = True
-        mock_get_ind.return_value = ["RSI", "MACD.macd"]
 
         mock_response = MagicMock()
         mock_response.raise_for_status = MagicMock()
@@ -534,15 +532,14 @@ class TestGetTechnicalsMetadata:
 
     @patch("tv_scraper.core.validators.verify_symbol_exchange")
     @patch("tv_scraper.core.validators.validate_timeframe")
-    @patch("tv_scraper.core.validators.get_indicators")
+    @patch(
+        "tv_scraper.scrapers.market_data.technicals.INDICATORS", ["RSI", "MACD.macd"]
+    )
     @patch("tv_scraper.core.base.requests.request")
-    def test_all_indicators_metadata(
-        self, mock_request, mock_get_ind, mock_validate_tf, mock_verify
-    ):
+    def test_all_indicators_metadata(self, mock_request, mock_validate_tf, mock_verify):
         """Test all_indicators metadata."""
         mock_verify.return_value = ("NASDAQ", "AAPL")
         mock_validate_tf.return_value = True
-        mock_get_ind.return_value = ["RSI", "MACD.macd"]
 
         mock_response = MagicMock()
         mock_response.raise_for_status = MagicMock()

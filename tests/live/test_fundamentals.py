@@ -16,11 +16,8 @@ class TestLiveFundamentals:
     @pytest.fixture(autouse=True)
     def setup(self):
         """Reset validator singleton before each test."""
-        from tv_scraper.core.validators import DataValidator
 
-        DataValidator.reset()
         yield
-        DataValidator.reset()
 
     def test_live_get_fundamentals_aapl_nasdaq(self) -> None:
         """Verify AAPL fundamentals from NASDAQ."""
@@ -197,11 +194,8 @@ class TestLiveFundamentalsEdgeCases:
     @pytest.fixture(autouse=True)
     def setup(self):
         """Reset validator singleton before each test."""
-        from tv_scraper.core.validators import DataValidator
 
-        DataValidator.reset()
         yield
-        DataValidator.reset()
 
     def test_live_get_fundamentals_invalid_exchange(self) -> None:
         """Verify invalid exchange returns error."""
@@ -266,11 +260,8 @@ class TestLiveFundamentalsExport:
     @pytest.fixture(autouse=True)
     def setup(self):
         """Reset validator singleton before each test."""
-        from tv_scraper.core.validators import DataValidator
 
-        DataValidator.reset()
         yield
-        DataValidator.reset()
 
     def test_live_get_fundamentals_with_json_export(self) -> None:
         """Verify JSON export works."""
@@ -293,11 +284,8 @@ class TestLiveFundamentalsResponseEnvelope:
     @pytest.fixture(autouse=True)
     def setup(self):
         """Reset validator singleton before each test."""
-        from tv_scraper.core.validators import DataValidator
 
-        DataValidator.reset()
         yield
-        DataValidator.reset()
 
     def test_live_success_response_structure(self) -> None:
         """Verify success response has all required keys."""

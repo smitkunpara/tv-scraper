@@ -20,7 +20,6 @@ from tv_scraper.core.exceptions import (
     ValidationError,
 )
 from tv_scraper.core.scanner import ScannerScraper
-from tv_scraper.core.validators import DataValidator
 
 __all__ = [
     "BASE_URL",
@@ -34,7 +33,6 @@ __all__ = [
     "BaseScraper",
     "CaptchaError",
     "DataNotFoundError",
-    "DataValidator",
     "ExportError",
     "NetworkError",
     "ScannerScraper",

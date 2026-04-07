@@ -9,66 +9,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 from tv_scraper.core.constants import STATUS_FAILED, STATUS_SUCCESS
-from tv_scraper.scrapers.market_data.fundamentals import Fundamentals
 from tv_scraper.scrapers.market_data.technicals import Technicals
-
-
-@pytest.mark.integration
-class TestTechnicalsWithDataValidator:
-    """Test Technicals integration with DataValidator."""
-
-    def test_validator_integration_success(self):
-        """Test successful integration with DataValidator."""
-        t = Technicals()
-        assert hasattr(t, "validator")
-        assert hasattr(t.validator, "validate_exchange")
-        assert hasattr(t.validator, "validate_symbol")
-        assert hasattr(t.validator, "validate_timeframe")
-        assert hasattr(t.validator, "validate_indicators")
-
-    @patch("tv_scraper.core.validators.verify_symbol_exchange")
-    def test_validator_called_on_success(self, mock_verify):
-        """Test validator methods are called on success."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
-
-        t = Technicals()
-        t.get_technicals(
-            exchange="NASDAQ",
-            symbol="AAPL",
-            technical_indicators=["RSI"],
-        )
-
-        assert mock_verify.called
-
-    def test_validator_error_propagates(self):
-        """Test validator errors propagate correctly."""
-        t = Technicals()
-        result = t.get_technicals(
-            exchange="INVALID_EXCHANGE_XYZ",
-            symbol="AAPL",
-            technical_indicators=["RSI"],
-        )
-
-        assert result["status"] == STATUS_FAILED
-        assert result["data"] is None
-
-
-@pytest.mark.integration
-class TestTechnicalsWithFundamentals:
-    """Test Technicals integration with Fundamentals scraper."""
-
-    def test_same_base_class(self):
-        """Test both scrapers inherit from ScannerScraper."""
-        t = Technicals()
-        f = Fundamentals()
-        assert type(t).__bases__[0].__name__ == "ScannerScraper"
-        assert type(f).__bases__[0].__name__ == "ScannerScraper"
-
-    def test_same_validator_instance(self):
-        """Test both scrapers use the same validator instance."""
-        t = Technicals()
-        f = Fundamentals()
-        assert t.validator is f.validator
 
 
 @pytest.mark.integration

@@ -36,7 +36,6 @@ class TestOptionsInit:
         assert hasattr(options, "_error_response")
         assert hasattr(options, "_request")
         assert hasattr(options, "_export")
-        assert hasattr(options, "validator")
 
 
 class TestDefaultColumns:

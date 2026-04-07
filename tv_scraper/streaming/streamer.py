@@ -13,7 +13,11 @@ from typing import Any
 from tv_scraper.core import validators
 from tv_scraper.core.base import catch_errors
 from tv_scraper.core.constants import STATUS_SUCCESS
-from tv_scraper.core.validation_data import EXCHANGE_LITERAL, TIMEFRAME_LITERAL
+from tv_scraper.core.validation_data import (
+    EXCHANGE_LITERAL,
+    TIMEFRAME_LITERAL,
+    TIMEFRAMES,
+)
 from tv_scraper.streaming.base_streamer import BaseStreamer
 from tv_scraper.streaming.candle_streamer import CandleStreamer
 from tv_scraper.streaming.forecast_streamer import ForecastStreamer
@@ -152,7 +156,7 @@ class Streamer(BaseStreamer):
         handler.send_message("quote_add_symbols", [qs, f"={resolve_symbol}"])
         handler.send_message("quote_fast_symbols", [qs, exchange_symbol])
 
-        mapped_tf = self.validator.get_timeframes().get("1m", "1")
+        mapped_tf = TIMEFRAMES.get("1m", "1")
         handler.send_message("resolve_symbol", [cs, "sds_sym_1", f"={resolve_symbol}"])
         handler.send_message(
             "create_series", [cs, "sds_1", "s1", "sds_sym_1", mapped_tf, 1, ""]

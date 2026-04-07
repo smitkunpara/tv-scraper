@@ -70,7 +70,6 @@ class TestForecastStreamerInheritance:
         assert hasattr(fs, "_success_response")
         assert hasattr(fs, "_error_response")
         assert hasattr(fs, "_export")
-        assert hasattr(fs, "validator")
 
     def test_inherits_connect_method(self):
         """Verify connect method exists."""

@@ -6,11 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- **Functional Validation Architecture**: Completed the migration from a singleton-based `DataValidator` class to a pure functional, module-level validation approach in `tv_scraper.core.validators`.
+- **Core**: Removed `DataValidator` class, its `RLock` synchronization, and `reset()` method, significantly reducing internal complexity and memory footprint.
+- **Core**: Replaced instance-based validation calls (e.g., `self.validator.validate_exchange()`) with direct module-level function calls, improving performance and decoupling scrapers from validator state.
+- **Core**: Removed all remaining `get_*` accessor functions from the validation system, promoting direct use of constants and specialized validation functions.
+- **Testing**: Cleaned up the entire test suite (950+ tests) by removing obsolete `DataValidator` singleton checks, fixing `AttributeError` regressions, and updating mock patterns to target the new functional interface.
+- **Testing**: Eliminated flaky collection errors caused by lingering imports of the removed `DataValidator` class.
 - **Standardized Validation Architecture**: Refactored the entire scrapers and streaming validation logic to use a decentralized, functional approach.
-- **Core**: Replaced `DataValidator` singleton with module-level functional validators in `tv_scraper.core.validators`, eliminating object state and improving testability.
 - **Core**: Standardized error handling and metadata capture across all public API methods via the `@catch_errors` decorator.
 - **Validation**: Enhanced generic validators (`validate_range`, `validate_fields`) with robust type checking to catch invalid input types early.
-- **Testing**: Reconciled the entire test suite (350+ tests) to align with the new validation patterns and standardized error messages ("Invalid" vs "Unsupported").
 - **Documentation**: Updated `AGENTS.md` and `CHANGELOG.md` to reflect the final decentralized validation architecture.
 
 ### Added

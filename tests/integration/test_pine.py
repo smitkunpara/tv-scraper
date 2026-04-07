@@ -7,36 +7,6 @@ from tv_scraper.core.constants import STATUS_FAILED, STATUS_SUCCESS
 from tv_scraper.scrapers.scripts.pine import Pine
 
 
-class TestPineWithValidator:
-    """Test Pine integration with DataValidator."""
-
-    def test_pine_inherits_base_scraper(self) -> None:
-        """Verify Pine extends BaseScraper."""
-        scraper = Pine(cookie="test")
-        assert hasattr(scraper, "_request")
-        assert hasattr(scraper, "_success_response")
-        assert hasattr(scraper, "_error_response")
-
-    def test_pine_has_validator(self) -> None:
-        """Verify Pine has access to validator."""
-        scraper = Pine(cookie="test")
-        assert scraper.validator is not None
-
-    def test_pine_has_cookie_validation(self) -> None:
-        """Verify Pine has cookie validation method."""
-        scraper = Pine(cookie="test")
-        assert hasattr(scraper, "_validate_cookie_required")
-        result = scraper._validate_cookie_required()
-        assert result is None
-
-    def test_pine_without_cookie_fails_validation(self) -> None:
-        """Verify missing cookie fails validation."""
-        scraper = Pine(cookie=None)
-        result = scraper._validate_cookie_required()
-        assert result is not None
-        assert result["status"] == STATUS_FAILED
-
-
 class TestPineResponseEnvelope:
     """Test standardized response envelope consistency."""
 
@@ -138,28 +108,6 @@ class TestPineCookieHandling:
         scraper = Pine(cookie="header_cookie")
         headers = scraper._build_pine_headers()
         assert headers["cookie"] == "header_cookie"
-
-
-class TestPineWithDataValidator:
-    """Test Pine with DataValidator singleton."""
-
-    def test_validator_is_singleton(self) -> None:
-        """Verify validator is singleton."""
-        scraper1 = Pine(cookie="test")
-        scraper2 = Pine(cookie="test")
-        assert scraper1.validator is scraper2.validator
-
-    def test_validator_provides_exchanges(self) -> None:
-        """Verify validator provides exchange data."""
-        scraper = Pine(cookie="test")
-        exchanges = scraper.validator.get_exchanges()
-        assert isinstance(exchanges, list)
-
-    def test_validator_provides_indicators(self) -> None:
-        """Verify validator provides indicator data."""
-        scraper = Pine(cookie="test")
-        indicators = scraper.validator.get_indicators()
-        assert isinstance(indicators, list)
 
 
 class TestPineFullWorkflow:

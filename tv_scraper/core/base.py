@@ -9,7 +9,6 @@ from typing import Any, TypeVar
 
 import requests
 
-from tv_scraper.core import validators
 from tv_scraper.core.constants import (
     CAPTCHA_MARKER,
     DEFAULT_USER_AGENT,
@@ -102,7 +101,6 @@ class BaseScraper:
         self.timeout = timeout
 
         self.cookie = cookie or os.environ.get("TRADINGVIEW_COOKIE")
-        self.validator = validators.DataValidator()
         self._last_metadata: dict[str, Any] = {}
         self._headers: dict[str, str] = {"User-Agent": DEFAULT_USER_AGENT}
         if self.cookie:

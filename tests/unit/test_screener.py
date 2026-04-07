@@ -94,7 +94,6 @@ class TestInheritance:
         assert hasattr(scraper, "_error_response")
         assert hasattr(scraper, "_export")
         assert hasattr(scraper, "_map_scanner_rows")
-        assert hasattr(scraper, "validator")
 
 
 class TestGetDefaultFields:
