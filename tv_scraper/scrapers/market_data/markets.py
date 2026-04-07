@@ -6,6 +6,7 @@ across supported markets, sorted by market cap, volume, change, etc.
 
 from typing import Any, Literal
 
+from tv_scraper.core import validators
 from tv_scraper.core.base import catch_errors
 from tv_scraper.core.constants import SCANNER_URL
 from tv_scraper.core.scanner import ScannerScraper
@@ -107,13 +108,10 @@ class Markets(ScannerScraper):
             Standardized response dict with ``status``, ``data``,
             ``metadata``, and ``error`` keys.
         """
-        # --- validation ------------------------------------------------
-        from tv_scraper.core.validators import validate_choice, validate_range
-
-        validate_choice("market", market, self.VALID_MARKETS)
-        validate_choice("sort_by", sort_by, list(self.SORT_CRITERIA.keys()))
-        validate_choice("sort_order", sort_order, ["asc", "desc"])
-        validate_range("limit", limit, 1, 1000)
+        validators.validate_choice("market", market, self.VALID_MARKETS)
+        validators.validate_choice("sort_by", sort_by, list(self.SORT_CRITERIA.keys()))
+        validators.validate_choice("sort_order", sort_order, ["asc", "desc"])
+        validators.validate_range("limit", limit, 1, 1000)
 
         # --- build payload ---------------------------------------------
         used_fields = fields if fields is not None else self.DEFAULT_FIELDS

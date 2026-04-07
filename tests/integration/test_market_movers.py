@@ -261,13 +261,13 @@ class TestMarketMoversValidationIntegration:
             market="invalid", category="gainers", limit=10
         )
         assert invalid_market["status"] == "failed"
-        assert "Unsupported market" in invalid_market["error"]
+        assert "Invalid market" in invalid_market["error"]
 
         invalid_category = scraper.get_market_movers(
             market="stocks-usa", category="invalid", limit=10
         )
         assert invalid_category["status"] == "failed"
-        assert "Unsupported category" in invalid_category["error"]
+        assert "Invalid category" in invalid_category["error"]
 
         invalid_limit = scraper.get_market_movers(
             market="stocks-usa", category="gainers", limit=0
@@ -279,7 +279,7 @@ class TestMarketMoversValidationIntegration:
             market="stocks-usa", category="gainers", limit=10, language="invalid"
         )
         assert invalid_lang["status"] == "failed"
-        assert "Unsupported language" in invalid_lang["error"]
+        assert "Invalid language" in invalid_lang["error"]
 
 
 class TestMarketMoversDataMapping:

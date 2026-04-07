@@ -150,7 +150,7 @@ class TestScreenerForecastStreamerWorkflow:
 
     @patch.object(Screener, "_request")
     @patch("tv_scraper.streaming.stream_handler.create_connection")
-    @patch("tv_scraper.core.validators.DataValidator.verify_symbol_exchange")
+    @patch("tv_scraper.core.validators.verify_symbol_exchange")
     def test_screener_then_forecast_workflow(
         self,
         mock_validate: MagicMock,
@@ -390,7 +390,7 @@ class TestScreenerErrorPropagation:
         result = scraper.get_screener(market="invalid", limit=5)
 
         assert result["status"] == STATUS_FAILED
-        assert "Unsupported market" in result["error"]
+        assert "Invalid market" in result["error"]
 
 
 class TestScreenerMetadataCompleteness:

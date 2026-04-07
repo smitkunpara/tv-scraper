@@ -1,11 +1,11 @@
 import logging
 from typing import Any, Literal
 
+from tv_scraper.core import validators
 from tv_scraper.core.base import catch_errors
 from tv_scraper.core.constants import SCANNER_URL
 from tv_scraper.core.exceptions import ValidationError
 from tv_scraper.core.scanner import ScannerScraper
-from tv_scraper.core.validators import validate_choice, validate_range
 
 SCREENER_MARKET_LITERAL = Literal[
     "america",
@@ -174,7 +174,9 @@ class Screener(ScannerScraper):
             if not isinstance(f, dict):
                 raise ValidationError(f"Filter at index {i} must be a dictionary")
             if "left" not in f:
-                raise ValidationError(f"Filter at index {i} missing required 'left' key")
+                raise ValidationError(
+                    f"Filter at index {i} missing required 'left' key"
+                )
             if "operation" not in f:
                 raise ValidationError(
                     f"Filter at index {i} missing required 'operation' key"
@@ -198,7 +200,6 @@ class Screener(ScannerScraper):
             raise ValidationError("filter2 must be a dictionary")
         if "operator" not in filter2:
             raise ValidationError("filter2 missing required 'operator' key")
-
 
     def _build_payload(
         self,
@@ -225,9 +226,9 @@ class Screener(ScannerScraper):
             Payload dict ready for JSON serialization.
         """
         if market not in self.SUPPORTED_MARKETS:
-            raise ValueError(
-                f"Unsupported market: '{market}'. "
-                f"Supported markets: {', '.join(sorted(self.SUPPORTED_MARKETS))}"
+            raise ValidationError(
+                f"Invalid market: '{market}'. "
+                f"Allowed values: {', '.join(sorted(self.SUPPORTED_MARKETS))}"
             )
         payload: dict[str, Any] = {
             "columns": fields,
@@ -283,9 +284,9 @@ class Screener(ScannerScraper):
             ``metadata``, and ``error`` keys.
         """
         # --- Validation ---
-        validate_choice("market", market, list(self.SUPPORTED_MARKETS))
-        validate_choice("sort_order", sort_order, ["asc", "desc"])
-        validate_range("limit", limit, MIN_LIMIT, MAX_LIMIT)
+        validators.validate_choice("market", market, list(self.SUPPORTED_MARKETS))
+        validators.validate_choice("sort_order", sort_order, ["asc", "desc"])
+        validators.validate_range("limit", limit, MIN_LIMIT, MAX_LIMIT)
 
         if filters is not None:
             self._validate_filter(filters)

@@ -1,12 +1,10 @@
 """DataValidator singleton for validating exchanges, indicators, timeframes, etc."""
 
-import functools
-import inspect
 import logging
 import re
 import threading
 from difflib import get_close_matches
-from typing import Any, Callable, Optional, TypeVar
+from typing import Any, Optional, TypeVar
 
 import requests
 
@@ -100,6 +98,8 @@ class DataValidator:
         Raises:
             ValidationError: If exchange is not found, with suggestions.
         """
+        if not exchange or not isinstance(exchange, str):
+            raise ValidationError("Exchange must be a non-empty string.")
         if exchange.upper() in self._exchanges_set:
             return True
         suggestions = get_close_matches(
@@ -202,9 +202,13 @@ class DataValidator:
         if provider in self._news_providers_set:
             return True
         valid = ", ".join(sorted(self._news_providers_set))
-        raise ValidationError(f"Invalid news provider: '{provider}'. Allowed values: {valid}")
+        raise ValidationError(
+            f"Invalid news provider: '{provider}'. Allowed values: {valid}"
+        )
 
-    def validate_choice(self, field_name: str, value: str, allowed: set[str] | list[str]) -> bool:
+    def validate_choice(
+        self, field_name: str, value: str, allowed: set[str] | list[str]
+    ) -> bool:
         """Generic validator for choice fields.
 
         Args:
@@ -241,6 +245,8 @@ class DataValidator:
         Raises:
             ValidationError: If value is outside [min_val, max_val].
         """
+        if not isinstance(value, (int, float)):
+            raise ValidationError(f"Invalid {field_name}: {value}. Must be a number.")
         if min_val <= value <= max_val:
             return True
         raise ValidationError(
@@ -263,6 +269,12 @@ class DataValidator:
         Raises:
             ValidationError: If any field is not in allowed list.
         """
+        if not isinstance(fields, (list, tuple)):
+            raise ValidationError(f"Invalid {field_name} parameter: expected list.")
+        if not all(isinstance(f, str) for f in fields):
+            raise ValidationError(
+                f"Invalid {field_name} parameter: all items must be strings."
+            )
         allowed_set = set(allowed)
         invalid = [f for f in fields if f not in allowed_set]
         if invalid:
@@ -474,3 +486,33 @@ def verify_symbol_exchange(
 def verify_options_symbol(exchange: str, symbol: str) -> tuple[str, str]:
     """Directly verify symbol for options."""
     return _validator.verify_options_symbol(exchange, symbol)
+
+
+def get_exchanges() -> list[str]:
+    """Return list of all valid exchanges."""
+    return _validator.get_exchanges()
+
+
+def get_indicators() -> list[str]:
+    """Return list of all valid indicators."""
+    return _validator.get_indicators()
+
+
+def get_timeframes() -> dict[str, Any]:
+    """Return timeframe mappings."""
+    return _validator.get_timeframes()
+
+
+def get_news_providers() -> list[str]:
+    """Return list of all valid news providers."""
+    return _validator.get_news_providers()
+
+
+def get_languages() -> dict[str, str]:
+    """Return language name-to-code mappings."""
+    return _validator.get_languages()
+
+
+def get_areas() -> dict[str, str]:
+    """Return area name-to-code mappings."""
+    return _validator.get_areas()

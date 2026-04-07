@@ -62,7 +62,7 @@ class TestSymbolMarketsGetSymbolMarkets:
         result = scraper.get_symbol_markets(symbol="AAPL", scanner="invalid_scanner")
         assert result["status"] == STATUS_FAILED
         assert result["data"] is None
-        assert "Unsupported scanner" in result["error"]
+        assert "Invalid scanner" in result["error"]
 
     def test_unsupported_scanner_list(self) -> None:
         """Test error message lists supported scanners."""

@@ -2,6 +2,8 @@
 
 from typing import Any, Literal
 
+from tv_scraper.core import validators
+from tv_scraper.core.base import catch_errors
 from tv_scraper.core.constants import SCANNER_URL
 from tv_scraper.core.scanner import ScannerScraper
 
@@ -75,6 +77,7 @@ class SymbolMarkets(ScannerScraper):
             "range": [0, limit],
         }
 
+    @catch_errors
     def get_symbol_markets(
         self,
         symbol: str,
@@ -98,24 +101,10 @@ class SymbolMarkets(ScannerScraper):
         # Support combined EXCHANGE:SYMBOL by extracting the symbol name
         search_symbol = symbol.split(":", 1)[1] if ":" in symbol else symbol
 
-        # Validate symbol
-        if not search_symbol.strip():
-            return self._error_response(
-                "Symbol must be a non-empty string.",
-                symbol=symbol,
-                scanner=scanner,
-                limit=limit,
-            )
-
-        # Validate scanner
-        if scanner not in self.SUPPORTED_SCANNERS:
-            return self._error_response(
-                f"Unsupported scanner: '{scanner}'. "
-                f"Supported scanners: {', '.join(sorted(self.SUPPORTED_SCANNERS))}",
-                symbol=symbol,
-                scanner=scanner,
-                limit=limit,
-            )
+        # --- Validation ---
+        validators.validate_symbol("global", search_symbol)
+        validators.validate_choice("scanner", scanner, self.SUPPORTED_SCANNERS)
+        validators.validate_range("limit", limit, 1, 1000)
 
         resolved_fields = fields if fields is not None else list(self.DEFAULT_FIELDS)
 
@@ -134,12 +123,7 @@ class SymbolMarkets(ScannerScraper):
         )
 
         if error_msg:
-            return self._error_response(
-                error_msg,
-                symbol=symbol,
-                scanner=scanner,
-                limit=limit,
-            )
+            return self._error_response(error_msg)
 
         assert json_response is not None
 
@@ -147,12 +131,7 @@ class SymbolMarkets(ScannerScraper):
         formatted_data = self._map_scanner_rows(raw_items, resolved_fields)
 
         if not formatted_data:
-            return self._error_response(
-                f"No markets found for symbol: {symbol}",
-                symbol=symbol,
-                scanner=scanner,
-                limit=limit,
-            )
+            return self._error_response(f"No markets found for symbol: {symbol}")
 
         total_count = json_response.get("totalCount", len(formatted_data))
 
@@ -165,9 +144,6 @@ class SymbolMarkets(ScannerScraper):
 
         return self._success_response(
             formatted_data,
-            symbol=symbol,
-            scanner=scanner,
-            limit=limit,
             total=len(formatted_data),
             total_available=total_count,
         )

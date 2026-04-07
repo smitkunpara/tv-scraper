@@ -8,12 +8,12 @@ for continuous quote updates.
 import json
 import logging
 from collections.abc import Generator
-from typing import Any, cast
+from typing import Any
 
+from tv_scraper.core import validators
 from tv_scraper.core.base import catch_errors
 from tv_scraper.core.constants import STATUS_SUCCESS
 from tv_scraper.core.validation_data import EXCHANGE_LITERAL, TIMEFRAME_LITERAL
-from tv_scraper.core.validators import verify_symbol_exchange, validate_timeframe
 from tv_scraper.streaming.base_streamer import BaseStreamer
 from tv_scraper.streaming.candle_streamer import CandleStreamer
 from tv_scraper.streaming.forecast_streamer import ForecastStreamer
@@ -139,7 +139,8 @@ class Streamer(BaseStreamer):
         Yields:
             Normalised price update dicts.
         """
-        exchange, _symbol = verify_symbol_exchange(exchange, symbol)
+        # --- Validation ---
+        exchange, _symbol = validators.verify_symbol_exchange(exchange, symbol)
         exchange_symbol = format_symbol(exchange, _symbol)
 
         handler = self.connect()

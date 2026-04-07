@@ -2,10 +2,10 @@
 
 import logging
 from datetime import datetime
-from typing import Any, cast
+from typing import Any
 
+from tv_scraper.core import validators
 from tv_scraper.core.base import BaseScraper, catch_errors
-from tv_scraper.core.validators import verify_symbol_exchange
 from tv_scraper.core.validation_data import EXCHANGE_LITERAL
 
 logger = logging.getLogger(__name__)
@@ -55,7 +55,8 @@ class Minds(BaseScraper):
             Standardized response dict with keys
             ``status``, ``data``, ``metadata``, ``error``.
         """
-        exchange, symbol = verify_symbol_exchange(exchange, symbol)
+        # --- Validation ---
+        validators.verify_symbol_exchange(exchange, symbol)
 
         combined_symbol = f"{exchange}:{symbol}"
 

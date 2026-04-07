@@ -31,7 +31,7 @@ class TestMindsIntegrationWithValidator:
         """Test that validator is called with correct exchange and symbol."""
         scraper = Minds()
 
-        with patch.object(scraper.validator, "verify_symbol_exchange") as mock_verify:
+        with patch("tv_scraper.core.validators.verify_symbol_exchange") as mock_verify:
             mock_verify.return_value = ("NASDAQ", "AAPL")
             with patch.object(scraper, "_request") as mock_req:
                 mock_req.return_value = ({"results": [], "next": "", "meta": {}}, None)
@@ -45,13 +45,13 @@ class TestMindsIntegrationWithValidator:
 
         scraper = Minds()
 
-        with patch.object(scraper.validator, "verify_symbol_exchange") as mock_verify:
-            mock_verify.side_effect = ValidationError("Symbol not found")
+        with patch("tv_scraper.core.validators.verify_symbol_exchange") as mock_verify:
+            mock_verify.side_effect = ValidationError("Symbol 'INVALID' not found")
             result = scraper.get_minds(exchange="NASDAQ", symbol="INVALID")
 
             assert result["status"] == "failed"
             assert result["error"] is not None
-            assert "Symbol not found" in result["error"]
+            assert "Symbol 'INVALID' not found" in result["error"]
 
 
 class TestMindsIntegrationWithBaseScraper:
@@ -91,7 +91,7 @@ class TestMindsIntegrationWithBaseScraper:
 
         scraper = Minds()
 
-        with patch.object(scraper.validator, "verify_symbol_exchange") as mock_verify:
+        with patch("tv_scraper.core.validators.verify_symbol_exchange") as mock_verify:
             mock_verify.side_effect = ValidationError("Test error")
             result = scraper.get_minds(exchange="INVALID", symbol="AAPL")
 
@@ -251,7 +251,7 @@ class TestMindsCrossModuleWorkflow:
         """Test complete workflow: validate -> fetch -> parse -> export."""
         scraper = Minds(export_result=True, export_type="json")
 
-        with patch.object(scraper.validator, "verify_symbol_exchange") as mock_verify:
+        with patch("tv_scraper.core.validators.verify_symbol_exchange") as mock_verify:
             mock_verify.return_value = ("NASDAQ", "AAPL")
 
             with patch.object(scraper, "_request") as mock_req:
@@ -291,9 +291,8 @@ class TestMindsCrossModuleWorkflow:
 
         scraper = Minds()
 
-        with patch.object(scraper.validator, "verify_symbol_exchange") as mock_verify:
+        with patch("tv_scraper.core.validators.verify_symbol_exchange") as mock_verify:
             mock_verify.side_effect = ValidationError("Invalid")
-
             with patch.object(scraper, "_request") as mock_req:
                 result = scraper.get_minds(exchange="INVALID", symbol="AAPL")
 

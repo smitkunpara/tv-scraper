@@ -4,10 +4,12 @@ import functools
 import inspect
 import logging
 import os
-from typing import Any, Callable, TypeVar
+from collections.abc import Callable
+from typing import Any, TypeVar
 
 import requests
 
+from tv_scraper.core import validators
 from tv_scraper.core.constants import (
     CAPTCHA_MARKER,
     DEFAULT_USER_AGENT,
@@ -17,7 +19,6 @@ from tv_scraper.core.constants import (
     STATUS_SUCCESS,
 )
 from tv_scraper.core.exceptions import CaptchaError, ValidationError
-from tv_scraper.core.validators import DataValidator
 from tv_scraper.utils.io import generate_export_filepath, save_csv_file, save_json_file
 
 logger = logging.getLogger(__name__)
@@ -42,9 +43,10 @@ def catch_errors(func: F) -> F:
         try:
             bound_args = sig.bind(self, *args, **kwargs)
             bound_args.apply_defaults()
-            # Exclude 'self' and store for use in _success_response / _error_response
             self._last_metadata = {
-                k: v for k, v in bound_args.arguments.items() if k != "self"
+                k: v
+                for k, v in bound_args.arguments.items()
+                if k != "self" and v is not None
             }
         except ValueError:
             # Fallback if signature binding fails (e.g. invalid arguments)
@@ -100,7 +102,7 @@ class BaseScraper:
         self.timeout = timeout
 
         self.cookie = cookie or os.environ.get("TRADINGVIEW_COOKIE")
-        self.validator = DataValidator()
+        self.validator = validators.DataValidator()
         self._last_metadata: dict[str, Any] = {}
         self._headers: dict[str, str] = {"User-Agent": DEFAULT_USER_AGENT}
         if self.cookie:

@@ -13,7 +13,7 @@ A comprehensive reference for tv-scraper's architecture, design patterns, and im
 5. [WebSocket Architecture](#websocket-architecture)
 6. [HTTP Scrapers](#http-scrapers)
 7. [Streaming Methods](#streaming-methods)
-8. [DataValidator Singleton](#datavalidator-singleton)
+8. [Validation & Error Architecture](#validation--error-architecture)
 9. [Development Standards](#development-standards)
 10. [Feature Matrix](#feature-matrix)
 11. [Contributing](#contributing)
@@ -261,7 +261,7 @@ def get_ideas(
 **Error Detection:**
 - Captcha: `"<title>Captcha Challenge</title>"` in HTML
 - HTTP errors: Non-200 status codes
-- Validation: DataValidator checks symbol/exchange
+- Validation: Module-level functions in `tv_scraper.core.validators`
 
 ### Minds Scraper
 
@@ -646,32 +646,6 @@ Validation logic is centralized in `tv_scraper/core/validators.py`. While a `Dat
 
 ---
 
-**Source:** `tv_scraper/core/validators.py`
-
-**Pattern:** Thread-unsafe singleton with lazy initialization
-
-**Initialization:**
-```python
-# First instantiation loads 6 JSON files from tv_scraper/data/validators/:
-_exchanges.json
-_indicators.json
-_timeframes.json
-_languages.json
-_areas.json
-_news_providers.json
-```
-
-**Cached Data Structure:**
-```python
-_instance: Optional["DataValidator"] = None
-
-def __new__(cls) -> "DataValidator":
-    if cls._instance is None:
-        cls._instance = super().__new__(cls)
-        cls._instance._load_data()
-    return cls._instance
-```
-
 ### Validation Methods
 
 #### Exchange Validation: `validate_exchange(exchange: str) -> bool`
@@ -679,16 +653,14 @@ def __new__(cls) -> "DataValidator":
 **Type:** Offline check
 
 **Logic:**
-```python
 1. Case-insensitive match: exchange.upper() in [e.upper() for e in self._exchanges]
-2. On failure: Use difflib.get_close_matches(cutoff=0.6, n=5) for suggestions
+2. On failure: Use `difflib.get_close_matches(cutoff=0.6, n=5)` for suggestions
 3. Return sample of valid exchanges in error message
-```
 
 **Example:**
 ```python
 try:
-    validator.validate_exchange("NASDQ")  # Typo
+    validators.validate_exchange("NASDQ")  # Typo
 except ValidationError as e:
     # "Invalid exchange: 'NASDQ'. Did you mean: 'NASDAQ'? Valid exchanges: NYSE, NASDAQ, ..."
 ```
@@ -698,58 +670,37 @@ except ValidationError as e:
 **Type:** Offline check
 
 **Logic:**
-```python
-1. isinstance(symbol, str)
-2. symbol.strip() is not empty
+1. `isinstance(symbol, str)`
+2. `symbol.strip()` is not empty
 3. No special character validation
-```
 
-#### Symbol-Exchange Verification: `verify_symbol_exchange(exchange: str, symbol: str, retries: int = 2) -> bool`
+#### Symbol-Exchange Verification: `verify_symbol_exchange(exchange: str, symbol: str, retries: int = 2) -> tuple[str, str]`
 
 **Type:** Two-stage (offline + online)
 
 **Stage 1 - Offline:**
-```python
-1. Call validate_exchange()
-2. Call validate_symbol()
+1. Call `validate_exchange()`
+2. Call `validate_symbol()`
 3. Return if offline checks fail
-```
 
 **Stage 2 - Online (HTTP):**
-```python
-# HTTP GET to TradingView scanner API:
-https://scanner.tradingview.com/symbol?symbol={EXCHANGE}%3A{SYMBOL}&fields=market&no_404=false
-
-# On 404: Raise ValidationError("Symbol '{symbol}' not found on exchange '{exchange}'")
-# On network error: Retry up to retries times, timeout 5s per request
-# On other HTTP error: Raise ValidationError with status code in message
-```
-
-**Retry Behavior:**
-```python
-for attempt in range(retries):
-    try:
-        response = requests.get(url, timeout=5)
-    except requests.RequestException as e:
-        if attempt == retries - 1:
-            raise ValidationError(f"Could not verify after {retries} attempt(s): {e}")
-        continue
-```
+- HTTP GET to TradingView scanner API: `https://scanner.tradingview.com/symbol?symbol={EXCHANGE}%3A{SYMBOL}&fields=market&no_404=false`
+- On 404: Raise `ValidationError("Symbol '{symbol}' not found on exchange '{exchange}'")`
+- On network error: Retry up to `retries` times, timeout 5s per request
+- On other HTTP error: Raise `ValidationError` with status code in message
 
 #### Indicator Validation: `validate_indicators(indicators: list[str]) -> bool`
 
 **Type:** Offline check
 
 **Logic:**
-```python
 1. List is non-empty
-2. Each indicator in self._indicators
-3. Use difflib suggestions on first invalid indicator
-```
+2. Each indicator in `_indicators`
+3. Use `difflib` suggestions on first invalid indicator
 
 ### Data Getter Methods
 
-All return **shallow copies** to prevent external mutation:
+All return **shallow copies** of the underlying data:
 
 ```python
 get_exchanges() → list[str]
@@ -758,12 +709,6 @@ get_timeframes() → dict[str, Any]
 get_news_providers() → list[str]
 get_languages() → dict[str, str]
 get_areas() → dict[str, str]
-```
-
-### Reset for Testing
-
-```python
-DataValidator.reset()  # Sets _instance = None for fresh reload in tests
 ```
 
 ---

@@ -65,72 +65,36 @@ class TestDefaultColumns:
         assert VALID_OPTION_COLUMNS == set(DEFAULT_OPTION_COLUMNS)
 
 
-class TestValidateInputs:
-    """Tests for _validate_inputs method."""
+class TestPublicValidation:
+    """Tests for validation in public methods."""
 
-    @patch("tv_scraper.core.validators.DataValidator.verify_options_symbol")
-    def test_validate_inputs_valid(self, mock_verify) -> None:
-        """Verify valid inputs pass validation."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
-
-        options = Options()
-        result = options._validate_inputs("NASDAQ", "AAPL", None)
-
-        assert result is None
-        mock_verify.assert_called_once_with("NASDAQ", "AAPL")
-
-    @patch("tv_scraper.core.validators.DataValidator.verify_options_symbol")
-    def test_validate_inputs_invalid_exchange(self, mock_verify) -> None:
-        """Verify invalid exchange returns error."""
+    @patch("tv_scraper.core.validators.verify_options_symbol")
+    def test_get_options_by_strike_invalid_exchange(self, mock_verify) -> None:
+        """Verify invalid exchange returns error via get_options_by_strike."""
         from tv_scraper.core.exceptions import ValidationError
 
         mock_verify.side_effect = ValidationError("Invalid exchange")
 
         options = Options()
-        result = options._validate_inputs("INVALID", "AAPL", None)
-
-        assert result is not None
-        assert result["status"] == STATUS_FAILED
-        assert "metadata" in result
-
-    @patch("tv_scraper.core.validators.DataValidator.verify_options_symbol")
-    def test_validate_inputs_invalid_columns(self, mock_verify) -> None:
-        """Verify invalid columns return error."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
-
-        options = Options()
-        result = options._validate_inputs(
-            "NASDAQ", "AAPL", ["invalid_column", "bad_column"]
+        result = options.get_options_by_strike(
+            exchange="INVALID", symbol="AAPL", strike=100
         )
 
-        assert result is not None
         assert result["status"] == STATUS_FAILED
-        assert "Invalid column names" in result["error"]
-        assert "invalid_column" in result["error"]
+        assert "Invalid exchange" in result["error"]
 
-    @patch("tv_scraper.core.validators.DataValidator.verify_options_symbol")
-    def test_validate_inputs_empty_columns(self, mock_verify) -> None:
-        """Verify empty columns list passes validation."""
+    @patch("tv_scraper.core.validators.verify_options_symbol")
+    def test_get_options_by_strike_invalid_columns(self, mock_verify) -> None:
+        """Verify invalid columns return error via get_options_by_strike."""
         mock_verify.return_value = ("NASDAQ", "AAPL")
 
         options = Options()
-        result = options._validate_inputs("NASDAQ", "AAPL", [])
-
-        assert result is None
-
-    @patch("tv_scraper.core.validators.DataValidator.verify_options_symbol")
-    def test_validate_inputs_mixed_valid_invalid_columns(self, mock_verify) -> None:
-        """Verify mixed valid/invalid columns returns error."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
-
-        options = Options()
-        result = options._validate_inputs(
-            "NASDAQ", "AAPL", ["bid", "ask", "invalid_field"]
+        result = options.get_options_by_strike(
+            exchange="NASDAQ", symbol="AAPL", strike=100, columns=["invalid_column"]
         )
 
-        assert result is not None
         assert result["status"] == STATUS_FAILED
-        assert "invalid_field" in result["error"]
+        assert "Invalid columns" in result["error"]
 
 
 class TestBuildPayload:
@@ -198,7 +162,7 @@ class TestBuildPayload:
 class TestGetOptionsByStrike:
     """Tests for get_options_by_strike method."""
 
-    @patch("tv_scraper.core.validators.DataValidator.verify_options_symbol")
+    @patch("tv_scraper.core.validators.verify_options_symbol")
     @patch.object(Options, "_request")
     def test_get_options_by_strike_success(self, mock_request, mock_verify) -> None:
         """Verify successful options by strike fetching."""
@@ -227,7 +191,7 @@ class TestGetOptionsByStrike:
         assert result["data"][0]["strike"] == 200
         assert result["metadata"]["filter_value"] == 200
 
-    @patch("tv_scraper.core.validators.DataValidator.verify_options_symbol")
+    @patch("tv_scraper.core.validators.verify_options_symbol")
     def test_get_options_by_strike_invalid_strike_type(self, mock_verify) -> None:
         """Verify invalid strike type returns error."""
         mock_verify.return_value = ("NASDAQ", "AAPL")
@@ -243,7 +207,7 @@ class TestGetOptionsByStrike:
         assert result["data"] is None
         assert "Invalid strike value" in result["error"]
 
-    @patch("tv_scraper.core.validators.DataValidator.verify_options_symbol")
+    @patch("tv_scraper.core.validators.verify_options_symbol")
     def test_get_options_by_strike_none_strike(self, mock_verify) -> None:
         """Verify None strike returns error."""
         mock_verify.return_value = ("NASDAQ", "AAPL")
@@ -258,7 +222,7 @@ class TestGetOptionsByStrike:
         assert result["status"] == STATUS_FAILED
         assert "Invalid strike value" in result["error"]
 
-    @patch("tv_scraper.core.validators.DataValidator.verify_options_symbol")
+    @patch("tv_scraper.core.validators.verify_options_symbol")
     def test_get_options_by_strike_string_strike(self, mock_verify) -> None:
         """Verify string strike returns error."""
         mock_verify.return_value = ("NASDAQ", "AAPL")
@@ -272,7 +236,7 @@ class TestGetOptionsByStrike:
 
         assert result["status"] == STATUS_FAILED
 
-    @patch("tv_scraper.core.validators.DataValidator.verify_options_symbol")
+    @patch("tv_scraper.core.validators.verify_options_symbol")
     @patch.object(Options, "_request")
     def test_get_options_by_strike_with_custom_columns(
         self, mock_request, mock_verify
@@ -301,7 +265,7 @@ class TestGetOptionsByStrike:
         assert result["status"] == STATUS_SUCCESS
         assert result["data"][0]["strike"] == 83000
 
-    @patch("tv_scraper.core.validators.DataValidator.verify_options_symbol")
+    @patch("tv_scraper.core.validators.verify_options_symbol")
     @patch.object(Options, "_request")
     def test_get_options_by_strike_float_strike(
         self, mock_request, mock_verify
@@ -332,7 +296,7 @@ class TestGetOptionsByStrike:
 class TestGetOptionsByExpiry:
     """Tests for get_options_by_expiry method."""
 
-    @patch("tv_scraper.core.validators.DataValidator.verify_options_symbol")
+    @patch("tv_scraper.core.validators.verify_options_symbol")
     @patch.object(Options, "_request")
     def test_get_options_by_expiry_success(self, mock_request, mock_verify) -> None:
         """Verify successful options by expiry fetching."""
@@ -368,7 +332,7 @@ class TestGetOptionsByExpiry:
         assert result["data"][0]["expiration"] == 20260419
         assert result["metadata"]["filter_value"] == 20260419
 
-    @patch("tv_scraper.core.validators.DataValidator.verify_options_symbol")
+    @patch("tv_scraper.core.validators.verify_options_symbol")
     @patch.object(Options, "_request")
     def test_get_options_by_expiry_with_custom_columns(
         self, mock_request, mock_verify
@@ -514,7 +478,7 @@ class TestExecuteRequest:
 class TestResponseEnvelope:
     """Tests for standardized response envelope."""
 
-    @patch("tv_scraper.core.validators.DataValidator.verify_options_symbol")
+    @patch("tv_scraper.core.validators.verify_options_symbol")
     @patch.object(Options, "_request")
     def test_success_response_has_all_keys(self, mock_request, mock_verify) -> None:
         """Verify success response has all required keys."""
@@ -540,7 +504,7 @@ class TestResponseEnvelope:
         assert result["status"] == STATUS_SUCCESS
         assert result["error"] is None
 
-    @patch("tv_scraper.core.validators.DataValidator.verify_options_symbol")
+    @patch("tv_scraper.core.validators.verify_options_symbol")
     def test_error_response_has_all_keys(self, mock_verify) -> None:
         """Verify error response has all required keys."""
         from tv_scraper.core.exceptions import ValidationError
@@ -564,7 +528,7 @@ class TestResponseEnvelope:
 class TestMetadata:
     """Tests for metadata in responses."""
 
-    @patch("tv_scraper.core.validators.DataValidator.verify_options_symbol")
+    @patch("tv_scraper.core.validators.verify_options_symbol")
     @patch.object(Options, "_request")
     def test_metadata_contains_exchange_symbol(self, mock_request, mock_verify) -> None:
         """Verify metadata contains exchange and symbol."""
@@ -586,7 +550,7 @@ class TestMetadata:
         assert result["metadata"]["exchange"] == "BSE"
         assert result["metadata"]["symbol"] == "SENSEX"
 
-    @patch("tv_scraper.core.validators.DataValidator.verify_options_symbol")
+    @patch("tv_scraper.core.validators.verify_options_symbol")
     @patch.object(Options, "_request")
     def test_metadata_contains_filter_value(self, mock_request, mock_verify) -> None:
         """Verify metadata contains filter value."""
@@ -607,7 +571,7 @@ class TestMetadata:
 
         assert result["metadata"]["filter_value"] == 200.5
 
-    @patch("tv_scraper.core.validators.DataValidator.verify_options_symbol")
+    @patch("tv_scraper.core.validators.verify_options_symbol")
     @patch.object(Options, "_request")
     def test_metadata_contains_total(self, mock_request, mock_verify) -> None:
         """Verify metadata contains total count."""
@@ -632,7 +596,7 @@ class TestMetadata:
 class TestEdgeCases:
     """Tests for edge cases and boundary conditions."""
 
-    @patch("tv_scraper.core.validators.DataValidator.verify_options_symbol")
+    @patch("tv_scraper.core.validators.verify_options_symbol")
     def test_empty_symbol_string(self, mock_verify) -> None:
         """Verify empty symbol string returns error."""
         mock_verify.return_value = ("NASDAQ", "")
@@ -642,7 +606,7 @@ class TestEdgeCases:
 
         assert result["status"] == STATUS_FAILED
 
-    @patch("tv_scraper.core.validators.DataValidator.verify_options_symbol")
+    @patch("tv_scraper.core.validators.verify_options_symbol")
     def test_whitespace_symbol(self, mock_verify) -> None:
         """Verify whitespace symbol returns error."""
         mock_verify.return_value = ("NASDAQ", "  ")
@@ -668,7 +632,7 @@ class TestEdgeCases:
 
         options = Options()
         with patch(
-            "tv_scraper.core.validators.DataValidator.verify_options_symbol",
+            "tv_scraper.core.validators.verify_options_symbol",
             return_value=("NASDAQ", "AAPL"),
         ):
             result = options.get_options_by_strike(
@@ -691,7 +655,7 @@ class TestEdgeCases:
 
         options = Options()
         with patch(
-            "tv_scraper.core.validators.DataValidator.verify_options_symbol",
+            "tv_scraper.core.validators.verify_options_symbol",
             return_value=("NASDAQ", "AAPL"),
         ):
             result = options.get_options_by_strike(
@@ -704,7 +668,7 @@ class TestEdgeCases:
 class TestExport:
     """Tests for export functionality."""
 
-    @patch("tv_scraper.core.validators.DataValidator.verify_options_symbol")
+    @patch("tv_scraper.core.validators.verify_options_symbol")
     @patch.object(Options, "_request")
     @patch("tv_scraper.core.base.save_json_file")
     def test_export_json_enabled(self, mock_save, mock_request, mock_verify) -> None:
@@ -724,7 +688,7 @@ class TestExport:
 
         assert mock_save.called
 
-    @patch("tv_scraper.core.validators.DataValidator.verify_options_symbol")
+    @patch("tv_scraper.core.validators.verify_options_symbol")
     @patch.object(Options, "_request")
     @patch("tv_scraper.core.base.save_csv_file")
     def test_export_csv_enabled(self, mock_save, mock_request, mock_verify) -> None:
@@ -744,7 +708,7 @@ class TestExport:
 
         assert mock_save.called
 
-    @patch("tv_scraper.core.validators.DataValidator.verify_options_symbol")
+    @patch("tv_scraper.core.validators.verify_options_symbol")
     @patch.object(Options, "_request")
     def test_export_disabled_by_default(self, mock_request, mock_verify) -> None:
         """Verify export is disabled by default."""

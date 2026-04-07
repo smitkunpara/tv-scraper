@@ -106,7 +106,7 @@ class TestMarketsValidation:
 
         assert result["status"] == STATUS_FAILED
         assert result["data"] is None
-        assert "Unsupported market" in result["error"]
+        assert "Invalid market" in result["error"]
         assert "invalid_market" in result["error"]
 
     def test_invalid_sort_by_error(self) -> None:
@@ -116,7 +116,7 @@ class TestMarketsValidation:
 
         assert result["status"] == STATUS_FAILED
         assert result["data"] is None
-        assert "Unsupported sort criterion" in result["error"]
+        assert "Invalid sort_by" in result["error"]
 
     def test_invalid_sort_order_error(self) -> None:
         """Test invalid sort_order returns error response."""
@@ -562,9 +562,10 @@ class TestMarketsErrorMessage:
         result = scraper.get_markets(market="invalid_market")
 
         assert result["status"] == STATUS_FAILED
-        assert "Unsupported market" in result["error"]
+        assert "Invalid market" in result["error"]
         assert "invalid_market" in result["error"]
         for valid in Markets.VALID_MARKETS:
+            # Note: validate_choice sorts the allowed values
             assert valid in result["error"]
 
     def test_invalid_sort_by_error_message(self) -> None:
@@ -573,7 +574,7 @@ class TestMarketsErrorMessage:
         result = scraper.get_markets(sort_by="invalid")
 
         assert result["status"] == STATUS_FAILED
-        assert "Unsupported sort criterion" in result["error"]
+        assert "Invalid sort_by" in result["error"]
         assert "invalid" in result["error"]
         for valid in Markets.SORT_CRITERIA.keys():
             assert valid in result["error"]

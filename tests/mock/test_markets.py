@@ -217,7 +217,7 @@ class TestMockMarketsValidation:
         assert result["status"] == STATUS_FAILED
         assert result["data"] is None
         assert result["error"] is not None
-        assert "Unsupported market" in result["error"]
+        assert "Invalid market" in result["error"]
         assert "invalid_market" in result["error"]
 
     def test_mock_invalid_sort_by(self) -> None:
@@ -228,7 +228,7 @@ class TestMockMarketsValidation:
         assert result["status"] == STATUS_FAILED
         assert result["data"] is None
         assert result["error"] is not None
-        assert "Unsupported sort criterion" in result["error"]
+        assert "Invalid sort_by" in result["error"]
 
     def test_mock_invalid_sort_order(self) -> None:
         """Test invalid sort_order returns error."""

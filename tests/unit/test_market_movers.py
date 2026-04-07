@@ -458,7 +458,7 @@ class TestGetMarketMoversValidation:
             market="invalid", category="gainers", limit=10
         )
         assert result["status"] == STATUS_FAILED
-        assert "Unsupported market" in result["error"]
+        assert "Invalid market" in result["error"]
 
     def test_invalid_category_for_stocks(self) -> None:
         """Test invalid category for stocks returns error."""
@@ -467,7 +467,7 @@ class TestGetMarketMoversValidation:
             market="stocks-usa", category="invalid", limit=10
         )
         assert result["status"] == STATUS_FAILED
-        assert "Unsupported category" in result["error"]
+        assert "Invalid category" in result["error"]
 
     def test_stock_category_for_crypto(self) -> None:
         """Test stock-only category rejected for crypto."""
@@ -476,7 +476,7 @@ class TestGetMarketMoversValidation:
             market="crypto", category="penny-stocks", limit=10
         )
         assert result["status"] == STATUS_FAILED
-        assert "Unsupported category" in result["error"]
+        assert "Invalid category" in result["error"]
 
     def test_limit_zero(self) -> None:
         """Test limit of 0 returns error."""
@@ -523,7 +523,7 @@ class TestGetMarketMoversValidation:
             market="stocks-usa", category="gainers", limit=10, language="invalid"
         )
         assert result["status"] == STATUS_FAILED
-        assert "Unsupported language" in result["error"]
+        assert "Invalid language" in result["error"]
 
     def test_invalid_fields_type(self) -> None:
         """Test invalid fields type returns error."""

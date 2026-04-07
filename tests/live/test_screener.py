@@ -310,7 +310,7 @@ class TestLiveScreenerValidation:
         result = scraper.get_screener(market="invalid_market_xyz", limit=5)
         assert result["status"] == "failed"
         assert result["error"] is not None
-        assert "Unsupported market" in result["error"]
+        assert "Invalid market" in result["error"]
 
     def test_invalid_sort_order(self) -> None:
         """Test invalid sort order returns error."""

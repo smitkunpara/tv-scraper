@@ -38,9 +38,9 @@ def _mock_response(fixture_name: str) -> MagicMock:
 class TestMockTechnicalsBasic:
     """Test basic mock scenarios."""
 
-    @patch("tv_scraper.core.validators.DataValidator.verify_symbol_exchange")
-    @patch("tv_scraper.core.validators.DataValidator.validate_timeframe")
-    @patch("tv_scraper.core.validators.DataValidator.validate_indicators")
+    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.core.validators.validate_timeframe")
+    @patch("tv_scraper.core.validators.validate_indicators")
     @patch("tv_scraper.core.base.requests.request")
     def test_nasdaq_aapl_rsi(
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
@@ -63,9 +63,9 @@ class TestMockTechnicalsBasic:
         assert result["metadata"]["symbol"] == "AAPL"
         assert "RSI" in result["data"]
 
-    @patch("tv_scraper.core.validators.DataValidator.verify_symbol_exchange")
-    @patch("tv_scraper.core.validators.DataValidator.validate_timeframe")
-    @patch("tv_scraper.core.validators.DataValidator.validate_indicators")
+    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.core.validators.validate_timeframe")
+    @patch("tv_scraper.core.validators.validate_indicators")
     @patch("tv_scraper.core.base.requests.request")
     def test_binance_btcusdt_rsi(
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
@@ -92,9 +92,9 @@ class TestMockTechnicalsBasic:
 class TestMockTechnicalsMultipleIndicators:
     """Test mock scenarios with multiple indicators."""
 
-    @patch("tv_scraper.core.validators.DataValidator.verify_symbol_exchange")
-    @patch("tv_scraper.core.validators.DataValidator.validate_timeframe")
-    @patch("tv_scraper.core.validators.DataValidator.validate_indicators")
+    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.core.validators.validate_timeframe")
+    @patch("tv_scraper.core.validators.validate_indicators")
     @patch("tv_scraper.core.base.requests.request")
     def test_nasdaq_aapl_rsi_macd(
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
@@ -116,9 +116,9 @@ class TestMockTechnicalsMultipleIndicators:
         assert "RSI" in result["data"]
         assert "MACD.macd" in result["data"]
 
-    @patch("tv_scraper.core.validators.DataValidator.verify_symbol_exchange")
-    @patch("tv_scraper.core.validators.DataValidator.validate_timeframe")
-    @patch("tv_scraper.core.validators.DataValidator.validate_indicators")
+    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.core.validators.validate_timeframe")
+    @patch("tv_scraper.core.validators.validate_indicators")
     @patch("tv_scraper.core.base.requests.request")
     def test_binance_btcusdt_rsi_macd(
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
@@ -144,9 +144,9 @@ class TestMockTechnicalsMultipleIndicators:
 class TestMockTechnicalsTimeframes:
     """Test mock scenarios with various timeframes."""
 
-    @patch("tv_scraper.core.validators.DataValidator.verify_symbol_exchange")
-    @patch("tv_scraper.core.validators.DataValidator.validate_timeframe")
-    @patch("tv_scraper.core.validators.DataValidator.validate_indicators")
+    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.core.validators.validate_timeframe")
+    @patch("tv_scraper.core.validators.validate_indicators")
     @patch("tv_scraper.core.base.requests.request")
     def test_timeframe_1m(
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
@@ -169,9 +169,9 @@ class TestMockTechnicalsTimeframes:
         assert result["metadata"]["timeframe"] == "1m"
         assert "RSI" in result["data"]
 
-    @patch("tv_scraper.core.validators.DataValidator.verify_symbol_exchange")
-    @patch("tv_scraper.core.validators.DataValidator.validate_timeframe")
-    @patch("tv_scraper.core.validators.DataValidator.validate_indicators")
+    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.core.validators.validate_timeframe")
+    @patch("tv_scraper.core.validators.validate_indicators")
     @patch("tv_scraper.core.base.requests.request")
     def test_timeframe_5m(
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
@@ -193,9 +193,9 @@ class TestMockTechnicalsTimeframes:
         assert result["status"] == STATUS_SUCCESS
         assert result["metadata"]["timeframe"] == "5m"
 
-    @patch("tv_scraper.core.validators.DataValidator.verify_symbol_exchange")
-    @patch("tv_scraper.core.validators.DataValidator.validate_timeframe")
-    @patch("tv_scraper.core.validators.DataValidator.validate_indicators")
+    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.core.validators.validate_timeframe")
+    @patch("tv_scraper.core.validators.validate_indicators")
     @patch("tv_scraper.core.base.requests.request")
     def test_timeframe_15m(
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
@@ -217,9 +217,9 @@ class TestMockTechnicalsTimeframes:
         assert result["status"] == STATUS_SUCCESS
         assert result["metadata"]["timeframe"] == "15m"
 
-    @patch("tv_scraper.core.validators.DataValidator.verify_symbol_exchange")
-    @patch("tv_scraper.core.validators.DataValidator.validate_timeframe")
-    @patch("tv_scraper.core.validators.DataValidator.validate_indicators")
+    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.core.validators.validate_timeframe")
+    @patch("tv_scraper.core.validators.validate_indicators")
     @patch("tv_scraper.core.base.requests.request")
     def test_timeframe_30m(
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
@@ -241,9 +241,9 @@ class TestMockTechnicalsTimeframes:
         assert result["status"] == STATUS_SUCCESS
         assert result["metadata"]["timeframe"] == "30m"
 
-    @patch("tv_scraper.core.validators.DataValidator.verify_symbol_exchange")
-    @patch("tv_scraper.core.validators.DataValidator.validate_timeframe")
-    @patch("tv_scraper.core.validators.DataValidator.validate_indicators")
+    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.core.validators.validate_timeframe")
+    @patch("tv_scraper.core.validators.validate_indicators")
     @patch("tv_scraper.core.base.requests.request")
     def test_timeframe_1h(
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
@@ -265,9 +265,9 @@ class TestMockTechnicalsTimeframes:
         assert result["status"] == STATUS_SUCCESS
         assert result["metadata"]["timeframe"] == "1h"
 
-    @patch("tv_scraper.core.validators.DataValidator.verify_symbol_exchange")
-    @patch("tv_scraper.core.validators.DataValidator.validate_timeframe")
-    @patch("tv_scraper.core.validators.DataValidator.validate_indicators")
+    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.core.validators.validate_timeframe")
+    @patch("tv_scraper.core.validators.validate_indicators")
     @patch("tv_scraper.core.base.requests.request")
     def test_timeframe_4h(
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
@@ -289,9 +289,9 @@ class TestMockTechnicalsTimeframes:
         assert result["status"] == STATUS_SUCCESS
         assert result["metadata"]["timeframe"] == "4h"
 
-    @patch("tv_scraper.core.validators.DataValidator.verify_symbol_exchange")
-    @patch("tv_scraper.core.validators.DataValidator.validate_timeframe")
-    @patch("tv_scraper.core.validators.DataValidator.validate_indicators")
+    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.core.validators.validate_timeframe")
+    @patch("tv_scraper.core.validators.validate_indicators")
     @patch("tv_scraper.core.base.requests.request")
     def test_timeframe_1d(
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
@@ -313,9 +313,9 @@ class TestMockTechnicalsTimeframes:
         assert result["status"] == STATUS_SUCCESS
         assert result["metadata"]["timeframe"] == "1d"
 
-    @patch("tv_scraper.core.validators.DataValidator.verify_symbol_exchange")
-    @patch("tv_scraper.core.validators.DataValidator.validate_timeframe")
-    @patch("tv_scraper.core.validators.DataValidator.validate_indicators")
+    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.core.validators.validate_timeframe")
+    @patch("tv_scraper.core.validators.validate_indicators")
     @patch("tv_scraper.core.base.requests.request")
     def test_timeframe_1w(
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
@@ -337,9 +337,9 @@ class TestMockTechnicalsTimeframes:
         assert result["status"] == STATUS_SUCCESS
         assert result["metadata"]["timeframe"] == "1w"
 
-    @patch("tv_scraper.core.validators.DataValidator.verify_symbol_exchange")
-    @patch("tv_scraper.core.validators.DataValidator.validate_timeframe")
-    @patch("tv_scraper.core.validators.DataValidator.validate_indicators")
+    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.core.validators.validate_timeframe")
+    @patch("tv_scraper.core.validators.validate_indicators")
     @patch("tv_scraper.core.base.requests.request")
     def test_timeframe_1m_monthly(
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
@@ -365,9 +365,9 @@ class TestMockTechnicalsTimeframes:
 class TestMockTechnicalsAllIndicators:
     """Test mock scenarios with all_indicators=True."""
 
-    @patch("tv_scraper.core.validators.DataValidator.verify_symbol_exchange")
-    @patch("tv_scraper.core.validators.DataValidator.validate_timeframe")
-    @patch("tv_scraper.core.validators.DataValidator.get_indicators")
+    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.core.validators.validate_timeframe")
+    @patch("tv_scraper.core.validators.get_indicators")
     @patch("tv_scraper.core.base.requests.request")
     def test_nasdaq_aapl_all_indicators(
         self, mock_request, mock_get_ind, mock_validate_tf, mock_verify
@@ -393,9 +393,9 @@ class TestMockTechnicalsAllIndicators:
 class TestMockTechnicalsErrorHandling:
     """Test mock scenarios for error handling."""
 
-    @patch("tv_scraper.core.validators.DataValidator.verify_symbol_exchange")
-    @patch("tv_scraper.core.validators.DataValidator.validate_timeframe")
-    @patch("tv_scraper.core.validators.DataValidator.validate_indicators")
+    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.core.validators.validate_timeframe")
+    @patch("tv_scraper.core.validators.validate_indicators")
     def test_invalid_indicator(self, mock_validate_ind, mock_validate_tf, mock_verify):
         """Test invalid indicator returns error."""
         mock_verify.return_value = ("NASDAQ", "AAPL")
@@ -418,8 +418,8 @@ class TestMockTechnicalsErrorHandling:
         assert result["data"] is None
         assert result["error"] is not None
 
-    @patch("tv_scraper.core.validators.DataValidator.verify_symbol_exchange")
-    @patch("tv_scraper.core.validators.DataValidator.validate_timeframe")
+    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.core.validators.validate_timeframe")
     def test_invalid_timeframe(self, mock_validate_tf, mock_verify):
         """Test invalid timeframe returns error."""
         mock_verify.return_value = ("NASDAQ", "AAPL")
@@ -442,9 +442,9 @@ class TestMockTechnicalsErrorHandling:
         assert result["data"] is None
         assert "timeframe" in result["error"].lower()
 
-    @patch("tv_scraper.core.validators.DataValidator.verify_symbol_exchange")
-    @patch("tv_scraper.core.validators.DataValidator.validate_timeframe")
-    @patch("tv_scraper.core.validators.DataValidator.validate_indicators")
+    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.core.validators.validate_timeframe")
+    @patch("tv_scraper.core.validators.validate_indicators")
     @patch("tv_scraper.core.base.requests.request")
     def test_empty_response(
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
@@ -470,9 +470,9 @@ class TestMockTechnicalsErrorHandling:
         assert result["status"] == STATUS_FAILED
         assert "Empty response" in result["error"]
 
-    @patch("tv_scraper.core.validators.DataValidator.verify_symbol_exchange")
-    @patch("tv_scraper.core.validators.DataValidator.validate_timeframe")
-    @patch("tv_scraper.core.validators.DataValidator.validate_indicators")
+    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.core.validators.validate_timeframe")
+    @patch("tv_scraper.core.validators.validate_indicators")
     @patch("tv_scraper.core.base.requests.request")
     def test_network_error(
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
@@ -500,9 +500,9 @@ class TestMockTechnicalsErrorHandling:
 class TestMockTechnicalsFieldsFiltering:
     """Test fields filtering with mock fixtures."""
 
-    @patch("tv_scraper.core.validators.DataValidator.verify_symbol_exchange")
-    @patch("tv_scraper.core.validators.DataValidator.validate_timeframe")
-    @patch("tv_scraper.core.validators.DataValidator.validate_indicators")
+    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.core.validators.validate_timeframe")
+    @patch("tv_scraper.core.validators.validate_indicators")
     @patch("tv_scraper.core.base.requests.request")
     def test_fields_filtering(
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
@@ -528,9 +528,9 @@ class TestMockTechnicalsFieldsFiltering:
 class TestMockTechnicalsResponseEnvelope:
     """Test response envelope structure with mock fixtures."""
 
-    @patch("tv_scraper.core.validators.DataValidator.verify_symbol_exchange")
-    @patch("tv_scraper.core.validators.DataValidator.validate_timeframe")
-    @patch("tv_scraper.core.validators.DataValidator.validate_indicators")
+    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.core.validators.validate_timeframe")
+    @patch("tv_scraper.core.validators.validate_indicators")
     @patch("tv_scraper.core.base.requests.request")
     def test_success_response_structure(
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
@@ -560,7 +560,7 @@ class TestMockTechnicalsResponseEnvelope:
         assert "all_indicators" in result["metadata"]
         assert "technical_indicators" in result["metadata"]
 
-    @patch("tv_scraper.core.validators.DataValidator.verify_symbol_exchange")
+    @patch("tv_scraper.core.validators.verify_symbol_exchange")
     def test_error_response_structure(self, mock_verify):
         """Test error response has correct structure."""
         from tv_scraper.core.exceptions import ValidationError

@@ -4,6 +4,7 @@ import datetime
 import logging
 from typing import Any, Literal
 
+from tv_scraper.core import validators
 from tv_scraper.core.constants import SCANNER_URL
 from tv_scraper.core.exceptions import ValidationError
 from tv_scraper.core.scanner import ScannerScraper
@@ -191,9 +192,7 @@ class Calendar(ScannerScraper):
         use_fields = default_fields
         if fields:
             try:
-                self.validator.validate_fields(
-                    fields, default_fields, field_name="fields"
-                )
+                validators.validate_fields(fields, default_fields, field_name="fields")
             except ValidationError as exc:
                 return self._error_response(
                     str(exc),

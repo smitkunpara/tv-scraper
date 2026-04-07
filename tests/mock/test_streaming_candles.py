@@ -52,7 +52,7 @@ class TestMockStreamingCandles:
     """Test streaming candles with mocked WebSocket using fixtures."""
 
     @patch("tv_scraper.streaming.stream_handler.create_connection")
-    @patch("tv_scraper.core.validators.DataValidator.verify_symbol_exchange")
+    @patch("tv_scraper.core.validators.verify_symbol_exchange")
     def test_basic_candle_success(self, mock_validate, mock_cc):
         """Test basic candle fetch with mock data."""
         mock_ws = create_mock_from_fixture("basic_candles")
@@ -67,7 +67,7 @@ class TestMockStreamingCandles:
         assert len(result["data"]["ohlcv"]) > 0
 
     @patch("tv_scraper.streaming.stream_handler.create_connection")
-    @patch("tv_scraper.core.validators.DataValidator.verify_symbol_exchange")
+    @patch("tv_scraper.core.validators.verify_symbol_exchange")
     def test_candle_structure(self, mock_validate, mock_cc):
         """Test OHLCV candle structure matches expected format."""
         mock_ws = create_mock_from_fixture("basic_candles")
@@ -84,7 +84,7 @@ class TestMockStreamingCandles:
                 assert field in candle, f"Missing field: {field}"
 
     @patch("tv_scraper.streaming.stream_handler.create_connection")
-    @patch("tv_scraper.core.validators.DataValidator.verify_symbol_exchange")
+    @patch("tv_scraper.core.validators.verify_symbol_exchange")
     def test_multiple_timeframes_fixture(self, mock_validate, mock_cc):
         """Test multiple timeframes using fixtures."""
         mock_ws = create_mock_from_fixture("multi_timeframe")
@@ -102,7 +102,7 @@ class TestMockStreamingCandles:
             assert result["metadata"]["timeframe"] == "1h"
 
     @patch("tv_scraper.streaming.stream_handler.create_connection")
-    @patch("tv_scraper.core.validators.DataValidator.verify_symbol_exchange")
+    @patch("tv_scraper.core.validators.verify_symbol_exchange")
     def test_with_indicators_fixture(self, mock_validate, mock_cc):
         """Test candles with indicators using fixtures."""
         mock_ws = create_mock_from_fixture("with_indicators")
@@ -120,7 +120,7 @@ class TestMockStreamingCandles:
         assert "status" in result
 
     @patch("tv_scraper.streaming.stream_handler.create_connection")
-    @patch("tv_scraper.core.validators.DataValidator.verify_symbol_exchange")
+    @patch("tv_scraper.core.validators.verify_symbol_exchange")
     def test_different_exchanges_fixture(self, mock_validate, mock_cc):
         """Test different exchanges using fixtures."""
         mock_ws = create_mock_from_fixture("basic_candles")
@@ -147,7 +147,7 @@ class TestMockWithIndicators:
 
     @patch("tv_scraper.streaming.stream_handler.create_connection")
     @patch("tv_scraper.streaming.candle_streamer.fetch_indicator_metadata")
-    @patch("tv_scraper.core.validators.DataValidator.verify_symbol_exchange")
+    @patch("tv_scraper.core.validators.verify_symbol_exchange")
     def test_rsi_indicator(self, mock_validate, mock_fetch_meta, mock_cc):
         """Test RSI indicator extraction."""
         fixture = load_fixture("with_rsi")
@@ -183,7 +183,7 @@ class TestMockWithIndicators:
 
     @patch("tv_scraper.streaming.stream_handler.create_connection")
     @patch("tv_scraper.streaming.candle_streamer.fetch_indicator_metadata")
-    @patch("tv_scraper.core.validators.DataValidator.verify_symbol_exchange")
+    @patch("tv_scraper.core.validators.verify_symbol_exchange")
     def test_macd_indicator(self, mock_validate, mock_fetch_meta, mock_cc):
         """Test MACD indicator extraction."""
         fixture = load_fixture("with_macd")
@@ -222,7 +222,7 @@ class TestMockCombinations:
     """Test various parameter combinations with fixtures."""
 
     @patch("tv_scraper.streaming.stream_handler.create_connection")
-    @patch("tv_scraper.core.validators.DataValidator.verify_symbol_exchange")
+    @patch("tv_scraper.core.validators.verify_symbol_exchange")
     def test_all_timeframes_combination(self, mock_validate, mock_cc):
         """Test all supported timeframes."""
         mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
@@ -250,7 +250,7 @@ class TestMockCombinations:
             assert result["metadata"]["timeframe"] == tf
 
     @patch("tv_scraper.streaming.stream_handler.create_connection")
-    @patch("tv_scraper.core.validators.DataValidator.verify_symbol_exchange")
+    @patch("tv_scraper.core.validators.verify_symbol_exchange")
     def test_all_exchanges_combination(self, mock_validate, mock_cc):
         """Test all exchanges with fixtures."""
         mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
@@ -283,7 +283,7 @@ class TestMockCombinations:
             assert result["metadata"]["symbol"] == symbol.upper()
 
     @patch("tv_scraper.streaming.stream_handler.create_connection")
-    @patch("tv_scraper.core.validators.DataValidator.verify_symbol_exchange")
+    @patch("tv_scraper.core.validators.verify_symbol_exchange")
     def test_numb_candles_combinations(self, mock_validate, mock_cc):
         """Test different numb_candles values."""
         mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
@@ -316,7 +316,7 @@ class TestMockResponseEnvelope:
     """Test response envelope structure with fixtures."""
 
     @patch("tv_scraper.streaming.stream_handler.create_connection")
-    @patch("tv_scraper.core.validators.DataValidator.verify_symbol_exchange")
+    @patch("tv_scraper.core.validators.verify_symbol_exchange")
     def test_success_envelope_structure(self, mock_validate, mock_cc):
         """Test success envelope has all required fields."""
         mock_ws = create_mock_from_fixture("basic_candles")
@@ -334,7 +334,7 @@ class TestMockResponseEnvelope:
             assert result["error"] is None
 
     @patch("tv_scraper.streaming.stream_handler.create_connection")
-    @patch("tv_scraper.core.validators.DataValidator.verify_symbol_exchange")
+    @patch("tv_scraper.core.validators.verify_symbol_exchange")
     def test_error_envelope_structure(self, mock_validate, mock_cc):
         """Test error envelope has all required fields."""
         mock_ws = MagicMock()
@@ -356,7 +356,7 @@ class TestMockMetadata:
     """Test metadata structure with fixtures."""
 
     @patch("tv_scraper.streaming.stream_handler.create_connection")
-    @patch("tv_scraper.core.validators.DataValidator.verify_symbol_exchange")
+    @patch("tv_scraper.core.validators.verify_symbol_exchange")
     def test_metadata_fields(self, mock_validate, mock_cc):
         """Test metadata contains all expected fields."""
         mock_ws = create_mock_from_fixture("basic_candles")
@@ -383,7 +383,7 @@ class TestMockEdgeCases:
     """Test edge cases with fixtures."""
 
     @patch("tv_scraper.streaming.stream_handler.create_connection")
-    @patch("tv_scraper.core.validators.DataValidator.verify_symbol_exchange")
+    @patch("tv_scraper.core.validators.verify_symbol_exchange")
     def test_empty_packet_array(self, mock_validate, mock_cc):
         """Test handling of empty packet array."""
         mock_ws = MagicMock()
@@ -397,7 +397,7 @@ class TestMockEdgeCases:
         assert result["status"] == STATUS_FAILED
 
     @patch("tv_scraper.streaming.stream_handler.create_connection")
-    @patch("tv_scraper.core.validators.DataValidator.verify_symbol_exchange")
+    @patch("tv_scraper.core.validators.verify_symbol_exchange")
     def test_malformed_json(self, mock_validate, mock_cc):
         """Test handling of malformed JSON."""
         mock_ws = MagicMock()
@@ -411,7 +411,7 @@ class TestMockEdgeCases:
         assert "status" in result
 
     @patch("tv_scraper.streaming.stream_handler.create_connection")
-    @patch("tv_scraper.core.validators.DataValidator.verify_symbol_exchange")
+    @patch("tv_scraper.core.validators.verify_symbol_exchange")
     def test_partial_ohlcv_data(self, mock_validate, mock_cc):
         """Test handling of partial OHLCV data."""
         partial_pkt = {
@@ -437,7 +437,7 @@ class TestStreamerMock:
     """Test Streamer class with mock fixtures."""
 
     @patch("tv_scraper.streaming.stream_handler.create_connection")
-    @patch("tv_scraper.core.validators.DataValidator.verify_symbol_exchange")
+    @patch("tv_scraper.core.validators.verify_symbol_exchange")
     def test_streamer_delegation(self, mock_validate, mock_cc):
         """Test Streamer delegates to CandleStreamer."""
         mock_ws = create_mock_from_fixture("basic_candles")

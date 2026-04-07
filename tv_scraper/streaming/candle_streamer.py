@@ -2,12 +2,11 @@
 
 import json
 import logging
-from typing import Any, cast
+from typing import Any
 
+from tv_scraper.core import validators
 from tv_scraper.core.base import catch_errors
-from tv_scraper.core.exceptions import ValidationError
 from tv_scraper.core.validation_data import EXCHANGE_LITERAL, TIMEFRAME_LITERAL
-from tv_scraper.core.validators import verify_symbol_exchange
 from tv_scraper.streaming.base_streamer import BaseStreamer
 from tv_scraper.streaming.stream_handler import StreamHandler
 from tv_scraper.streaming.utils import fetch_indicator_metadata
@@ -42,11 +41,11 @@ class CandleStreamer(BaseStreamer):
         )
 
     @catch_errors
-    def get_candles(  # noqa: PLR0915
+    def get_candles(
         self,
         exchange: EXCHANGE_LITERAL,
         symbol: str,
-        timeframe: TIMEFRAME_LITERAL = "1m",
+        timeframe: str = "1m",
         numb_candles: int = 10,
         indicators: list[tuple[str, str]] | None = None,
     ) -> dict[str, Any]:
@@ -63,11 +62,10 @@ class CandleStreamer(BaseStreamer):
             Standardized response dict with
             ``{"status", "data": {"ohlcv": [...], "indicators": {...}}, "metadata", "error"}``.
         """
-        if not isinstance(numb_candles, int) or numb_candles <= 0:
-            raise ValidationError(
-                f"numb_candles must be a positive integer, got {numb_candles!r}."
-            )
-        exchange, _symbol = verify_symbol_exchange(exchange, symbol)
+        # --- Validation ---
+        exchange, _symbol = validators.verify_symbol_exchange(exchange, symbol)
+        validators.validate_timeframe(timeframe)
+        validators.validate_range("numb_candles", numb_candles, 1, 5000)
         exchange_symbol = format_symbol(exchange, _symbol)
         self.study_id_to_name_map = {}
 

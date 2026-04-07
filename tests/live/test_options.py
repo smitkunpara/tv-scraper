@@ -138,7 +138,7 @@ class TestLiveOptions:
         assert result["status"] == "failed"
         assert result["data"] is None
         assert result["error"] is not None
-        assert "Invalid column names" in result["error"]
+        assert "Invalid columns" in result["error"]
 
     def test_live_get_options_invalid_strike_type(self) -> None:
         """Verify invalid strike type returns error."""
@@ -152,7 +152,7 @@ class TestLiveOptions:
         assert result["status"] == "failed"
         assert result["data"] is None
         assert result["error"] is not None
-        assert "Invalid strike value" in result["error"]
+        assert "Invalid strike" in result["error"]
 
     def test_live_get_options_empty_strike(self) -> None:
         """Verify empty strike value returns error."""

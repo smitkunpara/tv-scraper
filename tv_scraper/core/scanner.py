@@ -1,7 +1,7 @@
 """Scanner scraper class for tv_scraper."""
 
 import logging
-from typing import Any, cast
+from typing import Any
 
 from tv_scraper.core.base import BaseScraper, catch_errors
 from tv_scraper.core.constants import SCANNER_URL

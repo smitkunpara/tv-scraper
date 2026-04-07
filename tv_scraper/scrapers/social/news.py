@@ -1,20 +1,14 @@
 """News scraper for fetching headlines and article content from TradingView."""
 
 import logging
-from typing import Any, Literal, cast
+from typing import Any, Literal
 
+from tv_scraper.core import validators
 from tv_scraper.core.base import BaseScraper, catch_errors
 from tv_scraper.core.validation_data import (
     AREA_LITERAL,
     EXCHANGE_LITERAL,
     NEWS_PROVIDER_LITERAL,
-)
-from tv_scraper.core.validators import (
-    validate_area,
-    validate_choice,
-    validate_language,
-    validate_news_provider,
-    verify_symbol_exchange,
 )
 
 logger = logging.getLogger(__name__)
@@ -107,19 +101,23 @@ class News(BaseScraper):
             Standardized response dict with keys
             ``status``, ``data``, ``metadata``, ``error``.
         """
-        exchange, symbol = verify_symbol_exchange(exchange, symbol)
-        validate_choice("sort_by", sort_by, VALID_SORT_OPTIONS)
-        validate_choice("section", section, VALID_SECTIONS)
-        validate_language(language)
-        if provider:
-            validate_news_provider(provider)
-        if area:
-            validate_area(area)
+        validators.verify_symbol_exchange(exchange, symbol)
+        validators.validate_language(language)
+        validators.validate_news_provider(provider) if provider else None
+        validators.validate_area(area) if area else None
+        validators.validate_choice(
+            "sort_by", sort_by, ["latest", "oldest", "most_urgent", "least_urgent"]
+        )
+        validators.validate_choice(
+            "section",
+            section,
+            ["all", "esg", "press_release", "financial_statement"],
+        )
 
         params: dict[str, Any] = {
             "client": "web",
             "lang": language,
-            "area": self.validator.get_areas().get(area) if area else "",
+            "area": validators.get_areas().get(area) if area else "",
             "provider": provider.replace(".", "_") if provider else "",
             "section": "" if section == "all" else section,
             "streaming": "",
@@ -174,7 +172,7 @@ class News(BaseScraper):
         if not story_id or not story_id.strip():
             return self._error_response("story_id cannot be empty")
 
-        validate_language(language)
+        validators.validate_language(language)
 
         params: dict[str, str] = {
             "id": story_id,

@@ -2,11 +2,11 @@
 
 from typing import Any
 
+from tv_scraper.core import validators
 from tv_scraper.core.base import catch_errors
 from tv_scraper.core.exceptions import ValidationError
 from tv_scraper.core.scanner import ScannerScraper
 from tv_scraper.core.validation_data import EXCHANGE_LITERAL
-from tv_scraper.core.validators import validate_fields
 
 
 class Fundamentals(ScannerScraper):
@@ -162,7 +162,7 @@ class Fundamentals(ScannerScraper):
             raise ValidationError("Fields must be a list of strings or None.")
 
         field_list = fields if fields else self.ALL_FIELDS
-        validate_fields(field_list, self.ALL_FIELDS, "field")
+        validators.validate_fields(field_list, self.ALL_FIELDS, "field")
 
         return self._fetch_symbol_fields(
             exchange=exchange,

@@ -260,7 +260,7 @@ class TestLiveMarketMoversValidation:
         )
         assert result["status"] == "failed"
         assert result["error"] is not None
-        assert "Unsupported market" in result["error"]
+        assert "Invalid market" in result["error"]
 
     def test_live_invalid_category_for_stocks(self) -> None:
         """Test invalid category for stocks market."""
@@ -270,7 +270,7 @@ class TestLiveMarketMoversValidation:
         )
         assert result["status"] == "failed"
         assert result["error"] is not None
-        assert "Unsupported category" in result["error"]
+        assert "Invalid category" in result["error"]
 
     def test_live_invalid_category_for_crypto(self) -> None:
         """Test stock-only category rejected for crypto market."""
@@ -280,7 +280,7 @@ class TestLiveMarketMoversValidation:
         )
         assert result["status"] == "failed"
         assert result["error"] is not None
-        assert "Unsupported category" in result["error"]
+        assert "Invalid category" in result["error"]
 
     def test_live_invalid_limit_zero(self) -> None:
         """Test limit of 0 returns error."""
@@ -320,7 +320,7 @@ class TestLiveMarketMoversValidation:
         )
         assert result["status"] == "failed"
         assert result["error"] is not None
-        assert "Unsupported language" in result["error"]
+        assert "Invalid language" in result["error"]
 
     def test_live_invalid_fields_type(self) -> None:
         """Test invalid fields type returns error."""

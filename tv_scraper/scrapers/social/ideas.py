@@ -2,13 +2,13 @@
 
 import logging
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from typing import Any, Literal, cast
+from typing import Any, Literal
 
+from tv_scraper.core import validators
 from tv_scraper.core.base import BaseScraper, catch_errors
 from tv_scraper.core.constants import BASE_URL
 from tv_scraper.core.exceptions import ValidationError
 from tv_scraper.core.validation_data import EXCHANGE_LITERAL
-from tv_scraper.core.validators import validate_choice, verify_symbol_exchange
 
 logger = logging.getLogger(__name__)
 
@@ -86,8 +86,8 @@ class Ideas(BaseScraper):
                 f"end_page ({end_page}) must be >= start_page ({start_page})"
             )
 
-        exchange, symbol = verify_symbol_exchange(exchange, symbol)
-        validate_choice("sort_by", sort_by, ALLOWED_SORT_VALUES)
+        validators.verify_symbol_exchange(exchange, symbol)
+        validators.validate_choice("sort_by", sort_by, ALLOWED_SORT_VALUES)
 
         url_slug = f"{exchange}-{symbol}"
 

@@ -2,15 +2,15 @@
 
 import json
 import logging
-from typing import Any, cast
+from typing import Any
 
 import requests
 
+from tv_scraper.core import validators
 from tv_scraper.core.base import catch_errors
 from tv_scraper.core.constants import DEFAULT_USER_AGENT, SCANNER_URL
 from tv_scraper.core.exceptions import ValidationError
 from tv_scraper.core.validation_data import EXCHANGE_LITERAL
-from tv_scraper.core.validators import verify_symbol_exchange
 from tv_scraper.streaming.base_streamer import BaseStreamer
 from tv_scraper.utils.helpers import format_symbol
 
@@ -58,7 +58,7 @@ class ForecastStreamer(BaseStreamer):
         )
 
     @catch_errors
-    def get_forecast(self, exchange: EXCHANGE_LITERAL, symbol: str) -> dict[str, Any]:  # noqa: PLR0915
+    def get_forecast(self, exchange: EXCHANGE_LITERAL, symbol: str) -> dict[str, Any]:
         """Capture forecast data via TradingView WebSocket quote stream.
 
         This method captures qsd packets until all required forecast fields are
@@ -72,7 +72,8 @@ class ForecastStreamer(BaseStreamer):
             Standardized response dict with
             ``{"status", "data", "metadata", "error"}``.
         """
-        exchange, _symbol = verify_symbol_exchange(exchange, symbol)
+        # --- Validation ---
+        exchange, _symbol = validators.verify_symbol_exchange(exchange, symbol)
         exchange_symbol = format_symbol(exchange, _symbol)
 
         symbol_type = self._get_symbol_type(exchange_symbol)
@@ -85,9 +86,7 @@ class ForecastStreamer(BaseStreamer):
         handler = self.connect()
 
         qs = handler.quote_session
-        resolve_symbol = json.dumps(
-            {"adjustment": "splits", "symbol": exchange_symbol}
-        )
+        resolve_symbol = json.dumps({"adjustment": "splits", "symbol": exchange_symbol})
 
         capture_fields = sorted(set(_FORECAST_SOURCE_KEY_MAP.values()))
         handler.send_message("set_data_quality", ["low"])
@@ -137,9 +136,7 @@ class ForecastStreamer(BaseStreamer):
             out_key: snapshot.get(src_key)
             for out_key, src_key in _FORECAST_SOURCE_KEY_MAP.items()
         }
-        available_output_keys = [
-            k for k, v in cleaned_data.items() if v is not None
-        ]
+        available_output_keys = [k for k, v in cleaned_data.items() if v is not None]
 
         missing_output_keys = sorted(
             required_output_keys.difference(available_output_keys)

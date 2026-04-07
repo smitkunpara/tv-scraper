@@ -2,12 +2,12 @@
 
 from typing import Any
 
+from tv_scraper.core import validators
 from tv_scraper.core.base import catch_errors
 from tv_scraper.core.constants import SCANNER_URL
 from tv_scraper.core.exceptions import ValidationError
 from tv_scraper.core.scanner import ScannerScraper
 from tv_scraper.core.validation_data import EXCHANGE_LITERAL
-from tv_scraper.core.validators import validate_fields, verify_options_symbol
 
 OPTIONS_SCANNER_URL = f"{SCANNER_URL}/options/scan2?label-product=symbols-options"
 
@@ -88,9 +88,9 @@ class Options(ScannerScraper):
             Standardized response dict with keys
             ``status``, ``data``, ``metadata``, ``error``.
         """
-        verify_options_symbol(exchange, symbol)
+        validators.verify_options_symbol(exchange, symbol)
         if columns is not None:
-            validate_fields(columns, list(VALID_OPTION_COLUMNS), "columns")
+            validators.validate_fields(columns, list(VALID_OPTION_COLUMNS), "columns")
 
         underlying = f"{exchange}:{symbol}"
         cols = columns if columns is not None else DEFAULT_OPTION_COLUMNS
@@ -130,9 +130,9 @@ class Options(ScannerScraper):
             Standardized response dict with keys
             ``status``, ``data``, ``metadata``, ``error``.
         """
-        verify_options_symbol(exchange, symbol)
+        validators.verify_options_symbol(exchange, symbol)
         if columns is not None:
-            validate_fields(columns, list(VALID_OPTION_COLUMNS), "columns")
+            validators.validate_fields(columns, list(VALID_OPTION_COLUMNS), "columns")
 
         if not isinstance(strike, (int, float)):
             raise ValidationError(
@@ -154,7 +154,6 @@ class Options(ScannerScraper):
         )
 
         return self._execute_request(payload, exchange, symbol, strike)
-
 
     def _build_payload(
         self,

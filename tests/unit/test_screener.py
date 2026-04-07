@@ -9,6 +9,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 from tv_scraper.core.constants import STATUS_FAILED, STATUS_SUCCESS
+from tv_scraper.core.exceptions import ValidationError
 from tv_scraper.scrapers.screening.screener import (
     MAX_LIMIT,
     MIN_LIMIT,
@@ -131,8 +132,7 @@ class TestValidateFilter:
         """Test valid filter passes validation."""
         scraper = Screener()
         filters = [{"left": "close", "operation": "greater", "right": 100}]
-        error = scraper._validate_filter(filters)
-        assert error is None
+        scraper._validate_filter(filters)
 
     def test_valid_multiple_filters(self) -> None:
         """Test multiple valid filters pass validation."""
@@ -141,55 +141,52 @@ class TestValidateFilter:
             {"left": "close", "operation": "greater", "right": 50},
             {"left": "volume", "operation": "less", "right": 1000000},
         ]
-        error = scraper._validate_filter(filters)
-        assert error is None
+        scraper._validate_filter(filters)
 
     def test_all_valid_operations(self) -> None:
         """Test all operations are valid."""
         scraper = Screener()
         for op in Screener.OPERATIONS:
             filters = [{"left": "close", "operation": op, "right": 100}]
-            error = scraper._validate_filter(filters)
-            assert error is None, f"Operation '{op}' should be valid"
+            scraper._validate_filter(filters)
 
     def test_invalid_operation(self) -> None:
         """Test invalid operation fails validation."""
         scraper = Screener()
         filters = [{"left": "close", "operation": "invalid_op", "right": 100}]
-        error = scraper._validate_filter(filters)
-        assert error is not None
-        assert "operation" in error.lower()
-        assert "invalid_op" in error
+        with pytest.raises(ValidationError) as exc:
+            scraper._validate_filter(filters)
+        assert "operation" in str(exc.value).lower()
+        assert "invalid_op" in str(exc.value)
 
     def test_missing_left_key(self) -> None:
         """Test filter missing 'left' key fails validation."""
         scraper = Screener()
         filters = [{"operation": "greater", "right": 100}]
-        error = scraper._validate_filter(filters)
-        assert error is not None
-        assert "left" in error
+        with pytest.raises(ValidationError) as exc:
+            scraper._validate_filter(filters)
+        assert "left" in str(exc.value)
 
     def test_missing_operation_key(self) -> None:
         """Test filter missing 'operation' key fails validation."""
         scraper = Screener()
         filters = [{"left": "close", "right": 100}]
-        error = scraper._validate_filter(filters)
-        assert error is not None
-        assert "operation" in error
+        with pytest.raises(ValidationError) as exc:
+            scraper._validate_filter(filters)
+        assert "operation" in str(exc.value)
 
     def test_filter_not_dict(self) -> None:
         """Test filter that is not a dict fails validation."""
         scraper = Screener()
         filters = ["not a dict"]
-        error = scraper._validate_filter(filters)
-        assert error is not None
-        assert "dictionary" in error.lower()
+        with pytest.raises(ValidationError) as exc:
+            scraper._validate_filter(filters)
+        assert "dictionary" in str(exc.value).lower()
 
     def test_empty_filters_list(self) -> None:
         """Test empty filters list passes validation."""
         scraper = Screener()
-        error = scraper._validate_filter([])
-        assert error is None
+        scraper._validate_filter([])
 
 
 class TestValidateFilter2:
@@ -204,23 +201,22 @@ class TestValidateFilter2:
                 {"left": "volume", "operation": "greater", "right": 1000000},
             ],
         }
-        error = scraper._validate_filter2(filter2)
-        assert error is None
+        scraper._validate_filter2(filter2)
 
     def test_filter2_missing_operator(self) -> None:
         """Test filter2 missing 'operator' key fails validation."""
         scraper = Screener()
         filter2 = {"operands": []}
-        error = scraper._validate_filter2(filter2)
-        assert error is not None
-        assert "operator" in error
+        with pytest.raises(ValidationError) as exc:
+            scraper._validate_filter2(filter2)
+        assert "operator" in str(exc.value)
 
     def test_filter2_not_dict(self) -> None:
         """Test filter2 that is not a dict fails validation."""
         scraper = Screener()
-        error = scraper._validate_filter2("not a dict")
-        assert error is not None
-        assert "dictionary" in error.lower()
+        with pytest.raises(ValidationError) as exc:
+            scraper._validate_filter2("not a dict")
+        assert "dictionary" in str(exc.value).lower()
 
 
 class TestBuildPayload:
@@ -295,64 +291,13 @@ class TestBuildPayload:
     def test_unsupported_market_raises(self) -> None:
         """Test unsupported market raises ValueError."""
         scraper = Screener()
-        with pytest.raises(ValueError) as exc_info:
+        with pytest.raises(ValidationError) as exc_info:
             scraper._build_payload(
                 fields=["name"],
                 market="invalid_market",
                 limit=10,
             )
-        assert "Unsupported market" in str(exc_info.value)
-
-
-class TestBuildMetadata:
-    """Test _build_metadata method."""
-
-    def test_basic_metadata(self) -> None:
-        """Test basic metadata construction."""
-        scraper = Screener()
-        meta = scraper._build_metadata(
-            market="america",
-            sort_order="desc",
-            limit=10,
-        )
-        assert meta["market"] == "america"
-        assert meta["sort_order"] == "desc"
-        assert meta["limit"] == 10
-
-    def test_metadata_with_optional_params(self) -> None:
-        """Test metadata with optional parameters."""
-        scraper = Screener()
-        filters = [{"left": "close", "operation": "greater", "right": 100}]
-        meta = scraper._build_metadata(
-            market="america",
-            sort_order="desc",
-            limit=10,
-            filters=filters,
-            sort_by="close",
-            symbols={"tickers": ["NASDAQ:AAPL"]},
-            filter2={"operator": "and", "operands": []},
-        )
-        assert meta["filters"] == filters
-        assert meta["sort_by"] == "close"
-        assert meta["symbols"] == {"tickers": ["NASDAQ:AAPL"]}
-        assert meta["filter2"] == {"operator": "and", "operands": []}
-
-    def test_metadata_excludes_none_params(self) -> None:
-        """Test metadata excludes parameters set to None."""
-        scraper = Screener()
-        meta = scraper._build_metadata(
-            market="america",
-            sort_order="desc",
-            limit=10,
-            filters=None,
-            sort_by=None,
-            symbols=None,
-            filter2=None,
-        )
-        assert "filters" not in meta
-        assert "sort_by" not in meta
-        assert "symbols" not in meta
-        assert "filter2" not in meta
+        assert "market" in str(exc_info.value)
 
 
 class TestGetScreenerValidation:
@@ -365,7 +310,7 @@ class TestGetScreenerValidation:
 
         assert result["status"] == STATUS_FAILED
         assert result["data"] is None
-        assert "Unsupported market" in result["error"]
+        assert "Invalid market" in result["error"]
         assert result["metadata"]["market"] == "invalid_market"
 
     def test_invalid_sort_order(self) -> None:

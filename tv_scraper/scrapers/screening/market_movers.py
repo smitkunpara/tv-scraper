@@ -3,9 +3,10 @@
 import logging
 from typing import Any, Literal
 
+from tv_scraper.core import validators
+from tv_scraper.core.base import catch_errors
 from tv_scraper.core.constants import SCANNER_URL
 from tv_scraper.core.scanner import ScannerScraper
-from tv_scraper.core.validators import DataValidator
 
 MOVER_MARKET_LITERAL = Literal[
     "stocks-usa",
@@ -252,6 +253,7 @@ class MarketMovers(ScannerScraper):
             "sort": self._get_sort_config(category),
         }
 
+    @catch_errors
     def get_market_movers(
         self,
         market: MOVER_MARKET_LITERAL = "stocks-usa",
@@ -273,66 +275,22 @@ class MarketMovers(ScannerScraper):
             Standardized response envelope with ``status``, ``data``,
             ``metadata``, and ``error`` keys.
         """
-        # Validate limit bounds
-        if not isinstance(limit, int) or limit < 1 or limit > 1000:
-            return self._error_response(
-                f"Invalid limit: {limit}. Must be an integer between 1 and 1000.",
-                market=market,
-                category=category,
-                limit=limit,
-            )
+        # --- Validation ---
+        validators.validate_range("limit", limit, 1, 1000)
+        validators.validate_choice("market", market, self.SUPPORTED_MARKETS)
 
-        # Validate market
-        if market not in self.SUPPORTED_MARKETS:
-            return self._error_response(
-                f"Unsupported market: '{market}'. "
-                f"Supported markets: {', '.join(self.SUPPORTED_MARKETS)}",
-                market=market,
-                category=category,
-                limit=limit,
-            )
-
-        # Validate category
-        allowed = (
+        allowed_categories = (
             self.STOCK_CATEGORIES
             if market.startswith("stocks")
             else self.NON_STOCK_CATEGORIES
         )
-        if category not in allowed:
-            return self._error_response(
-                f"Unsupported category: '{category}'. "
-                f"Supported categories: {', '.join(allowed)}",
-                market=market,
-                category=category,
-                limit=limit,
-            )
-
-        # Validate language
-        valid_languages = DataValidator().get_languages()
-        valid_language_codes = set(valid_languages.values())
-        if language not in valid_language_codes:
-            return self._error_response(
-                f"Unsupported language: '{language}'. "
-                f"Supported language codes: {', '.join(sorted(valid_language_codes))}",
-                market=market,
-                category=category,
-                limit=limit,
-            )
+        validators.validate_choice("category", category, allowed_categories)
+        validators.validate_language(language)
 
         resolved_fields = (
             fields if fields is not None else self._get_default_fields(market)
         )
-
-        # Validate fields
-        if not isinstance(resolved_fields, list) or not all(
-            isinstance(f, str) for f in resolved_fields
-        ):
-            return self._error_response(
-                "Invalid fields parameter. Must be a list of strings.",
-                market=market,
-                category=category,
-                limit=limit,
-            )
+        validators.validate_fields(resolved_fields, resolved_fields, "fields")
 
         payload = self._build_payload(
             market, category, resolved_fields, limit, language
@@ -346,23 +304,12 @@ class MarketMovers(ScannerScraper):
         )
 
         if error_msg:
-            return self._error_response(
-                error_msg,
-                market=market,
-                category=category,
-                limit=limit,
-            )
+            return self._error_response(error_msg)
 
         assert json_response is not None
 
-        # Validate JSON response structure
         if not isinstance(json_response, dict):
-            return self._error_response(
-                f"Invalid response format: expected dict, got {type(json_response).__name__}",
-                market=market,
-                category=category,
-                limit=limit,
-            )
+            return self._error_response("Invalid response format: expected dictionary.")
 
         raw_items = json_response.get("data", [])
         total_count = json_response.get("totalCount", 0)
@@ -377,9 +324,6 @@ class MarketMovers(ScannerScraper):
 
         return self._success_response(
             formatted_data,
-            market=market,
-            category=category,
-            limit=limit,
             total=len(formatted_data),
             totalCount=total_count,
         )

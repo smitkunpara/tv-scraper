@@ -2,18 +2,14 @@
 
 import logging
 import re
-from typing import Any, cast
+from typing import Any
 
+from tv_scraper.core import validators
 from tv_scraper.core.base import catch_errors
 from tv_scraper.core.constants import SCANNER_URL
 from tv_scraper.core.exceptions import ValidationError
 from tv_scraper.core.scanner import ScannerScraper
 from tv_scraper.core.validation_data import EXCHANGE_LITERAL, TIMEFRAME_LITERAL
-from tv_scraper.core.validators import (
-    validate_indicators,
-    validate_timeframe,
-    verify_symbol_exchange,
-)
 
 logger = logging.getLogger(__name__)
 
@@ -69,14 +65,12 @@ class Technicals(ScannerScraper):
         """
 
         # --- Validation ---
-        verify_symbol_exchange(exchange, symbol)
-        validate_timeframe(timeframe)
-
-        # Resolve indicator list
+        validators.verify_symbol_exchange(exchange, symbol)
+        validators.validate_timeframe(timeframe)
         if all_indicators:
             indicators = self.validator.get_indicators()
         elif technical_indicators:
-            validate_indicators(technical_indicators)
+            validators.validate_indicators(technical_indicators)
             indicators = technical_indicators
         else:
             raise ValidationError(
