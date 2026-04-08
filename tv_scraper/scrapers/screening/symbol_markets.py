@@ -52,31 +52,6 @@ class SymbolMarkets(ScannerScraper):
         "market_cap_basic",
     ]
 
-    def _build_payload(
-        self,
-        symbol: str,
-        fields: list[str],
-        limit: int,
-    ) -> dict[str, Any]:
-        """Build the scanner API request payload.
-
-        Args:
-            symbol: Symbol name to match against.
-            fields: Columns to retrieve.
-            limit: Maximum number of results.
-
-        Returns:
-            Payload dict ready for JSON serialization.
-        """
-        return {
-            "filter": [
-                {"left": "name", "operation": "match", "right": symbol},
-            ],
-            "columns": fields,
-            "options": {"lang": "en"},
-            "range": [0, limit],
-        }
-
     @catch_errors
     def get_symbol_markets(
         self,
@@ -108,11 +83,14 @@ class SymbolMarkets(ScannerScraper):
 
         resolved_fields = fields if fields is not None else list(self.DEFAULT_FIELDS)
 
-        payload = self._build_payload(
-            symbol=search_symbol,
-            fields=resolved_fields,
-            limit=limit,
-        )
+        payload = {
+            "filter": [
+                {"left": "name", "operation": "match", "right": search_symbol},
+            ],
+            "columns": resolved_fields,
+            "options": {"lang": "en"},
+            "range": [0, limit],
+        }
 
         url = f"{SCANNER_URL}/{scanner}/scan"
 

@@ -9,35 +9,6 @@ from tv_scraper.core.constants import STATUS_FAILED, STATUS_SUCCESS
 from tv_scraper.scrapers.screening.symbol_markets import SymbolMarkets
 
 
-class TestSymbolMarketsBuildPayload:
-    """Test _build_payload method."""
-
-    def test_build_payload_basic(self) -> None:
-        """Test basic payload construction."""
-        scraper = SymbolMarkets()
-        payload = scraper._build_payload(
-            symbol="AAPL", fields=["name", "close"], limit=10
-        )
-        assert payload["filter"] == [
-            {"left": "name", "operation": "match", "right": "AAPL"}
-        ]
-        assert payload["columns"] == ["name", "close"]
-        assert payload["range"] == [0, 10]
-        assert payload["options"]["lang"] == "en"
-
-    def test_build_payload_empty_fields(self) -> None:
-        """Test payload with empty fields list."""
-        scraper = SymbolMarkets()
-        payload = scraper._build_payload(symbol="BTC", fields=[], limit=50)
-        assert payload["columns"] == []
-
-    def test_build_payload_large_limit(self) -> None:
-        """Test payload with large limit."""
-        scraper = SymbolMarkets()
-        payload = scraper._build_payload(symbol="EURUSD", fields=["name"], limit=150)
-        assert payload["range"] == [0, 150]
-
-
 class TestSymbolMarketsGetSymbolMarkets:
     """Test get_symbol_markets method."""
 

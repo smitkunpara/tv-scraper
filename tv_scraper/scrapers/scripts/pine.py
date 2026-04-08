@@ -4,7 +4,7 @@ import logging
 from typing import Any
 from urllib.parse import quote
 
-from tv_scraper.core.base import BaseScraper
+from tv_scraper.core.base import BaseScraper, catch_errors
 
 logger = logging.getLogger(__name__)
 
@@ -40,6 +40,7 @@ class Pine(BaseScraper):
             cookie=cookie,
         )
 
+    @catch_errors
     def list_saved_scripts(self) -> dict[str, Any]:
         """List the authenticated user's saved Pine scripts.
 
@@ -78,6 +79,7 @@ class Pine(BaseScraper):
 
         return self._success_response(scripts)
 
+    @catch_errors
     def validate_script(self, source: str) -> dict[str, Any]:
         """Validate Pine source code using TradingView translate_light endpoint.
 
@@ -94,7 +96,7 @@ class Pine(BaseScraper):
 
         source_error = self._validate_non_empty(source, "Source code")
         if source_error:
-            return self._error_response(source_error, source=source)
+            return self._error_response(source_error)
 
         headers = self._build_pine_headers()
 
@@ -110,19 +112,17 @@ class Pine(BaseScraper):
         )
 
         if error_msg:
-            return self._error_response(error_msg, source=source)
+            return self._error_response(error_msg)
 
         if not isinstance(payload, dict):
             return self._error_response(
-                "Unexpected response format from Pine validation endpoint.",
-                source=source,
+                "Unexpected response format from Pine validation endpoint."
             )
 
         result_obj = payload.get("result")
         if not isinstance(result_obj, dict):
             return self._error_response(
-                "Unexpected validation payload from Pine endpoint.",
-                source=source,
+                "Unexpected validation payload from Pine endpoint."
             )
 
         errors = result_obj.get("errors") or []
@@ -131,15 +131,15 @@ class Pine(BaseScraper):
         if errors:
             return self._error_response(
                 "Pine script validation failed.",
-                source=source,
                 errors=errors,
                 warnings=warnings,
             )
 
         if warnings:
-            return self._success_response(None, source=source, warnings=warnings)
-        return self._success_response(None, source=source)
+            return self._success_response(None, warnings=warnings)
+        return self._success_response(None)
 
+    @catch_errors
     def create_script(
         self,
         name: str,
@@ -160,17 +160,16 @@ class Pine(BaseScraper):
 
         name_error = self._validate_non_empty(name, "Script name")
         if name_error:
-            return self._error_response(name_error, name=name)
+            return self._error_response(name_error)
         source_error = self._validate_non_empty(source, "Source code")
         if source_error:
-            return self._error_response(source_error, name=name, source=source)
+            return self._error_response(source_error)
 
         validation = self.validate_script(source)
         if validation["status"] != "success":
             validation_meta = validation.get("metadata", {})
             return self._error_response(
                 validation["error"] or "Pine script validation failed.",
-                name=name,
                 warnings=validation_meta.get("warnings"),
                 errors=validation_meta.get("errors"),
             )
@@ -192,13 +191,12 @@ class Pine(BaseScraper):
         )
 
         if error_msg:
-            return self._error_response(error_msg, name=name)
+            return self._error_response(error_msg)
 
         script_result = self._extract_save_result(payload)
         if script_result is None:
             return self._error_response(
-                "Unexpected response format from Pine create endpoint.",
-                name=name,
+                "Unexpected response format from Pine create endpoint."
             )
 
         data = {
@@ -208,11 +206,9 @@ class Pine(BaseScraper):
             or name,
             "warnings": validation.get("metadata", {}).get("warnings", []),
         }
-        return self._success_response(
-            data,
-            name=name,
-        )
+        return self._success_response(data)
 
+    @catch_errors
     def edit_script(self, pine_id: str, name: str, source: str) -> dict[str, Any]:
         """Edit an existing Pine script by script ID.
 
@@ -230,23 +226,19 @@ class Pine(BaseScraper):
 
         pine_id_error = self._validate_non_empty(pine_id, "Pine script ID")
         if pine_id_error:
-            return self._error_response(pine_id_error, pine_id=pine_id)
+            return self._error_response(pine_id_error)
         name_error = self._validate_non_empty(name, "Script name")
         if name_error:
-            return self._error_response(name_error, pine_id=pine_id, name=name)
+            return self._error_response(name_error)
         source_error = self._validate_non_empty(source, "Source code")
         if source_error:
-            return self._error_response(
-                source_error, pine_id=pine_id, name=name, source=source
-            )
+            return self._error_response(source_error)
 
         validation = self.validate_script(source)
         if validation["status"] != "success":
             validation_meta = validation.get("metadata", {})
             return self._error_response(
                 validation["error"] or "Pine script validation failed.",
-                pine_id=pine_id,
-                name=name,
                 warnings=validation_meta.get("warnings"),
                 errors=validation_meta.get("errors"),
             )
@@ -269,14 +261,12 @@ class Pine(BaseScraper):
         )
 
         if error_msg:
-            return self._error_response(error_msg, pine_id=pine_id, name=name)
+            return self._error_response(error_msg)
 
         script_result = self._extract_save_result(payload)
         if script_result is None:
             return self._error_response(
-                "Unexpected response format from Pine edit endpoint.",
-                pine_id=pine_id,
-                name=name,
+                "Unexpected response format from Pine edit endpoint."
             )
 
         data = {
@@ -286,12 +276,9 @@ class Pine(BaseScraper):
             or name,
             "warnings": validation.get("metadata", {}).get("warnings", []),
         }
-        return self._success_response(
-            data,
-            pine_id=pine_id,
-            name=name,
-        )
+        return self._success_response(data)
 
+    @catch_errors
     def delete_script(self, pine_id: str) -> dict[str, Any]:
         """Delete an existing Pine script by script ID.
 
@@ -307,7 +294,7 @@ class Pine(BaseScraper):
 
         pine_id_error = self._validate_non_empty(pine_id, "Pine script ID")
         if pine_id_error:
-            return self._error_response(pine_id_error, pine_id=pine_id)
+            return self._error_response(pine_id_error)
 
         headers = self._build_pine_headers()
         encoded_pine_id = quote(pine_id, safe="")
@@ -323,18 +310,14 @@ class Pine(BaseScraper):
             # If the error is JSON decode, but the text is "ok", `_request` might return "Failed to parse API response".
             # We can't access the text here, but if that happens, we'll see it in tests.
             # Assuming TV returns `"ok"`, not `ok`.
-            return self._error_response(error_msg, pine_id=pine_id)
+            return self._error_response(error_msg)
 
         if response != "ok":
             return self._error_response(
-                f"Pine delete endpoint returned unexpected response: {response}",
-                pine_id=pine_id,
+                f"Pine delete endpoint returned unexpected response: {response}"
             )
 
-        return self._success_response(
-            {"id": pine_id},
-            pine_id=pine_id,
-        )
+        return self._success_response({"id": pine_id})
 
     def _validate_cookie_required(self) -> dict[str, Any] | None:
         if self.cookie:

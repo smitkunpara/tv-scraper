@@ -302,25 +302,6 @@ class TestMarketMoversDataMapping:
         assert result[0]["close"] == 175.50
         assert result[0]["change"] == 2.5
 
-    def test_payload_builds_correctly(self) -> None:
-        """Test payload building integrates correctly."""
-        scraper = MarketMovers()
-        payload = scraper._build_payload(
-            market="stocks-usa",
-            category="gainers",
-            fields=["name", "close"],
-            limit=10,
-        )
-
-        assert "columns" in payload
-        assert "filter" in payload
-        assert "options" in payload
-        assert "range" in payload
-        assert "sort" in payload
-
-        assert payload["columns"] == ["name", "close"]
-        assert payload["range"] == [0, 10]
-
     def test_filter_conditions_for_different_markets(self) -> None:
         """Test filter conditions work correctly for different markets."""
         scraper = MarketMovers()

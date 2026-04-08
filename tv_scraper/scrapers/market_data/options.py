@@ -95,17 +95,15 @@ class Options(ScannerScraper):
         underlying = f"{exchange}:{symbol}"
         cols = columns if columns is not None else DEFAULT_OPTION_COLUMNS
 
-        payload = self._build_payload(
-            cols=cols,
-            underlying=underlying,
-            filter_type="expiry",
-            filter_value=expiration,
-            additional_filters=[
+        payload = {
+            "columns": cols,
+            "filter": [
                 {"left": "type", "operation": "equal", "right": "option"},
                 {"left": "expiration", "operation": "equal", "right": expiration},
                 {"left": "root", "operation": "equal", "right": root},
             ],
-        )
+            "index_filters": [{"name": "underlying_symbol", "values": [underlying]}],
+        }
 
         return self._execute_request(payload, exchange, symbol, expiration)
 
@@ -142,33 +140,16 @@ class Options(ScannerScraper):
         underlying = f"{exchange}:{symbol}"
         cols = columns if columns is not None else DEFAULT_OPTION_COLUMNS
 
-        payload = self._build_payload(
-            cols=cols,
-            underlying=underlying,
-            filter_type="strike",
-            filter_value=strike,
-            additional_filters=[
+        payload = {
+            "columns": cols,
+            "filter": [
                 {"left": "type", "operation": "equal", "right": "option"},
                 {"left": "strike", "operation": "equal", "right": strike},
             ],
-        )
-
-        return self._execute_request(payload, exchange, symbol, strike)
-
-    def _build_payload(
-        self,
-        cols: list[str],
-        underlying: str,
-        filter_type: str,
-        filter_value: int | float,
-        additional_filters: list[dict[str, Any]],
-    ) -> dict[str, Any]:
-        """Build the request payload for the options scanner API."""
-        return {
-            "columns": cols,
-            "filter": additional_filters,
             "index_filters": [{"name": "underlying_symbol", "values": [underlying]}],
         }
+
+        return self._execute_request(payload, exchange, symbol, strike)
 
     def _execute_request(
         self,

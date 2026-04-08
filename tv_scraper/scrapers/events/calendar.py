@@ -200,15 +200,14 @@ class Calendar(ScannerScraper):
                 )
             use_fields = fields
 
-        if timestamp_from is None or timestamp_to is None:
-            now = datetime.datetime.now().timestamp()
-            midnight = now - (now % _SECONDS_PER_DAY)
+        midnight = int(datetime.datetime.now().timestamp())
+        midnight -= midnight % _SECONDS_PER_DAY
 
         if timestamp_from is None:
-            timestamp_from = int(midnight - _DAYS_OFFSET * _SECONDS_PER_DAY)
+            timestamp_from = midnight - _DAYS_OFFSET * _SECONDS_PER_DAY
 
         if timestamp_to is None:
-            timestamp_to = int(
+            timestamp_to = (
                 midnight + _DAYS_OFFSET * _SECONDS_PER_DAY + _SECONDS_PER_DAY - 1
             )
 

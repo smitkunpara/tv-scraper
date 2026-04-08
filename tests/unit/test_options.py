@@ -96,68 +96,6 @@ class TestPublicValidation:
         assert "Invalid columns" in result["error"]
 
 
-class TestBuildPayload:
-    """Tests for _build_payload method."""
-
-    def test_build_payload_basic(self) -> None:
-        """Verify basic payload construction."""
-        options = Options()
-        payload = options._build_payload(
-            cols=["bid", "ask", "strike"],
-            underlying="NASDAQ:AAPL",
-            filter_type="expiry",
-            filter_value=20260219,
-            additional_filters=[
-                {"left": "type", "operation": "equal", "right": "option"},
-            ],
-        )
-
-        assert payload["columns"] == ["bid", "ask", "strike"]
-        assert payload["filter"] == [
-            {"left": "type", "operation": "equal", "right": "option"},
-        ]
-        assert payload["index_filters"] == [
-            {"name": "underlying_symbol", "values": ["NASDAQ:AAPL"]},
-        ]
-
-    def test_build_payload_with_strike_filter(self) -> None:
-        """Verify strike filter payload construction."""
-        options = Options()
-        payload = options._build_payload(
-            cols=DEFAULT_OPTION_COLUMNS,
-            underlying="BSE:SENSEX",
-            filter_type="strike",
-            filter_value=83000,
-            additional_filters=[
-                {"left": "type", "operation": "equal", "right": "option"},
-                {"left": "strike", "operation": "equal", "right": 83000},
-            ],
-        )
-
-        assert "index_filters" in payload
-        assert payload["index_filters"][0]["name"] == "underlying_symbol"
-        assert payload["index_filters"][0]["values"] == ["BSE:SENSEX"]
-
-    def test_build_payload_expiry_filter(self) -> None:
-        """Verify expiry filter payload construction."""
-        options = Options()
-        payload = options._build_payload(
-            cols=["strike", "bid", "ask"],
-            underlying="NSE:NIFTY",
-            filter_type="expiry",
-            filter_value=20260320,
-            additional_filters=[
-                {"left": "type", "operation": "equal", "right": "option"},
-                {"left": "expiration", "operation": "equal", "right": 20260320},
-                {"left": "root", "operation": "equal", "right": "NIFTY"},
-            ],
-        )
-
-        assert len(payload["filter"]) == 3
-        expiry_filter = next(f for f in payload["filter"] if f["left"] == "expiration")
-        assert expiry_filter["right"] == 20260320
-
-
 class TestGetOptionsByStrike:
     """Tests for get_options_by_strike method."""
 

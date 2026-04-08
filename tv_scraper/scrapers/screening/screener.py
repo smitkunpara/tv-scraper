@@ -201,54 +201,6 @@ class Screener(ScannerScraper):
         if "operator" not in filter2:
             raise ValidationError("filter2 missing required 'operator' key")
 
-    def _build_payload(
-        self,
-        fields: list[str],
-        market: str,
-        filters: list[dict[str, Any]] | None = None,
-        sort_by: str | None = None,
-        sort_order: str = "desc",
-        limit: int = 50,
-        symbols: dict[str, Any] | None = None,
-        filter2: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
-        """Build the scanner API request payload.
-
-        Args:
-            fields: Columns to retrieve.
-            market: Market identifier, auto-derived into the ``markets`` body field.
-            filters: Optional list of filter condition dicts.
-            sort_by: Optional field to sort by.
-            sort_order: Sort direction (``"asc"`` or ``"desc"``).
-            limit: Maximum number of results.
-
-        Returns:
-            Payload dict ready for JSON serialization.
-        """
-        if market not in self.SUPPORTED_MARKETS:
-            raise ValidationError(
-                f"Invalid market: '{market}'. "
-                f"Allowed values: {', '.join(sorted(self.SUPPORTED_MARKETS))}"
-            )
-        payload: dict[str, Any] = {
-            "columns": fields,
-            "options": {"lang": "en"},
-            "range": [0, limit],
-            "markets": [market],
-        }
-        if filters:
-            payload["filter"] = filters
-        if sort_by:
-            payload["sort"] = {
-                "sortBy": sort_by,
-                "sortOrder": sort_order,
-            }
-        if symbols:
-            payload["symbols"] = symbols
-        if filter2:
-            payload["filter2"] = filter2
-        return payload
-
     @catch_errors
     def get_screener(
         self,
@@ -298,16 +250,23 @@ class Screener(ScannerScraper):
             fields if fields is not None else self._get_default_fields(market)
         )
 
-        payload = self._build_payload(
-            fields=resolved_fields,
-            market=market,
-            filters=filters,
-            sort_by=sort_by,
-            sort_order=sort_order,
-            limit=limit,
-            symbols=symbols,
-            filter2=filter2,
-        )
+        payload: dict[str, Any] = {
+            "columns": resolved_fields,
+            "options": {"lang": "en"},
+            "range": [0, limit],
+            "markets": [market],
+        }
+        if filters:
+            payload["filter"] = filters
+        if sort_by:
+            payload["sort"] = {
+                "sortBy": sort_by,
+                "sortOrder": sort_order,
+            }
+        if symbols:
+            payload["symbols"] = symbols
+        if filter2:
+            payload["filter2"] = filter2
 
         url = f"{SCANNER_URL}/{market}/scan"
 

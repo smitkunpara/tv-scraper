@@ -37,11 +37,11 @@ class ScannerScraper(BaseScraper):
         Returns:
             Standardized response dict.
         """
-        exchange, symbol = verify_symbol_exchange(exchange, symbol)
+        validated_exchange, validated_symbol = verify_symbol_exchange(exchange, symbol)
 
         url = f"{SCANNER_URL}/symbol"
         params: dict[str, str] = {
-            "symbol": f"{exchange}:{symbol}",
+            "symbol": f"{validated_exchange}:{validated_symbol}",
             "fields": ",".join(fields),
             "no_404": "true",
         }
@@ -61,22 +61,22 @@ class ScannerScraper(BaseScraper):
             errmsg = json_response.get("errmsg", "Unknown API error")
             return self._error_response(f"API error: {errmsg}")
 
-        result: dict[str, Any] = {"symbol": f"{exchange}:{symbol}"}
+        result: dict[str, Any] = {"symbol": f"{validated_exchange}:{validated_symbol}"}
         for field in fields:
             value = json_response.get(field)
             if value is None:
                 logger.warning(
                     "Field '%s' not found in response for %s:%s",
                     field,
-                    exchange,
-                    symbol,
+                    validated_exchange,
+                    validated_symbol,
                 )
             result[field] = value
 
         if self.export_result:
             self._export(
                 data=result,
-                symbol=f"{exchange}_{symbol}",
+                symbol=f"{validated_exchange}_{validated_symbol}",
                 data_category=data_category,
             )
 

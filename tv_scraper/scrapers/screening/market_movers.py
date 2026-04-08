@@ -225,34 +225,6 @@ class MarketMovers(ScannerScraper):
 
         return filters
 
-    def _build_payload(
-        self,
-        market: str,
-        category: str,
-        fields: list[str],
-        limit: int,
-        language: str = "en",
-    ) -> dict[str, Any]:
-        """Build the scanner API request payload.
-
-        Args:
-            market: Market identifier.
-            category: Category identifier.
-            fields: Columns to retrieve.
-            limit: Maximum number of results.
-            language: Language code for the request (default: "en").
-
-        Returns:
-            Payload dict ready for JSON serialization.
-        """
-        return {
-            "columns": fields,
-            "filter": self._get_filter_conditions(market, category),
-            "options": {"lang": language},
-            "range": [0, limit],
-            "sort": self._get_sort_config(category),
-        }
-
     @catch_errors
     def get_market_movers(
         self,
@@ -292,9 +264,13 @@ class MarketMovers(ScannerScraper):
         )
         validators.validate_fields(resolved_fields, resolved_fields, "fields")
 
-        payload = self._build_payload(
-            market, category, resolved_fields, limit, language
-        )
+        payload = {
+            "columns": resolved_fields,
+            "filter": self._get_filter_conditions(market, category),
+            "options": {"lang": language},
+            "range": [0, limit],
+            "sort": self._get_sort_config(category),
+        }
         url = self._get_scanner_url(market)
 
         json_response, error_msg = self._request(
