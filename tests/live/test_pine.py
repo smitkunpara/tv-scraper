@@ -133,6 +133,39 @@ class TestValidateScript:
 
 
 @pytest.mark.live
+class TestGetScript:
+    """Test get_script() method."""
+
+    def test_get_script_success(self, scraper: Pine) -> None:
+        """Verify script source can be fetched by id/version."""
+        listed = scraper.list_saved_scripts()
+        assert listed["status"] == STATUS_SUCCESS, listed.get("error")
+
+        if not listed["data"]:
+            pytest.skip("No saved Pine scripts available for get_script test")
+
+        first_with_version = next(
+            (item for item in listed["data"] if item.get("version")), None
+        )
+        if first_with_version is None:
+            pytest.skip("No saved Pine script with version available")
+
+        result = scraper.get_script(
+            pine_id=first_with_version["id"],
+            version=str(first_with_version["version"]),
+        )
+        assert result["status"] == STATUS_SUCCESS, result.get("error")
+        assert isinstance(result["data"], dict)
+        assert "source" in result["data"]
+
+    def test_get_script_no_cookie(self, scraper_no_cookie: Pine) -> None:
+        """Verify missing cookie returns error."""
+        result = scraper_no_cookie.get_script(pine_id="USER;test", version="5.0")
+        assert result["status"] == "failed"
+        assert "cookie" in result["error"].lower()
+
+
+@pytest.mark.live
 class TestCreateScript:
     """Test create_script() method."""
 

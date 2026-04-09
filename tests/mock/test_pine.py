@@ -318,6 +318,31 @@ class TestCreateScriptMock:
 
         assert result["status"] == STATUS_FAILED
 
+    @patch("requests.request")
+    def test_create_preserves_outer_metadata(self, mock_request: MagicMock) -> None:
+        """Verify metadata includes create args after internal validation call."""
+        validation_response = _create_mock_response(
+            {"result": {"errors": [], "warnings": []}}
+        )
+        create_response = _create_mock_response(
+            {
+                "result": {
+                    "metaInfo": {
+                        "scriptIdPart": "USER;new123",
+                        "shortDescription": "Test",
+                    },
+                }
+            }
+        )
+        mock_request.side_effect = [validation_response, create_response]
+
+        scraper = Pine(cookie=COOKIE)
+        result = scraper.create_script(name="TestScript", source=self.VALID_SOURCE)
+
+        assert result["status"] == STATUS_SUCCESS
+        assert result["metadata"]["name"] == "TestScript"
+        assert result["metadata"]["source"] == self.VALID_SOURCE
+
 
 class TestEditScriptMock:
     """Test edit_script() with mocked responses."""
@@ -438,6 +463,73 @@ class TestDeleteScriptMock:
         mock_request.side_effect = requests.RequestException("Connection error")
         scraper = Pine(cookie=COOKIE)
         result = scraper.delete_script("USER;test")
+
+        assert result["status"] == STATUS_FAILED
+
+
+class TestGetScriptMock:
+    """Test get_script() with mocked responses."""
+
+    @patch("requests.request")
+    def test_get_script_success(self, mock_request: MagicMock) -> None:
+        """Verify script source and metadata are returned."""
+        payload = {
+            "created": "2026-04-02T17:01:57.997843Z",
+            "extra": {
+                "kind": "study",
+                "sourceInputsCount": 1,
+            },
+            "lastVersionMaj": "5.0",
+            "scriptName": "smitrsi",
+            "scriptTitle": "smitrsi",
+            "source": "//@version=6\\nplot(close)",
+            "updated": "2026-04-02T17:01:57.997843Z",
+            "version": "5.0",
+        }
+        mock_request.return_value = _create_mock_response(payload)
+
+        scraper = Pine(cookie=COOKIE)
+        result = scraper.get_script(
+            pine_id="USER;495ddbc28fe44ad79b3c2e1dd19eefb6", version="5.0"
+        )
+
+        assert result["status"] == STATUS_SUCCESS
+        assert result["data"]["id"] == "USER;495ddbc28fe44ad79b3c2e1dd19eefb6"
+        assert result["data"]["version"] == "5.0"
+        assert result["data"]["name"] == "smitrsi"
+        assert result["data"]["source"] == "//@version=6\\nplot(close)"
+
+    def test_get_script_empty_id(self) -> None:
+        """Verify empty script ID returns error."""
+        scraper = Pine(cookie=COOKIE)
+        result = scraper.get_script(pine_id="", version="5.0")
+
+        assert result["status"] == STATUS_FAILED
+        assert "id" in result["error"].lower()
+
+    def test_get_script_empty_version(self) -> None:
+        """Verify empty version returns error."""
+        scraper = Pine(cookie=COOKIE)
+        result = scraper.get_script(pine_id="USER;abc", version="")
+
+        assert result["status"] == STATUS_FAILED
+        assert "version" in result["error"].lower()
+
+    def test_get_script_no_cookie(self) -> None:
+        """Verify missing cookie returns error."""
+        scraper = Pine(cookie=None)
+        result = scraper.get_script(pine_id="USER;abc", version="5.0")
+
+        assert result["status"] == STATUS_FAILED
+        assert "cookie" in result["error"].lower()
+
+    @patch("requests.request")
+    def test_get_script_unexpected_payload(self, mock_request: MagicMock) -> None:
+        """Verify unexpected payload format returns error."""
+        mock_request.return_value = _create_mock_response([])
+
+        scraper = Pine(cookie=COOKIE)
+        result = scraper.get_script(pine_id="USER;abc", version="5.0")
 
         assert result["status"] == STATUS_FAILED
 

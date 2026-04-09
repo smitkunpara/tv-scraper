@@ -209,6 +209,57 @@ class TestExtractSaveResult:
         assert result is None
 
 
+class TestMapScriptDetails:
+    """Test _map_script_details() static method."""
+
+    def test_maps_complete_payload(self) -> None:
+        """Verify complete get payload is mapped correctly."""
+        payload = {
+            "scriptIdPart": "USER;abc123",
+            "scriptName": "My Script",
+            "scriptTitle": "My Script",
+            "version": "5.0",
+            "lastVersionMaj": "5.0",
+            "created": "2026-04-02T17:01:57.997843Z",
+            "updated": "2026-04-02T17:01:57.997843Z",
+            "source": "//@version=6\nplot(close)",
+            "extra": {"kind": "study"},
+        }
+
+        result = Pine._map_script_details(payload, "USER;fallback", "4.0")
+
+        assert result is not None
+        assert result["id"] == "USER;abc123"
+        assert result["name"] == "My Script"
+        assert result["title"] == "My Script"
+        assert result["version"] == "5.0"
+        assert result["source"] == "//@version=6\nplot(close)"
+        assert result["extra"] == {"kind": "study"}
+
+    def test_falls_back_to_inputs_for_missing_id_and_version(self) -> None:
+        """Verify fallback values are used when payload omits id/version."""
+        payload = {
+            "scriptName": "Fallback Script",
+            "source": "//@version=6\nplot(open)",
+        }
+
+        result = Pine._map_script_details(payload, "USER;fallback", "5.0")
+
+        assert result is not None
+        assert result["id"] == "USER;fallback"
+        assert result["version"] == "5.0"
+
+    def test_returns_none_when_source_missing(self) -> None:
+        """Verify source is mandatory for get payload mapping."""
+        payload = {
+            "scriptIdPart": "USER;abc",
+            "scriptName": "No Source",
+        }
+
+        result = Pine._map_script_details(payload, "USER;abc", "5.0")
+        assert result is None
+
+
 class TestBuildPineHeaders:
     """Test _build_pine_headers() method."""
 

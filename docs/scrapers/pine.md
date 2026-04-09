@@ -22,6 +22,7 @@ Why teams use this pattern:
 Current support includes:
 
 - View your saved Pine scripts
+- Fetch full script source by id and version
 - Validate Pine source code
 - Create new scripts
 - Edit existing scripts
@@ -125,7 +126,51 @@ Output example:
 
 ---
 
-### 2) `validate_script(source)`
+### 2) `get_script(pine_id, version)`
+
+Fetches a saved Pine script (including source code) using the script id and version.
+
+```python
+result = pine.get_script(
+    pine_id="USER;495ddbc28fe44ad79b3c2e1dd19eefb6",
+    version="5.0",
+)
+```
+
+Output example:
+
+```python
+{
+    "status": "success",
+    "data": {
+        "id": "USER;495ddbc28fe44ad79b3c2e1dd19eefb6",
+        "name": "smitrsi",
+        "title": "smitrsi",
+        "version": "5.0",
+        "last_version": "5.0",
+        "created": "2026-04-02T17:01:57.997843Z",
+        "updated": "2026-04-02T17:01:57.997843Z",
+        "source": "//@version=6\nindicator(\"smitrsi\")...",
+        "extra": {
+            "kind": "study"
+        }
+    },
+    "metadata": {
+        "pine_id": "USER;495ddbc28fe44ad79b3c2e1dd19eefb6",
+        "version": "5.0"
+    },
+    "error": None,
+}
+```
+
+Notes:
+
+- Use `list_saved_scripts()` to get valid `id` and `version` pairs.
+- This endpoint requires cookie authentication.
+
+---
+
+### 3) `validate_script(source)`
 
 Validates Pine code through TradingView compiler endpoint.
 
@@ -197,7 +242,7 @@ Notes:
 
 ---
 
-### 3) `create_script(name, source)`
+### 4) `create_script(name, source)`
 
 Creates a new Pine script.
 
@@ -240,7 +285,7 @@ Important behavior:
 
 ---
 
-### 4) `edit_script(pine_id, name, source)`
+### 5) `edit_script(pine_id, name, source)`
 
 Edits an existing Pine script.
 
@@ -285,7 +330,7 @@ Important behavior:
 
 ---
 
-### 5) `delete_script(pine_id)`
+### 6) `delete_script(pine_id)`
 
 Deletes a script by Pine ID.
 

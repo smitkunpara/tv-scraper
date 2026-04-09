@@ -6,23 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-- **Functional Validation Architecture**: Completed the migration from a singleton-based `DataValidator` class to a pure functional, module-level validation approach in `tv_scraper.core.validators`.
-- **Core**: Removed `DataValidator` class, its `RLock` synchronization, and `reset()` method, significantly reducing internal complexity and memory footprint.
-- **Core**: Replaced instance-based validation calls (e.g., `self.validator.validate_exchange()`) with direct module-level function calls, improving performance and decoupling scrapers from validator state.
-- **Core**: Removed all remaining `get_*` accessor functions from the validation system, promoting direct use of constants and specialized validation functions.
-- **Testing**: Cleaned up the entire test suite (950+ tests) by removing obsolete `DataValidator` singleton checks, fixing `AttributeError` regressions, and updating mock patterns to target the new functional interface.
-- **Testing**: Eliminated flaky collection errors caused by lingering imports of the removed `DataValidator` class.
-- **Standardized Validation Architecture**: Completed a comprehensive audit of all scrapers and streaming modules to ensure strict adherence to the `@catch_errors` metadata architecture.
-- **Scrapers**: Fixed `pine.py` public methods by applying the `@catch_errors` decorator and removing redundant manual metadata arguments (`pine_id`, `name`, `source`).
-- **Core**: Confirmed that manual keyword arguments in `_success_response` and `_error_response` are now strictly reserved for supplementary (e.g., `total` counts) or derived (e.g., internal `event_type`) context across the entire library.
-- **Validation**: Enhanced generic validators (`validate_range`, `validate_fields`) with robust type checking to catch invalid input types early.
-- **Documentation**: Updated `AGENTS.md` and `CHANGELOG.md` to reflect the final decentralized validation architecture and metadata audit.
 
 ### Added
-- **Core**: New `ScannerScraper` base class (inherits from `BaseScraper`) to standardize interactions with TradingView's scanner API, providing automatic payload formatting and table parsing.
 - **Core**: New `http.py` module implementing a centralized `requests.Session` with automatic retry logic (exponential backoff) for improved network reliability.
 - **Streaming**: `BaseStreamer` now catching and raising normalized `RuntimeError` for authentication and connection failures.
-
 ### Refactor
 - **Scanner Migration**: Migrated 8 modules (`Fundamentals`, `Options`, `Markets`, `Technicals`, `Screener`, `MarketMovers`, `SymbolMarkets`, `Calendar`) to inherit from `ScannerScraper`, eliminating thousands of lines of boilerplate and unifying error handling.
 - **Social Scrapers**: Refactored `minds.py`, `news.py`, and `pine.py` to use `BaseScraper._request()` for consistent HTTP handling, timeout management, and Captcha detection.
