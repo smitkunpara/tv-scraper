@@ -36,6 +36,8 @@ class Markets(ScannerScraper):
         export_result: Whether to export results to file.
         export_type: Export format, ``"json"`` or ``"csv"``.
         timeout: HTTP request timeout in seconds.
+        cookie: Optional TradingView session cookie. If omitted,
+            ``TRADINGVIEW_COOKIE`` from the environment is used when available.
 
     Example::
 
@@ -102,7 +104,7 @@ class Markets(ScannerScraper):
             fields: List of scanner fields to retrieve.  Uses
                 :attr:`DEFAULT_FIELDS` when ``None``.
             sort_order: ``"desc"`` (default) or ``"asc"``.
-            limit: Maximum number of results to return.
+            limit: Maximum number of results to return (1 to 1000).
 
         Returns:
             Standardized response dict with ``status``, ``data``,

@@ -42,7 +42,7 @@ class News(BaseScraper):
 
     Fetches news headlines for a given symbol and exchange, with optional
     filters for provider, area, section, language, and sort order. Also
-    supports scraping full article content given a story path.
+    supports scraping full article content given a story ID.
 
     Args:
         export_result: Whether to export results to file.
@@ -217,7 +217,8 @@ class News(BaseScraper):
     def _clean_headline(self, item: dict[str, Any]) -> dict[str, Any]:
         """Remove unwanted fields from headline.
 
-        Removes: id, sourceLogoid, provider, relatedSymbols, permission, urgency
+        Keeps core fields (id, title, shortDescription, published, storyPath)
+        and drops extra fields from the raw payload.
 
         Args:
             item: Raw headline dict.

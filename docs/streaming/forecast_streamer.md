@@ -1,11 +1,6 @@
 # ForecastStreamer API
 
-The `ForecastStreamer` class provides analyst forecast data for stock symbols via TradingView's WebSocket API. This includes price targets, EPS data, and revenue estimates.
-
-## Important Limitations
-
-- **Stock symbols only**: Forecast data is only available for stock symbols (e.g., `"NYSE:A"`, `"NASDAQ:AAPL"`).
-- **Not available for**: Crypto, forex, indices, or other non-stock instruments.
+The `ForecastStreamer` class captures forecast fields from TradingView quote stream (`qsd` packets) and returns them in a standardized response envelope.
 
 ## Installation
 
@@ -17,9 +12,9 @@ from tv_scraper.streaming import ForecastStreamer
 
 ```python
 fs = ForecastStreamer(
-    export_result=False,        # Save results to file
-    export_type="json",        # "json" or "csv"
-    cookie="<TRADINGVIEW_COOKIE>",  # Optional: session cookie
+    export_result=False,
+    export_type="json",
+    cookie="<TRADINGVIEW_COOKIE>",
 )
 ```
 
@@ -27,31 +22,101 @@ fs = ForecastStreamer(
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `export_result` | `bool` | `False` | Whether to save results to file |
+| `export_result` | `bool` | `False` | Whether to export successful forecast results |
 | `export_type` | `str` | `"json"` | Export format: `"json"` or `"csv"` |
-| `cookie` | `str \| None` | `None` | TradingView session cookie |
+| `cookie` | `str \| None` | `None` | TradingView cookie (used for JWT resolution in `connect()`) |
 
-## Methods
+## Method
 
-### `get_forecast()`
-
-Fetch analyst forecast data for stock symbols.
+### `get_forecast(exchange, symbol)`
 
 ```python
-result = fs.get_forecast(
-    exchange="NYSE",
-    symbol="A",
-)
+result = fs.get_forecast(exchange="NASDAQ", symbol="AAPL")
 ```
 
 #### Parameters
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `exchange` | `str` | **required** | Exchange name (e.g., `"NYSE"`, `"NASDAQ"`) |
-| `symbol` | `str` | **required** | Stock symbol (e.g., `"A"`, `"AAPL"`) |
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `exchange` | `str` | Yes | Exchange name |
+| `symbol` | `str` | Yes | Symbol name |
 
-#### Success Response
+## Runtime Flow (Exact Behavior)
+
+1. Validates and normalizes symbol via `validators.verify_symbol_exchange(exchange, symbol)`.
+2. Builds `exchange_symbol` with `format_symbol(exchange, normalized_symbol)`.
+3. Resolves instrument type using HTTP GET to `f"{SCANNER_URL}/symbol"` with params:
+   - `symbol=<EXCHANGE:SYMBOL>`
+   - `fields=type`
+   - `no_404=false`
+4. Enforces stock-only access:
+   - If resolved type is not `"stock"`, returns failed response with error:
+     - `forecast is not available for this symbol because it is type: <type>`
+5. Opens WebSocket handler through `connect()`.
+6. Sends quote-stream setup messages in this order:
+   - `set_data_quality`, `["low"]`
+   - `quote_set_fields`, `[quote_session, *capture_fields]`
+   - `quote_hibernate_all`, `[quote_session]`
+   - `quote_add_symbols`, `[quote_session, f"={resolve_symbol_json}"]`
+   - `quote_fast_symbols`, `[quote_session, exchange_symbol]`
+7. Captures packets from `handler.receive_packets()` and accumulates snapshot values.
+
+## Packet Capture Behavior
+
+- Every packet increments `packet_count` and is appended to internal `raw_packets`.
+- Only packets with `m == "qsd"` are parsed for forecast values.
+- A `qsd` packet is parsed only when:
+  - `p` exists with at least 2 items,
+  - `p[1]` is a dict,
+  - `p[1]["v"]` is a dict.
+- Parsed values are merged with `snapshot.update(values)`.
+- Non-`qsd` packets are ignored for field extraction.
+- `raw_packets` is internal only and is not included in the method response.
+
+## Required Output Key Mapping
+
+The method always produces this fixed output schema by mapping output keys to TradingView source keys.
+
+| Output key | Source key in snapshot |
+|------------|------------------------|
+| `revenue_currency` | `fundamental_currency_code` |
+| `previous_close_price` | `regular_close` |
+| `average_price_target` | `price_target_average` |
+| `highest_price_target` | `price_target_high` |
+| `lowest_price_target` | `price_target_low` |
+| `median_price_target` | `price_target_median` |
+| `yearly_eps_data` | `earnings_fy_h` |
+| `quarterly_eps_data` | `earnings_fq_h` |
+| `yearly_revenue_data` | `revenues_fy_h` |
+| `quarterly_revenue_data` | `revenues_fq_h` |
+
+`capture_fields` sent to `quote_set_fields` is `sorted(set(source_keys))` from the mapping above.
+
+## Stop Conditions
+
+The receive loop stops when either condition is met:
+
+1. All required output keys are found with non-`None` values.
+2. Timeout branch triggers when `packet_count > 15` (checked inside the parsed `qsd` branch).
+
+On timeout, a warning is logged with currently found keys.
+
+## Response Semantics
+
+All responses follow:
+
+```python
+{
+    "status": "success" | "failed",
+    "data": <payload or None>,
+    "metadata": {...},
+    "error": <string or None>
+}
+```
+
+### Success Response
+
+When all required keys are present and non-`None`:
 
 ```python
 {
@@ -60,29 +125,17 @@ result = fs.get_forecast(
         "revenue_currency": "USD",
         "previous_close_price": 114.5,
         "average_price_target": 162.8,
-        "highest_price_target": 185,
-        "lowest_price_target": 145,
-        "median_price_target": 160,
-        "yearly_eps_data": [
-            {"FiscalPeriod": "2026", "Estimate": 5.9},
-            {"FiscalPeriod": "2025", "Estimate": 5.2}
-        ],
-        "quarterly_eps_data": [
-            {"FiscalPeriod": "2026-Q1", "Estimate": 1.36},
-            {"FiscalPeriod": "2025-Q4", "Estimate": 1.28}
-        ],
-        "yearly_revenue_data": [
-            {"FiscalPeriod": "2026", "Estimate": 7395056494},
-            {"FiscalPeriod": "2025", "Estimate": 6823456789}
-        ],
-        "quarterly_revenue_data": [
-            {"FiscalPeriod": "2026-Q1", "Estimate": 1807792308},
-            {"FiscalPeriod": "2025-Q4", "Estimate": 1756421356}
-        ]
+        "highest_price_target": 185.0,
+        "lowest_price_target": 145.0,
+        "median_price_target": 160.0,
+        "yearly_eps_data": [...],
+        "quarterly_eps_data": [...],
+        "yearly_revenue_data": [...],
+        "quarterly_revenue_data": [...]
     },
     "metadata": {
-        "exchange": "NYSE",
-        "symbol": "A",
+        "exchange": "NASDAQ",
+        "symbol": "AAPL",
         "available_output_keys": [
             "average_price_target",
             "highest_price_target",
@@ -100,63 +153,15 @@ result = fs.get_forecast(
 }
 ```
 
-#### Error Response - Non-Stock Symbol (Crypto)
+### Failed Response: Missing Keys
 
-```python
-{
-    "status": "failed",
-    "data": null,
-    "metadata": {
-        "exchange": "BINANCE",
-        "symbol": "BTCUSDT"
-    },
-    "error": "forecast is not available for this symbol because it is type: crypto"
-}
-```
+If any required output key is missing (`None` in final cleaned payload):
 
-#### Error Response - Non-Stock Symbol (Forex)
-
-```python
-{
-    "status": "failed",
-    "data": null,
-    "metadata": {
-        "exchange": "FX",
-        "symbol": "EURUSD"
-    },
-    "error": "forecast is not available for this symbol because it is type: forex"
-}
-```
-
-#### Error Response - Invalid Exchange
-
-```python
-{
-    "status": "failed",
-    "data": null,
-    "metadata": {
-        "exchange": "INVALID_EXCHANGE",
-        "symbol": "A"
-    },
-    "error": "Invalid exchange: 'INVALID_EXCHANGE'. Did you mean: 'NYSE'?"
-}
-```
-
-#### Error Response - Invalid Symbol
-
-```python
-{
-    "status": "failed",
-    "data": null,
-    "metadata": {
-        "exchange": "NYSE",
-        "symbol": "INVALID_SYMBOL"
-    },
-    "error": "Symbol 'INVALID_SYMBOL' not found on exchange 'NYSE'"
-}
-```
-
-#### Error Response - Partial Data (Missing Keys)
+- `status` is `"failed"`
+- `data` is still returned (all 10 output keys, with missing ones set to `None`)
+- `metadata.available_output_keys` contains only non-`None` keys
+- `error` is exactly:
+  - `failed to fetch keys: <comma-separated-missing-keys>`
 
 ```python
 {
@@ -165,21 +170,17 @@ result = fs.get_forecast(
         "revenue_currency": "USD",
         "previous_close_price": null,
         "average_price_target": 162.8,
-        "highest_price_target": 185,
-        "lowest_price_target": 145,
-        "median_price_target": 160,
+        "highest_price_target": 185.0,
+        "lowest_price_target": 145.0,
+        "median_price_target": 160.0,
         "yearly_eps_data": null,
-        "quarterly_eps_data": [
-            {"FiscalPeriod": "2026-Q1", "Estimate": 1.36}
-        ],
+        "quarterly_eps_data": [...],
         "yearly_revenue_data": null,
-        "quarterly_revenue_data": [
-            {"FiscalPeriod": "2026-Q1", "Estimate": 1807792308}
-        ]
+        "quarterly_revenue_data": [...]
     },
     "metadata": {
-        "exchange": "NYSE",
-        "symbol": "A",
+        "exchange": "NASDAQ",
+        "symbol": "AAPL",
         "available_output_keys": [
             "average_price_target",
             "highest_price_target",
@@ -194,153 +195,50 @@ result = fs.get_forecast(
 }
 ```
 
-### `connect()`
-
-Create and return a connected StreamHandler with JWT token.
+### Failed Response: Non-Stock Symbol
 
 ```python
-handler = fs.connect()
+{
+    "status": "failed",
+    "data": null,
+    "metadata": {
+        "exchange": "BINANCE",
+        "symbol": "BTCUSDT"
+    },
+    "error": "forecast is not available for this symbol because it is type: crypto"
+}
 ```
 
-Returns a connected `StreamHandler` instance.
+### Failed Response: Unexpected Errors
 
-## Data Fields
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `revenue_currency` | `str` | Currency for revenue values (e.g., "USD") |
-| `previous_close_price` | `float \| None` | Previous closing price |
-| `average_price_target` | `float \| None` | Average analyst price target |
-| `highest_price_target` | `float \| None` | Highest analyst price target |
-| `lowest_price_target` | `float \| None` | Lowest analyst price target |
-| `median_price_target` | `float \| None` | Median analyst price target |
-| `yearly_eps_data` | `list \| None` | Annual EPS estimates |
-| `quarterly_eps_data` | `list \| None` | Quarterly EPS estimates |
-| `yearly_revenue_data` | `list \| None` | Annual revenue estimates |
-| `quarterly_revenue_data` | `list \| None` | Quarterly revenue estimates |
-
-## Usage Examples
-
-### Basic - Get forecast for a stock
+Unexpected runtime exceptions (for example symbol-type lookup failures) are wrapped by `@catch_errors`:
 
 ```python
-from tv_scraper.streaming import ForecastStreamer
-
-fs = ForecastStreamer()
-result = fs.get_forecast(exchange="NYSE", symbol="A")
-
-if result["status"] == "success":
-    data = result["data"]
-    print(f"Price targets: {data['lowest_price_target']} - {data['highest_price_target']}")
-    print(f"Average target: {data['average_price_target']}")
-    print(f"Median target: {data['median_price_target']}")
+{
+    "status": "failed",
+    "data": null,
+    "metadata": {
+        "exchange": "NASDAQ",
+        "symbol": "AAPL"
+    },
+    "error": "Unexpected error: <exception message>"
+}
 ```
 
-### Multiple stocks
+## Output Metadata
 
-```python
-stocks = [
-    ("NYSE", "A"),
-    ("NASDAQ", "AAPL"),
-    ("NASDAQ", "MSFT"),
-]
+`metadata` always starts with method arguments captured by `@catch_errors` and is then extended by method-level metadata:
 
-fs = ForecastStreamer()
-for exchange, symbol in stocks:
-    result = fs.get_forecast(exchange=exchange, symbol=symbol)
-    if result["status"] == "success":
-        print(f"{exchange}:{symbol} - Avg target: {result['data']['average_price_target']}")
-    else:
-        print(f"{exchange}:{symbol} - Error: {result['error']}")
-```
+- Always includes: `exchange`, `symbol`
+- On success and missing-keys failure: includes `available_output_keys`
 
-### With export
+## Export Behavior
 
-```python
-fs = ForecastStreamer(export_result=True, export_type="json")
-result = fs.get_forecast(exchange="NASDAQ", symbol="AAPL")
-# Creates: export/forecast_aapl_20260215-120000.json
-```
+- Export runs only on successful completion (all required keys present).
+- Export call is `_export(cleaned_data, symbol, "forecast")`.
 
-### Check available keys
+## Data Field Notes
 
-```python
-result = fs.get_forecast(exchange="NYSE", symbol="A")
-if result["status"] == "success":
-    available = result["metadata"]["available_output_keys"]
-    print(f"Available data: {available}")
-else:
-    # Even on failure, we get available keys
-    if "available_output_keys" in result["metadata"]:
-        print(f"Partial data available: {result['metadata']['available_output_keys']}")
-```
-
-## Error Handling
-
-All public methods return standardized response envelopes and never raise exceptions.
-
-```python
-result = fs.get_forecast(exchange="BINANCE", symbol="BTCUSDT")
-
-# Always check status
-if result["status"] == "failed":
-    print(f"Error: {result['error']}")
-    print(f"Metadata: {result['metadata']}")
-
-    # Even on failure, partial data may be available
-    if result["data"]:
-        print(f"Partial data: {result['data']}")
-```
-
-## Common Error Scenarios
-
-### 1. Crypto symbols
-
-```python
-result = fs.get_forecast(exchange="BINANCE", symbol="BTCUSDT")
-# Error: "forecast is not available for this symbol because it is type: crypto"
-```
-
-### 2. Forex symbols
-
-```python
-result = fs.get_forecast(exchange="FX", symbol="EURUSD")
-# Error: "forecast is not available for this symbol because it is type: forex"
-```
-
-### 3. Index symbols
-
-```python
-result = fs.get_forecast(exchange="INDEX", symbol="SPX")
-# Error: "forecast is not available for this symbol because it is type: index"
-```
-
-### 4. Invalid exchange
-
-```python
-result = fs.get_forecast(exchange="INVALID", symbol="A")
-# Error: "Invalid exchange: 'INVALID_EXCHANGE'. Did you mean: 'NYSE'?"
-```
-
-### 5. Invalid symbol
-
-```python
-result = fs.get_forecast(exchange="NYSE", symbol="NOTEXIST")
-# Error: "Symbol 'NOTEXIST' not found on exchange 'NYSE'"
-```
-
-## Inheritance
-
-`ForecastStreamer` extends `BaseStreamer` which extends `BaseScraper`, providing:
-
-- `_success_response()` - Build standardized success response
-- `_error_response()` - Build standardized error response
-- `_export()` - Export data to file
-- `validator` - DataValidator singleton for exchange/symbol validation
-
-## Notes
-
-- Uses WebSocket quote updates as the source of forecast data
-- Output key mappings are fixed and deterministic
-- Public API follows the standard envelope: `status`, `data`, `metadata`, `error`
-- Some keys may be `null` if TradingView doesn't have that data for a particular symbol
+- Values are passed through from TradingView snapshot values.
+- No additional schema transformation is applied beyond source-to-output key mapping.
+- Any field may be `None` when unavailable in the captured snapshot.

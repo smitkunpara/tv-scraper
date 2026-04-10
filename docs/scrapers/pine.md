@@ -2,76 +2,18 @@
 
 ## Overview
 
-The Pine scraper provides authenticated TradingView Pine script management APIs.
+The Pine scraper manages authenticated TradingView Pine Script operations through the Pine facade API.
 
-## ✨ Highlight: Pine -> Streamer Custom Indicator Workflow
+Public methods:
 
-The primary purpose of Pine support is to power custom indicator workflows in Streamer:
+- `list_saved_scripts()`
+- `validate_script(source)`
+- `get_script(pine_id, version)`
+- `create_script(name, source)`
+- `edit_script(pine_id, name, source)`
+- `delete_script(pine_id)`
 
-- Create and maintain your own Pine indicator scripts from Python.
-- Merge multiple indicator calculations into one Pine script.
-- Fetch the merged output through Streamer as a single custom indicator feed.
-
-This lets you centralize strategy logic in one Pine script while consuming the values in your market-data pipeline.
-
-Why teams use this pattern:
-
-- Some TradingView plans cap concurrent indicator usage (for example, 2 indicators on free usage).
-- A merged custom Pine script can expose multiple signals while occupying one custom indicator stream target.
-
-Current support includes:
-
-- View your saved Pine scripts
-- Fetch full script source by id and version
-- Validate Pine source code
-- Create new scripts
-- Edit existing scripts
-- Delete scripts
-
-Cookie authentication is required for all Pine operations.
-
-## Common Workflow (Merged Indicators)
-
-Use Pine methods to maintain a script that combines multiple indicator calculations (for example, RSI + EMA + ATR in one script), then fetch that custom indicator through Streamer.
-
-```python
-from tv_scraper.scrapers.scripts import Pine
-from tv_scraper.streaming import Streamer
-
-pine = Pine(cookie="<TRADINGVIEW_COOKIE>")
-streamer = Streamer()
-
-source_code = """
-//@version=6
-indicator("My Multi Indicator", overlay=false)
-
-rsi = ta.rsi(close, 14)
-ema = ta.ema(close, 21)
-atr = ta.atr(14)
-
-plot(rsi, title="RSI")
-plot(ema, title="EMA")
-plot(atr, title="ATR")
-"""
-
-# Create or update your script in TradingView
-pine.create_script(name="My Multi Indicator", source=source_code)
-
-# Then fetch your saved script id/version pair
-saved = pine.list_saved_scripts()
-first_script = saved["data"][0]
-
-# Use the corresponding custom indicator id/version in Streamer
-result = streamer.get_candles(
-    exchange="BINANCE",
-    symbol="BTCUSDT",
-    timeframe="1h",
-    numb_candles=100,
-    indicators=[(first_script["id"], str(first_script["version"]))],
-)
-```
-
-> Note: For custom scripts, use `pine.list_saved_scripts()` and pass that exact `id` + `version` pair into `indicators` when calling `Streamer.get_candles()`.
+All public methods are decorated with `catch_errors` and return the standardized response envelope.
 
 ## Import and Constructor
 
@@ -87,295 +29,305 @@ pine = Pine(
 )
 ```
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `export_result` | `bool` | `False` | Export output to file |
-| `export_type` | `str` | `"json"` | Export format: `"json"` or `"csv"` |
-| `timeout` | `int` | `10` | HTTP timeout in seconds |
-| `cookie` | `str \| None` | `None` | Full TradingView cookie string; falls back to `TRADINGVIEW_COOKIE` |
+| Parameter | Type | Default | Behavior |
+|---|---|---|---|
+| `export_result` | `bool` | `False` | Enables export when a method supports export. |
+| `export_type` | `str` | `"json"` | Export format (`"json"` or `"csv"`). |
+| `timeout` | `int` | `10` | HTTP timeout in seconds. |
+| `cookie` | `str \| None` | `None` | TradingView cookie. If `None`, falls back to `TRADINGVIEW_COOKIE` environment variable. |
 
-## API
+## Cookie-Required Behavior
+
+All Pine public methods call `_validate_cookie_required()` before making network calls.
+
+- If `self.cookie` is truthy, execution continues.
+- If cookie is missing (including empty string), the method returns failed status with this message:
+
+```text
+TradingView cookie is required for Pine Script operations. Provide it via the cookie argument or TRADINGVIEW_COOKIE environment variable.
+```
+
+Headers for Pine facade requests are built by `_build_pine_headers()` and include:
+
+- `User-Agent` (from `BaseScraper`)
+- `cookie`
+- `accept: */*`
+- `origin: https://in.tradingview.com`
+- `referer: https://in.tradingview.com/`
+
+## Response Envelope Semantics
+
+All methods return this shape:
+
+```python
+{
+    "status": "success" | "failed",
+    "data": <payload or None>,
+    "metadata": <dict>,
+    "error": None | "message",
+}
+```
+
+Metadata semantics come from `catch_errors` + base response helpers:
+
+- `catch_errors` captures method arguments into `metadata` before method execution.
+- Captured metadata excludes `self` and arguments whose value is `None`.
+- `_success_response()` and `_error_response()` merge additional metadata into captured metadata.
+- Unexpected exceptions are converted to failed envelopes with `error = "Unexpected error: ..."`.
+- `create_script` and `edit_script` restore outer metadata after internal `validate_script` calls so final metadata reflects outer call arguments.
+
+## Endpoint Behavior
+
+Base URL: `https://pine-facade.tradingview.com/pine-facade`
+
+| Method | HTTP | Endpoint | Request details | Success expectation |
+|---|---|---|---|---|
+| `list_saved_scripts` | GET | `/list` | Query params: `filter=saved` | Parsed JSON payload must be a list |
+| `validate_script` | POST | `/translate_light` | Query params: `v=3`; multipart field `source` | Parsed JSON payload must be a dict with dict `result` |
+| `get_script` | GET | `/get/{pine_id}/{version}` | `pine_id` and `version` are URL-encoded path segments | Parsed JSON payload must be a dict |
+| `create_script` | POST | `/save/new` | Query params: `name`, `allow_overwrite=true`; multipart field `source` | Parsed JSON payload must include `result.metaInfo.scriptIdPart` |
+| `edit_script` | POST | `/save/next/{pine_id}` | URL-encoded `pine_id`; query params: `allow_create_new=false`, `name`; multipart field `source` | Parsed JSON payload must include `result.metaInfo.scriptIdPart` |
+| `delete_script` | POST | `/delete/{pine_id}` | URL-encoded `pine_id`; no body | Parsed JSON value must equal string `"ok"` |
+
+Notes:
+
+- Path values are encoded via `quote(value, safe="")`.
+- `_request()` always parses responses using `response.json()`.
+
+## Validation Flow
+
+### Shared validators
+
+- `_validate_cookie_required()`
+- `_validate_non_empty(value, field_name)` (whitespace-only values are treated as empty)
+
+### Per-method sequence
+
+1. `list_saved_scripts()`
+- Cookie check.
+
+2. `validate_script(source)`
+- Cookie check.
+- Source non-empty check.
+- Payload must be dict.
+- `payload["result"]` must be dict.
+
+3. `get_script(pine_id, version)`
+- Cookie check.
+- `pine_id` non-empty check.
+- `version` non-empty check.
+- Payload must be dict.
+- Mapped details must include string `source`.
+
+4. `create_script(name, source)`
+- Cookie check.
+- `name` non-empty check.
+- `source` non-empty check.
+- Internal `validate_script(source)` call.
+- If validation fails, create returns failed and does not call save endpoint.
+- Save payload must include `result.metaInfo.scriptIdPart`.
+
+5. `edit_script(pine_id, name, source)`
+- Cookie check.
+- `pine_id` non-empty check.
+- `name` non-empty check.
+- `source` non-empty check.
+- Internal `validate_script(source)` call.
+- If validation fails, edit returns failed and does not call save endpoint.
+- Save payload must include `result.metaInfo.scriptIdPart`.
+
+6. `delete_script(pine_id)`
+- Cookie check.
+- `pine_id` non-empty check.
+- Parsed response must equal `"ok"`.
+
+## Public Methods
 
 ### 1) `list_saved_scripts()`
 
-Returns your own saved Pine scripts.
+Returns saved scripts for the authenticated account.
+
+Mapped item shape:
 
 ```python
-result = pine.list_saved_scripts()
+{
+    "id": item.get("scriptIdPart", ""),
+    "name": item.get("scriptName") or item.get("scriptTitle", ""),
+    "version": item.get("version") or item.get("scriptVersion"),
+    "modified": <non-negative int, else 0>,
+}
 ```
 
-Output example:
+If `export_result=True`, this method exports with:
+
+- `symbol="pine_saved_scripts"`
+- `data_category="pine"`
+
+Success example:
 
 ```python
 {
     "status": "success",
     "data": [
         {
-            "id": "USER;cf7b5c71264f45ccb4d298d9ec1eaf88",
-            "name": "My script",
-            "version": "7.0",
-            "modified": 1774357749,
+            "id": "USER;abc123",
+            "name": "My Script",
+            "version": "4",
+            "modified": 1700000000,
         }
-        ...(other scripts)
     ],
     "metadata": {},
     "error": None,
 }
 ```
 
+### 2) `validate_script(source)`
 
----
+Validates Pine source through the translate endpoint.
 
-### 2) `get_script(pine_id, version)`
+Behavior:
 
-Fetches a saved Pine script (including source code) using the script id and version.
+- `errors` non-empty -> failed response with `error="Pine script validation failed."`; `errors` and `warnings` are placed in metadata.
+- `errors` empty and `warnings` non-empty -> success response, `data=None`, warnings in metadata.
+- both empty -> success response, `data=None`.
 
-```python
-result = pine.get_script(
-    pine_id="USER;495ddbc28fe44ad79b3c2e1dd19eefb6",
-    version="5.0",
-)
-```
-
-Output example:
-
-```python
-{
-    "status": "success",
-    "data": {
-        "id": "USER;495ddbc28fe44ad79b3c2e1dd19eefb6",
-        "name": "smitrsi",
-        "title": "smitrsi",
-        "version": "5.0",
-        "last_version": "5.0",
-        "created": "2026-04-02T17:01:57.997843Z",
-        "updated": "2026-04-02T17:01:57.997843Z",
-        "source": "//@version=6\nindicator(\"smitrsi\")...",
-        "extra": {
-            "kind": "study"
-        }
-    },
-    "metadata": {
-        "pine_id": "USER;495ddbc28fe44ad79b3c2e1dd19eefb6",
-        "version": "5.0"
-    },
-    "error": None,
-}
-```
-
-Notes:
-
-- Use `list_saved_scripts()` to get valid `id` and `version` pairs.
-- This endpoint requires cookie authentication.
-
----
-
-### 3) `validate_script(source)`
-
-Validates Pine code through TradingView compiler endpoint.
-
-```python
-source_code = """
-//@version=6
-indicator("My Script")
-plot(close)
-"""
-
-result = pine.validate_script(source_code)
-```
-
-Output example (no errors):
+Warnings-only success example:
 
 ```python
 {
     "status": "success",
     "data": None,
     "metadata": {
-        "source": "//@version=6\nindicator(\"My Script\")\nplot(close)"
+        "source": "//@version=6\nvar x = na",
+        "warnings": [{"text": "Unused variable"}],
     },
     "error": None,
 }
 ```
 
-Output example (warnings only):
-
-```python
-{
-    "status": "success",
-    "data": None,
-    "metadata": {
-        "source": "//@version=6\nindicator(\"My Script\")\nplot(close)",
-        "warnings": [
-            {
-                "message": "Some compiler warning"
-            }
-        ]
-    },
-    "error": None,
-}
-```
-
-Output example (validation errors):
+Compiler-error failure example:
 
 ```python
 {
     "status": "failed",
     "data": None,
     "metadata": {
-        "errors": [
-            {
-                "message": "\"sdf\" is not a valid statement.",
-                "start": {"line": 8, "column": 1},
-                "end": {"line": 8, "column": 3}
-            }
-        ],
-        "warnings": []
+        "source": "//@version=6\nundefined()",
+        "errors": [{"text": "Undefined function"}],
+        "warnings": [],
     },
     "error": "Pine script validation failed.",
 }
 ```
 
-Notes:
+### 3) `get_script(pine_id, version)`
 
-- Use this method when you want compiler diagnostics only.
-- This method is optional before create/edit because create/edit already validate internally.
+Fetches one script and maps:
 
----
+```python
+{
+    "id": <payload scriptIdPart or input pine_id>,
+    "name": <scriptName or scriptTitle or "">,
+    "title": <scriptTitle or scriptName>,
+    "version": <payload version or input version>,
+    "last_version": payload.get("lastVersionMaj"),
+    "created": payload.get("created"),
+    "updated": payload.get("updated"),
+    "source": <required string>,
+    "extra": <dict, defaults to {}>,
+}
+```
+
+If `export_result=True`, this method exports with:
+
+- `symbol=<pine_id>`
+- `data_category="pine_script"`
 
 ### 4) `create_script(name, source)`
 
-Creates a new Pine script.
+Creates a script after internal `validate_script(source)` succeeds.
 
-```python
-source_code = """
-//@version=6
-indicator("My Script")
-plot(close)
-"""
-
-result = pine.create_script(
-    name="My Script",
-    source=source_code,
-)
-```
-
-Output example:
+Success data shape:
 
 ```python
 {
-    "status": "success",
-    "data": {
-        "id": "USER;cf7b5c71264f45ccb4d298d9ec1eaf88",
-        "name": "My Script",
-        "warnings": []
-    },
-    "metadata": {
-        "name": "My Script",
-        "source": "//@version=6\nindicator(\"My Script\")\nplot(close)"
-    },
-    "error": None,
+    "id": script_result.get("scriptIdPart", ""),
+    "name": script_result.get("shortDescription")
+        or script_result.get("description")
+        or name,
+    "warnings": <validation warnings list or []>,
 }
 ```
 
-Important behavior:
+Behavior details:
 
-- `create_script` validates source internally before saving.
-- If compiler returns errors, create stops and returns failed response.
-- If compiler returns warnings only, create continues and warnings appear in `data["warnings"]`.
-
----
+- Validation warnings do not block create.
+- Validation errors block create.
+- When validation fails, response metadata includes outer args (`name`, `source`) and forwards validation `errors`/`warnings` into metadata.
 
 ### 5) `edit_script(pine_id, name, source)`
 
-Edits an existing Pine script.
+Edits a script after internal `validate_script(source)` succeeds.
 
-```python
-updated_source = """
-//@version=6
-indicator("My Script v2")
-plot(close)
-"""
-
-result = pine.edit_script(
-    pine_id="USER;cf7b5c71264f45ccb4d298d9ec1eaf88",
-    name="My Script v2",
-    source=updated_source,
-)
-```
-
-Output example:
+Success data shape:
 
 ```python
 {
-    "status": "success",
-    "data": {
-        "id": "USER;cf7b5c71264f45ccb4d298d9ec1eaf88",
-        "name": "My Script v2",
-        "warnings": []
-    },
-    "metadata": {
-        "pine_id": "USER;cf7b5c71264f45ccb4d298d9ec1eaf88",
-        "name": "My Script v2",
-        "source": "//@version=6\nindicator(\"My Script v2\")\nplot(close)"
-    },
-    "error": None,
+    "id": script_result.get("scriptIdPart", "") or pine_id,
+    "name": script_result.get("shortDescription")
+        or script_result.get("description")
+        or name,
+    "warnings": <validation warnings list or []>,
 }
 ```
 
-Important behavior:
+Behavior details:
 
-- `edit_script` validates source internally before saving.
-- If validation fails, edit is blocked.
-- Warnings are returned in `data["warnings"]` when save succeeds.
-
----
+- Validation warnings do not block edit.
+- Validation errors block edit.
+- When validation fails, response metadata includes outer args (`pine_id`, `name`, `source`) and forwards validation `errors`/`warnings` into metadata.
 
 ### 6) `delete_script(pine_id)`
 
-Deletes a script by Pine ID.
+Deletes a script by ID.
 
-```python
-result = pine.delete_script("USER;cf7b5c71264f45ccb4d298d9ec1eaf88")
-```
-
-Output example:
+Success response:
 
 ```python
 {
     "status": "success",
-    "data": {
-        "id": "USER;cf7b5c71264f45ccb4d298d9ec1eaf88",
-        "deleted": True
-    },
-    "metadata": {
-        "pine_id": "USER;cf7b5c71264f45ccb4d298d9ec1eaf88"
-    },
+    "data": {"id": "USER;test123"},
+    "metadata": {"pine_id": "USER;test123"},
     "error": None,
 }
 ```
 
-Notes:
+Failure behavior:
 
-- Delete uses a POST request with no payload.
-- TradingView returns `"ok"` on success.
+- If parsed response is not exactly `"ok"`, returns failed status with:
 
----
-
-## Error Format
-
-All Pine methods use the standard envelope for failures:
-
-```python
-{
-    "status": "failed",
-    "data": None,
-    "metadata": {},
-    "error": "TradingView cookie is required for Pine Script operations...",
-}
+```text
+Pine delete endpoint returned unexpected response: <response>
 ```
 
-Metadata behavior summary:
+Important:
 
-- `list_saved_scripts()` returns empty metadata.
-- `list_saved_scripts()` `data` items include `id`, `name`, `version`, and `modified`.
-- All other Pine methods return input parameters inside metadata.
+- Success data contains only `id`; there is no `deleted` field.
+
+## Warning and Error Metadata Matrix
+
+| Method | Success metadata behavior | Failure metadata behavior |
+|---|---|---|
+| `list_saved_scripts` | Usually `{}` (no method args) | Usually `{}` unless decorator-level metadata is present |
+| `validate_script` | Includes `source`; includes `warnings` when present | Includes `source`; compiler failures include `errors` and `warnings` |
+| `get_script` | Includes `pine_id`, `version` | Includes `pine_id`, `version` |
+| `create_script` | Includes `name`, `source`; warnings are in `data["warnings"]` | Includes `name`, `source`; validation failure may include `errors`/`warnings` |
+| `edit_script` | Includes `pine_id`, `name`, `source`; warnings are in `data["warnings"]` | Includes `pine_id`, `name`, `source`; validation failure may include `errors`/`warnings` |
+| `delete_script` | Includes `pine_id` | Includes `pine_id` |
+
+## Known Edge Behavior
+
+`delete_script` depends on JSON parsing in `_request()` and only succeeds when parsed response equals `"ok"`.
+
+- If the endpoint returns non-JSON plain text `ok`, `_request()` returns parse failure.
+- If the endpoint returns JSON but not `"ok"`, delete returns failed status.

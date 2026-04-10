@@ -151,8 +151,8 @@ class Fundamentals(ScannerScraper):
         Args:
             exchange: Exchange name (e.g. ``"NASDAQ"``).
             symbol: Trading symbol (e.g. ``"AAPL"``).
-            fields: Specific fields to retrieve. If ``None``, retrieves all
-                fields defined in ``ALL_FIELDS``.
+            fields: Specific fields to retrieve. If ``None`` or an empty
+                list, retrieves all fields defined in ``ALL_FIELDS``.
 
         Returns:
             Standardized response dict with keys

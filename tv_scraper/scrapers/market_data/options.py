@@ -82,7 +82,7 @@ class Options(ScannerScraper):
             expiration: Expiration date in YYYYMMDD format (e.g. ``20260219``).
             root: Root symbol for the option (e.g. ``"BSX"``).
             columns: List of data columns to retrieve. Defaults to
-                :attr:`DEFAULT_OPTION_COLUMNS`.
+                ``DEFAULT_OPTION_COLUMNS``.
 
         Returns:
             Standardized response dict with keys
@@ -122,7 +122,7 @@ class Options(ScannerScraper):
             symbol: Trading symbol slug (e.g. ``"SENSEX"``).
             strike: Strike price (e.g. ``83300``).
             columns: List of data columns to retrieve. Defaults to
-                :attr:`DEFAULT_OPTION_COLUMNS`.
+                ``DEFAULT_OPTION_COLUMNS``.
 
         Returns:
             Standardized response dict with keys

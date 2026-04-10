@@ -27,6 +27,8 @@ class Minds(BaseScraper):
         export_result: Whether to export results to file.
         export_type: Export format, ``"json"`` or ``"csv"``.
         timeout: HTTP request timeout in seconds.
+        cookie: Optional TradingView session cookie. If omitted,
+            uses ``TRADINGVIEW_COOKIE`` from the environment when available.
 
     Example::
 
@@ -48,8 +50,9 @@ class Minds(BaseScraper):
         Args:
             exchange: Exchange name (e.g. ``"NASDAQ"``).
             symbol: Trading symbol (e.g. ``"AAPL"``).
-            limit: Maximum number of results to retrieve. If ``None``,
-                fetches all available data across pages.
+            limit: Optional limit for the returned list. When provided and
+                the collected list is longer than ``limit``, the final result
+                is truncated via ``parsed_data[:limit]``.
 
         Returns:
             Standardized response dict with keys

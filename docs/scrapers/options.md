@@ -2,31 +2,19 @@
 
 ## Overview
 
-The `Options` scraper retrieves option chain data for a given underlying symbol via the TradingView options scanner API. It supports fetching chains filtered by either expiration date or strike price.
+The `Options` scraper fetches option-chain rows from TradingView's options scanner endpoint.
 
-## Quick Start
+It exposes two public methods:
 
-```python
-from tv_scraper.scrapers.market_data import Options
+- `get_options_by_expiry(...)`: filter by expiration and root
+- `get_options_by_strike(...)`: filter by strike
 
-scraper = Options()
+Both methods return the standardized envelope:
 
-# Get option chain by expiration date
-result = scraper.get_options_by_expiry(
-    exchange="BSE",
-    symbol="SENSEX",
-    expiration=20260219,
-    root="BSX"
-)
-print(result["data"])
-
-# Get option chain by strike price
-result = scraper.get_options_by_strike(
-    exchange="BSE",
-    symbol="SENSEX",
-    strike=83300
-)
-```
+- `status`: `"success"` or `"failed"`
+- `data`: list of mapped option rows on success, `None` on failure
+- `metadata`: captured call arguments plus scraper-added metadata keys
+- `error`: `None` on success, error string on failure
 
 ## Constructor
 
@@ -38,74 +26,195 @@ Options(
 )
 ```
 
+## Endpoints Used
+
+### Validation endpoints (via `validators.verify_options_symbol`)
+
+Before querying options data, both public methods validate exchange/symbol and options availability:
+
+1. Symbol-exchange existence check:
+   - `GET https://scanner.tradingview.com/symbol?symbol={EXCHANGE}%3A{SYMBOL}&fields=market&no_404=false`
+2. Options availability check:
+   - `GET https://symbol-search.tradingview.com/symbol_search/v3/?text={SYMBOL}&exchange={EXCHANGE}&lang=en&search_type=undefined&only_has_options=true&domain=production`
+
+### Options data endpoint
+
+- `POST https://scanner.tradingview.com/options/scan2?label-product=symbols-options`
+- Body format: JSON payload with `columns`, `filter`, and `index_filters`
+
+## Default and Allowed Columns
+
+If `columns` is omitted (`None`), the scraper uses:
+
+`ask`, `bid`, `currency`, `delta`, `expiration`, `gamma`, `iv`, `option-type`, `pricescale`, `rho`, `root`, `strike`, `theoPrice`, `theta`, `vega`, `bid_iv`, `ask_iv`
+
+When `columns` is provided, each value must be one of the above strings.
+
 ## Methods
 
 ### `get_options_by_expiry(exchange, symbol, expiration, root, columns=None)`
 
-Fetch the option chain for a specific expiration date.
+Fetch option rows filtered by expiration and root for one underlying symbol.
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `exchange` | `str` | — | Exchange name (e.g. `"BSE"`) |
-| `symbol` | `str` | — | Underlying symbol (e.g. `"SENSEX"`) |
-| `expiration` | `int` | — | Expiry date in YYYYMMDD format (e.g. `20260219`) |
-| `root` | `str` | — | Root symbol for the option (e.g. `"BSX"`) |
-| `columns` | `list[str] \| None` | `None` | Specific data columns to retrieve. |
+| `exchange` | `str` | — | Exchange slug, e.g. `"BSE"` |
+| `symbol` | `str` | — | Underlying symbol slug, e.g. `"SENSEX"` |
+| `expiration` | `int` | — | Expiration value passed directly to API filter |
+| `root` | `str` | — | Root value passed directly to API filter |
+| `columns` | `list[str] \| None` | `None` | Optional output fields list |
+
+Validation behavior:
+
+- Calls `validators.verify_options_symbol(exchange, symbol)` first
+- If `columns` is not `None`, calls `validators.validate_fields(columns, list(VALID_OPTION_COLUMNS), "columns")`
+- No additional explicit runtime validation is performed for `expiration` or `root`
+
+Request payload shape:
+
+```python
+{
+    "columns": columns_or_default,
+    "filter": [
+        {"left": "type", "operation": "equal", "right": "option"},
+        {"left": "expiration", "operation": "equal", "right": expiration},
+        {"left": "root", "operation": "equal", "right": root},
+    ],
+    "index_filters": [
+        {"name": "underlying_symbol", "values": [f"{exchange}:{symbol}"]}
+    ],
+}
+```
+
+Notes:
+
+- The underlying value uses the incoming `exchange` and `symbol` exactly as provided.
+- Success metadata includes `filter_value=<expiration>` and `total`.
 
 ### `get_options_by_strike(exchange, symbol, strike, columns=None)`
 
-Fetch options across all expirations for a specific strike price.
+Fetch option rows filtered by strike for one underlying symbol.
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `exchange` | `str` | — | Exchange name (e.g. `"BSE"`) |
-| `symbol` | `str` | — | Underlying symbol (e.g. `"SENSEX"`) |
-| `strike` | `int \| float` | — | Strike price (e.g. `83300`) |
-| `columns` | `list[str] \| None` | `None` | Specific data columns to retrieve. |
+| `exchange` | `str` | — | Exchange slug, e.g. `"BSE"` |
+| `symbol` | `str` | — | Underlying symbol slug, e.g. `"SENSEX"` |
+| `strike` | `int \| float` | — | Strike value passed directly to API filter |
+| `columns` | `list[str] \| None` | `None` | Optional output fields list |
 
-## Default Columns
+Validation behavior:
 
-If `columns` is not specified, the following fields are retrieved:
+- Calls `validators.verify_options_symbol(exchange, symbol)` first
+- If `columns` is not `None`, validates with `validators.validate_fields(..., "columns")`
+- Enforces `strike` type with `isinstance(strike, (int, float))`
+- On invalid type, raises `ValidationError("Invalid strike value: {strike!r}. Must be int or float.")`
 
-`ask`, `bid`, `currency`, `delta`, `expiration`, `gamma`, `iv`, `option-type`, `pricescale`, `rho`, `root`, `strike`, `theoPrice`, `theta`, `vega`, `bid_iv`, `ask_iv`
+Request payload shape:
 
-## Response Format
+```python
+{
+    "columns": columns_or_default,
+    "filter": [
+        {"left": "type", "operation": "equal", "right": "option"},
+        {"left": "strike", "operation": "equal", "right": strike},
+    ],
+    "index_filters": [
+        {"name": "underlying_symbol", "values": [f"{exchange}:{symbol}"]}
+    ],
+}
+```
 
-Returns a standardized response envelope:
+Notes:
 
-```json
+- Success metadata includes `filter_value=<strike>` and `total`.
+
+## Response Schema
+
+### Success envelope
+
+```python
 {
     "status": "success",
     "data": [
         {
-            "symbol": "BSE:BSX260219C83300",
-            "ask": 251.5,
-            "bid": 250.05,
-            "currency": "INR",
-            "delta": 0.30031253196887614,
-            "expiration": 20260219,
-            "gamma": 0.0002619084231041657,
-            "iv": 0.12206886452622712,
-            "option-type": "call",
-            "pricescale": 100,
-            "rho": 4.260193630531909,
-            "root": "BSX",
-            "strike": 83300,
-            "theoPrice": 251.05,
-            "theta": -36.46051324424114,
-            "vega": 37.841028744369176,
-            "bid_iv": 0.12179930401016525,
-            "ask_iv": 0.12218255530179331
-        },
-        ...(other objects)
+            "symbol": "EXCHANGE:OPTION_SYMBOL",
+            # plus one key per field name in response["fields"]
+            # for example: "strike", "bid", "ask", "delta", ...
+        }
     ],
     "metadata": {
-        "exchange": "BSE",
-        "symbol": "SENSEX",
-        "filter_type": "expiry",
-        "filter_value": 20260219,
-        "total": 14
+        # Captured method arguments except None values,
+        # plus:
+        "filter_value": 20260219,  # or strike value
+        "total": 14,
     },
-    "error": null
+    "error": None,
 }
 ```
+
+### Error envelope
+
+```python
+{
+    "status": "failed",
+    "data": None,
+    "metadata": {
+        # Captured method arguments; may also include filter_value
+    },
+    "error": "...",
+}
+```
+
+Data mapping details:
+
+- Reads `fields = response["fields"]` and `symbols = response["symbols"]`
+- Each symbol row is expected as `{"s": symbol_name, "f": [values...]}`
+- Output row starts as `{"symbol": item.get("s")}`
+- For each index `i` in `fields`, sets `row[fields[i]] = values[i]` if value exists
+- Non-dict entries in `symbols` are skipped
+
+## Metadata Behavior
+
+Metadata is built by combining:
+
+1. Captured method arguments from the decorator (`exchange`, `symbol`, method-specific args, and `columns` only if not `None`)
+2. Scraper-added keys from `_execute_request`:
+   - Always on `_execute_request` path: `filter_value`
+   - On success only: `total`
+
+Per method:
+
+| Method | Always present from args | Conditionally present | Added by scraper |
+|--------|---------------------------|------------------------|------------------|
+| `get_options_by_expiry` | `exchange`, `symbol`, `expiration`, `root` | `columns` (if provided) | `filter_value`, `total` (success only) |
+| `get_options_by_strike` | `exchange`, `symbol`, `strike` | `columns` (if provided) | `filter_value`, `total` (success only) |
+
+## Error Behavior
+
+### Validation and decorator-caught errors
+
+These are returned as failed envelopes with `data=None` and captured input metadata:
+
+- Invalid exchange/symbol/options availability from `verify_options_symbol`
+	(including 403 or missing match from options search)
+- Invalid `columns` from `validate_fields`
+- Invalid strike type from method check
+- Any unexpected exception as `"Unexpected error: ..."`
+
+### Request and response-shape errors inside `_execute_request`
+
+| Condition | Returned error string |
+|-----------|-----------------------|
+| `_request` returns error containing `"404"` | `Options chain not found for symbol '{exchange}:{symbol}'. This symbol may not have options available on TradingView.` |
+| `_request` returns any other error | Original error message from `_request` |
+| Response is not a dict | `Invalid API response format: expected a dictionary` |
+| `fields` or `symbols` is not a list | `Invalid API response: 'fields' and 'symbols' must be lists` |
+| `symbols` is empty | `No options found for symbol '{exchange}:{symbol}'. This symbol may not have options available on TradingView.` |
+
+## Export Behavior
+
+If `export_result=True`, successful mapped `data` is exported through the base exporter with:
+
+- `data_category="options"`
+- `symbol="{exchange}_{symbol}_{filter_value}"`
+- format selected by `export_type` (`json` or `csv`)

@@ -2,144 +2,175 @@
 
 ## Overview
 
-Scrape headlines and full article content from TradingView news providers.
+`News` scrapes TradingView headlines and full story content.
 
-## API Reference
+- Headlines endpoint: `https://news-headlines.tradingview.com/v2/view/headlines/symbol`
+- Story endpoint: `https://news-mediator.tradingview.com/public/news/v1/story`
 
-### Constructor
-
-```python
-scraper = News(export_result=False, export_type="json", timeout=10, cookie=None)
-```
-
-| Parameter       | Type   | Default  | Description                        |
-|-----------------|--------|----------|------------------------------------|
-| `export_result` | bool   | `False`  | Export results to file             |
-| `export_type`   | str    | `"json"` | `"json"` or `"csv"`               |
-| `timeout`       | int    | `10`     | HTTP request timeout in seconds    |
-| `cookie`        | str    | `None`   | TradingView cookie for captcha     |
-
-### `get_news_headlines()`
+## Constructor
 
 ```python
-get_news_headlines(
-    exchange: str,
-    symbol: str,
-    provider: str | None = None,
-    area: str | None = None,
-    sort_by: str = "latest",
-    section: str = "all",
-    language: str = "en",
-) -> Dict[str, Any]
-```
+from tv_scraper.scrapers.social import News
 
-| Parameter  | Type         | Default    | Description                                       |
-|------------|--------------|------------|---------------------------------------------------|
-| `exchange` | str          | —          | Exchange name (e.g. `"BINANCE"`)                  |
-| `symbol`   | str          | —          | Trading symbol (e.g. `"BTCUSD"`)                  |
-| `provider` | str \| None  | `None`     | News provider (e.g. `"cointelegraph"`)            |
-| `area`     | str \| None  | `None`     | Region: `world`, `americas`, `europe`, `asia`, `oceania`, `africa` |
-| `sort_by`  | str          | `"latest"` | `latest`, `oldest`, `most_urgent`, `least_urgent` |
-| `section`  | str          | `"all"`    | `all`, `esg`, `press_release`, `financial_statement` |
-| `language` | str          | `"en"`     | Language code (e.g. `"en"`, `"fr"`, `"ja"`)       |
-
-**Validation:**
-- Exchange and symbol are verified against TradingView's symbol database
-- `sort_by` must be one of: `latest`, `oldest`, `most_urgent`, `least_urgent`
-- `section` must be one of: `all`, `esg`, `press_release`, `financial_statement`
-- `provider` must be a valid news provider (case-insensitive)
-- `area` must be a valid area code
-- `language` must be a valid language code
-
-Code:
-
-```python
-result = scraper.get_news_headlines(
-    exchange="NASDAQ",
-    symbol="AAPL",
-    provider="reuters",
-    sort_by="latest",
+scraper = News(
+    export_result=False,
+    export_type="json",
+    timeout=10,
+    cookie=None,
 )
-
-print(result)
 ```
 
-Output:
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `export_result` | `bool` | `False` | Export headlines result to file |
+| `export_type` | `str` | `"json"` | Export format: `"json"` or `"csv"` |
+| `timeout` | `int` | `10` | HTTP timeout in seconds |
+| `cookie` | `str \| None` | `None` | TradingView cookie. If omitted, `TRADINGVIEW_COOKIE` env var is used when available |
+
+## Method: `get_news_headlines()`
+
+```python
+def get_news_headlines(
+    exchange: EXCHANGE_LITERAL,
+    symbol: str,
+    provider: NEWS_PROVIDER_LITERAL | None = None,
+    area: AREA_LITERAL | None = None,
+    sort_by: Literal["latest", "oldest", "most_urgent", "least_urgent"] = "latest",
+    section: Literal["all", "esg", "press_release", "financial_statement"] = "all",
+    language: str = "en",
+) -> dict[str, Any]
+```
+
+### Validation
+
+- `exchange` + `symbol` are verified with a live TradingView symbol check.
+- `sort_by` must be one of: `latest`, `oldest`, `most_urgent`, `least_urgent`.
+- `section` must be one of: `all`, `esg`, `press_release`, `financial_statement`.
+- `provider` (if set) must exactly match one of:
+  - `the_block`, `cointelegraph`, `beincrypto`, `newsbtc`, `dow-jones`, `cryptonews`, `coindesk`, `cryptoglobe`, `tradingview`, `zycrypto`, `todayq`, `cryptopotato`, `u_today`, `cryptobriefing`, `coindar`, `bitcoin_com`
+- `area` (if set) validates against area names and codes:
+  - names: `world`, `americas`, `europe`, `asia`, `oceania`, `africa`
+  - codes: `WLD`, `AME`, `EUR`, `ASI`, `OCN`, `AFR`
+- `language` must be one of:
+  - `en`, `de`, `fr`, `es`, `it`, `pt`, `ru`, `ja`, `ko`, `ar`, `hi`, `sv`, `tr`, `th`, `vi`, `id`, `fa`, `ch`, `ms`, `el`, `he`
+
+### Request and Filtering Behavior
+
+- API request params include `symbol="{exchange}:{symbol}"`, `client="web"`, and `streaming=""`.
+- `section="all"` is sent as an empty `section` value.
+- `provider` is sent as `provider.replace(".", "_")`.
+- `area` is sent as `AREAS.get(area, "")`.
+  - This means area names map to TradingView area codes.
+  - Passing a raw area code validates, but currently sends an empty area filter.
+- Sorting is applied client-side after fetch:
+  - `latest` / `oldest` sort by `published`
+  - `most_urgent` / `least_urgent` sort by `urgency`
+
+### Headline Output Items
+
+Each `data` item contains:
+
+```json
+{
+  "id": "tag:provider.com,2026:newsml_123:0",
+  "title": "Headline title",
+  "shortDescription": "Short summary",
+  "published": 1700000000,
+  "storyPath": "/news/path"
+}
+```
+
+Notes:
+
+- `storyPath` is normalized to always start with `/` when non-empty.
+- If `items` is missing or empty, returns success with `data=[]` and `metadata.total=0`.
+- Export is only triggered by `get_news_headlines()` when `export_result=True`.
+
+## Method: `get_news_content()`
+
+```python
+def get_news_content(
+    story_id: str,
+    language: str = "en",
+) -> dict[str, Any]
+```
+
+### Validation
+
+- `story_id` must not be empty or whitespace-only.
+- `language` uses the same language validation as headlines.
+
+### Behavior
+
+- Sends request params: `id`, `lang`, `user_prostatus="non_pro"`.
+- Parses output into:
+  - `id`, `title`, `published`, `storyPath`, `description`
+- `description` is built from `ast_description.children`:
+  - only top-level paragraph nodes (`type == "p"`) are used
+  - paragraph text merges raw strings and object `params.text` values
+  - paragraphs are joined with newline characters
+
+## Response Envelope (Both Methods)
+
+Both methods return the standard envelope:
 
 ```json
 {
   "status": "success",
-  "data": [
-    {
-      "id": "tag:reuters.com,2026:newsml_L4N3Z9104:0",
-      "title": "Apple shares rise on strong guidance",
-      "shortDescription": "Apple reported stronger than expected guidance...",
-      "published": 1705350000,
-      "storyPath": "/news/story_12345-apple-shares-rise/"
-    }
-  ],
-  "metadata": {
-    "exchange": "NASDAQ",
-    "symbol": "AAPL",
-    "sort_by": "latest",
-    "section": "all",
-    "language": "en",
-    "provider": "reuters",
-    "total": 1
-  },
+  "data": {},
+  "metadata": {},
   "error": null
 }
 ```
 
-Other details:
+Failure shape:
 
-- `metadata.total` reflects the number of items matched and returned.
-- News results are filtered by provider, area, and section before being returned.
-- Use the headline `id` with `get_news_content()`.
-
-### `get_news_content()`
-
-```python
-get_news_content(
-    story_id: str,
-    language: str = "en",
-) -> Dict[str, Any]
+```json
+{
+  "status": "failed",
+  "data": null,
+  "metadata": {},
+  "error": "error message"
+}
 ```
 
-| Parameter    | Type         | Default | Description                                    |
-|--------------|--------------|---------|------------------------------------------------|
-| `story_id`   | str          | —       | Story ID from news API (e.g. `"tag:reuters.com,2026:newsml_L4N3Z9104:0"`) |
-| `language`   | str          | `"en"`  | Language code (e.g. `"en"`, `"fr"`)            |
+Metadata behavior:
 
-**Validation:**
-- `story_id` cannot be empty or whitespace-only
-- `language` must be a valid language code
+- Metadata is auto-captured from method arguments.
+- Arguments passed as `None` are omitted from metadata.
+- `get_news_headlines()` adds `metadata.total` on success.
 
-Code:
+## Usage Examples
+
+### Headlines
 
 ```python
-result = scraper.get_news_content(
-    story_id="tag:reuters.com,2026:newsml_L4N3Z9104:0",
+from tv_scraper.scrapers.social import News
+
+scraper = News()
+result = scraper.get_news_headlines(
+    exchange="NASDAQ",
+    symbol="AAPL",
+    sort_by="latest",
+    section="all",
     language="en",
 )
 ```
 
-Output:
+### Story Content
 
-```json
-{
-  "status": "success",
-  "data": {
-    "id": "tag:reuters.com,2026:newsml_L4N3Z9104:0",
-    "title": "Bitcoin Hits New High",
-    "description": "Full article content with paragraphs separated by newlines.\nSecond paragraph here...",
-    "published": 1643097623,
-    "storyPath": "/news/story/12345"
-  },
-  "metadata": {
-    "story_id": "tag:reuters.com,2026:newsml_L4N3Z9104:0",
-    "language": "en"
-  },
-  "error": null
-}
+```python
+headlines = scraper.get_news_headlines(exchange="NASDAQ", symbol="AAPL")
+
+if headlines["status"] == "success" and headlines["data"]:
+    story_id = headlines["data"][0]["id"]
+    content = scraper.get_news_content(story_id=story_id, language="en")
+```
+
+### Validation Error Example
+
+```python
+result = scraper.get_news_content(story_id="   ")
+# result["status"] == "failed"
+# result["error"] == "story_id cannot be empty"
 ```

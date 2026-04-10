@@ -67,6 +67,8 @@ class Calendar(ScannerScraper):
         export_result: Whether to export results to file.
         export_type: Export format, ``"json"`` or ``"csv"``.
         timeout: HTTP request timeout in seconds.
+        cookie: Optional TradingView session cookie. If not provided,
+            the ``TRADINGVIEW_COOKIE`` environment variable is used.
 
     Example::
 
@@ -100,8 +102,9 @@ class Calendar(ScannerScraper):
                 Defaults to current midnight plus 3 days + 86399s.
             markets: List of market names to filter
                 (e.g. ``["america", "uk"]``).
-            fields: Specific fields to fetch. Validated against the
-                known dividend field list. Defaults to all dividend fields.
+            fields: Specific fields to fetch. If a non-empty list is
+                provided, it is validated against the known dividend field
+                list. ``None`` or an empty list uses all dividend fields.
             lang: Language code for API responses (default: "en").
 
         Returns:
@@ -137,8 +140,9 @@ class Calendar(ScannerScraper):
                 Defaults to current midnight plus 3 days + 86399s.
             markets: List of market names to filter
                 (e.g. ``["america", "uk"]``).
-            fields: Specific fields to fetch. Validated against the
-                known earnings field list. Defaults to all earnings fields.
+            fields: Specific fields to fetch. If a non-empty list is
+                provided, it is validated against the known earnings field
+                list. ``None`` or an empty list uses all earnings fields.
             lang: Language code for API responses (default: "en").
 
         Returns:
@@ -179,7 +183,8 @@ class Calendar(ScannerScraper):
             label: TradingView label-product query parameter.
             filter_left: Column names for date range filtering.
             default_fields: Default field list for this event type.
-            fields: User-specified fields (validated against defaults).
+            fields: User-specified fields. Non-empty values are validated
+                against defaults; ``None`` or an empty list uses defaults.
             timestamp_from: Start timestamp or ``None`` for default.
             timestamp_to: End timestamp or ``None`` for default.
             markets: Optional market filter.

@@ -1,15 +1,19 @@
 # BaseStreamer API
 
-The `BaseStreamer` class is the base class for all streaming functionality. It provides WebSocket connection management, JWT token handling, and inherits standardized response envelope methods from `BaseScraper`.
+`BaseStreamer` is the shared streaming base class in `tv_scraper/streaming/base_streamer.py`.
+It extends `BaseScraper` and adds a single connection helper, `connect()`, plus
+the `study_id_to_name_map` attribute used by indicator-aware streamers.
 
 ## Purpose
 
-`BaseStreamer` is an abstract base class that should not be used directly. Instead, use the specialized streaming classes:
+`BaseStreamer` is a concrete class, but it is primarily meant to be inherited by
+higher-level streamers:
 
-- `CandleStreamer` - For OHLCV and indicator data
-- `ForecastStreamer` - For analyst forecast data
+- `CandleStreamer`
+- `ForecastStreamer`
+- `Streamer`
 
-## Installation
+## Import
 
 ```python
 from tv_scraper.streaming import BaseStreamer
@@ -19,145 +23,140 @@ from tv_scraper.streaming import BaseStreamer
 
 ```python
 bs = BaseStreamer(
-    export_result=False,        # Save results to file
-    export_type="json",        # "json" or "csv"
-    cookie="<TRADINGVIEW_COOKIE>",  # Optional: session cookie
+    export_result=False,
+    export_type="json",
+    cookie=None,
 )
 ```
 
-### Parameters
+### Constructor Arguments
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `export_result` | `bool` | `False` | Whether to save results to file |
-| `export_type` | `str` | `"json"` | Export format: `"json"` or `"csv"` |
-| `cookie` | `str \| None` | `None` | TradingView session cookie |
+| Parameter | Type | Default | Exact behavior |
+|-----------|------|---------|----------------|
+| `export_result` | `bool` | `False` | Stored on the instance and used by inherited `_export(...)`. |
+| `export_type` | `str` | `"json"` | Validated by `BaseScraper` against `{ "json", "csv" }`. Invalid values raise `ValueError` during construction. |
+| `cookie` | `str \| None` | `None` | Passed to `BaseScraper`. If `None`, `BaseScraper` falls back to `TRADINGVIEW_COOKIE` environment variable. |
 
-## Methods
+### Inherited Initialization Notes
 
-### `connect()`
+From `BaseScraper.__init__`:
 
-Create and return a connected StreamHandler with JWT token.
+- `timeout` is not exposed by `BaseStreamer`, so it remains the base default (`REQUEST_TIMEOUT`, currently `10` seconds).
+- `self.cookie` becomes `cookie or os.environ.get("TRADINGVIEW_COOKIE")`.
+- `self._headers` always includes `User-Agent`; it also includes `cookie` when `self.cookie` exists.
+
+`BaseStreamer` then initializes:
+
+```python
+self.study_id_to_name_map: dict[str, str] = {}
+```
+
+## Method: connect()
 
 ```python
 handler = bs.connect()
 ```
 
-#### Returns
+Creates and returns `StreamHandler(jwt_token=...)`.
 
-A connected `StreamHandler` instance.
+### Exact Runtime Flow
 
-#### Behavior
+1. Start with fallback token: `"unauthorized_user_token"`.
+2. If `self.cookie` is truthy, lazily import `get_valid_jwt_token` and attempt JWT resolution.
+3. If token resolution succeeds, use that JWT.
+4. If token resolution fails, log an error and raise:
+   `RuntimeError("Failed to resolve JWT token from cookie: ...")`.
+5. Construct and return `StreamHandler(jwt_token=websocket_jwt_token)`.
 
-1. If `self.cookie` is provided, resolves JWT token using `get_valid_jwt_token()`
-2. If no cookie, uses `"unauthorized_user_token"` for unauthenticated access
-3. Creates and returns a new `StreamHandler` instance with the JWT token
+### What "connected" means here
 
-#### Raises
+`StreamHandler` connects in its constructor:
 
-- `Exception`: If JWT token resolution fails from an invalid cookie
+- opens WebSocket connection,
+- generates `quote_session` and `chart_session`,
+- sends initialization messages (`set_auth_token`, `set_locale`,
+  `chart_create_session`, `quote_create_session`, `quote_set_fields`,
+  `quote_hibernate_all`).
 
-#### Example
+So `connect()` returns a ready-initialized handler, not a lazy wrapper.
+
+### Exceptions
+
+- `RuntimeError` when cookie-based JWT resolution fails.
+- Any exception from `StreamHandler(...)` setup is not caught in `connect()` and propagates.
+
+## Inherited Response Envelope Expectations
+
+`BaseStreamer` inherits response helpers from `BaseScraper`.
+
+### Success envelope (`_success_response`)
 
 ```python
-from tv_scraper.streaming import CandleStreamer
-
-cs = CandleStreamer(cookie="<TRADINGVIEW_COOKIE>")
-handler = cs.connect()
-# handler is now connected and ready for streaming
+{
+    "status": "success",
+    "data": <payload>,
+    "metadata": <merged metadata>,
+    "error": None,
+}
 ```
+
+### Error envelope (`_error_response`)
+
+```python
+{
+    "status": "failed",
+    "data": <optional payload, default None>,
+    "metadata": <merged metadata>,
+    "error": "<error message>",
+}
+```
+
+### Metadata merge behavior
+
+Both helpers merge:
+
+1. `self._last_metadata` (usually captured by `@catch_errors`), then
+2. explicit `**metadata` passed to the helper.
+
+Later keys overwrite earlier keys.
+
+### `@catch_errors` expectations for subclasses
+
+Public methods in streaming subclasses (for example `get_candles` and
+`get_forecast`) are typically decorated with `@catch_errors`, which:
+
+- captures bound, non-`None` arguments into metadata,
+- converts `ValidationError` to `_error_response(str(exc), ...)`,
+- converts unexpected exceptions to
+  `_error_response("Unexpected error: ...", ...)`.
+
+`connect()` itself is not decorated with `@catch_errors`, so it does not
+return an envelope on failure; it raises.
 
 ## Inheritance Hierarchy
 
+```text
+BaseScraper
+  └── BaseStreamer
+      ├── CandleStreamer
+      ├── ForecastStreamer
+      └── Streamer
 ```
-BaseScraper (core/base.py)
-    └── BaseStreamer (streaming/base_streamer.py)
-            ├── CandleStreamer (streaming/candle_streamer.py)
-            └── ForecastStreamer (streaming/forecast_streamer.py)
-```
 
-## Attributes
-
-| Attribute | Type | Description |
-|-----------|------|-------------|
-| `cookie` | `str \| None` | TradingView session cookie |
-| `export_result` | `bool` | Whether to export data to file |
-| `export_type` | `str` | Export format ("json" or "csv") |
-| `validator` | `DataValidator` | Singleton for exchange/symbol validation |
-| `study_id_to_name_map` | `dict` | Maps internal study IDs to indicator names |
-
-## Inherited Methods
-
-From `BaseScraper`:
-
-### `_success_response(data, **metadata)`
-
-Build a standardized success response.
+## Minimal Extension Example
 
 ```python
-response = self._success_response(
-    data={"key": "value"},
-    exchange="NYSE",
-    symbol="A"
-)
-```
-
-### `_error_response(error, **metadata)`
-
-Build a standardized error response.
-
-```python
-response = self._error_response(
-    error="Something went wrong",
-    exchange="NYSE",
-    symbol="A"
-)
-```
-
-### `_export(data, symbol, data_category, timeframe=None)`
-
-Export data to file if `export_result=True`.
-
-```python
-self._export(
-    data={"candles": [...]},
-    symbol="BTCUSDT",
-    data_category="candles",
-    timeframe="1h"
-)
-```
-
-## Extension Points
-
-To create a custom streaming class, extend `BaseStreamer`:
-
-```python
-from tv_scraper.streaming import BaseStreamer
-from tv_scraper.streaming.stream_handler import StreamHandler
 from typing import Any
 
+from tv_scraper.core.base import catch_errors
+from tv_scraper.streaming import BaseStreamer
+
+
 class CustomStreamer(BaseStreamer):
-    """Custom streaming implementation."""
-
-    def __init__(self, cookie: str | None = None):
-        super().__init__(cookie=cookie)
-
+    @catch_errors
     def get_custom_data(self, exchange: str, symbol: str) -> dict[str, Any]:
         handler = self.connect()
-
-        # Your custom streaming logic
-        # ...
-
-        return self._success_response(
-            data=result,
-            exchange=exchange,
-            symbol=symbol
-        )
+        # custom packet handling with handler.receive_packets()
+        result = {"exchange": exchange, "symbol": symbol}
+        return self._success_response(result)
 ```
-
-## Notes
-
-- `BaseStreamer` is abstract - use `CandleStreamer` or `ForecastStreamer` directly
-- All subclasses inherit export functionality and response envelope methods
-- The `connect()` method is the primary way to get a WebSocket handler
-- JWT tokens are automatically refreshed when a cookie is provided

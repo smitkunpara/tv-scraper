@@ -63,14 +63,14 @@ pytest tests/integration/  # Cross-module integration tests
 
 | Layer | Technology | Purpose |
 |-------|-----------|---------|
-| **WebSocket** | `websockets` (with custom framing) | Real-time streaming (candles, forecast) |
-| **HTTP** | `requests` with `urllib3.util.retry` | Robust HTTP requests with auto-retries (`http.py`) |
+| **WebSocket** | `websocket-client` (with custom framing) | Real-time streaming (candles, forecast) |
+| **HTTP** | `requests` | Unified HTTP requests via `BaseScraper._request()` |
 | **Object Model**| `ScannerScraper` / `BaseScraper` | Centralized network/error handling & inheritance hierarchy |
 | **Error Handling**| `@catch_errors` decorator | Automated metadata capture and standardized response envelopes |
 | **Validation** | Module-level functions | Symbolic/exchange verification via `tv_scraper.core.validators` |
 | **Data Mapping** | Hardcoded JSON mappings | Forecast key transformation, timeframe conversion |
 | **Export** | CSV/JSON writers | Optional data persistence |
-| **Parallelization** | `ThreadPoolExecutor` | Concurrent page scraping (ideas, minds) |
+| **Parallelization** | `ThreadPoolExecutor` | Concurrent page scraping (ideas) |
 
 ---
 
@@ -93,10 +93,10 @@ Every public scraper method returns an identical envelope structure, regardless 
 
 ### Design Principles
 
-- **No exceptions raised** from public methods
-- **All errors captured** in the `error` field
+- **Most public scraper methods return envelopes** with `status/data/metadata/error`
+- **`@catch_errors` methods capture exceptions** into failed envelopes
 - **Status field** reflects operation outcome
-- **Data field** set to `None` on failure
+- **Data field** is scraper-specific on failure (`None` or partial data)
 - **Metadata** preserved even on failure (for context)
 
 ### Example: Success Response
@@ -129,19 +129,24 @@ To standardize network requests and error handling, all scrapers extend from cen
 
 ### BaseScraper
 The root class for all HTTP operations. Provides:
-- **`self._request()`**: A unified wrapper around `requests` that handles timeouts, retries, and Captcha detection automatically.
+- **`self._request()`**: A unified wrapper around `requests.request()` that handles timeout usage, Captcha detection, HTTP errors, and JSON parsing.
 - **`self._success_response()` / `self._error_response()`**: Factory methods for generating the standardized response envelope.
 - **`self._export()`**: Handles auto-saving results to JSON / CSV.
 
+Related decorator behavior:
+- **`@catch_errors`** captures bound function arguments into metadata.
+- **`@catch_errors`** converts `ValidationError` and unexpected exceptions into failed envelopes.
+
 ### ScannerScraper
-Extends `BaseScraper` for scrapers that interface directly with the `scanner.tradingview.com` API structure (e.g., `Fundamentals`, `Options`, `Technicals`, `Markets`, `Screener`, `MarketMovers`, `SymbolMarkets`, `Calendar`). Provides:
-- Default `Content-Type: application/x-www-form-urlencoded` headers.
-- Automatic payload formatting and response parsing for scanner tables.
+Extends `BaseScraper` for scanner-driven scrapers (e.g., `Fundamentals`, `Markets`, `Technicals`, `Screener`, `MarketMovers`, `SymbolMarkets`, `Calendar`, `Options`). Provides:
+- **`_fetch_symbol_fields()`**: Shared `GET /symbol` helper for flat field retrieval.
+- **`_map_scanner_rows()`**: Maps scanner rows (`{"s": ..., "d": [...]}`) into field-named dictionaries.
 
 ### BaseStreamer
 Extends `BaseScraper` for real-time WebSocket interactions. Provides:
-- Connection bootstrapping via `StreamHandler`.
-- JWT token authentication resolution natively baked into connection flows.
+- **`connect()`**: Builds a `StreamHandler` using either `unauthorized_user_token` or cookie-resolved JWT.
+- Runtime JWT resolution failure is raised as `RuntimeError` from `connect()`.
+- Shared indicator study mapping state via `study_id_to_name_map`.
 
 ---
 
@@ -182,7 +187,7 @@ def generate_session(prefix="qs_"):
 2. **set_locale** — Set language/region (e.g., `["en", "US"]`)
 3. **chart_create_session** — Create chart session for OHLCV
 4. **quote_create_session** — Create quote session for prices
-5. **quote_set_fields** — Subscribe to 24 price fields (bid, ask, volume, etc.)
+5. **quote_set_fields** — Subscribe to 31 quote fields (bid, ask, volume, high/low/open, etc.)
 6. **quote_hibernate_all** — Ready to receive updates
 
 ### Message Types Received
@@ -213,12 +218,423 @@ def generate_session(prefix="qs_"):
 
 ## HTTP Scrapers
 
+### Calendar Scraper
+
+**Source:** `tv_scraper/scrapers/events/calendar.py`
+
+**Endpoints:**
+- **Dividends:** `https://scanner.tradingview.com/global/scan?label-product=calendar-dividends`
+- **Earnings:** `https://scanner.tradingview.com/global/scan?label-product=calendar-earnings`
+
+**Method Signatures:**
+```python
+def get_dividends(
+    timestamp_from: int | None = None,
+    timestamp_to: int | None = None,
+    markets: list[str] | None = None,
+    fields: list[str] | None = None,
+    lang: str = "en",
+) -> dict[str, Any]
+
+def get_earnings(
+    timestamp_from: int | None = None,
+    timestamp_to: int | None = None,
+    markets: list[str] | None = None,
+    fields: list[str] | None = None,
+    lang: str = "en",
+) -> dict[str, Any]
+```
+
+**Validation & Defaults:**
+- `fields` are validated only when truthy; `None` or `[]` uses defaults.
+- Default window when timestamps are omitted:
+  - `timestamp_from = midnight - 3 * 86400`
+  - `timestamp_to = midnight + 3 * 86400 + 86399`
+- `markets` and `lang` are passed through without local validation.
+
+**Data Extraction:**
+```
+1. Build scanner payload with columns + in_range filter on event date columns.
+2. POST to calendar scanner endpoint.
+3. Read json_response["data"]; if not list, fallback to [].
+4. Map scanner rows via _map_scanner_rows(items, selected_fields).
+```
+
+**Output Fields (per row):**
+```python
+{
+    "symbol": str,
+    "<requested_field>": Any,
+    ...
+}
+```
+
+**Known Behavior Nuances:**
+- Returns success with empty list when no events are found.
+- Adds metadata: `event_type`, `total`, `timestamp_from`, `timestamp_to`, and optional `markets`.
+- These methods are not decorated with `@catch_errors`; handled failures are normalized, but unexpected runtime exceptions are not auto-wrapped.
+
+### Fundamentals Scraper
+
+**Source:** `tv_scraper/scrapers/market_data/fundamentals.py`
+
+**Endpoint:** `https://scanner.tradingview.com/symbol`
+
+**Method Signature:**
+```python
+def get_fundamentals(
+    exchange: str,
+    symbol: str,
+    fields: list[str] | None = None,
+) -> dict[str, Any]
+```
+
+**Validation:**
+- `fields` must be `list[str]` or `None`.
+- `fields=None` or `fields=[]` fetches all `ALL_FIELDS`.
+- `validate_fields(field_list, ALL_FIELDS, "field")`.
+- Live symbol validation happens inside `_fetch_symbol_fields()`.
+
+**Data Extraction:**
+```
+1. Verify exchange:symbol via verify_symbol_exchange().
+2. GET /symbol with fields=<comma-separated requested fields> and no_404=true.
+3. Build output dict: {"symbol": "EXCHANGE:SYMBOL", field: response.get(field), ...}.
+4. Missing fields are kept with value None.
+```
+
+**Output Structure:**
+```python
+{
+    "symbol": str,
+    "<fundamental_field>": Any | None,
+    ...
+}
+```
+
+**Known Behavior Nuances:**
+- `DEFAULT_COMPARISON_FIELDS` exists but is not used by `get_fundamentals()`.
+- Empty/falsy parsed payload returns failed response: `"No data returned from API."`.
+
+### Markets Scraper
+
+**Source:** `tv_scraper/scrapers/market_data/markets.py`
+
+**Endpoint:** `https://scanner.tradingview.com/{market}/scan`
+
+**Method Signature:**
+```python
+def get_markets(
+    market: str = "america",
+    sort_by: str = "market_cap",
+    fields: list[str] | None = None,
+    sort_order: str = "desc",
+    limit: int = 50,
+) -> dict[str, Any]
+```
+
+**Validation:**
+- `market` in `VALID_MARKETS`.
+- `sort_by` in `SORT_CRITERIA`.
+- `sort_order` in `{"asc", "desc"}`.
+- `limit` in `[1, 1000]`.
+- `fields` are not validated by this method.
+
+**Data Extraction:**
+```
+1. Build payload with columns, sort, range, options.lang="en", and STOCK_FILTERS.
+2. POST scanner request.
+3. If data is empty, return failed response.
+4. Map scanner rows via _map_scanner_rows().
+```
+
+**Output Fields (per row):**
+```python
+{
+    "symbol": str,
+    "<requested_field>": Any | None,
+    ...
+}
+```
+
+**Known Behavior Nuances:**
+- Built-in filters force stock + non-empty market cap.
+- Although non-stock markets are accepted by validation (`crypto`, `forex`), stock-only filters may produce empty results and a failed envelope.
+
+### Options Scraper
+
+**Source:** `tv_scraper/scrapers/market_data/options.py`
+
+**Data Endpoint:** `https://scanner.tradingview.com/options/scan2?label-product=symbols-options`
+
+**Method Signatures:**
+```python
+def get_options_by_expiry(
+    exchange: str,
+    symbol: str,
+    expiration: int,
+    root: str,
+    columns: list[str] | None = None,
+) -> dict[str, Any]
+
+def get_options_by_strike(
+    exchange: str,
+    symbol: str,
+    strike: int | float,
+    columns: list[str] | None = None,
+) -> dict[str, Any]
+```
+
+**Validation:**
+- Both methods call `verify_options_symbol(exchange, symbol)`.
+- `columns` are validated against `DEFAULT_OPTION_COLUMNS` when provided.
+- `strike` must be `int | float` in `get_options_by_strike()`.
+- `expiration` and `root` are passed through without extra type checks.
+
+**Data Extraction:**
+```
+1. Build payload with filters + index_filters on underlying_symbol.
+2. POST options scanner endpoint.
+3. Parse response fields list + symbols list.
+4. Map each symbol row: {"symbol": item["s"], field_i: values[i], ...}.
+```
+
+**Output Fields (per option row):**
+```python
+{
+    "symbol": str,
+    "ask": float | None,
+    "bid": float | None,
+    "strike": float | int | None,
+    ...
+}
+```
+
+**Known Behavior Nuances:**
+- Error messages with `"404"` are rewritten to "options chain not found" wording.
+- Empty `symbols` list returns failed response.
+- Success metadata includes `total` and `filter_value`.
+
+### Technicals Scraper
+
+**Source:** `tv_scraper/scrapers/market_data/technicals.py`
+
+**Endpoint:** `https://scanner.tradingview.com/symbol`
+
+**Method Signature:**
+```python
+def get_technicals(
+    exchange: str,
+    symbol: str,
+    timeframe: str = "1d",
+    technical_indicators: list[str] | None = None,
+    all_indicators: bool = False,
+    fields: list[str] | None = None,
+) -> dict[str, Any]
+```
+
+**Validation Flow:**
+```
+1. validate_exchange(exchange)
+2. validate_symbol(exchange, symbol)
+3. validate_timeframe(timeframe)
+4. resolve indicators:
+    - all_indicators=True -> use full INDICATORS list
+    - technical_indicators provided -> validate_indicators(technical_indicators)
+    - otherwise -> raise ValidationError
+5. verify_symbol_exchange(exchange, symbol)  # live check
+```
+
+**Data Extraction:**
+```
+1. Build fields param from requested indicators.
+   - Daily (1D): indicator keys are unsuffixed.
+   - Non-daily: indicator keys are suffixed (e.g. RSI|60).
+2. GET /symbol with no_404=true.
+3. Build result dict from response.get(indicator_key).
+4. Strip timeframe suffix from output keys for non-daily timeframes.
+5. Optional post-filter using fields (suffixes stripped before comparison).
+```
+
+**Output Fields:**
+```python
+{
+    "RSI": float | None,
+    "MACD.macd": float | None,
+    ...
+}
+```
+
+**Known Behavior Nuances:**
+- Missing indicator keys are returned as `None` (not an automatic failure).
+- `fields=[]` is treated as no filtering because filtering runs only when `fields` is truthy.
+
+### Screener Scraper
+
+**Source:** `tv_scraper/scrapers/screening/screener.py`
+
+**Endpoint:** `https://scanner.tradingview.com/{market}/scan`
+
+**Method Signature:**
+```python
+def get_screener(
+    market: str = "america",
+    filters: list[dict[str, Any]] | None = None,
+    fields: list[str] | None = None,
+    sort_by: str | None = None,
+    sort_order: str = "desc",
+    limit: int = 50,
+    symbols: dict[str, Any] | None = None,
+    filter2: dict[str, Any] | None = None,
+) -> dict[str, Any]
+```
+
+**Validation:**
+- `market` choice validation.
+- `sort_order` in `{"asc", "desc"}`.
+- `limit` in `[1, 10000]`.
+- `filters` entries must be dicts with `left` and valid `operation`.
+- `filter2` must be dict with `operator` key.
+- `fields`, `sort_by`, and `symbols` are not schema-validated here.
+
+**Data Extraction:**
+```
+1. Build payload with columns, options.lang="en", range, and markets=[market].
+2. Add filter/sort/symbols/filter2 only when inputs are truthy.
+3. POST scanner endpoint.
+4. Map rows via _map_scanner_rows().
+5. Return total + total_available metadata.
+```
+
+**Known Behavior Nuances:**
+- Empty result sets return success with `data=[]`.
+- `filters=[]`, `symbols={}`, and `filter2={}` are omitted from payload due truthy checks.
+
+### Market Movers Scraper
+
+**Source:** `tv_scraper/scrapers/screening/market_movers.py`
+
+**Endpoint Mapping:**
+- `stocks-usa -> /america/scan`
+- `stocks-uk -> /uk/scan`
+- `stocks-india -> /india/scan`
+- `stocks-australia -> /australia/scan`
+- `stocks-canada -> /canada/scan`
+- `crypto -> /crypto/scan`
+- `forex -> /forex/scan`
+- `bonds -> /bonds/scan`
+- `futures -> /futures/scan`
+
+**Method Signature:**
+```python
+def get_market_movers(
+    market: str = "stocks-usa",
+    category: str = "gainers",
+    fields: list[str] | None = None,
+    limit: int = 50,
+    language: str = "en",
+) -> dict[str, Any]
+```
+
+**Validation:**
+- `limit` in `[1, 1000]`.
+- `market` in supported list.
+- `category` allowed set depends on stock vs non-stock market.
+- `language` validated via `validate_language()`.
+- Field validation checks list-of-strings shape, but not against a fixed global allowlist.
+
+**Data Extraction:**
+```
+1. Resolve market-specific default fields.
+2. Build category sort config and filter conditions.
+3. POST scanner endpoint.
+4. Map scanner rows and return total + totalCount metadata.
+```
+
+**Category Filter Nuances:**
+- Stock markets add `market == <scanner_segment>` filter.
+- `penny-stocks` adds `close < 5`.
+- Gainers/losers variants add `change > 0` / `change < 0`.
+- No explicit `type=stock` filter is added.
+
+### Symbol Markets Scraper
+
+**Source:** `tv_scraper/scrapers/screening/symbol_markets.py`
+
+**Endpoint:** `https://scanner.tradingview.com/{scanner}/scan`
+
+**Method Signature:**
+```python
+def get_symbol_markets(
+    symbol: str,
+    fields: list[str] | None = None,
+    scanner: str = "global",
+    limit: int = 150,
+) -> dict[str, Any]
+```
+
+**Validation:**
+- If symbol is `EXCHANGE:SYMBOL`, only the part after `:` is used for matching.
+- `validate_symbol("global", search_symbol)`.
+- `scanner` choice validation.
+- `limit` in `[1, 1000]`.
+- `fields` are not field-name validated here.
+
+**Data Extraction:**
+```
+1. Build payload with filter: {left:"name", operation:"match", right:search_symbol}.
+2. POST scanner endpoint.
+3. Map rows via _map_scanner_rows().
+4. Return failed response if mapped result is empty.
+```
+
+**Known Behavior Nuances:**
+- Failure message on empty data uses original input symbol, not parsed `search_symbol`.
+- Success metadata includes `total` and `total_available`.
+
+### Pine Scraper
+
+**Source:** `tv_scraper/scrapers/scripts/pine.py`
+
+**Facade Base URL:** `https://pine-facade.tradingview.com/pine-facade`
+
+**Public Methods:**
+```python
+list_saved_scripts() -> dict[str, Any]
+validate_script(source: str) -> dict[str, Any]
+get_script(pine_id: str, version: str) -> dict[str, Any]
+create_script(name: str, source: str) -> dict[str, Any]
+edit_script(pine_id: str, name: str, source: str) -> dict[str, Any]
+delete_script(pine_id: str) -> dict[str, Any]
+```
+
+**Authentication & Validation:**
+- All methods require cookie authentication (`_validate_cookie_required()`).
+- Empty input validation is handled for `source`, `pine_id`, `version`, and `name` where applicable.
+- `create_script()` and `edit_script()` run `validate_script()` before save calls.
+
+**Endpoint Coverage:**
+- `GET /list?filter=saved`
+- `POST /translate_light?v=3` (multipart source)
+- `GET /get/{encoded_pine_id}/{encoded_version}`
+- `POST /save/new` (params: `name`, `allow_overwrite=true`)
+- `POST /save/next/{encoded_pine_id}` (params: `allow_create_new=false`, `name`)
+- `POST /delete/{encoded_pine_id}`
+
+**Output Nuances:**
+- `validate_script()` returns failed response when compiler `errors` exists; warnings are preserved in metadata.
+- `create_script()` / `edit_script()` return `{"id", "name", "warnings"}` on success.
+- `delete_script()` succeeds only when parsed response equals string `"ok"`.
+- Export support is used by `list_saved_scripts()` and `get_script()`; create/edit/delete do not export.
+
 ### Ideas Scraper
 
 **Source:** `tv_scraper/scrapers/social/ideas.py`
 Extends `BaseScraper`.
 
-**Endpoint:** `https://www.tradingview.com/symbols/{EXCHANGE}-{SYMBOL}/ideas/page-{N}/`
+**Endpoints:**
+- **Page 1:** `https://www.tradingview.com/symbols/{EXCHANGE}-{SYMBOL}/ideas/`
+- **Page N (N>1):** `https://www.tradingview.com/symbols/{EXCHANGE}-{SYMBOL}/ideas/page-{N}/`
 
 **Method Signature:**
 ```python
@@ -237,10 +653,12 @@ def get_ideas(
 
 **Data Extraction:**
 ```
-1. HTTP GET to endpoint
-2. Parse JSON: response.json()["data"]["ideas"]["data"]["items"]
-3. Map each item via _map_idea() static method
-4. Concurrent page scraping: ThreadPoolExecutor(max_workers=3)
+1. Validate: start_page >= 1 and end_page >= start_page
+2. Validate symbol/exchange via verify_symbol_exchange() and sort_by via validate_choice()
+3. Build page range [start_page, end_page] and scrape concurrently via ThreadPoolExecutor(max_workers=self._max_workers)
+4. For each page: GET endpoint with `component-data-only=1` (+ `sort=recent` when needed)
+5. Parse JSON defensively: data -> ideas -> data -> items (fallback to empty containers on type mismatch)
+6. Map each item via _map_idea() static method
 ```
 
 **Output Fields (per idea):**
@@ -261,7 +679,14 @@ def get_ideas(
 **Error Detection:**
 - Captcha: `"<title>Captcha Challenge</title>"` in HTML
 - HTTP errors: Non-200 status codes
-- Validation: Module-level functions in `tv_scraper.core.validators`
+- Validation: `start_page`/`end_page` checks plus module-level validators
+- Partial page failures: returns `status="failed"` with `failed_pages`, `total` collected, and `pages` metadata
+- Non-dict page payloads are logged and treated as empty page results
+- `as_completed(..., timeout=self.timeout*2)` timeout is caught by decorator and returned as an `Unexpected error` failed envelope
+
+**Known Behavior Nuances:**
+- Result ordering follows future completion order, not guaranteed page order.
+- If any page fails, collected articles are counted in metadata but not returned in `data` (failed envelope).
 
 ### Minds Scraper
 
@@ -286,9 +711,11 @@ def get_minds(
 ```
 1. HTTP GET to endpoint
 2. Parse JSON: response.json()["results"]
-3. Extract cursor from "next" field for pagination
-4. Continue until limit reached or no next cursor
-5. Client-side limit trimming: parsed_data[:limit]
+3. Parse each item via _parse_mind() (author normalization + created timestamp formatting)
+4. Extract cursor from "next" URL query (`?c=`) for pagination
+5. Continue until no next cursor, empty results, or MAX_PAGES (100) reached
+6. Client-side limit trimming: parsed_data[:limit] (applied after fetch loop)
+7. Capture symbol_info from response.meta.symbols_info[{EXCHANGE}:{SYMBOL}] when present
 ```
 
 **Output Fields (per mind):**
@@ -298,16 +725,23 @@ def get_minds(
     "url": str,                           # Link to idea
     "author": {
         "username": str,
-        "profile_url": str,               # Constructed URL
+        "profile_url": str,               # Relative URL normalized to absolute tradingview.com URL
         "is_broker": bool                 # Broker flag
     },
-    "created": str,                       # ISO 8601, formatted as "YYYY-MM-DD HH:MM:SS"
+    "created": str,                       # "YYYY-MM-DD HH:MM:SS" if ISO-8601 parseable, else raw value
     "total_likes": int,
     "total_comments": int
 }
 ```
 
-**Pagination:** Cursor-based (incremental loops)
+**Validation & Pagination:**
+- Symbol/exchange verified via `verify_symbol_exchange()`
+- Cursor-based pagination (`next` URL) with `MAX_PAGES=100` guard
+- No explicit validation for `limit` in current implementation
+
+**Known Behavior Nuances:**
+- `limit` truncation runs after pagination completes.
+- Request failure at any page returns failed response and does not include partially collected rows in `data`.
 
 ### News Scraper
 
@@ -336,9 +770,11 @@ def get_news_content(
 ```
 
 **Headlines Query Parameters:**
-- `client=web`, `lang={lang}`, `area={area}`, `provider={provider}`, `section={section}`
+- `client=web`, `lang={lang}`, `symbol={EXCHANGE}:{SYMBOL}`
+- `area={AREAS[area]}` if area provided, else empty string
+- `provider={provider.replace(".", "_")}` if provider provided, else empty string
+- `section=""` when section="all", else section value
 - `streaming` (key-only parameter)
-- `symbol={EXCHANGE}:{SYMBOL}`
 
 **Story Query Parameters:**
 - `id={story_id}` (e.g., `tag:reuters.com,2026:newsml_L4N3Z9104:0`)
@@ -348,16 +784,19 @@ def get_news_content(
 ```
 1. HTTP GET to headlines endpoint
 2. Parse JSON: response.json()["items"]
-3. Extract: id, title, shortDescription, published, storyPath
-4. Client-side sort by: latest/oldest/most_urgent/least_urgent
+3. If empty items: return success with [] and total=0
+4. Client-side sort by latest/oldest (published) or most_urgent/least_urgent (urgency)
+5. Clean each item to: id, title, shortDescription, published, storyPath
+6. Normalize storyPath to start with "/"
 ```
 
 **Story Parsing (Complex):**
 ```
 1. HTTP GET to story endpoint with story_id
-2. Recursively parse ast_description.children (AST traversal)
-3. Extract paragraph nodes (type="p")
-4. Merge text from paragraphs with \n separator
+2. Parse ast_description.children
+3. Keep only top-level paragraph nodes (type="p")
+4. For each paragraph, merge plain string nodes and dict node params.text values
+5. Join paragraph texts with \n separator
 ```
 
 **Headline Output Fields:**
@@ -374,6 +813,7 @@ def get_news_content(
 **Story Output Fields:**
 ```python
 {
+    "id": str,
     "title": str,
     "description": str,                 # Merged AST paragraphs
     "published": int,
@@ -382,20 +822,44 @@ def get_news_content(
 ```
 
 **Validation:**
-- Symbol/exchange: DataValidator
+- `get_news_headlines`: verify symbol/exchange + validate language/provider/area/sort_by/section
+- `get_news_content`: `story_id` must be non-empty + validate language
 - sort_by: Must be in `{"latest", "oldest", "most_urgent", "least_urgent"}`
 - section: Must be in `{"all", "esg", "press_release", "financial_statement"}`
-- language: Validated against `_languages` dict
-- provider: Validated against `_news_providers` list
-- area: Validated against `_areas` dict keys
+- language: Validated against `validation_data.LANGUAGES` values (e.g., `"en"`, `"fr"`)
+- provider: Validated against `validation_data.NEWS_PROVIDERS`
+- area: Validated against `validation_data.AREAS` (keys or mapped codes)
+
+**Known Behavior Nuance:**
+- `area` values passed as area codes (e.g. `"WLD"`) validate, but `AREAS.get(area, "")` sends empty area filter for those code inputs.
 
 ---
 
 ## Streaming Methods
 
-### Streamer.get_candles()
+### BaseStreamer.connect()
 
-**Source:** `tv_scraper/streaming/streamer.py`
+**Source:** `tv_scraper/streaming/base_streamer.py`
+
+**Method Signature:**
+```python
+def connect(self) -> StreamHandler:
+```
+
+**Flow:**
+```
+1. Start with websocket_jwt_token="unauthorized_user_token".
+2. If cookie exists, resolve JWT via get_valid_jwt_token(cookie).
+3. On JWT resolution failure, raise RuntimeError.
+4. Return StreamHandler(jwt_token=resolved_token).
+```
+
+**Known Behavior Nuance:**
+- `connect()` is not wrapped by `@catch_errors`; it raises on failure.
+
+### CandleStreamer.get_candles()
+
+**Source:** `tv_scraper/streaming/candle_streamer.py`
 
 **Method Signature:**
 ```python
@@ -405,152 +869,53 @@ def get_candles(
     symbol: str,
     timeframe: str = "1m",
     numb_candles: int = 10,
-    indicators: list[tuple[str, str]] | None = None
+    indicators: list[tuple[str, str]] | None = None,
 ) -> dict[str, Any]
 ```
 
-**Supported Timeframes:**
+**Validation:**
+- `verify_symbol_exchange(exchange, symbol)`
+- `validate_timeframe(timeframe)`
+- `validate_range("numb_candles", numb_candles, 1, 5000)`
+
+**WebSocket Flow:**
 ```
-"1m", "5m", "15m", "30m", "1h", "2h", "4h", "1d", "1w", "1M"
+1. Connect and initialize quote/chart sessions.
+2. Add symbol to both sessions via quote_add_symbols, resolve_symbol, create_series, quote_fast_symbols.
+3. If indicators requested, fetch study metadata and send create_study per indicator.
+4. Consume packets:
+   - timescale_update -> OHLCV extraction
+   - du -> indicator extraction
+5. Break when OHLCV and indicators are ready, or when packet index i > 15.
 ```
 
-**Timeframe Mapping to TradingView Values:**
-```python
-"1m" → "1", "5m" → "5", "15m" → "15", "30m" → "30"
-"1h" → "60", "2h" → "120", "4h" → "240"
-"1d" → "1D", "1w" → "1W", "1M" → "1M"
+**Stop Conditions:**
 ```
-
-**WebSocket Subscription Flow:**
+1. len(ohlcv_data) >= numb_candles AND indicator readiness satisfied, OR
+2. packet index timeout: i > 15
 ```
-1. Create quote + chart sessions (via _add_symbol_to_sessions)
-2. Send subscribe commands:
-   - quote_add_symbols: Real-time price updates
-   - resolve_symbol: Symbol resolution for chart
-   - create_series: OHLCV data for timeframe
-   - quote_fast_symbols: Fast price quotes
-3. Receive timescale_update packets → OHLCV
-4. Receive du packets → Indicator values
-5. Exit when: (len(ohlcv) >= numb_candles AND indicators ready) OR timeout
-```
-
-**Message Filtering:**
-| Type | Use | Ignore |
-|------|-----|--------|
-| `timescale_update` | Extract OHLCV | — |
-| `du` | Extract indicators | — |
-| `qsd` | — | Not used for historical |
-| `~h~` | — | Auto-echoed |
 
 **Data Extraction Logic:**
 ```python
-# OHLCV from p[1].sds_1.s array:
+# OHLCV from p[1].sds_1.s
 {
     "index": entry["i"],
-    "timestamp": entry["v"][0],        # Unix ms
+    "timestamp": entry["v"][0],
     "open": entry["v"][1],
     "high": entry["v"][2],
     "low": entry["v"][3],
     "close": entry["v"][4],
-    "volume": entry["v"][5]
+    # "volume" included only when len(entry["v"]) > 5
 }
 
-# Indicators from p[1].st[N] arrays:
+# Indicator rows from du packet studies
 {
     "index": item["i"],
     "timestamp": item["v"][0],
-    "0": item["v"][1],                 # Indicator output 1
-    "1": item["v"][2]                  # Indicator output 2
+    "0": item["v"][1],
+    "1": item["v"][2],
+    ...
 }
-```
-
-**Stop Conditions:**
-```
-1. OHLCV received >= numb_candles AND
-2. (Indicators ready OR no indicators requested)
-3. OR timeout after 15 packets
-```
-
-**Output Structure:**
-```python
-{
-    "status": "success",
-    "data": {
-        "ohlcv": [
-            {
-                "index": int,
-                "timestamp": int,
-                "open": float,
-                "high": float,
-                "low": float,
-                "close": float,
-                "volume": float
-            }
-        ],
-        "indicators": {
-            "STD;RSI": [
-                {"index": int, "timestamp": int, "0": float, ...}
-            ]
-        }
-    },
-    "metadata": {
-        "exchange": str,
-        "symbol": str,
-        "timeframe": str,
-        "numb_candles": int
-    },
-    "error": None
-}
-```
-
-### Streamer.get_forecast()
-
-**Source:** `tv_scraper/streaming/streamer.py`
-
-**Method Signature:**
-```python
-def get_forecast(
-    self,
-    exchange: str,
-    symbol: str
-) -> dict[str, Any]
-```
-
-**Validation Flow:**
-```
-1. Verify symbol/exchange exists (offline check)
-2. HTTP GET to TradingView scanner API:
-   https://scanner.tradingview.com/symbol?symbol={EXCHANGE}:{SYMBOL}&fields=market&no_404=false
-3. Check response: type=="stock"
-4. If non-stock: return error "Found non-stock symbol..."
-5. Continue to WebSocket only if stock verified
-```
-
-**WebSocket Subscription:**
-```
-1. Create quote session
-2. Send 5 subscribe/request commands (standard format)
-3. Capture qsd packets only (incremental snapshots)
-4. Merge snapshots via _merge_snapshot logic
-```
-
-**Key Mapping:**
-```python
-# TradingView source keys → tv-scraper output keys
-{
-    "earnings_fy_h": "yearly_eps_data",
-    "earnings_ttm": "trailing_eps_data",
-    # ... 8 more forecast mappings (bidirectional)
-}
-
-# Total: 10 required keys for success
-```
-
-**Stop Conditions:**
-```
-1. All 10 required keys found in snapshot, OR
-2. 15 packets received (whichever first)
-3. On timeout: Log warning with found_output_keys list
 ```
 
 **Output Structure (Success):**
@@ -558,37 +923,123 @@ def get_forecast(
 {
     "status": "success",
     "data": {
-        "yearly_eps_data": float,
-        "trailing_eps_data": float,
-        # ... 8 more fields
+        "ohlcv": [ ... ],
+        "indicators": {
+            "STD;RSI": [ ... ]
+        }
     },
     "metadata": {
         "exchange": str,
-        "symbol": str
+        "symbol": str,
+        "timeframe": str,
+        "numb_candles": int,
+        # indicators included when provided
     },
     "error": None
 }
 ```
 
-**Output Structure (Partial/Timeout):**
+**Failure Nuances:**
+- Returns failed if no OHLCV data is received.
+- Returns failed if one or more requested indicator IDs are missing after capture.
+- Indicator metadata or study creation failures are raised internally and wrapped by `@catch_errors` as `Unexpected error` failed envelopes.
+
+### ForecastStreamer.get_forecast()
+
+**Source:** `tv_scraper/streaming/forecast_streamer.py`
+
+**Method Signature:**
+```python
+def get_forecast(self, exchange: str, symbol: str) -> dict[str, Any]
+```
+
+**Validation Flow:**
+```
+1. verify_symbol_exchange(exchange, symbol)
+2. Resolve symbol type via direct requests.get to /symbol with fields=type.
+3. If type != "stock", raise ValidationError.
+```
+
+**WebSocket Subscription:**
+```
+1. Connect quote session.
+2. set_data_quality("low")
+3. quote_set_fields(qs, *capture_fields)
+4. quote_hibernate_all(qs)
+5. quote_add_symbols(qs, resolved symbol)
+6. quote_fast_symbols(qs, exchange_symbol)
+7. Capture qsd packets and merge snapshot values.
+```
+
+**Output Key Mapping (fixed 10 keys):**
 ```python
 {
-    "status": "failed",
-    "data": <partial dict with found keys>,
-    "metadata": {...},
-    "error": "Timeout after 15 packets. Missing keys: ['key1', 'key2', ...]"
+    "revenue_currency": "fundamental_currency_code",
+    "previous_close_price": "regular_close",
+    "average_price_target": "price_target_average",
+    "highest_price_target": "price_target_high",
+    "lowest_price_target": "price_target_low",
+    "median_price_target": "price_target_median",
+    "yearly_eps_data": "earnings_fy_h",
+    "quarterly_eps_data": "earnings_fq_h",
+    "yearly_revenue_data": "revenues_fy_h",
+    "quarterly_revenue_data": "revenues_fq_h",
 }
 ```
 
-**Output Structure (Non-Stock):**
-```python
-{
-    "status": "failed",
-    "data": None,
-    "metadata": {"exchange": str, "symbol": str},
-    "error": "Found non-stock symbol (type=crypto). Forecast only available for stocks."
-}
+**Stop Conditions:**
 ```
+1. All required output keys found with non-None values, OR
+2. packet_count > 15 (timeout warning logged)
+```
+
+**Output Behavior:**
+- Success: all 10 mapped keys available, metadata includes `available_output_keys`.
+- Partial/timeout: failed response with `data` containing all 10 keys (missing values as `None`) and `available_output_keys` metadata.
+- Non-stock symbol: failed response via validation error.
+
+**Known Behavior Nuance:**
+- `packet_count > 15` timeout check is executed inside the `qsd` parse branch.
+
+### Streamer Facade
+
+**Source:** `tv_scraper/streaming/streamer.py`
+
+**Facade Methods:**
+```python
+def get_candles(...) -> dict[str, Any]
+def get_forecast(...) -> dict[str, Any]
+def stream_realtime_price(...) -> Generator[dict[str, Any], None, None]
+@staticmethod
+def get_available_indicators() -> dict[str, Any]
+```
+
+**Delegation Model:**
+- `get_candles()` delegates to `CandleStreamer.get_candles()`.
+- `get_forecast()` delegates to `ForecastStreamer.get_forecast()`.
+- `get_available_indicators()` returns `fetch_available_indicators()` directly.
+
+**Export Nuance:**
+- When `export_result=True`, delegated streamers export on success, and `Streamer` exports again in proxy methods.
+- This can result in duplicate export writes for successful `get_candles()` / `get_forecast()` calls.
+
+**Realtime Price Generator (`stream_realtime_price`)**
+
+**Validation & Setup:**
+```
+1. verify_symbol_exchange(exchange, symbol)
+2. connect()
+3. subscribe quote session (quote_add_symbols, quote_fast_symbols)
+4. subscribe chart session with 1m series (resolve_symbol, create_series(..., "1", 1, ""))
+```
+
+**Yielded Packet Mapping:**
+- `qsd` packets yield quote-centric dictionaries (price, volume, bid/ask, OHLC day values, etc.).
+- `du` packets yield close-based updates from the 1m chart series.
+
+**Known Behavior Nuances:**
+- Generator runs until stream ends; no internal max packet stop condition.
+- This method is not envelope-wrapped and may raise during iteration (validation/connect/network/runtime errors).
 
 ### StreamHandler Core Implementation
 
@@ -624,13 +1075,15 @@ def get_forecast(
 ## Validation & Error Architecture
 
 ### @catch_errors Decorator
-The primary mechanism for standardizing responses. Every public scraper method is decorated with `@catch_errors`, which:
+The primary mechanism for standardizing responses. Most public scraper methods are decorated with `@catch_errors`, which:
 1. **Captures Metadata**: Uses `inspect.signature` to automatically bind all function arguments (e.g., `symbol`, `exchange`, `limit`) into the response's `metadata` field.
 2. **Standardizes Envelopes**: Wraps the function's return value in a `success` envelope or catches `ValidationError` / network exceptions to return a `failed` envelope.
 3. **Eliminates Boilerplate**: Removes the need for manual `try/except` blocks and manual metadata dictionary construction in every method.
 
-### DataValidator & Module Functions
-Validation logic is centralized in `tv_scraper/core/validators.py`. While a `DataValidator` singleton exists internally to manage data loading, developers should use the exposed **module-level functions** for direct validation:
+Notable exceptions in this codebase include methods such as `Calendar.get_dividends/get_earnings`, `BaseStreamer.connect()`, and `Streamer.stream_realtime_price()`.
+
+### Validation Module Functions
+Validation logic is centralized in `tv_scraper/core/validators.py`. Developers should use the exposed **module-level functions** for direct validation:
 
 | Function | Purpose |
 |----------|---------|
@@ -653,7 +1106,7 @@ Validation logic is centralized in `tv_scraper/core/validators.py`. While a `Dat
 **Type:** Offline check
 
 **Logic:**
-1. Case-insensitive match: exchange.upper() in [e.upper() for e in self._exchanges]
+1. Case-insensitive match: `exchange.upper() in _EXCHANGES_SET`
 2. On failure: Use `difflib.get_close_matches(cutoff=0.6, n=5)` for suggestions
 3. Return sample of valid exchanges in error message
 
@@ -695,20 +1148,15 @@ except ValidationError as e:
 
 **Logic:**
 1. List is non-empty
-2. Each indicator in `_indicators`
+2. Each indicator in `_INDICATORS_SET`
 3. Use `difflib` suggestions on first invalid indicator
 
-### Data Getter Methods
+### Validation Datasets
 
-All return **shallow copies** of the underlying data:
+Validator allowlists are sourced from `tv_scraper.core.validation_data` constants:
 
 ```python
-get_exchanges() → list[str]
-get_indicators() → list[str]
-get_timeframes() → dict[str, Any]
-get_news_providers() → list[str]
-get_languages() → dict[str, str]
-get_areas() → dict[str, str]
+EXCHANGES, INDICATORS, TIMEFRAMES, NEWS_PROVIDERS, LANGUAGES, AREAS
 ```
 
 ---
@@ -729,13 +1177,13 @@ get_areas() → dict[str, str]
 ### Error Handling
 - Catch specific exceptions, not `Exception`
 - Always return standardized envelope structure
-- Never raise exceptions from public methods
+- Prefer envelope-based failures in public scraper methods; some streaming/connection helpers intentionally raise
 - Log errors with full context before returning error envelope
 
 ### Testing
 - Unit tests for isolated components (no network calls)
 - Live API tests for integration with TradingView
-- Use `DataValidator.reset()` in test setup/teardown
+- Keep validator/network state isolated across tests (mock external calls in unit tests)
 
 ---
 
@@ -743,16 +1191,22 @@ get_areas() → dict[str, str]
 
 | Feature | Module | Type | Timeout | Status |
 |---------|--------|------|---------|--------|
-| Real-time Candles | `streamer.get_candles()` | WebSocket | 15 packets | ✅ Active |
-| Forecast Data | `streamer.get_forecast()` | WebSocket | 15 packets, stock-only | ✅ Active |
+| Calendar Events | `scrapers.events.calendar.get_dividends/get_earnings` | HTTP (Scanner) | Single request (default +/-3 day range) | ✅ Active |
+| Fundamentals | `scrapers.market_data.fundamentals.get_fundamentals()` | HTTP (Scanner /symbol) | Single request | ✅ Active |
+| Markets Ranking | `scrapers.market_data.markets.get_markets()` | HTTP (Scanner) | Single request | ✅ Active |
+| Options Chain | `scrapers.market_data.options.get_options_by_expiry/by_strike` | HTTP (Options Scanner) | Single request | ✅ Active |
+| Technical Indicators | `scrapers.market_data.technicals.get_technicals()` | HTTP (Scanner /symbol) | Single request | ✅ Active |
+| Screener | `scrapers.screening.screener.get_screener()` | HTTP (Scanner) | Single request | ✅ Active |
+| Market Movers | `scrapers.screening.market_movers.get_market_movers()` | HTTP (Scanner) | Single request | ✅ Active |
+| Symbol Markets | `scrapers.screening.symbol_markets.get_symbol_markets()` | HTTP (Scanner) | Single request | ✅ Active |
+| Pine Scripts | `scrapers.scripts.pine.*` | HTTP (Pine Facade) | Single request per operation | ✅ Active |
 | Trading Ideas | `scrapers.social.ideas.get_ideas()` | HTTP | Concurrent pages | ✅ Active |
 | Community Minds | `scrapers.social.minds.get_minds()` | HTTP | Cursor-based | ✅ Active |
 | News Headlines | `scrapers.social.news.get_news_headlines()` | HTTP | Single request | ✅ Active |
 | News Content | `scrapers.social.news.get_news_content()` | HTTP | Single request | ✅ Active |
-| Screener | `scrapers.screening.screener.get_screener()` | HTTP | Concurrent pages | ✅ Active |
-| Market Movers | `scrapers.market_data.market_movers.get_market_movers()` | HTTP | Single request | ✅ Active |
-| Fundamentals | `scrapers.market_data.fundamentals.get_fundamentals()` | HTTP | Single request | ✅ Active |
-| Pine Scripts | `scrapers.data.pine.get_script()` | HTTP | Single request | ✅ Active |
+| Candle Streaming | `streaming.candle_streamer.CandleStreamer.get_candles()` | WebSocket | Packet loop with `i > 15` timeout break | ✅ Active |
+| Forecast Streaming | `streaming.forecast_streamer.ForecastStreamer.get_forecast()` | WebSocket + HTTP type check | Packet loop with `packet_count > 15` timeout break | ✅ Active |
+| Realtime Price Stream | `streaming.streamer.Streamer.stream_realtime_price()` | WebSocket Generator | Continuous until stream closes | ✅ Active |
 
 ---
 
