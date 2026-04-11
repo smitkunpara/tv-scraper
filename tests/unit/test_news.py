@@ -156,7 +156,7 @@ class TestNewsHeadlineCleaning:
             "permission": "public",
             "urgency": 3,
         }
-        result = scraper._clean_headline(item)
+        result = scraper._clean_legacy_headline(item)
         assert "id" in result
         assert "title" in result
         assert "shortDescription" in result
@@ -172,7 +172,7 @@ class TestNewsHeadlineCleaning:
         """Verify missing fields handled gracefully."""
         scraper = News()
         item: dict[str, Any] = {}
-        result = scraper._clean_headline(item)
+        result = scraper._clean_legacy_headline(item)
         assert result["id"] is None
         assert result["title"] is None
         assert result["shortDescription"] is None

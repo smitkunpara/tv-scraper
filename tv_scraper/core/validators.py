@@ -13,7 +13,12 @@ from tv_scraper.core.validation_data import (
     EXCHANGES,
     INDICATORS,
     LANGUAGES,
+    NEWS_CORP_ACTIVITIES,
+    NEWS_COUNTRIES,
+    NEWS_ECONOMIC_CATEGORIES,
+    NEWS_MARKETS,
     NEWS_PROVIDERS,
+    NEWS_SECTORS,
     TIMEFRAMES,
 )
 
@@ -27,6 +32,11 @@ _INDICATORS_SET = set(INDICATORS)
 _LANGUAGES_SET = set(LANGUAGES.values())
 _AREAS_SET = set(AREAS.values())
 _NEWS_PROVIDERS_SET = set(NEWS_PROVIDERS)
+_NEWS_COUNTRIES_SET = set(NEWS_COUNTRIES)
+_NEWS_CORP_ACTIVITIES_SET = set(NEWS_CORP_ACTIVITIES)
+_NEWS_ECONOMIC_CATEGORIES_SET = set(NEWS_ECONOMIC_CATEGORIES)
+_NEWS_MARKETS_SET = set(NEWS_MARKETS)
+_NEWS_SECTORS_SET = set(NEWS_SECTORS)
 
 # TradingView scanner API for live symbol:exchange combination validation
 _SCANNER_SYMBOL_URL = (
@@ -173,6 +183,50 @@ def validate_news_provider(provider: str) -> bool:
     raise ValidationError(
         f"Invalid news provider: '{provider}'. Allowed values: {valid}"
     )
+
+
+def validate_news_country(country: str) -> bool:
+    """Validate news country code exists."""
+    if country in _NEWS_COUNTRIES_SET:
+        return True
+    valid = ", ".join(sorted(_NEWS_COUNTRIES_SET))
+    raise ValidationError(f"Invalid country: '{country}'. Allowed values: {valid}")
+
+
+def validate_news_corp_activity(activity: str) -> bool:
+    """Validate news corporate activity exists."""
+    if activity in _NEWS_CORP_ACTIVITIES_SET:
+        return True
+    valid = ", ".join(sorted(_NEWS_CORP_ACTIVITIES_SET))
+    raise ValidationError(
+        f"Invalid corporate activity: '{activity}'. Allowed values: {valid}"
+    )
+
+
+def validate_news_economic_category(category: str) -> bool:
+    """Validate news economic category exists."""
+    if category in _NEWS_ECONOMIC_CATEGORIES_SET:
+        return True
+    valid = ", ".join(sorted(_NEWS_ECONOMIC_CATEGORIES_SET))
+    raise ValidationError(
+        f"Invalid economic category: '{category}'. Allowed values: {valid}"
+    )
+
+
+def validate_news_market(market: str) -> bool:
+    """Validate news market exists."""
+    if market in _NEWS_MARKETS_SET:
+        return True
+    valid = ", ".join(sorted(_NEWS_MARKETS_SET))
+    raise ValidationError(f"Invalid market: '{market}'. Allowed values: {valid}")
+
+
+def validate_news_sector(sector: str) -> bool:
+    """Validate news sector exists."""
+    if sector in _NEWS_SECTORS_SET:
+        return True
+    valid = ", ".join(sorted(_NEWS_SECTORS_SET))
+    raise ValidationError(f"Invalid sector: '{sector}'. Allowed values: {valid}")
 
 
 def validate_choice(field_name: str, value: str, allowed: set[str] | list[str]) -> bool:

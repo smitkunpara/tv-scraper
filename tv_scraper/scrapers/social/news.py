@@ -2,6 +2,7 @@
 
 import logging
 from typing import Any, Literal
+from urllib.parse import urlencode
 
 from tv_scraper.core import validators
 from tv_scraper.core.base import BaseScraper, catch_errors
@@ -9,13 +10,19 @@ from tv_scraper.core.validation_data import (
     AREA_LITERAL,
     AREAS,
     EXCHANGE_LITERAL,
+    NEWS_CORP_ACTIVITY_LITERAL,
+    NEWS_COUNTRY_LITERAL,
+    NEWS_ECONOMIC_CATEGORY_LITERAL,
+    NEWS_MARKET_LITERAL,
     NEWS_PROVIDER_LITERAL,
+    NEWS_SECTOR_LITERAL,
 )
 
 logger = logging.getLogger(__name__)
 
 # TradingView News API endpoints
 NEWS_HEADLINES_URL = "https://news-headlines.tradingview.com/v2/view/headlines/symbol"
+NEWS_FLOW_URL = "https://news-mediator.tradingview.com/news-flow/v2/news"
 NEWS_STORY_URL = "https://news-mediator.tradingview.com/public/news/v1/story"
 
 # Valid sort options
@@ -75,6 +82,106 @@ class News(BaseScraper):
         )
 
     @catch_errors
+    def get_news(
+        self,
+        symbol: str | None = None,
+        corp_activity: list[NEWS_CORP_ACTIVITY_LITERAL] | None = None,
+        economic_category: list[NEWS_ECONOMIC_CATEGORY_LITERAL] | None = None,
+        market: list[NEWS_MARKET_LITERAL] | None = None,
+        market_country: list[NEWS_COUNTRY_LITERAL] | None = None,
+        provider: list[NEWS_PROVIDER_LITERAL] | None = None,
+        sector: list[NEWS_SECTOR_LITERAL] | None = None,
+        language: str = "en",
+        limit: int = 50,
+    ) -> dict[str, Any]:
+        """Scrape news flow using the Mediator API with advanced filtering.
+
+        Args:
+            symbol: Optional symbol filter (e.g. ``"OANDA:XAUUSD"``).
+            corp_activity: Optional list of corporate activities.
+            economic_category: Optional list of economic categories.
+            market: Optional list of market types.
+            market_country: Optional list of country codes.
+            provider: Optional list of news providers.
+            sector: Optional list of industry sectors.
+            language: Language code (default: ``"en"``).
+            limit: Maximum number of items to return (applied client-side).
+
+        Returns:
+            Standardized response dict with keys
+            ``status``, ``data``, ``metadata``, ``error``.
+        """
+        validators.validate_language(language)
+
+        filters = [f"lang:{language}"]
+        if symbol:
+            filters.append(f"symbol:{symbol}")
+        if corp_activity:
+            for val in corp_activity:
+                validators.validate_news_corp_activity(val)
+            filters.append(f"corp_activity:{','.join(corp_activity)}")
+        if economic_category:
+            for val in economic_category:
+                validators.validate_news_economic_category(val)
+            filters.append(f"economic_category:{','.join(economic_category)}")
+        if market:
+            for val in market:
+                validators.validate_news_market(val)
+            filters.append(f"market:{','.join(market)}")
+        if market_country:
+            for val in market_country:
+                validators.validate_news_country(val)
+            filters.append(f"market_country:{','.join(market_country)}")
+        if provider:
+            for val in provider:
+                validators.validate_news_provider(val)
+            filters.append(f"provider:{','.join(provider)}")
+        if sector:
+            for val in sector:
+                validators.validate_news_sector(val)
+            filters.append(f"sector:{','.join(sector)}")
+
+        params = [("filter", f) for f in filters]
+        params.extend(
+            [
+                ("client", "screener"),
+                ("streaming", "true"),
+                ("user_prostatus", "non_pro"),
+            ]
+        )
+
+        # Pre-flight URL length check
+        full_url = f"{NEWS_FLOW_URL}?{urlencode(params)}"
+        if len(full_url) > 4096:
+            return self._error_response(
+                f"URL length ({len(full_url)}) exceeds the maximum allowed limit of 4096 characters. "
+                "Please reduce the number of filters."
+            )
+
+        response_json, error_msg = self._request(
+            "GET",
+            NEWS_FLOW_URL,
+            params=params,
+        )
+
+        if error_msg:
+            return self._error_response(error_msg)
+
+        assert response_json is not None
+        items = response_json.get("items", [])[:limit]
+
+        cleaned_items = [self._clean_headline(item) for item in items]
+
+        if self.export_result:
+            self._export(
+                data=cleaned_items,
+                symbol=symbol or "news_flow",
+                data_category="news",
+            )
+
+        return self._success_response(cleaned_items, total=len(cleaned_items))
+
+    @catch_errors
     def get_news_headlines(
         self,
         exchange: EXCHANGE_LITERAL,
@@ -85,7 +192,7 @@ class News(BaseScraper):
         section: NEWS_SECTION_LITERAL = "all",
         language: str = "en",
     ) -> dict[str, Any]:
-        """Scrape news headlines for a symbol.
+        """Scrape news headlines for a symbol using the legacy symbols API.
 
         Args:
             exchange: Exchange name (e.g. ``"NSE"``).
@@ -104,8 +211,10 @@ class News(BaseScraper):
         """
         validators.verify_symbol_exchange(exchange, symbol)
         validators.validate_language(language)
-        validators.validate_news_provider(provider) if provider else None
-        validators.validate_area(area) if area else None
+        if provider:
+            validators.validate_news_provider(provider)
+        if area:
+            validators.validate_area(area)
         validators.validate_choice(
             "sort_by", sort_by, ["latest", "oldest", "most_urgent", "least_urgent"]
         )
@@ -142,7 +251,7 @@ class News(BaseScraper):
             return self._success_response([], total=0)
 
         items = self._sort_news(items, sort_by)
-        cleaned_items = [self._clean_headline(item) for item in items]
+        cleaned_items = [self._clean_legacy_headline(item) for item in items]
 
         if self.export_result:
             self._export(
@@ -215,7 +324,28 @@ class News(BaseScraper):
         return sorted(news_list, key=lambda x: x.get(key, 0), reverse=reverse)
 
     def _clean_headline(self, item: dict[str, Any]) -> dict[str, Any]:
-        """Remove unwanted fields from headline.
+        """Normalize news item from Mediator API.
+
+        Args:
+            item: Raw news item dict.
+
+        Returns:
+            Cleaned news item dict with standardized fields.
+        """
+        return {
+            "id": item.get("id"),
+            "title": item.get("title"),
+            "published": item.get("published"),
+            "urgency": item.get("urgency"),
+            "permission": item.get("permission"),
+            "relatedSymbols": item.get("relatedSymbols", []),
+            "storyPath": self._normalize_story_path(item.get("storyPath", "")),
+            "provider": item.get("provider", {}),
+            "is_flash": item.get("is_flash", False),
+        }
+
+    def _clean_legacy_headline(self, item: dict[str, Any]) -> dict[str, Any]:
+        """Remove unwanted fields from legacy headlines.
 
         Keeps core fields (id, title, shortDescription, published, storyPath)
         and drops extra fields from the raw payload.

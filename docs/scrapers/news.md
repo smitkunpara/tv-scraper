@@ -2,10 +2,11 @@
 
 ## Overview
 
-`News` scrapes TradingView headlines and full story content.
+`News` scrapes TradingView news flow, symbol-specific headlines, and full story content. It now supports the **News Flow (v2) API** with advanced categorical filtering.
 
-- Headlines endpoint: `https://news-headlines.tradingview.com/v2/view/headlines/symbol`
-- Story endpoint: `https://news-mediator.tradingview.com/public/news/v1/story`
+- **News Flow (v2):** `https://news-mediator.tradingview.com/news-flow/v2/news`
+- **Headlines (Legacy):** `https://news-headlines.tradingview.com/v2/view/headlines/symbol`
+- **Story Content:** `https://news-mediator.tradingview.com/public/news/v1/story`
 
 ## Constructor
 
@@ -22,12 +23,70 @@ scraper = News(
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `export_result` | `bool` | `False` | Export headlines result to file |
+| `export_result` | `bool` | `False` | Export results to file |
 | `export_type` | `str` | `"json"` | Export format: `"json"` or `"csv"` |
 | `timeout` | `int` | `10` | HTTP timeout in seconds |
 | `cookie` | `str \| None` | `None` | TradingView cookie. If omitted, `TRADINGVIEW_COOKIE` env var is used when available |
 
-## Method: `get_news_headlines()`
+## Method: `get_news()`
+
+This is the primary method for fetching a live flow of news with advanced filtering.
+
+```python
+def get_news(
+    symbol: str | None = None,
+    corp_activity: list[str] | None = None,
+    economic_category: list[str] | None = None,
+    market: list[str] | None = None,
+    market_country: list[str] | None = None,
+    provider: list[str] | None = None,
+    sector: list[str] | None = None,
+    language: str = "en",
+    limit: int = 50,
+) -> dict[str, Any]
+```
+
+### Filtering & Validation
+
+The Mediator API uses a complex filtering system. All categorical inputs are strictly validated against `Literal` types:
+
+- **`market_country`**: List of 90+ country codes (e.g., `["US", "IN", "GB"]`).
+- **`corp_activity`**: Filter by corporate events like `dividends`, `earnings`, `ipo`.
+- **`economic_category`**: Filter by economic news like `gdp`, `labor`, `prices`.
+- **`market`**: Filter by asset class like `stock`, `crypto`, `forex`.
+- **`sector`**: Filter by industry sector like `Energy Minerals`, `Finance`.
+- **`provider`**: Comprehensive list of news sources (refer to [Supported Data](../supported_data.md)).
+
+> [!IMPORTANT]
+> **URL Length Guard:** TradingView servers have limits on query string length. `get_news()` includes a pre-flight check that enforces a maximum URL length of **4096 characters**. If exceeded, it returns a `failed` response.
+
+### Output Items (News Flow)
+
+Each `data` item in the Flow API returns richer data than the legacy headlines:
+
+```json
+{
+  "id": "tag:provider.com,2026:newsml_123:0",
+  "title": "Headline title",
+  "published": 1700000000,
+  "urgency": 2,
+  "permission": "free",
+  "relatedSymbols": [
+    {"symbol": "NASDAQ:AAPL", "currency_id": "USD"}
+  ],
+  "storyPath": "/news/path",
+  "provider": {
+    "id": "reuters",
+    "name": "Reuters",
+    "logo_id": "reuters_logo"
+  },
+  "is_flash": false
+}
+```
+
+## Method: `get_news_headlines()` (Legacy)
+
+Fetches symbol-specific headlines using the older symbols-based API.
 
 ```python
 def get_news_headlines(
@@ -41,52 +100,11 @@ def get_news_headlines(
 ) -> dict[str, Any]
 ```
 
-### Validation
-
-- `exchange` + `symbol` are verified with a live TradingView symbol check.
-- `sort_by` must be one of: `latest`, `oldest`, `most_urgent`, `least_urgent`.
-- `section` must be one of: `all`, `esg`, `press_release`, `financial_statement`.
-- `provider` (if set) must exactly match one of:
-  - `the_block`, `cointelegraph`, `beincrypto`, `newsbtc`, `dow-jones`, `cryptonews`, `coindesk`, `cryptoglobe`, `tradingview`, `zycrypto`, `todayq`, `cryptopotato`, `u_today`, `cryptobriefing`, `coindar`, `bitcoin_com`
-- `area` (if set) validates against area names and codes:
-  - names: `world`, `americas`, `europe`, `asia`, `oceania`, `africa`
-  - codes: `WLD`, `AME`, `EUR`, `ASI`, `OCN`, `AFR`
-- `language` must be one of:
-  - `en`, `de`, `fr`, `es`, `it`, `pt`, `ru`, `ja`, `ko`, `ar`, `hi`, `sv`, `tr`, `th`, `vi`, `id`, `fa`, `ch`, `ms`, `el`, `he`
-
-### Request and Filtering Behavior
-
-- API request params include `symbol="{exchange}:{symbol}"`, `client="web"`, and `streaming=""`.
-- `section="all"` is sent as an empty `section` value.
-- `provider` is sent as `provider.replace(".", "_")`.
-- `area` is sent as `AREAS.get(area, "")`.
-  - This means area names map to TradingView area codes.
-  - Passing a raw area code validates, but currently sends an empty area filter.
-- Sorting is applied client-side after fetch:
-  - `latest` / `oldest` sort by `published`
-  - `most_urgent` / `least_urgent` sort by `urgency`
-
-### Headline Output Items
-
-Each `data` item contains:
-
-```json
-{
-  "id": "tag:provider.com,2026:newsml_123:0",
-  "title": "Headline title",
-  "shortDescription": "Short summary",
-  "published": 1700000000,
-  "storyPath": "/news/path"
-}
-```
-
-Notes:
-
-- `storyPath` is normalized to always start with `/` when non-empty.
-- If `items` is missing or empty, returns success with `data=[]` and `metadata.total=0`.
-- Export is only triggered by `get_news_headlines()` when `export_result=True`.
+Sorting for this method is applied client-side after fetch.
 
 ## Method: `get_news_content()`
+
+Retrieves the full text content of a news article.
 
 ```python
 def get_news_content(
@@ -95,82 +113,35 @@ def get_news_content(
 ) -> dict[str, Any]
 ```
 
-### Validation
-
-- `story_id` must not be empty or whitespace-only.
-- `language` uses the same language validation as headlines.
-
 ### Behavior
 
-- Sends request params: `id`, `lang`, `user_prostatus="non_pro"`.
-- Parses output into:
-  - `id`, `title`, `published`, `storyPath`, `description`
-- `description` is built from `ast_description.children`:
-  - only top-level paragraph nodes (`type == "p"`) are used
-  - paragraph text merges raw strings and object `params.text` values
-  - paragraphs are joined with newline characters
-
-## Response Envelope (Both Methods)
-
-Both methods return the standard envelope:
-
-```json
-{
-  "status": "success",
-  "data": {},
-  "metadata": {},
-  "error": null
-}
-```
-
-Failure shape:
-
-```json
-{
-  "status": "failed",
-  "data": null,
-  "metadata": {},
-  "error": "error message"
-}
-```
-
-Metadata behavior:
-
-- Metadata is auto-captured from method arguments.
-- Arguments passed as `None` are omitted from metadata.
-- `get_news_headlines()` adds `metadata.total` on success.
+- Parses output into: `id`, `title`, `published`, `storyPath`, `description`.
+- `description` is built by merging AST-style paragraph nodes (`type == "p"`) from the response.
 
 ## Usage Examples
 
-### Headlines
+### Fetching News Flow with Filters
 
 ```python
 from tv_scraper.scrapers.social import News
 
 scraper = News()
-result = scraper.get_news_headlines(
-    exchange="NASDAQ",
-    symbol="AAPL",
-    sort_by="latest",
-    section="all",
-    language="en",
+result = scraper.get_news(
+    market_country=["US", "IN"],
+    market=["crypto", "stock"],
+    sector=["Finance", "Technology Services"],
+    limit=10
 )
 ```
 
-### Story Content
+### Fetching Article Content
 
 ```python
-headlines = scraper.get_news_headlines(exchange="NASDAQ", symbol="AAPL")
+# First get headlines or flow items
+flow = scraper.get_news(symbol="NASDAQ:AAPL", limit=1)
 
-if headlines["status"] == "success" and headlines["data"]:
-    story_id = headlines["data"][0]["id"]
-    content = scraper.get_news_content(story_id=story_id, language="en")
-```
-
-### Validation Error Example
-
-```python
-result = scraper.get_news_content(story_id="   ")
-# result["status"] == "failed"
-# result["error"] == "story_id cannot be empty"
+if flow["status"] == "success" and flow["data"]:
+    story_id = flow["data"][0]["id"]
+    content = scraper.get_news_content(story_id=story_id)
+    print(content["data"]["description"])
 ```

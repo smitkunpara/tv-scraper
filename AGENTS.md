@@ -748,11 +748,24 @@ def get_minds(
 **Source:** `tv_scraper/scrapers/social/news.py`
 
 **Endpoints:**
-- **Headlines:** `https://news-headlines.tradingview.com/v2/view/headlines/symbol`
+- **News Flow (v2):** `https://news-mediator.tradingview.com/news-flow/v2/news`
+- **Headlines (Legacy):** `https://news-headlines.tradingview.com/v2/view/headlines/symbol`
 - **Story Content:** `https://news-mediator.tradingview.com/public/news/v1/story`
 
 **Method Signatures:**
 ```python
+def get_news(
+    symbol: str | None = None,
+    corp_activity: list[str] | None = None,
+    economic_category: list[str] | None = None,
+    market: list[str] | None = None,
+    market_country: list[str] | None = None,
+    provider: list[str] | None = None,
+    sector: list[str] | None = None,
+    language: str = "en",
+    limit: int = 50
+) -> dict[str, Any]
+
 def get_news_headlines(
     exchange: str,
     symbol: str,
@@ -769,44 +782,57 @@ def get_news_content(
 ) -> dict[str, Any]
 ```
 
-**Headlines Query Parameters:**
-- `client=web`, `lang={lang}`, `symbol={EXCHANGE}:{SYMBOL}`
-- `area={AREAS[area]}` if area provided, else empty string
-- `provider={provider.replace(".", "_")}` if provider provided, else empty string
-- `section=""` when section="all", else section value
-- `streaming` (key-only parameter)
+**News Flow (v2) Query Construction:**
+- Uses multiple `filter` parameters: `?filter=lang:en&filter=symbol:OANDA:XAUUSD&...`
+- Filters are comma-separated within the key: `filter=market_country:US,IN,GB`
+- **URL Length Guard:** Pre-flight check throws `ValidationError` if the total URL exceeds **4096 characters** (safety limit for TradingView servers).
 
-**Story Query Parameters:**
-- `id={story_id}` (e.g., `tag:reuters.com,2026:newsml_L4N3Z9104:0`)
-- `lang={lang}`, `user_prostatus=non_pro`
-
-**Headline Extraction:**
+**Headline Extraction (v2):**
 ```
-1. HTTP GET to headlines endpoint
-2. Parse JSON: response.json()["items"]
-3. If empty items: return success with [] and total=0
-4. Client-side sort by latest/oldest (published) or most_urgent/least_urgent (urgency)
-5. Clean each item to: id, title, shortDescription, published, storyPath
-6. Normalize storyPath to start with "/"
+1. Validate inputs against strict Literals (Providers, Countries, Sectors, etc.).
+2. Build dynamic filter list and encode as multiple "filter" params.
+3. Perform URL length verification.
+4. HTTP GET to Mediator flow endpoint.
+5. Parse JSON and truncate to client-side limit.
+6. Map rich fields: urgency, permission, relatedSymbols, provider object, is_flash.
 ```
 
 **Story Parsing (Complex):**
 ```
-1. HTTP GET to story endpoint with story_id
-2. Parse ast_description.children
-3. Keep only top-level paragraph nodes (type="p")
-4. For each paragraph, merge plain string nodes and dict node params.text values
-5. Join paragraph texts with \n separator
+1. HTTP GET to story endpoint with story_id.
+2. Parse ast_description.children.
+3. Keep only top-level paragraph nodes (type="p").
+4. For each paragraph, merge plain string nodes and dict node params.text values.
+5. Join paragraph texts with \n separator.
 ```
 
-**Headline Output Fields:**
+**News Flow Output Fields:**
 ```python
 {
-    "id": str,                          # Story ID for get_news_content()
+    "id": str,
+    "title": str,
+    "published": int,
+    "urgency": int,
+    "permission": str,
+    "relatedSymbols": list[dict],
+    "storyPath": str,
+    "provider": {
+        "id": str,
+        "name": str,
+        "logo_id": str
+    },
+    "is_flash": bool
+}
+```
+
+**Legacy Headline Output Fields:**
+```python
+{
+    "id": str,
     "title": str,
     "shortDescription": str,
-    "published": int,                   # Unix timestamp
-    "storyPath": str                    # Always starts with "/"
+    "published": int,
+    "storyPath": str
 }
 ```
 
@@ -822,16 +848,21 @@ def get_news_content(
 ```
 
 **Validation:**
+- `get_news`: strict Literal validation for Country/Provider/Sector/Activity/Market/Category
 - `get_news_headlines`: verify symbol/exchange + validate language/provider/area/sort_by/section
 - `get_news_content`: `story_id` must be non-empty + validate language
+- **URL Limit:** Pre-flight check enforces **4096 character** maximum for `get_news()` filter strings.
 - sort_by: Must be in `{"latest", "oldest", "most_urgent", "least_urgent"}`
 - section: Must be in `{"all", "esg", "press_release", "financial_statement"}`
 - language: Validated against `validation_data.LANGUAGES` values (e.g., `"en"`, `"fr"`)
-- provider: Validated against `validation_data.NEWS_PROVIDERS`
+- provider: Validated against `validation_data.NEWS_PROVIDERS` (expanded in News v2)
+- country: Validated against `validation_data.NEWS_COUNTRIES`
+- sector: Validated against `validation_data.NEWS_SECTORS`
 - area: Validated against `validation_data.AREAS` (keys or mapped codes)
 
 **Known Behavior Nuance:**
 - `area` values passed as area codes (e.g. `"WLD"`) validate, but `AREAS.get(area, "")` sends empty area filter for those code inputs.
+- Mediator API `get_news()` applies the `limit` client-side after initial fetch.
 
 ---
 
@@ -1202,7 +1233,8 @@ EXCHANGES, INDICATORS, TIMEFRAMES, NEWS_PROVIDERS, LANGUAGES, AREAS
 | Pine Scripts | `scrapers.scripts.pine.*` | HTTP (Pine Facade) | Single request per operation | ✅ Active |
 | Trading Ideas | `scrapers.social.ideas.get_ideas()` | HTTP | Concurrent pages | ✅ Active |
 | Community Minds | `scrapers.social.minds.get_minds()` | HTTP | Cursor-based | ✅ Active |
-| News Headlines | `scrapers.social.news.get_news_headlines()` | HTTP | Single request | ✅ Active |
+| News Flow (v2) | `scrapers.social.news.get_news()` | HTTP (Mediator) | Multi-filter safety check | ✅ Active |
+| News Headlines (Legacy) | `scrapers.social.news.get_news_headlines()` | HTTP | Single request | ✅ Active |
 | News Content | `scrapers.social.news.get_news_content()` | HTTP | Single request | ✅ Active |
 | Candle Streaming | `streaming.candle_streamer.CandleStreamer.get_candles()` | WebSocket | Packet loop with `i > 15` timeout break | ✅ Active |
 | Forecast Streaming | `streaming.forecast_streamer.ForecastStreamer.get_forecast()` | WebSocket + HTTP type check | Packet loop with `packet_count > 15` timeout break | ✅ Active |

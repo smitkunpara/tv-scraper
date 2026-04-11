@@ -172,6 +172,245 @@ UNISWAP3POLYGON UPBIT UPCOM VANTAGE VELODROME VERSEETH VIE VVSFINANCE WAGYUSWAP 
 | W.R | Williams %R |
 | Stoch.RSI.K | Stochastic RSI %K |
 
+## Supported News Filters (Flow v2)
+
+The `get_news()` method supports the following categorical filters.
+
+### News Countries
+
+| Code | Country/Region |
+|------|----------------|
+| AE | United Arab Emirates |
+| AO | Angola |
+| AR | Argentina |
+| AT | Austria |
+| AU | Australia |
+| BD | Bangladesh |
+| BE | Belgium |
+| BG | Bulgaria |
+| BH | Bahrain |
+| BR | Brazil |
+| BW | Botswana |
+| CA | Canada |
+| CH | Switzerland |
+| CL | Chile |
+| CN | China |
+| CO | Colombia |
+| CY | Cyprus |
+| CZ | Czech Republic |
+| DE | Germany |
+| DK | Denmark |
+| EE | Estonia |
+| EG | Egypt |
+| ES | Spain |
+| ET | Ethiopia |
+| EU | European Union |
+| FI | Finland |
+| FR | France |
+| GB | United Kingdom |
+| GH | Ghana |
+| GR | Greece |
+| HK | Hong Kong |
+| HR | Croatia |
+| HU | Hungary |
+| ID | Indonesia |
+| IE | Ireland |
+| IL | Israel |
+| IN | India |
+| IS | Iceland |
+| IT | Italy |
+| JP | Japan |
+| KE | Kenya |
+| KR | South Korea |
+| KW | Kuwait |
+| LK | Sri Lanka |
+| LT | Lithuania |
+| LU | Luxembourg |
+| LV | Latvia |
+| MA | Morocco |
+| MU | Mauritius |
+| MW | Malawi |
+| MX | Mexico |
+| MY | Malaysia |
+| MZ | Mozambique |
+| NA | Namibia |
+| NG | Nigeria |
+| NL | Netherlands |
+| NO | Norway |
+| NZ | New Zealand |
+| OM | Oman |
+| PE | Peru |
+| PH | Philippines |
+| PK | Pakistan |
+| PL | Poland |
+| PT | Portugal |
+| QA | Qatar |
+| RO | Romania |
+| RS | Serbia |
+| RU | Russia |
+| RW | Rwanda |
+| SA | Saudi Arabia |
+| SC | Seychelles |
+| SE | Sweden |
+| SG | Singapore |
+| SI | Slovenia |
+| SK | Slovakia |
+| TH | Thailand |
+| TN | Tunisia |
+| TR | Turkey |
+| TW | Taiwan |
+| TZ | Tanzania |
+| UA | Ukraine |
+| UG | Uganda |
+| US | United States |
+| VE | Venezuela |
+| VN | Vietnam |
+| ZA | South Africa |
+| ZM | Zambia |
+| ZW | Zimbabwe |
+
+### News Providers
+
+The following providers are supported across the Flow and Headlines APIs:
+
+| Code | Description |
+|------|-------------|
+| 99Bitcoins | 99Bitcoins |
+| acceswire | Accesswire |
+| acn | ACN Newswire |
+| barchart | Barchart |
+| beincrypto | BeInCrypto |
+| bitcoin_com | Bitcoin.com |
+| bitcoinist | Bitcoinist |
+| blockonomi | Blockonomi |
+| bloomberg | Bloomberg (Limited) |
+| bravenewcoin | Brave New Coin |
+| chainwire | Chainwire |
+| cme_group | CME Group |
+| coindar | Coindar |
+| coindesk | CoinDesk |
+| coinmarketcal | CoinMarketCal |
+| coinpedia | Coinpedia |
+| cointelegraph | Cointelegraph |
+| cryptobriefing | CryptoBriefing |
+| cryptoglobe | CryptoGlobe |
+| cryptomiso | CryptoMiso |
+| cryptonews | CryptoNews |
+| cryptopotato | CryptoPotato |
+| cryptoslate | CryptoSlate |
+| dailyfx | DailyFX |
+| decrypt | Decrypt |
+| dow-jones | Dow Jones |
+| dpa_afx | dpa-AFX |
+| eqs | EQS Group |
+| etfcom | ETF.com |
+| financemagnates | Finance Magnates |
+| financewire | FinanceWire |
+| forexlive | ForexLive |
+| globenewswire | GlobeNewswire |
+| gurufocus | GuruFocus |
+| investorplace | InvestorPlace |
+| invezz | Invezz |
+| jcn | JCN Newswire |
+| leverage_shares | Leverage Shares |
+| macenews | MaceNews |
+| market-watch | MarketWatch |
+| marketbeat | MarketBeat |
+| marketindex | MarketIndex |
+| miranda_partners | Miranda Partners |
+| modular_finance | Modular Finance |
+| moneycontrol | Moneycontrol |
+| nbd | National Bank of Dubai |
+| newsbtc | NewsBTC |
+| pressetext | pressetext |
+| quartr | Quartr |
+| reuters | Reuters |
+| rns | RNS |
+| stocktitan | Stocktitan |
+| streetinsider | StreetInsider |
+| technode | TechNode |
+| the_block | The Block |
+| todayq | Todayq |
+| tradingview | TradingView |
+| u_today | U.Today |
+| utoday | U.Today (Alternative) |
+| zycrypto | ZyCrypto |
+| ... and many others | (Refer to constants in `validation_data.py`) |
+
+### News Sectors
+
+| Sector |
+|--------|
+| Commercial Services |
+| Communications |
+| Consumer Durables |
+| Consumer Non-Durables |
+| Consumer Services |
+| Distribution Services |
+| Electronic Technology |
+| Energy Minerals |
+| Finance |
+| Government |
+| Health Services |
+| Health Technology |
+| Industrial Services |
+| Miscellaneous |
+| Non-Energy Minerals |
+| Process Industries |
+| Producer Manufacturing |
+| Retail Trade |
+| Technology Services |
+| Transportation |
+| Utilities |
+
+### News Corporate Activities
+
+| Activity | Description |
+|----------|-------------|
+| credit_ratings | Credit Ratings |
+| dividends | Dividends |
+| earnings | Earnings |
+| earnings_calls | Earnings Calls |
+| esg | ESG |
+| insider_trading | Insider Trading |
+| ipo | IPOs |
+| management | Management Changes |
+| mergers_and_acquisitions | M&A |
+| ownership_changes | Ownership Changes |
+| recommendation | Recommendations |
+| share_buybacks | Share Buybacks |
+| strategy_business_products | Business Strategy |
+
+### News Economic Categories
+
+| Category | Description |
+|----------|-------------|
+| business | Business |
+| consumer | Consumer |
+| gdp | GDP |
+| government | Government |
+| health | Health |
+| housing | Housing |
+| labor | Labor |
+| money | Money |
+| prices | Prices |
+| taxes | Taxes |
+| trade | Trade |
+
+### News Asset Markets
+
+| Market | Description |
+|--------|-------------|
+| bond | Bonds |
+| corp_bond | Corporate Bonds |
+| crypto | Crypto |
+| economic | Economic |
+| etf | ETF |
+| forex | Forex |
+| futures | Futures |
+| index | Indices |
+| stock | Stocks |
+
 ## Supported Languages
 
 | Language | Code |
@@ -179,57 +418,17 @@ UNISWAP3POLYGON UPBIT UPCOM VANTAGE VELODROME VERSEETH VIE VVSFINANCE WAGYUSWAP 
 | English | en |
 | German | de |
 | French | fr |
-| Spanish | es |
-| Italian | it |
-| Portuguese | pt |
-| Russian | ru |
-| Japanese | ja |
-| Korean | ko |
-| Arabic | ar |
-| Hindi | hi |
-| Swedish | sv |
-| Turkish | tr |
-| Thai | th |
-| Vietnamese | vi |
-| Indonesian | id |
-| Persian | fa |
-| Chinese | ch |
-| Malay | ms |
-| Greek | el |
-| Hebrew | he |
-
-## Supported News Providers
-
-| Provider | Description |
-|----------|-------------|
-| the_block | The Block - Crypto news |
-| cointelegraph | Cointelegraph - Crypto news |
-| beincrypto | BeInCrypto - Crypto news |
-| newsbtc | NewsBTC - Crypto news |
-| dow-jones | Dow Jones - Financial news |
-| cryptonews | CryptoNews - Crypto news |
-| coindesk | CoinDesk - Crypto news |
-| cryptoglobe | CryptoGlobe - Crypto news |
-| tradingview | TradingView - Market analysis |
-| zycrypto | ZyCrypto - Crypto news |
-| todayq | Todayq - Financial news |
-| cryptopotato | CryptoPotato - Crypto news |
-| u_today | U.Today - Crypto news |
-| cryptobriefing | CryptoBriefing - Crypto news |
-| coindar | Coindar - Crypto events |
-| bitcoin_com | Bitcoin.com - Crypto news |
+| ... | (See standard codes) |
 
 ## Supported Timeframes
 
-| Timeframe | Code | Description |
-|-----------|------|-------------|
-| 1m | 1 | 1 minute |
-| 5m | 5 | 5 minutes |
-| 15m | 15 | 15 minutes |
-| 30m | 30 | 30 minutes |
-| 1h | 60 | 1 hour |
-| 2h | 120 | 2 hours |
-| 4h | 240 | 4 hours |
-| 1d |  | 1 day |
-| 1w | 1W | 1 week |
-| 1M | 1M | 1 month |
+| Timeframe | Code |
+|-----------|------|
+| 1m | 1 |
+| 5m | 5 |
+| 15m | 15 |
+| 30m | 30 |
+| 1h | 60 |
+| 1d | 1D |
+| 1w | 1W |
+| 1M | 1M |

@@ -259,7 +259,7 @@ class TestMockNewsHeadlineCleaning:
             "permission": "public",
             "urgency": 3,
         }
-        cleaned = scraper._clean_headline(raw_item)
+        cleaned = scraper._clean_legacy_headline(raw_item)
 
         assert "id" in cleaned
         assert "title" in cleaned
@@ -275,7 +275,7 @@ class TestMockNewsHeadlineCleaning:
     def test_clean_headline_handles_missing_keys(self, scraper: News) -> None:
         """Verify missing keys handled gracefully."""
         empty_item: dict[str, Any] = {}
-        cleaned = scraper._clean_headline(empty_item)
+        cleaned = scraper._clean_legacy_headline(empty_item)
 
         assert cleaned["id"] is None
         assert cleaned["title"] is None
