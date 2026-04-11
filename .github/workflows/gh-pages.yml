@@ -20,12 +20,12 @@ jobs:
       contents: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v6
         with:
           python-version: '3.11'
 
@@ -43,8 +43,8 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          # Fetch gh-pages branch or create if not exists
-          git fetch origin gh-pages || git checkout --orphan gh-pages && git rm -rf . && git commit --allow-empty -m "Initial gh-pages commit" && git push origin gh-pages && git checkout -
+          # Fetch gh-pages branch to ensure mike can see it
+          git fetch origin gh-pages --depth=1 || true
 
           # Resolve version name
           BRANCH_NAME="${{ github.ref_name }}"
