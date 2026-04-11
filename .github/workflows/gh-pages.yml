@@ -6,6 +6,7 @@ on:
       - main
       - master
       - improve/docs-experience
+      - refactor/core-revamp
     paths:
       - 'docs/**'
       - 'mkdocs.yml'
@@ -20,6 +21,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -33,19 +36,25 @@ jobs:
 
       - name: Install dependencies
         run: |
-          uv pip install --system mkdocs-material mkdocs-git-revision-date-localized-plugin
+          uv pip install --system mkdocs-material mkdocs-git-revision-date-localized-plugin mike
 
-      - name: Build documentation
+      - name: Deploy documentation
         run: |
-          uv run mkdocs build --site-dir ./site
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./site
-          publish_branch: gh-pages
-          force_orphan: true
-          enable_jekyll: false
-          allow_empty_commit: false
-          keep_files: false
+          # Fetch gh-pages branch or create if not exists
+          git fetch origin gh-pages || git checkout --orphan gh-pages && git rm -rf . && git commit --allow-empty -m "Initial gh-pages commit" && git push origin gh-pages && git checkout -
+
+          # Resolve version name
+          BRANCH_NAME="${{ github.ref_name }}"
+          if [[ "$BRANCH_NAME" == "main" || "$BRANCH_NAME" == "master" ]]; then
+            VERSION_NAME="latest"
+          elif [[ "$BRANCH_NAME" == "refactor/core-revamp" ]]; then
+            VERSION_NAME="beta"
+          else
+            VERSION_NAME="$BRANCH_NAME"
+          fi
+
+          mike deploy --push --update-aliases "$VERSION_NAME"
+          mike set-default --push latest

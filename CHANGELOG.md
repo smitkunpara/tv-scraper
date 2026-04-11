@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
+---
+
+## [1.4.0b1] - 2026-04-11
+
+### Added
 - **Core**: New `http.py` module implementing a centralized `requests.Session` with automatic retry logic (exponential backoff) for improved network reliability.
 - **News Scraper**: Integrated TradingView **News Flow (v2)** API via `get_news()`, introducing advanced categorical filtering (Country, Sector, Corporate Activity, Economic Category, Asset Market) and rich data output. Resolves [#7](https://github.com/smitkunpara/tv-scraper/issues/7).
 - **Streaming**: `BaseStreamer` now catching and raising normalized `RuntimeError` for authentication and connection failures.
