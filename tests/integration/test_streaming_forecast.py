@@ -37,7 +37,7 @@ class TestIntegrationForecastStreamer:
         """Test ForecastStreamer works standalone."""
         with (
             patch("tv_scraper.streaming.forecast_streamer.requests.get") as mock_get,
-            patch("tv_scraper.streaming.stream_handler.create_connection") as mock_cc,
+            patch("tv_scraper.streaming.base_streamer.create_connection") as mock_cc,
         ):
             mock_ws = MagicMock()
             mock_cc.return_value = mock_ws
@@ -82,7 +82,7 @@ class TestIntegrationStreamerForecast:
         """Test Streamer.get_forecast delegates to ForecastStreamer."""
         with (
             patch("tv_scraper.streaming.forecast_streamer.requests.get") as mock_get,
-            patch("tv_scraper.streaming.stream_handler.create_connection") as mock_cc,
+            patch("tv_scraper.streaming.base_streamer.create_connection") as mock_cc,
         ):
             mock_ws = MagicMock()
             mock_cc.return_value = mock_ws
@@ -105,7 +105,7 @@ class TestIntegrationStreamerForecast:
         """Test that candles and forecast are independent operations."""
         with (
             patch("tv_scraper.streaming.forecast_streamer.requests.get") as mock_get,
-            patch("tv_scraper.streaming.stream_handler.create_connection") as mock_cc,
+            patch("tv_scraper.streaming.base_streamer.create_connection") as mock_cc,
         ):
             mock_ws = MagicMock()
             mock_cc.return_value = mock_ws
@@ -151,7 +151,7 @@ class TestIntegrationForecastExport:
         """Test Streamer exports forecast as JSON."""
         with (
             patch("tv_scraper.streaming.forecast_streamer.requests.get") as mock_get,
-            patch("tv_scraper.streaming.stream_handler.create_connection") as mock_cc,
+            patch("tv_scraper.streaming.base_streamer.create_connection") as mock_cc,
         ):
             mock_ws = MagicMock()
             mock_cc.return_value = mock_ws
@@ -229,7 +229,7 @@ class TestIntegrationForecastMetadata:
         """Test metadata is consistent between Streamer and ForecastStreamer."""
         with (
             patch("tv_scraper.streaming.forecast_streamer.requests.get") as mock_get,
-            patch("tv_scraper.streaming.stream_handler.create_connection") as mock_cc,
+            patch("tv_scraper.streaming.base_streamer.create_connection") as mock_cc,
         ):
             mock_ws = MagicMock()
             mock_cc.return_value = mock_ws
@@ -291,7 +291,7 @@ class TestIntegrationForecastDataFields:
         """Test all expected data fields are present."""
         with (
             patch("tv_scraper.streaming.forecast_streamer.requests.get") as mock_get,
-            patch("tv_scraper.streaming.stream_handler.create_connection") as mock_cc,
+            patch("tv_scraper.streaming.base_streamer.create_connection") as mock_cc,
         ):
             mock_ws = MagicMock()
             mock_cc.return_value = mock_ws
@@ -339,7 +339,7 @@ class TestIntegrationForecastEdgeCases:
         """Test partial data still returns metadata."""
         with (
             patch("tv_scraper.streaming.forecast_streamer.requests.get") as mock_get,
-            patch("tv_scraper.streaming.stream_handler.create_connection") as mock_cc,
+            patch("tv_scraper.streaming.base_streamer.create_connection") as mock_cc,
         ):
             mock_ws = MagicMock()
             mock_cc.return_value = mock_ws

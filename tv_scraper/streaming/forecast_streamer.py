@@ -1,6 +1,5 @@
 """Forecast streamer for capturing forecast data from TradingView."""
 
-import json
 import logging
 from typing import Any
 
@@ -83,17 +82,11 @@ class ForecastStreamer(BaseStreamer):
                 f"{symbol_type}"
             )
 
-        handler = self.connect()
-
-        qs = handler.quote_session
-        resolve_symbol = json.dumps({"adjustment": "splits", "symbol": exchange_symbol})
+        self.connect()
 
         capture_fields = sorted(set(_FORECAST_SOURCE_KEY_MAP.values()))
-        handler.send_message("set_data_quality", ["low"])
-        handler.send_message("quote_set_fields", [qs, *capture_fields])
-        handler.send_message("quote_hibernate_all", [qs])
-        handler.send_message("quote_add_symbols", [qs, f"={resolve_symbol}"])
-        handler.send_message("quote_fast_symbols", [qs, exchange_symbol])
+        self._send_msg("set_data_quality", ["low"])
+        self._subscribe_quote(exchange_symbol, fields=capture_fields)
 
         raw_packets: list[dict[str, Any]] = []
         snapshot: dict[str, Any] = {}
@@ -101,7 +94,7 @@ class ForecastStreamer(BaseStreamer):
         found_output_keys: set[str] = set()
         packet_count = 0
 
-        for pkt in handler.receive_packets():
+        for pkt in self.receive_packets():
             packet_count += 1
             raw_packets.append(pkt)
 

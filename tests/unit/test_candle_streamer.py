@@ -62,7 +62,7 @@ class TestInheritance:
 class TestGetCandlesInvalidInputs:
     """Test get_candles with invalid inputs."""
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     def test_empty_exchange(self, mock_cc):
         """Test empty exchange returns error."""
         mock_ws = MagicMock()
@@ -76,7 +76,7 @@ class TestGetCandlesInvalidInputs:
         assert "exchange" in result["metadata"]
         assert "symbol" in result["metadata"]
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     def test_empty_symbol(self, mock_cc):
         """Test empty symbol returns error."""
         mock_ws = MagicMock()
@@ -87,7 +87,7 @@ class TestGetCandlesInvalidInputs:
 
         assert result["status"] == STATUS_FAILED
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     def test_null_exchange(self, mock_cc):
         """Test null exchange returns error."""
         mock_ws = MagicMock()
@@ -98,7 +98,7 @@ class TestGetCandlesInvalidInputs:
 
         assert result["status"] == STATUS_FAILED
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     def test_null_symbol(self, mock_cc):
         """Test null symbol returns error."""
         mock_ws = MagicMock()
@@ -109,7 +109,7 @@ class TestGetCandlesInvalidInputs:
         assert result["status"] == STATUS_FAILED
         assert "Symbol must be a non-empty string" in result["error"]
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     def test_whitespace_only_exchange(self, mock_cc):
         """Test whitespace-only exchange returns error."""
         mock_ws = MagicMock()
@@ -120,7 +120,7 @@ class TestGetCandlesInvalidInputs:
 
         assert result["status"] == STATUS_FAILED
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     def test_whitespace_only_symbol(self, mock_cc):
         """Test whitespace-only symbol returns error."""
         mock_ws = MagicMock()
@@ -135,7 +135,7 @@ class TestGetCandlesInvalidInputs:
 class TestGetCandlesInvalidTimeframe:
     """Test get_candles with invalid timeframe."""
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     @patch("tv_scraper.core.validators.verify_symbol_exchange")
     def test_invalid_timeframe(self, mock_validate, mock_cc):
         """Test invalid timeframe is handled gracefully.
@@ -163,7 +163,7 @@ class TestGetCandlesInvalidTimeframe:
 class TestGetCandlesInvalidNumbCandles:
     """Test get_candles with invalid numb_candles values."""
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     @patch("tv_scraper.core.validators.verify_symbol_exchange")
     def test_negative_numb_candles(self, mock_validate, mock_cc):
         """Test negative numb_candles returns error."""
@@ -176,7 +176,7 @@ class TestGetCandlesInvalidNumbCandles:
 
         assert result["status"] == STATUS_FAILED
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     @patch("tv_scraper.core.validators.verify_symbol_exchange")
     def test_zero_numb_candles(self, mock_validate, mock_cc):
         """Test zero numb_candles returns error."""
@@ -189,7 +189,7 @@ class TestGetCandlesInvalidNumbCandles:
 
         assert result["status"] == STATUS_FAILED
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     @patch("tv_scraper.core.validators.verify_symbol_exchange")
     def test_very_large_numb_candles(self, mock_validate, mock_cc):
         """Test very large numb_candles."""
@@ -219,7 +219,7 @@ class TestGetCandlesInvalidNumbCandles:
 class TestGetCandlesInvalidIndicators:
     """Test get_candles with invalid indicators."""
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     @patch("tv_scraper.core.validators.verify_symbol_exchange")
     def test_empty_indicators_list(self, mock_validate, mock_cc):
         """Test empty indicators list works."""
@@ -241,7 +241,7 @@ class TestGetCandlesInvalidIndicators:
 
         assert result["status"] == STATUS_SUCCESS
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     @patch("tv_scraper.core.validators.verify_symbol_exchange")
     def test_none_indicators(self, mock_validate, mock_cc):
         """Test None indicators works."""
@@ -296,7 +296,7 @@ class TestGetCandlesValidInputs:
         framed = f"~m~{len(ts_raw)}~m~{ts_raw}"
         return [framed, ConnectionError("done")]
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     @patch("tv_scraper.core.validators.verify_symbol_exchange")
     def test_basic_success(self, mock_validate, mock_cc):
         """Test basic successful call."""
@@ -314,7 +314,7 @@ class TestGetCandlesValidInputs:
         assert result["metadata"]["exchange"] == "BINANCE"
         assert result["metadata"]["symbol"] == "BTCUSDT"
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     @patch("tv_scraper.core.validators.verify_symbol_exchange")
     def test_small_numb_candles(self, mock_validate, mock_cc):
         """Test with small numb_candles (1)."""
@@ -329,7 +329,7 @@ class TestGetCandlesValidInputs:
         assert result["status"] == STATUS_SUCCESS
         assert len(result["data"]["ohlcv"]) == 1
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     @patch("tv_scraper.core.validators.verify_symbol_exchange")
     def test_medium_numb_candles(self, mock_validate, mock_cc):
         """Test with medium numb_candles (50)."""
@@ -344,7 +344,7 @@ class TestGetCandlesValidInputs:
         assert result["status"] == STATUS_SUCCESS
         assert len(result["data"]["ohlcv"]) == 50
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     @patch("tv_scraper.core.validators.verify_symbol_exchange")
     def test_all_timeframes(self, mock_validate, mock_cc):
         """Test with all supported timeframes."""
@@ -367,7 +367,7 @@ class TestGetCandlesValidInputs:
             )
             assert result["metadata"]["timeframe"] == tf, f"Failed for {tf}"
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     @patch("tv_scraper.core.validators.verify_symbol_exchange")
     def test_different_exchanges(self, mock_validate, mock_cc):
         """Test with different exchanges."""
@@ -392,7 +392,7 @@ class TestGetCandlesValidInputs:
 class TestGetCandlesWithIndicators:
     """Test get_candles with various indicator configurations."""
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     @patch("tv_scraper.streaming.candle_streamer.fetch_indicator_metadata")
     @patch("tv_scraper.core.validators.verify_symbol_exchange")
     def test_single_indicator(self, mock_validate, mock_fetch_meta, mock_cc):
@@ -437,7 +437,7 @@ class TestGetCandlesWithIndicators:
         assert "indicators" in result["data"]
         assert "STD;RSI" in result["data"]["indicators"]
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     @patch("tv_scraper.streaming.candle_streamer.fetch_indicator_metadata")
     @patch("tv_scraper.core.validators.verify_symbol_exchange")
     def test_multiple_indicators(self, mock_validate, mock_fetch_meta, mock_cc):
@@ -490,7 +490,7 @@ class TestGetCandlesWithIndicators:
 class TestGetCandlesExport:
     """Test export functionality."""
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     @patch("tv_scraper.core.validators.verify_symbol_exchange")
     @patch("tv_scraper.core.base.save_json_file")
     def test_export_json(self, mock_save, mock_validate, mock_cc):
@@ -513,7 +513,7 @@ class TestGetCandlesExport:
 
         assert mock_save.called
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     @patch("tv_scraper.core.validators.verify_symbol_exchange")
     @patch("tv_scraper.core.base.save_csv_file")
     def test_export_csv(self, mock_save, mock_validate, mock_cc):
@@ -540,7 +540,7 @@ class TestGetCandlesExport:
 class TestGetCandlesErrorHandling:
     """Test error handling in get_candles."""
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     @patch("tv_scraper.core.validators.verify_symbol_exchange")
     def test_no_data_received(self, mock_validate, mock_cc):
         """Test when no OHLCV data is received."""
@@ -555,7 +555,7 @@ class TestGetCandlesErrorHandling:
         assert result["status"] == STATUS_FAILED
         assert "No OHLCV data received" in result["error"]
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     @patch("tv_scraper.core.validators.verify_symbol_exchange")
     def test_validation_error(self, mock_validate, mock_cc):
         """Test validation error from DataValidator."""
@@ -575,7 +575,7 @@ class TestGetCandlesErrorHandling:
 class TestMetadata:
     """Test metadata in responses."""
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     @patch("tv_scraper.core.validators.verify_symbol_exchange")
     def test_metadata_has_all_params(self, mock_validate, mock_cc):
         """Test metadata contains all input parameters."""
@@ -612,7 +612,7 @@ class TestMetadata:
 class TestResponseEnvelope:
     """Test standardized response envelope."""
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     @patch("tv_scraper.core.validators.verify_symbol_exchange")
     def test_success_has_all_keys(self, mock_validate, mock_cc):
         """Test success response has required keys."""
@@ -639,7 +639,7 @@ class TestResponseEnvelope:
         assert result["status"] == STATUS_SUCCESS
         assert result["error"] is None
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     @patch("tv_scraper.core.validators.verify_symbol_exchange")
     def test_error_has_all_keys(self, mock_validate, mock_cc):
         """Test error response has required keys."""
@@ -662,7 +662,7 @@ class TestResponseEnvelope:
 class TestConnect:
     """Test connect method."""
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     def test_connect_without_cookie(self, mock_cc):
         """Test connect without cookie sends unauthorized_user_token via set_auth_token."""
         mock_ws = MagicMock()
@@ -680,7 +680,7 @@ class TestConnect:
         )
 
     @patch("tv_scraper.streaming.auth.get_valid_jwt_token")
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     def test_connect_with_cookie(self, mock_cc, mock_jwt):
         """Test connect with cookie resolves JWT."""
         mock_ws = MagicMock()
@@ -697,7 +697,7 @@ class TestConnect:
 class TestStudyIdMap:
     """Test study_id_to_name_map functionality."""
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     @patch("tv_scraper.streaming.candle_streamer.fetch_indicator_metadata")
     @patch("tv_scraper.core.validators.verify_symbol_exchange")
     def test_map_is_cleared_on_each_call(self, mock_validate, mock_fetch_meta, mock_cc):
@@ -741,7 +741,7 @@ class TestStudyIdMap:
 class TestEdgeCases:
     """Test edge cases and boundary conditions."""
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     @patch("tv_scraper.core.validators.verify_symbol_exchange")
     def test_special_characters_in_symbol(self, mock_validate, mock_cc):
         """Test symbol with special characters."""
@@ -764,7 +764,7 @@ class TestEdgeCases:
         # Should work if symbol is valid
         assert "status" in result
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     @patch("tv_scraper.core.validators.verify_symbol_exchange")
     def test_case_sensitivity_exchange(self, mock_validate, mock_cc):
         """Test exchange is case insensitive."""

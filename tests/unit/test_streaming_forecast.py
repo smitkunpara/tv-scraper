@@ -222,7 +222,7 @@ class TestForecastStockSuccess:
         """Test successful forecast for stock symbol."""
         with (
             patch("tv_scraper.streaming.forecast_streamer.requests.get") as mock_get,
-            patch("tv_scraper.streaming.stream_handler.create_connection") as mock_cc,
+            patch("tv_scraper.streaming.base_streamer.create_connection") as mock_cc,
         ):
             mock_ws = MagicMock()
             mock_cc.return_value = mock_ws
@@ -244,7 +244,7 @@ class TestForecastStockSuccess:
         """Test with multiple stock symbols."""
         with (
             patch("tv_scraper.streaming.forecast_streamer.requests.get") as mock_get,
-            patch("tv_scraper.streaming.stream_handler.create_connection") as mock_cc,
+            patch("tv_scraper.streaming.base_streamer.create_connection") as mock_cc,
         ):
             type_response = MagicMock()
             type_response.raise_for_status = MagicMock()
@@ -291,7 +291,7 @@ class TestForecastPartialData:
         """Test partial data returns failed with available data."""
         with (
             patch("tv_scraper.streaming.forecast_streamer.requests.get") as mock_get,
-            patch("tv_scraper.streaming.stream_handler.create_connection") as mock_cc,
+            patch("tv_scraper.streaming.base_streamer.create_connection") as mock_cc,
         ):
             mock_ws = MagicMock()
             mock_cc.return_value = mock_ws
@@ -338,7 +338,7 @@ class TestForecastResponseEnvelope:
         """Test success response has required keys."""
         with (
             patch("tv_scraper.streaming.forecast_streamer.requests.get") as mock_get,
-            patch("tv_scraper.streaming.stream_handler.create_connection") as mock_cc,
+            patch("tv_scraper.streaming.base_streamer.create_connection") as mock_cc,
         ):
             mock_ws = MagicMock()
             mock_cc.return_value = mock_ws
@@ -418,7 +418,7 @@ class TestForecastDataFields:
         """Test all price target fields are present."""
         with (
             patch("tv_scraper.streaming.forecast_streamer.requests.get") as mock_get,
-            patch("tv_scraper.streaming.stream_handler.create_connection") as mock_cc,
+            patch("tv_scraper.streaming.base_streamer.create_connection") as mock_cc,
         ):
             mock_ws = MagicMock()
             mock_cc.return_value = mock_ws
@@ -445,7 +445,7 @@ class TestForecastDataFields:
         """Test EPS data fields."""
         with (
             patch("tv_scraper.streaming.forecast_streamer.requests.get") as mock_get,
-            patch("tv_scraper.streaming.stream_handler.create_connection") as mock_cc,
+            patch("tv_scraper.streaming.base_streamer.create_connection") as mock_cc,
         ):
             mock_ws = MagicMock()
             mock_cc.return_value = mock_ws
@@ -470,7 +470,7 @@ class TestForecastDataFields:
         """Test revenue data fields."""
         with (
             patch("tv_scraper.streaming.forecast_streamer.requests.get") as mock_get,
-            patch("tv_scraper.streaming.stream_handler.create_connection") as mock_cc,
+            patch("tv_scraper.streaming.base_streamer.create_connection") as mock_cc,
         ):
             mock_ws = MagicMock()
             mock_cc.return_value = mock_ws
@@ -518,7 +518,7 @@ class TestForecastMetadata:
         """Test success metadata contains exchange and symbol."""
         with (
             patch("tv_scraper.streaming.forecast_streamer.requests.get") as mock_get,
-            patch("tv_scraper.streaming.stream_handler.create_connection") as mock_cc,
+            patch("tv_scraper.streaming.base_streamer.create_connection") as mock_cc,
         ):
             mock_ws = MagicMock()
             mock_cc.return_value = mock_ws
@@ -565,7 +565,7 @@ class TestForecastExport:
         """Test JSON export."""
         with (
             patch("tv_scraper.streaming.forecast_streamer.requests.get") as mock_get,
-            patch("tv_scraper.streaming.stream_handler.create_connection") as mock_cc,
+            patch("tv_scraper.streaming.base_streamer.create_connection") as mock_cc,
         ):
             mock_ws = MagicMock()
             mock_cc.return_value = mock_ws
@@ -587,7 +587,7 @@ class TestForecastExport:
         """Test CSV export."""
         with (
             patch("tv_scraper.streaming.forecast_streamer.requests.get") as mock_get,
-            patch("tv_scraper.streaming.stream_handler.create_connection") as mock_cc,
+            patch("tv_scraper.streaming.base_streamer.create_connection") as mock_cc,
         ):
             mock_ws = MagicMock()
             mock_cc.return_value = mock_ws
@@ -610,7 +610,7 @@ class TestForecastConnect:
 
     def test_connect_without_cookie(self):
         """Test connect without cookie."""
-        with patch("tv_scraper.streaming.stream_handler.create_connection") as mock_cc:
+        with patch("tv_scraper.streaming.base_streamer.create_connection") as mock_cc:
             mock_ws = MagicMock()
             mock_cc.return_value = mock_ws
 
@@ -622,7 +622,7 @@ class TestForecastConnect:
     @patch("tv_scraper.streaming.auth.get_valid_jwt_token")
     def test_connect_with_cookie(self, mock_jwt):
         """Test connect with cookie resolves JWT."""
-        with patch("tv_scraper.streaming.stream_handler.create_connection") as mock_cc:
+        with patch("tv_scraper.streaming.base_streamer.create_connection") as mock_cc:
             mock_ws = MagicMock()
             mock_cc.return_value = mock_ws
             mock_jwt.return_value = "resolved_jwt_token"
@@ -640,7 +640,7 @@ class TestForecastTimeout:
         """Test timeout returns partial data."""
         with (
             patch("tv_scraper.streaming.forecast_streamer.requests.get") as mock_get,
-            patch("tv_scraper.streaming.stream_handler.create_connection") as mock_cc,
+            patch("tv_scraper.streaming.base_streamer.create_connection") as mock_cc,
         ):
             mock_ws = MagicMock()
             mock_cc.return_value = mock_ws

@@ -1,19 +1,19 @@
 """Candle streamer for OHLCV and indicator data streaming."""
 
-import json
 import logging
+from collections.abc import Generator
 from typing import Any
 
 from tv_scraper.core import validators
 from tv_scraper.core.base import catch_errors
 from tv_scraper.core.validation_data import (
     EXCHANGE_LITERAL,
-    TIMEFRAME_LITERAL,
-    TIMEFRAMES,
 )
 from tv_scraper.streaming.base_streamer import BaseStreamer
-from tv_scraper.streaming.stream_handler import StreamHandler
-from tv_scraper.streaming.utils import fetch_indicator_metadata
+from tv_scraper.streaming.utils import (
+    fetch_available_indicators,
+    fetch_indicator_metadata,
+)
 from tv_scraper.utils.helpers import format_symbol
 
 logger = logging.getLogger(__name__)
@@ -74,25 +74,19 @@ class CandleStreamer(BaseStreamer):
         self.study_id_to_name_map = {}
 
         ind_flag = bool(indicators)
-        handler = self.connect()
+        self.connect()
 
-        self._add_symbol_to_sessions(
-            handler,
-            handler.quote_session,
-            handler.chart_session,
-            exchange_symbol,
-            timeframe,
-            numb_candles,
-        )
+        self._subscribe_chart(exchange_symbol, timeframe, numb_candles)
+        self._subscribe_quote(exchange_symbol)
 
         if ind_flag and indicators:
-            self._add_indicators(handler, indicators)
+            self._add_indicators(indicators)
 
         ohlcv_data: list[dict[str, Any]] = []
         indicator_data: dict[str, Any] = {}
         expected_ind_count = len(indicators) if ind_flag and indicators else 0
 
-        for i, pkt in enumerate(handler.receive_packets()):
+        for i, pkt in enumerate(self.receive_packets()):
             received_ohlcv = self._extract_ohlcv_from_stream(pkt)
             if received_ohlcv:
                 ohlcv_data = received_ohlcv
@@ -143,31 +137,89 @@ class CandleStreamer(BaseStreamer):
 
         return self._success_response(result_data)
 
-    def _add_symbol_to_sessions(
+    def stream_realtime_price(
         self,
-        handler: StreamHandler,
-        quote_session: str,
-        chart_session: str,
-        exchange_symbol: str,
-        timeframe: TIMEFRAME_LITERAL = "1m",
-        numb_candles: int = 10,
-    ) -> None:
-        """Register symbol in both quote and chart sessions."""
-        mapped_tf = TIMEFRAMES.get(timeframe, "1")
-        resolve_symbol = json.dumps({"adjustment": "splits", "symbol": exchange_symbol})
-        handler.send_message("quote_add_symbols", [quote_session, f"={resolve_symbol}"])
-        handler.send_message(
-            "resolve_symbol", [chart_session, "sds_sym_1", f"={resolve_symbol}"]
-        )
-        handler.send_message(
-            "create_series",
-            [chart_session, "sds_1", "s1", "sds_sym_1", mapped_tf, numb_candles, ""],
-        )
-        handler.send_message("quote_fast_symbols", [quote_session, exchange_symbol])
+        exchange: EXCHANGE_LITERAL,
+        symbol: str,
+    ) -> Generator[dict[str, Any], None, None]:
+        """Persistent generator yielding normalized realtime price updates."""
+        # --- Validation ---
+        exchange, _symbol = validators.verify_symbol_exchange(exchange, symbol)
+        exchange_symbol = format_symbol(exchange, _symbol)
 
-    def _add_indicators(
-        self, handler: StreamHandler, indicators: list[tuple[str, str]]
-    ) -> None:
+        self.connect()
+        self._subscribe_quote(exchange_symbol)
+        self._subscribe_chart(exchange_symbol, "1m", 1)
+
+        last_price = None
+
+        for pkt in self.receive_packets():
+            if pkt.get("m") == "qsd":
+                p_data = pkt.get("p", [])
+                if len(p_data) > 1 and isinstance(p_data[1], dict):
+                    v = p_data[1].get("v", {})
+                    price = v.get("lp")
+                    if price is not None:
+                        last_price = price
+                        yield {
+                            "exchange": v.get("exchange", exchange),
+                            "symbol": v.get("short_name", symbol),
+                            "price": price,
+                            "volume": v.get("volume"),
+                            "change": v.get("ch"),
+                            "change_percent": v.get("chp"),
+                            "high": v.get("high_price"),
+                            "low": v.get("low_price"),
+                            "open": v.get("open_price"),
+                            "prev_close": v.get("prev_close_price"),
+                            "bid": v.get("bid"),
+                            "ask": v.get("ask"),
+                        }
+
+            elif pkt.get("m") == "du":
+                p_data = pkt.get("p", [])
+                if len(p_data) > 1 and isinstance(p_data[1], dict):
+                    sds_data = p_data[1].get("sds_1", {})
+                    series = sds_data.get("s", [])
+
+                    for entry in series:
+                        if "v" in entry and len(entry["v"]) >= 5:
+                            close_price = entry["v"][4]
+                            volume = entry["v"][5] if len(entry["v"]) > 5 else None
+
+                            change = None
+                            change_percent = None
+                            if last_price is not None:
+                                change = close_price - last_price
+                                change_percent = (
+                                    (change / last_price * 100)
+                                    if last_price != 0
+                                    else 0
+                                )
+
+                            last_price = close_price
+
+                            yield {
+                                "exchange": exchange,
+                                "symbol": symbol,
+                                "price": close_price,
+                                "volume": volume,
+                                "change": change,
+                                "change_percent": change_percent,
+                                "high": entry["v"][2],
+                                "low": entry["v"][3],
+                                "open": entry["v"][1],
+                                "prev_close": None,
+                                "bid": None,
+                                "ask": None,
+                            }
+
+    @staticmethod
+    def get_available_indicators() -> dict[str, Any]:
+        """Fetch available built-in indicators with standardized response envelope."""
+        return fetch_available_indicators()
+
+    def _add_indicators(self, indicators: list[tuple[str, str]]) -> None:
         """Add one or more indicator studies to the chart session."""
         from tv_scraper.core.constants import STATUS_SUCCESS
 
@@ -183,7 +235,7 @@ class CandleStreamer(BaseStreamer):
             res = fetch_indicator_metadata(
                 script_id=script_id,
                 script_version=script_version,
-                chart_session=handler.chart_session,
+                chart_session=self.chart_session,
                 cookie=self.cookie,
             )
             if res["status"] != STATUS_SUCCESS or not res["data"]:
@@ -205,8 +257,8 @@ class CandleStreamer(BaseStreamer):
             self.study_id_to_name_map[study_id] = script_id
 
             try:
-                handler.send_message("create_study", ind_study["p"])
-                handler.send_message("quote_hibernate_all", [handler.quote_session])
+                self._send_msg("create_study", ind_study["p"])
+                self._send_msg("quote_hibernate_all", [self.quote_session])
             except Exception as exc:
                 logger.error("Failed to add indicator %s: %s", script_id, exc)
                 raise RuntimeError(
@@ -215,9 +267,15 @@ class CandleStreamer(BaseStreamer):
 
     def _serialize_ohlcv(self, raw_data: dict[str, Any]) -> list[dict[str, Any]]:
         """Extract OHLCV entries from a timescale_update packet."""
-        ohlcv_entries = raw_data.get("p", [{}, {}])[1].get("sds_1", {}).get("s", [])
+        p_data = raw_data.get("p", [])
+        if len(p_data) < 2 or not isinstance(p_data[1], dict):
+            return []
+
+        ohlcv_entries = p_data[1].get("sds_1", {}).get("s", [])
         result = []
         for entry in ohlcv_entries:
+            if "i" not in entry or "v" not in entry or len(entry["v"]) < 5:
+                continue
             rec = {
                 "index": entry["i"],
                 "timestamp": entry["v"][0],
@@ -244,7 +302,7 @@ class CandleStreamer(BaseStreamer):
             return indicator_data
 
         p_data = pkt.get("p", [])
-        if len(p_data) <= 1 or not isinstance(p_data[1], dict):
+        if len(p_data) < 2 or not isinstance(p_data[1], dict):
             return indicator_data
 
         for key, val in p_data[1].items():
@@ -253,6 +311,8 @@ class CandleStreamer(BaseStreamer):
                     indicator_name = self.study_id_to_name_map[key]
                     json_data = []
                     for item in val["st"]:
+                        if "i" not in item or "v" not in item or not item["v"]:
+                            continue
                         tmp = {"index": item["i"], "timestamp": item["v"][0]}
                         tmp.update({str(i): v for i, v in enumerate(item["v"][1:])})
                         json_data.append(tmp)

@@ -74,7 +74,7 @@ class TestScreenerCandleStreamerWorkflow:
         assert hasattr(screener, "get_screener")
         assert hasattr(streamer, "get_candles")
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     @patch.object(Screener, "_request")
     def test_screener_then_candles_workflow(
         self, mock_screener: MagicMock, mock_ws: MagicMock
@@ -125,7 +125,7 @@ class TestScreenerForecastStreamerWorkflow:
         assert hasattr(forecast, "get_forecast")
 
     @patch.object(Screener, "_request")
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     @patch("tv_scraper.core.validators.verify_symbol_exchange")
     def test_screener_then_forecast_workflow(
         self,

@@ -8,8 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Streaming**: Added `stream_realtime_price()` and `get_available_indicators()` to `CandleStreamer` for better feature isolation.
 
----
+### Changed
+- **Streaming**: Consolidated `stream_handler.py` into `base_streamer.py`, reducing the number of internal files.
+- **Streaming**: `StreamHandler` is now imported from `tv_scraper.streaming.base_streamer`.
+
+### Deprecated
+- **Streaming**: The `Streamer` class in `tv_scraper.streaming.streamer` is now deprecated. It has been moved to a multi-streamer architecture for easier maintenance.
+
 
 ## [1.4.0b1] - 2026-04-11
 

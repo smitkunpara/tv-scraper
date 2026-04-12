@@ -1,22 +1,20 @@
-"""Main Streamer class for candle + indicator streaming and realtime price.
+"""Main Streamer class (DEPRECATED).
 
-Provides ``get_candles()`` for historical OHLCV + indicator data,
-``get_forecast()`` for forecast data, and ``stream_realtime_price()``
-for continuous quote updates.
+.. deprecated:: 1.4.0
+    Use :class:`tv_scraper.streaming.CandleStreamer` or
+    :class:`tv_scraper.streaming.ForecastStreamer` instead.
 """
 
-import json
 import logging
+import warnings
 from collections.abc import Generator
 from typing import Any
 
-from tv_scraper.core import validators
 from tv_scraper.core.base import catch_errors
 from tv_scraper.core.constants import STATUS_SUCCESS
 from tv_scraper.core.validation_data import (
     EXCHANGE_LITERAL,
     TIMEFRAME_LITERAL,
-    TIMEFRAMES,
 )
 from tv_scraper.streaming.base_streamer import BaseStreamer
 from tv_scraper.streaming.candle_streamer import CandleStreamer
@@ -24,16 +22,17 @@ from tv_scraper.streaming.forecast_streamer import ForecastStreamer
 from tv_scraper.streaming.utils import (
     fetch_available_indicators,
 )
-from tv_scraper.utils.helpers import format_symbol
 
 logger = logging.getLogger(__name__)
 
 
 class Streamer(BaseStreamer):
-    """Stream OHLCV candles, indicators, forecast data, and realtime prices from TradingView.
+    """Stream OHLCV candles, indicators, forecast data, and realtime prices (DEPRECATED).
 
-    This class combines all streaming functionality in a single convenient interface.
-    For more granular control, use ``CandleStreamer`` or ``ForecastStreamer`` directly.
+    .. deprecated:: 1.4.0
+        This class is deprecated and will be removed in a future version.
+        Please use :class:`CandleStreamer` for OHLCV, indicators, and realtime prices,
+        or :class:`ForecastStreamer` for forecast data.
 
     Args:
         export_result: Whether to export data to file after retrieval.
@@ -48,6 +47,12 @@ class Streamer(BaseStreamer):
         export_type: str = "json",
         cookie: str | None = None,
     ) -> None:
+        warnings.warn(
+            "Streamer is deprecated and will be removed in a future version. "
+            "Use CandleStreamer or ForecastStreamer instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         super().__init__(
             export_result=export_result,
             export_type=export_type,
@@ -143,87 +148,9 @@ class Streamer(BaseStreamer):
         Yields:
             Normalised price update dicts.
         """
-        # --- Validation ---
-        exchange, _symbol = validators.verify_symbol_exchange(exchange, symbol)
-        exchange_symbol = format_symbol(exchange, _symbol)
-
-        handler = self.connect()
-
-        resolve_symbol = json.dumps({"adjustment": "splits", "symbol": exchange_symbol})
-        qs = handler.quote_session
-        cs = handler.chart_session
-
-        handler.send_message("quote_add_symbols", [qs, f"={resolve_symbol}"])
-        handler.send_message("quote_fast_symbols", [qs, exchange_symbol])
-
-        mapped_tf = TIMEFRAMES.get("1m", "1")
-        handler.send_message("resolve_symbol", [cs, "sds_sym_1", f"={resolve_symbol}"])
-        handler.send_message(
-            "create_series", [cs, "sds_1", "s1", "sds_sym_1", mapped_tf, 1, ""]
+        yield from self._candle_streamer.stream_realtime_price(
+            exchange=exchange, symbol=symbol
         )
-
-        last_price = None
-
-        for pkt in handler.receive_packets():
-            if pkt.get("m") == "qsd":
-                p_data = pkt.get("p", [])
-                if len(p_data) > 1 and isinstance(p_data[1], dict):
-                    v = p_data[1].get("v", {})
-                    price = v.get("lp")
-                    if price is not None:
-                        last_price = price
-                        yield {
-                            "exchange": v.get("exchange", exchange),
-                            "symbol": v.get("short_name", symbol),
-                            "price": price,
-                            "volume": v.get("volume"),
-                            "change": v.get("ch"),
-                            "change_percent": v.get("chp"),
-                            "high": v.get("high_price"),
-                            "low": v.get("low_price"),
-                            "open": v.get("open_price"),
-                            "prev_close": v.get("prev_close_price"),
-                            "bid": v.get("bid"),
-                            "ask": v.get("ask"),
-                        }
-
-            elif pkt.get("m") == "du":
-                p_data = pkt.get("p", [])
-                if len(p_data) > 1 and isinstance(p_data[1], dict):
-                    sds_data = p_data[1].get("sds_1", {})
-                    series = sds_data.get("s", [])
-
-                    for entry in series:
-                        if "v" in entry and len(entry["v"]) >= 5:
-                            close_price = entry["v"][4]
-                            volume = entry["v"][5] if len(entry["v"]) > 5 else None
-
-                            change = None
-                            change_percent = None
-                            if last_price is not None:
-                                change = close_price - last_price
-                                change_percent = (
-                                    (change / last_price * 100)
-                                    if last_price != 0
-                                    else 0
-                                )
-
-                            last_price = close_price
-
-                            yield {
-                                "exchange": exchange,
-                                "symbol": symbol,
-                                "price": close_price,
-                                "volume": volume,
-                                "change": change,
-                                "change_percent": change_percent,
-                                "high": entry["v"][2],
-                                "low": entry["v"][3],
-                                "open": entry["v"][1],
-                                "prev_close": None,
-                                "bid": None,
-                                "ask": None,
-                            }
 
     @staticmethod
     def get_available_indicators() -> dict[str, Any]:

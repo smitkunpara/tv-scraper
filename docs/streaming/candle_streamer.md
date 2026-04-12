@@ -42,6 +42,22 @@ result = cs.get_candles(
 )
 ```
 
+### `stream_realtime_price()` (Generator)
+
+```python
+for tick in cs.stream_realtime_price(exchange="BINANCE", symbol="BTCUSDT"):
+    print(tick)
+```
+
+Yields normalized price update dictionaries.
+
+### `get_available_indicators()` (Static)
+
+```python
+result = CandleStreamer.get_available_indicators()
+```
+
+
 Signature:
 
 ```python
@@ -202,6 +218,30 @@ All public calls are wrapped by `@catch_errors`, so output is always the standar
 ```
 
 Behavior note: a successful response can contain fewer than `numb_candles` rows if the loop stops before enough candles are collected but at least one OHLCV entry exists and indicator checks pass.
+
+## Realtime Price Data Flow
+
+`stream_realtime_price()` is a generator that yields real-time market data ticks.
+
+### Yielded Dict Shape (QSD/DU Merged)
+
+```python
+{
+    "exchange": str,
+    "symbol": str,
+    "price": float,
+    "volume": float | None,
+    "change": float | None,
+    "change_percent": float | None,
+    "high": float | None,
+    "low": float | None,
+    "open": float | None,
+    "prev_close": float | None,
+    "bid": float | None,
+    "ask": float | None,
+}
+```
+
 
 ## Failure Paths
 

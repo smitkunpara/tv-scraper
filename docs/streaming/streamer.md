@@ -1,12 +1,13 @@
-# Streamer API
+# Streamer API (DEPRECATED)
 
-`Streamer` is a convenience class that combines:
+> [!WARNING]
+> The `Streamer` class is **deprecated** as of version 1.4.0. It has been replaced by a more modular multi-streamer architecture for better maintenance and performance.
+>
+> - Use [`CandleStreamer`](candle_streamer.md) for OHLCV, indicators, and realtime price streaming.
+> - Use [`ForecastStreamer`](forecast_streamer.md) for analyst forecast data.
 
-- `CandleStreamer.get_candles()` via proxy
-- `ForecastStreamer.get_forecast()` via proxy
-- `stream_realtime_price()` implemented directly in `Streamer`
+`Streamer` is a legacy convenience class that combines:
 
-This page documents the behavior of `tv_scraper/streaming/streamer.py` exactly, including proxy and export side effects.
 
 ## Constructor
 

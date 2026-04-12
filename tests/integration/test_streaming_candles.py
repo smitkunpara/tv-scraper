@@ -35,7 +35,7 @@ class TestIntegrationStreamingCandlesWithValidation:
             ]
 
             with patch(
-                "tv_scraper.streaming.stream_handler.create_connection"
+                "tv_scraper.streaming.base_streamer.create_connection"
             ) as mock_cc:
                 mock_cc.return_value = mock_ws
 
@@ -68,7 +68,7 @@ class TestIntegrationStreamingCandlesWithExport:
 
     def test_export_after_successful_stream(self):
         """Test that export is called after successful streaming."""
-        with patch("tv_scraper.streaming.stream_handler.create_connection") as mock_cc:
+        with patch("tv_scraper.streaming.base_streamer.create_connection") as mock_cc:
             mock_ws = MagicMock()
             ohlcv_entry = {"i": 0, "v": [1700000000, 100.0, 105.0, 99.0, 102.0, 5000]}
             ts_pkt = {
@@ -145,7 +145,7 @@ class TestIntegrationStreamingCandlesWithIndicators:
             ]
 
             with patch(
-                "tv_scraper.streaming.stream_handler.create_connection"
+                "tv_scraper.streaming.base_streamer.create_connection"
             ) as mock_cc:
                 mock_cc.return_value = mock_ws
 
@@ -170,7 +170,7 @@ class TestIntegrationCandleStreamerAndStreamer:
 
     def test_streamer_uses_candle_streamer(self):
         """Test that Streamer.get_candles uses CandleStreamer internally."""
-        with patch("tv_scraper.streaming.stream_handler.create_connection") as mock_cc:
+        with patch("tv_scraper.streaming.base_streamer.create_connection") as mock_cc:
             mock_ws = MagicMock()
             ohlcv_entries = [
                 {
@@ -230,7 +230,7 @@ class TestIntegrationCandleDataProcessing:
 
     def test_candle_data_sorting(self):
         """Test that candle data is sorted by index."""
-        with patch("tv_scraper.streaming.stream_handler.create_connection") as mock_cc:
+        with patch("tv_scraper.streaming.base_streamer.create_connection") as mock_cc:
             mock_ws = MagicMock()
 
             ohlcv_entries = [
@@ -266,7 +266,7 @@ class TestIntegrationCandleDataProcessing:
 
     def test_candle_data_truncation(self):
         """Test that candle data is truncated to numb_candles."""
-        with patch("tv_scraper.streaming.stream_handler.create_connection") as mock_cc:
+        with patch("tv_scraper.streaming.base_streamer.create_connection") as mock_cc:
             mock_ws = MagicMock()
 
             ohlcv_entries = [
@@ -356,7 +356,7 @@ class TestIntegrationCandleDataWithMultipleIndicators:
             ]
 
             with patch(
-                "tv_scraper.streaming.stream_handler.create_connection"
+                "tv_scraper.streaming.base_streamer.create_connection"
             ) as mock_cc:
                 mock_cc.return_value = mock_ws
 
@@ -382,7 +382,7 @@ class TestIntegrationCandleWithConnectionHandling:
 
     def test_connection_error_handled(self):
         """Test connection errors are handled gracefully."""
-        with patch("tv_scraper.streaming.stream_handler.create_connection") as mock_cc:
+        with patch("tv_scraper.streaming.base_streamer.create_connection") as mock_cc:
             mock_ws = MagicMock()
             mock_ws.recv.side_effect = ConnectionError("Connection refused")
             mock_cc.return_value = mock_ws
@@ -402,7 +402,7 @@ class TestIntegrationCandleWithConnectionHandling:
 
     def test_timeout_handling(self):
         """Test timeout is handled."""
-        with patch("tv_scraper.streaming.stream_handler.create_connection") as mock_cc:
+        with patch("tv_scraper.streaming.base_streamer.create_connection") as mock_cc:
             mock_ws = MagicMock()
 
             ohlcv_entry = {"i": 0, "v": [1700000000, 100.0, 105.0, 99.0, 102.0, 5000]}
@@ -435,7 +435,7 @@ class TestIntegrationCandleWithHeartbeat:
 
     def test_heartbeat_echoed(self):
         """Test heartbeat messages are echoed back."""
-        with patch("tv_scraper.streaming.stream_handler.create_connection") as mock_cc:
+        with patch("tv_scraper.streaming.base_streamer.create_connection") as mock_cc:
             mock_ws = MagicMock()
 
             heartbeat = "~m~30~m~~h~12345"
@@ -472,7 +472,7 @@ class TestIntegrationCandleEndToEnd:
 
     def test_full_workflow_success(self):
         """Test complete workflow from request to response."""
-        with patch("tv_scraper.streaming.stream_handler.create_connection") as mock_cc:
+        with patch("tv_scraper.streaming.base_streamer.create_connection") as mock_cc:
             mock_ws = MagicMock()
 
             ohlcv_entries = [
@@ -535,7 +535,7 @@ class TestIntegrationCandleEndToEnd:
             }
 
             with patch(
-                "tv_scraper.streaming.stream_handler.create_connection"
+                "tv_scraper.streaming.base_streamer.create_connection"
             ) as mock_cc:
                 mock_ws = MagicMock()
 

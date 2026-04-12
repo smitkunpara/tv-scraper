@@ -57,7 +57,7 @@ class TestMockForecastStockSymbols:
         qsd_framed = f"~m~{len(qsd_raw)}~m~{qsd_raw}"
         return [qsd_framed, ConnectionError("done")]
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     @patch("tv_scraper.streaming.forecast_streamer.requests.get")
     def test_mock_forecast_nyse_a(self, mock_get, mock_cc):
         """Test mock forecast for NYSE:A."""
@@ -83,7 +83,7 @@ class TestMockForecastStockSymbols:
         assert result["metadata"]["exchange"] == "NYSE"
         assert result["metadata"]["symbol"] == "A"
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     @patch("tv_scraper.streaming.forecast_streamer.requests.get")
     def test_mock_forecast_nasdaq_aapl(self, mock_get, mock_cc):
         """Test mock forecast for NASDAQ:AAPL."""
@@ -107,7 +107,7 @@ class TestMockForecastStockSymbols:
 
         assert result["status"] == STATUS_SUCCESS
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     @patch("tv_scraper.streaming.forecast_streamer.requests.get")
     def test_mock_forecast_nasdaq_msft(self, mock_get, mock_cc):
         """Test mock forecast for NASDAQ:MSFT."""
@@ -219,7 +219,7 @@ class TestMockForecastDataFields:
         qsd_framed = f"~m~{len(qsd_raw)}~m~{qsd_raw}"
         return [qsd_framed, ConnectionError("done")]
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     @patch("tv_scraper.streaming.forecast_streamer.requests.get")
     def test_all_price_targets_present(self, mock_get, mock_cc):
         """Test all price target fields are present."""
@@ -245,7 +245,7 @@ class TestMockForecastDataFields:
         assert data["lowest_price_target"] == 145.0
         assert data["median_price_target"] == 160.0
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     @patch("tv_scraper.streaming.forecast_streamer.requests.get")
     def test_eps_data_structure(self, mock_get, mock_cc):
         """Test EPS data structure is correct."""
@@ -268,7 +268,7 @@ class TestMockForecastDataFields:
         assert len(data["quarterly_eps_data"]) == 2
         assert data["yearly_eps_data"][0]["FiscalPeriod"] == "2026"
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     @patch("tv_scraper.streaming.forecast_streamer.requests.get")
     def test_revenue_data_structure(self, mock_get, mock_cc):
         """Test revenue data structure is correct."""
@@ -312,7 +312,7 @@ class TestMockForecastResponseEnvelope:
         qsd_framed = f"~m~{len(qsd_raw)}~m~{qsd_raw}"
         return [qsd_framed, ConnectionError("done")]
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     @patch("tv_scraper.streaming.forecast_streamer.requests.get")
     def test_success_envelope_structure(self, mock_get, mock_cc):
         """Test success envelope has all required keys."""
@@ -378,7 +378,7 @@ class TestMockForecastStreamerClass:
         qsd_framed = f"~m~{len(qsd_raw)}~m~{qsd_raw}"
         return [qsd_framed, ConnectionError("done")]
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     @patch("tv_scraper.streaming.forecast_streamer.requests.get")
     def test_streamer_get_forecast(self, mock_get, mock_cc):
         """Test Streamer.get_forecast delegates correctly."""
@@ -420,7 +420,7 @@ class TestMockForecastExport:
         qsd_framed = f"~m~{len(qsd_raw)}~m~{qsd_raw}"
         return [qsd_framed, ConnectionError("done")]
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     @patch("tv_scraper.streaming.forecast_streamer.requests.get")
     @patch("tv_scraper.core.base.save_json_file")
     def test_export_json(self, mock_save, mock_get, mock_cc):

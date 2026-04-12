@@ -65,7 +65,7 @@ class TestInheritance:
 class TestGetForecastInvalidInputs:
     """Test get_forecast with invalid inputs."""
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     def test_empty_exchange(self, mock_cc):
         """Test empty exchange returns error."""
         mock_ws = MagicMock()
@@ -77,7 +77,7 @@ class TestGetForecastInvalidInputs:
         assert result["status"] == STATUS_FAILED
         assert result["data"] is None
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     def test_empty_symbol(self, mock_cc):
         """Test empty symbol returns error."""
         mock_ws = MagicMock()
@@ -88,7 +88,7 @@ class TestGetForecastInvalidInputs:
 
         assert result["status"] == STATUS_FAILED
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     def test_null_exchange(self, mock_cc):
         """Test null exchange returns error."""
         mock_ws = MagicMock()
@@ -99,7 +99,7 @@ class TestGetForecastInvalidInputs:
 
         assert result["status"] == STATUS_FAILED
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     def test_null_symbol(self, mock_cc):
         """Test null symbol returns error."""
         mock_ws = MagicMock()
@@ -110,7 +110,7 @@ class TestGetForecastInvalidInputs:
 
         assert result["status"] == STATUS_FAILED
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     def test_whitespace_only_exchange(self, mock_cc):
         """Test whitespace-only exchange returns error."""
         mock_ws = MagicMock()
@@ -121,7 +121,7 @@ class TestGetForecastInvalidInputs:
 
         assert result["status"] == STATUS_FAILED
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     def test_whitespace_only_symbol(self, mock_cc):
         """Test whitespace-only symbol returns error."""
         mock_ws = MagicMock()
@@ -262,7 +262,7 @@ class TestGetForecastValidStock:
 
         return [qsd_framed, ConnectionError("done")]
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     @patch("tv_scraper.streaming.forecast_streamer.requests.get")
     def test_stock_symbol_success(self, mock_get, mock_cc):
         """Test successful forecast fetch for stock symbol."""
@@ -284,7 +284,7 @@ class TestGetForecastValidStock:
         assert "revenue_currency" in result["data"]
         assert result["data"]["revenue_currency"] == "USD"
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     @patch("tv_scraper.streaming.forecast_streamer.requests.get")
     def test_multiple_stock_symbols(self, mock_get, mock_cc):
         """Test with multiple different stock symbols."""
@@ -338,7 +338,7 @@ class TestGetForecastPartialData:
 
         return [qsd_framed, ConnectionError("done")]
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     @patch("tv_scraper.streaming.forecast_streamer.requests.get")
     def test_partial_data_returns_failed_with_data(self, mock_get, mock_cc):
         """Test partial data returns failed status with available data."""
@@ -383,7 +383,7 @@ class TestGetForecastExport:
         qsd_framed = f"~m~{len(qsd_raw)}~m~{qsd_raw}"
         return [qsd_framed, ConnectionError("done")]
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     @patch("tv_scraper.streaming.forecast_streamer.requests.get")
     @patch("tv_scraper.core.base.save_json_file")
     def test_export_json(self, mock_save, mock_get, mock_cc):
@@ -403,7 +403,7 @@ class TestGetForecastExport:
 
         assert mock_save.called
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     @patch("tv_scraper.streaming.forecast_streamer.requests.get")
     @patch("tv_scraper.core.base.save_csv_file")
     def test_export_csv(self, mock_save, mock_get, mock_cc):
@@ -445,7 +445,7 @@ class TestGetForecastMetadata:
         qsd_framed = f"~m~{len(qsd_raw)}~m~{qsd_raw}"
         return [qsd_framed, ConnectionError("done")]
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     @patch("tv_scraper.streaming.forecast_streamer.requests.get")
     def test_success_metadata(self, mock_get, mock_cc):
         """Test success metadata contains exchange and symbol."""
@@ -466,7 +466,7 @@ class TestGetForecastMetadata:
         assert result["metadata"]["symbol"] == "AAPL"
         assert "available_output_keys" in result["metadata"]
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     @patch("tv_scraper.streaming.forecast_streamer.requests.get")
     def test_partial_data_metadata(self, mock_get, mock_cc):
         """Test partial data metadata contains available keys."""
@@ -500,7 +500,7 @@ class TestGetForecastMetadata:
 class TestGetForecastResponseEnvelope:
     """Test standardized response envelope."""
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     @patch("tv_scraper.streaming.forecast_streamer.requests.get")
     def test_success_has_all_keys(self, mock_get, mock_cc):
         """Test success response has required keys."""
@@ -539,7 +539,7 @@ class TestGetForecastResponseEnvelope:
         assert result["status"] == STATUS_SUCCESS
         assert result["error"] is None
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     @patch("tv_scraper.streaming.forecast_streamer.requests.get")
     def test_error_has_all_keys(self, mock_get, mock_cc):
         """Test error response has required keys."""
@@ -562,7 +562,7 @@ class TestGetForecastResponseEnvelope:
         assert result["data"] is None
         assert result["error"] is not None
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     @patch("tv_scraper.streaming.forecast_streamer.requests.get")
     def test_partial_failure_has_data(self, mock_get, mock_cc):
         """Test partial failure contains partial data."""
@@ -624,7 +624,7 @@ class TestGetForecastDataFields:
         qsd_framed = f"~m~{len(qsd_raw)}~m~{qsd_raw}"
         return [qsd_framed, ConnectionError("done")]
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     @patch("tv_scraper.streaming.forecast_streamer.requests.get")
     def test_all_price_target_fields(self, mock_get, mock_cc):
         """Test all price target fields are present."""
@@ -649,7 +649,7 @@ class TestGetForecastDataFields:
         assert "lowest_price_target" in data
         assert "median_price_target" in data
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     @patch("tv_scraper.streaming.forecast_streamer.requests.get")
     def test_eps_data_fields(self, mock_get, mock_cc):
         """Test EPS data fields."""
@@ -672,7 +672,7 @@ class TestGetForecastDataFields:
         assert isinstance(data["yearly_eps_data"], list)
         assert isinstance(data["quarterly_eps_data"], list)
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     @patch("tv_scraper.streaming.forecast_streamer.requests.get")
     def test_revenue_data_fields(self, mock_get, mock_cc):
         """Test revenue data fields."""
@@ -699,7 +699,7 @@ class TestGetForecastDataFields:
 class TestGetForecastConnect:
     """Test connect method."""
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     def test_connect_without_cookie(self, mock_cc):
         """Test connect without cookie uses unauthorized token."""
         mock_ws = MagicMock()
@@ -711,7 +711,7 @@ class TestGetForecastConnect:
         mock_cc.assert_called_once()
 
     @patch("tv_scraper.streaming.auth.get_valid_jwt_token")
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     def test_connect_with_cookie(self, mock_cc, mock_jwt):
         """Test connect with cookie resolves JWT."""
         mock_ws = MagicMock()
@@ -727,9 +727,13 @@ class TestGetForecastConnect:
 class TestGetForecastEdgeCases:
     """Test edge cases and boundary conditions."""
 
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     @patch("tv_scraper.streaming.forecast_streamer.requests.get")
-    def test_special_characters_in_symbol(self, mock_get):
+    def test_special_characters_in_symbol(self, mock_get, mock_cc):
         """Test symbol with special characters."""
+        mock_ws = MagicMock()
+        mock_ws.recv.side_effect = [ConnectionError("done")]
+        mock_cc.return_value = mock_ws
         mock_response = MagicMock()
         mock_response.raise_for_status = MagicMock()
         mock_response.json.return_value = {"type": "stock"}
@@ -741,9 +745,13 @@ class TestGetForecastEdgeCases:
         result = fs.get_forecast(exchange="NYSE", symbol="BRK.A")
         assert "status" in result
 
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     @patch("tv_scraper.streaming.forecast_streamer.requests.get")
-    def test_case_sensitivity(self, mock_get):
+    def test_case_sensitivity(self, mock_get, mock_cc):
         """Test case insensitivity for exchange."""
+        mock_ws = MagicMock()
+        mock_ws.recv.side_effect = [ConnectionError("done"), ConnectionError("done")]
+        mock_cc.return_value = mock_ws
         mock_response = MagicMock()
         mock_response.raise_for_status = MagicMock()
         mock_response.json.return_value = {"type": "stock"}
@@ -773,7 +781,7 @@ class TestGetForecastErrorScenarios:
 
         assert result["status"] == STATUS_FAILED
 
-    @patch("tv_scraper.streaming.stream_handler.create_connection")
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
     @patch("tv_scraper.streaming.forecast_streamer.requests.get")
     def test_timeout_on_websocket(self, mock_get, mock_cc):
         """Test timeout scenario on WebSocket."""
