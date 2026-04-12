@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#streamer-api" class="md-skip">
+        <a href="#streamer-api-deprecated" class="md-skip">
           Skip to content
         </a>
       
@@ -1758,14 +1758,16 @@
   
 
 
-<h1 id="streamer-api">Streamer API</h1>
-<p><code>Streamer</code> is a convenience class that combines:</p>
+<h1 id="streamer-api-deprecated">Streamer API (DEPRECATED)</h1>
+<blockquote>
+<p>[!WARNING]
+The <code>Streamer</code> class is <strong>deprecated</strong> as of version 1.4.0. It has been replaced by a more modular multi-streamer architecture for better maintenance and performance.</p>
 <ul>
-<li><code>CandleStreamer.get_candles()</code> via proxy</li>
-<li><code>ForecastStreamer.get_forecast()</code> via proxy</li>
-<li><code>stream_realtime_price()</code> implemented directly in <code>Streamer</code></li>
+<li>Use <a href="../candle_streamer/"><code>CandleStreamer</code></a> for OHLCV, indicators, and realtime price streaming.</li>
+<li>Use <a href="../forecast_streamer/"><code>ForecastStreamer</code></a> for analyst forecast data.</li>
 </ul>
-<p>This page documents the behavior of <code>tv_scraper/streaming/streamer.py</code> exactly, including proxy and export side effects.</p>
+</blockquote>
+<p><code>Streamer</code> is a legacy convenience class that combines:</p>
 <h2 id="constructor">Constructor</h2>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">tv_scraper.streaming</span><span class="w"> </span><span class="kn">import</span> <span class="n">Streamer</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
