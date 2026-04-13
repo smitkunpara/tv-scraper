@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://smitkunpara.github.io/tv-scraper/v1.0.2/scrapers/calendar/">
+        <link rel="canonical" href="https://smitkunpara.github.io/tv-scraper/v1.0.2/scrapers/overview/">
       
       
-        <link rel="prev" href="../symbol_markets/">
+        <link rel="prev" href="../../api-conventions/">
       
       
-        <link rel="next" href="../../streaming/">
+        <link rel="next" href="../technicals/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>Calendar - tv-scraper v1.0.0</title>
+        <title>Overview - tv-scraper v1.0.0</title>
       
     
     
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#calendar-module" class="md-skip">
+        <a href="#overview" class="md-skip">
           Skip to content
         </a>
       
@@ -116,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Calendar
+              Overview
             
           </span>
         </div>
@@ -481,10 +481,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../overview/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -500,6 +527,181 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#import" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Import
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#constructor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Constructor
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Methods
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#get_overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_overview
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#category-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Category Methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#response-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Response Format
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#code-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Code Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Code Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basic-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom Fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#category-methods_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Category Methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exporting-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exporting Results
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#migration-from-old-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Migration from Old API
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -789,37 +991,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Calendar
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../calendar/" class="md-nav__link">
         
   
   
@@ -835,148 +1010,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Overview
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        API
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="API">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#get_dividends" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        get_dividends()
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#get_earnings" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        get_earnings()
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#response-format" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Response Format
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#available-fields" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Available Fields
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Available Fields">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#dividend-fields" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Dividend Fields
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#earnings-fields" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Earnings Fields
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#examples" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Examples
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#migration-from-tradingview_scraper" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Migration from tradingview_scraper
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1302,7 +1335,7 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#overview_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         Overview
@@ -1313,22 +1346,44 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#api" class="md-nav__link">
+  <a href="#import" class="md-nav__link">
     <span class="md-ellipsis">
       
-        API
+        Import
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="API">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#constructor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Constructor
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Methods
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Methods">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#get_dividends" class="md-nav__link">
+  <a href="#get_overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        get_dividends()
+        get_overview
       
     </span>
   </a>
@@ -1336,10 +1391,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#get_earnings" class="md-nav__link">
+  <a href="#category-methods" class="md-nav__link">
     <span class="md-ellipsis">
       
-        get_earnings()
+        Category Methods
       
     </span>
   </a>
@@ -1363,22 +1418,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#available-fields" class="md-nav__link">
+  <a href="#code-examples" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Available Fields
+        Code Examples
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Available Fields">
+    <nav class="md-nav" aria-label="Code Examples">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#dividend-fields" class="md-nav__link">
+  <a href="#basic-usage" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Dividend Fields
+        Basic Usage
       
     </span>
   </a>
@@ -1386,10 +1441,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#earnings-fields" class="md-nav__link">
+  <a href="#custom-fields" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Earnings Fields
+        Custom Fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#category-methods_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Category Methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exporting-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exporting Results
       
     </span>
   </a>
@@ -1402,21 +1479,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#examples" class="md-nav__link">
+  <a href="#migration-from-old-api" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Examples
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#migration-from-tradingview_scraper" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Migration from tradingview_scraper
+        Migration from Old API
       
     </span>
   </a>
@@ -1443,137 +1509,197 @@
   
 
 
-<h1 id="calendar-module">Calendar Module</h1>
-<h2 id="overview">Overview</h2>
-<p>The Calendar module fetches dividend and earnings events from the TradingView calendar scanner API. It returns standardized response envelopes and never raises exceptions.</p>
-<h2 id="api">API</h2>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">tv_scraper.scrapers.events</span><span class="w"> </span><span class="kn">import</span> <span class="n">Calendar</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">cal</span> <span class="o">=</span> <span class="n">Calendar</span><span class="p">(</span><span class="n">export_result</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">export_type</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<h1 id="overview">Overview</h1>
+<h2 id="overview_1">Overview</h2>
+<p>The Overview module provides comprehensive functionality to retrieve detailed information about financial symbols from TradingView, including profile data, market statistics, financial metrics, performance indicators, and technical analysis.</p>
+<h2 id="import">Import</h2>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">tv_scraper.scrapers.market_data</span><span class="w"> </span><span class="kn">import</span> <span class="n">Overview</span>
 </span></code></pre></div>
-<h3 id="get_dividends"><code>get_dividends()</code></h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">cal</span><span class="o">.</span><span class="n">get_dividends</span><span class="p">(</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="n">timestamp_from</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>   <span class="c1"># Unix timestamp, default: midnight - 3 days</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">timestamp_to</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>     <span class="c1"># Unix timestamp, default: midnight + 3 days + 86399</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="n">markets</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>    <span class="c1"># e.g. [&quot;america&quot;, &quot;uk&quot;]</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="n">fields</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>     <span class="c1"># validated against known dividend fields</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+<h2 id="constructor">Constructor</h2>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">Overview</span><span class="p">(</span><span class="n">export_result</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">export_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;json&quot;</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span>
 </span></code></pre></div>
-<h3 id="get_earnings"><code>get_earnings()</code></h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">cal</span><span class="o">.</span><span class="n">get_earnings</span><span class="p">(</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="n">timestamp_from</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="n">timestamp_to</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">markets</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="n">fields</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>     <span class="c1"># validated against known earnings fields</span>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
-</span></code></pre></div>
-<h2 id="response-format">Response Format</h2>
-<p>All methods return a standardized envelope:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>          <span class="c1"># or &quot;failed&quot;</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">[</span>                     <span class="c1"># list of event dicts, or None on error</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>        <span class="p">{</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>            <span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="s2">&quot;NASDAQ:AAPL&quot;</span><span class="p">,</span>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Apple Inc.&quot;</span><span class="p">,</span>
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>            <span class="s2">&quot;dividends_yield&quot;</span><span class="p">:</span> <span class="mf">0.55</span><span class="p">,</span>
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>            <span class="o">...</span>
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>        <span class="p">}</span>
-</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    <span class="p">],</span>
-</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>        <span class="s2">&quot;event_type&quot;</span><span class="p">:</span> <span class="s2">&quot;dividends&quot;</span><span class="p">,</span>  <span class="c1"># or &quot;earnings&quot;</span>
-</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>        <span class="s2">&quot;total&quot;</span><span class="p">:</span> <span class="mi">42</span><span class="p">,</span>
-</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>    <span class="p">},</span>
-</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="kc">None</span>                 <span class="c1"># error message string on failure</span>
-</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="p">}</span>
-</span></code></pre></div>
-<h2 id="available-fields">Available Fields</h2>
-<h3 id="dividend-fields">Dividend Fields</h3>
-<ul>
-<li><code>dividend_ex_date_recent</code>, <code>dividend_ex_date_upcoming</code></li>
-<li><code>logoid</code>, <code>name</code>, <code>description</code></li>
-<li><code>dividends_yield</code></li>
-<li><code>dividend_payment_date_recent</code>, <code>dividend_payment_date_upcoming</code></li>
-<li><code>dividend_amount_recent</code>, <code>dividend_amount_upcoming</code></li>
-<li><code>fundamental_currency_code</code>, <code>market</code></li>
-</ul>
-<h3 id="earnings-fields">Earnings Fields</h3>
-<ul>
-<li><code>earnings_release_next_date</code>, <code>earnings_release_date</code></li>
-<li><code>logoid</code>, <code>name</code>, <code>description</code></li>
-<li><code>earnings_per_share_fq</code>, <code>earnings_per_share_forecast_next_fq</code></li>
-<li><code>eps_surprise_fq</code>, <code>eps_surprise_percent_fq</code></li>
-<li><code>revenue_fq</code>, <code>revenue_forecast_next_fq</code></li>
-<li><code>market_cap_basic</code></li>
-<li><code>earnings_release_time</code>, <code>earnings_release_next_time</code></li>
-<li><code>earnings_per_share_forecast_fq</code>, <code>revenue_forecast_fq</code></li>
-<li><code>fundamental_currency_code</code>, <code>market</code></li>
-<li><code>earnings_publication_type_fq</code>, <code>earnings_publication_type_next_fq</code></li>
-<li><code>revenue_surprise_fq</code>, <code>revenue_surprise_percent_fq</code></li>
-</ul>
-<h2 id="examples">Examples</h2>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">tv_scraper.scrapers.events</span><span class="w"> </span><span class="kn">import</span> <span class="n">Calendar</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">cal</span> <span class="o">=</span> <span class="n">Calendar</span><span class="p">()</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Default dividend events (±3 days)</span>
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="n">result</span> <span class="o">=</span> <span class="n">cal</span><span class="o">.</span><span class="n">get_dividends</span><span class="p">()</span>
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Earnings for specific market and fields</span>
-</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="n">result</span> <span class="o">=</span> <span class="n">cal</span><span class="o">.</span><span class="n">get_earnings</span><span class="p">(</span>
-</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    <span class="n">markets</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;america&quot;</span><span class="p">],</span>
-</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>    <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;logoid&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;earnings_per_share_fq&quot;</span><span class="p">],</span>
-</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="p">)</span>
-</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
-</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># Custom date range</span>
-</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
-</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="n">now</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">timestamp</span><span class="p">())</span>
-</span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="n">week_later</span> <span class="o">=</span> <span class="n">now</span> <span class="o">+</span> <span class="mi">7</span> <span class="o">*</span> <span class="mi">86400</span>
-</span><span id="__span-4-18"><a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="n">result</span> <span class="o">=</span> <span class="n">cal</span><span class="o">.</span><span class="n">get_dividends</span><span class="p">(</span><span class="n">timestamp_from</span><span class="o">=</span><span class="n">now</span><span class="p">,</span> <span class="n">timestamp_to</span><span class="o">=</span><span class="n">week_later</span><span class="p">)</span>
-</span><span id="__span-4-19"><a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>
-</span><span id="__span-4-20"><a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="c1"># Export to CSV</span>
-</span><span id="__span-4-21"><a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="n">cal</span> <span class="o">=</span> <span class="n">Calendar</span><span class="p">(</span><span class="n">export_result</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">export_type</span><span class="o">=</span><span class="s2">&quot;csv&quot;</span><span class="p">)</span>
-</span><span id="__span-4-22"><a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="n">result</span> <span class="o">=</span> <span class="n">cal</span><span class="o">.</span><span class="n">get_earnings</span><span class="p">()</span>
-</span></code></pre></div>
-<h2 id="migration-from-tradingview_scraper">Migration from <code>tradingview_scraper</code></h2>
+<p><strong>Parameters:</strong></p>
 <table>
 <thead>
 <tr>
-<th>Old (<code>CalendarScraper</code>)</th>
-<th>New (<code>Calendar</code>)</th>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>CalendarScraper()</code></td>
-<td><code>Calendar()</code></td>
+<td><code>export_result</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td>Whether to export results to a file</td>
 </tr>
 <tr>
-<td><code>scrape_dividends(...)</code></td>
-<td><code>get_dividends(...)</code></td>
+<td><code>export_type</code></td>
+<td><code>str</code></td>
+<td><code>"json"</code></td>
+<td>Export format: <code>"json"</code> or <code>"csv"</code></td>
 </tr>
 <tr>
-<td><code>scrape_earnings(...)</code></td>
-<td><code>get_earnings(...)</code></td>
+<td><code>timeout</code></td>
+<td><code>int</code></td>
+<td><code>10</code></td>
+<td>HTTP request timeout in seconds</td>
+</tr>
+</tbody>
+</table>
+<h2 id="methods">Methods</h2>
+<h3 id="get_overview"><code>get_overview</code></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">get_overview</span><span class="p">(</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="n">exchange</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="n">symbol</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">fields</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+</span></code></pre></div>
+<p>Get comprehensive overview data for a symbol. When <code>fields</code> is <code>None</code>, all fields from every category are fetched.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>exchange</code></td>
+<td><code>str</code></td>
+<td>Yes</td>
+<td>Exchange name (e.g. <code>"NASDAQ"</code>, <code>"BITSTAMP"</code>)</td>
 </tr>
 <tr>
-<td><code>values=["name", "logoid"]</code></td>
-<td><code>fields=["name", "logoid"]</code></td>
+<td><code>symbol</code></td>
+<td><code>str</code></td>
+<td>Yes</td>
+<td>Trading symbol (e.g. <code>"AAPL"</code>, <code>"BTCUSD"</code>)</td>
 </tr>
 <tr>
-<td>Raises <code>ValueError</code> on invalid fields</td>
-<td>Returns error response envelope</td>
+<td><code>fields</code></td>
+<td><code>List[str]</code></td>
+<td>No</td>
+<td>Specific fields to retrieve. Defaults to all fields.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="category-methods">Category Methods</h3>
+<p>Each category method takes <code>exchange</code> and <code>symbol</code> and internally calls <code>get_overview</code> with predefined field lists:</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Fields Used</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>get_profile(exchange, symbol)</code></td>
+<td><code>BASIC_FIELDS</code> — name, description, type, subtype, exchange, country, sector, industry</td>
 </tr>
 <tr>
-<td>Raises <code>requests.HTTPError</code> on failure</td>
-<td>Returns error response envelope</td>
+<td><code>get_statistics(exchange, symbol)</code></td>
+<td><code>MARKET_FIELDS + VALUATION_FIELDS + DIVIDEND_FIELDS</code> — market cap, shares, P/E, EPS, dividends</td>
 </tr>
 <tr>
-<td>Returns <code>List[DividendEvent]</code></td>
-<td>Returns <code>Dict[str, Any]</code> envelope</td>
+<td><code>get_financials(exchange, symbol)</code></td>
+<td><code>FINANCIAL_FIELDS</code> — revenue, margins, ROE, ROA, EBITDA, employees</td>
 </tr>
 <tr>
-<td>Fields filtered with <code>values</code> param</td>
-<td>Fields filtered with <code>fields</code> param</td>
+<td><code>get_performance(exchange, symbol)</code></td>
+<td><code>PERFORMANCE_FIELDS</code> — weekly, monthly, quarterly, yearly returns</td>
+</tr>
+<tr>
+<td><code>get_technicals(exchange, symbol)</code></td>
+<td><code>TECHNICAL_FIELDS + VOLATILITY_FIELDS</code> — RSI, MACD, ADX, volatility, beta</td>
+</tr>
+</tbody>
+</table>
+<h2 id="response-format">Response Format</h2>
+<p>All methods return a standardised 4-key envelope:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>          <span class="c1"># or &quot;failed&quot;</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span>                     <span class="c1"># None on failure</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>        <span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="s2">&quot;NASDAQ:AAPL&quot;</span><span class="p">,</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>        <span class="s2">&quot;close&quot;</span><span class="p">:</span> <span class="mf">150.25</span><span class="p">,</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>        <span class="s2">&quot;market_cap_basic&quot;</span><span class="p">:</span> <span class="mi">2500000000000</span><span class="p">,</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>        <span class="o">...</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="p">},</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>        <span class="s2">&quot;exchange&quot;</span><span class="p">:</span> <span class="s2">&quot;NASDAQ&quot;</span><span class="p">,</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>        <span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="s2">&quot;AAPL&quot;</span><span class="p">,</span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    <span class="p">},</span>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="kc">None</span>                 <span class="c1"># error message string on failure</span>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="p">}</span>
+</span></code></pre></div>
+<h2 id="code-examples">Code Examples</h2>
+<h3 id="basic-usage">Basic Usage</h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">tv_scraper.scrapers.market_data</span><span class="w"> </span><span class="kn">import</span> <span class="n">Overview</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">overview</span> <span class="o">=</span> <span class="n">Overview</span><span class="p">()</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="n">result</span> <span class="o">=</span> <span class="n">overview</span><span class="o">.</span><span class="n">get_overview</span><span class="p">(</span><span class="n">exchange</span><span class="o">=</span><span class="s2">&quot;NASDAQ&quot;</span><span class="p">,</span> <span class="n">symbol</span><span class="o">=</span><span class="s2">&quot;AAPL&quot;</span><span class="p">)</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;success&quot;</span><span class="p">:</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    <span class="n">data</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Price: </span><span class="si">{</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;close&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Market Cap: </span><span class="si">{</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;market_cap_basic&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="custom-fields">Custom Fields</h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">result</span> <span class="o">=</span> <span class="n">overview</span><span class="o">.</span><span class="n">get_overview</span><span class="p">(</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="n">exchange</span><span class="o">=</span><span class="s2">&quot;BITSTAMP&quot;</span><span class="p">,</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="n">symbol</span><span class="o">=</span><span class="s2">&quot;BTCUSD&quot;</span><span class="p">,</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;close&quot;</span><span class="p">,</span> <span class="s2">&quot;volume&quot;</span><span class="p">,</span> <span class="s2">&quot;change&quot;</span><span class="p">],</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="category-methods_1">Category Methods</h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Profile</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">profile</span> <span class="o">=</span> <span class="n">overview</span><span class="o">.</span><span class="n">get_profile</span><span class="p">(</span><span class="n">exchange</span><span class="o">=</span><span class="s2">&quot;NASDAQ&quot;</span><span class="p">,</span> <span class="n">symbol</span><span class="o">=</span><span class="s2">&quot;AAPL&quot;</span><span class="p">)</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Financial metrics</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="n">financials</span> <span class="o">=</span> <span class="n">overview</span><span class="o">.</span><span class="n">get_financials</span><span class="p">(</span><span class="n">exchange</span><span class="o">=</span><span class="s2">&quot;NASDAQ&quot;</span><span class="p">,</span> <span class="n">symbol</span><span class="o">=</span><span class="s2">&quot;AAPL&quot;</span><span class="p">)</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Technical indicators</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="n">technicals</span> <span class="o">=</span> <span class="n">overview</span><span class="o">.</span><span class="n">get_technicals</span><span class="p">(</span><span class="n">exchange</span><span class="o">=</span><span class="s2">&quot;NASDAQ&quot;</span><span class="p">,</span> <span class="n">symbol</span><span class="o">=</span><span class="s2">&quot;AAPL&quot;</span><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="exporting-results">Exporting Results</h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">overview</span> <span class="o">=</span> <span class="n">Overview</span><span class="p">(</span><span class="n">export_result</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">export_type</span><span class="o">=</span><span class="s2">&quot;csv&quot;</span><span class="p">)</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">result</span> <span class="o">=</span> <span class="n">overview</span><span class="o">.</span><span class="n">get_overview</span><span class="p">(</span><span class="n">exchange</span><span class="o">=</span><span class="s2">&quot;NASDAQ&quot;</span><span class="p">,</span> <span class="n">symbol</span><span class="o">=</span><span class="s2">&quot;AAPL&quot;</span><span class="p">)</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># File saved to export/ directory</span>
+</span></code></pre></div>
+<h2 id="migration-from-old-api">Migration from Old API</h2>
+<table>
+<thead>
+<tr>
+<th>Old API</th>
+<th>New API</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>from tradingview_scraper.symbols.overview import Overview</code></td>
+<td><code>from tv_scraper.scrapers.market_data import Overview</code></td>
+</tr>
+<tr>
+<td><code>overview.get_symbol_overview(symbol="NASDAQ:AAPL")</code></td>
+<td><code>overview.get_overview(exchange="NASDAQ", symbol="AAPL")</code></td>
+</tr>
+<tr>
+<td><code>overview.get_profile("NASDAQ:AAPL")</code></td>
+<td><code>overview.get_profile(exchange="NASDAQ", symbol="AAPL")</code></td>
+</tr>
+<tr>
+<td>Combined symbol <code>"EXCHANGE:SYMBOL"</code></td>
+<td>Separate <code>exchange</code> and <code>symbol</code> parameters</td>
+</tr>
+<tr>
+<td>Response: <code>{"status", "data", "error"}</code></td>
+<td>Response: <code>{"status", "data", "metadata", "error"}</code></td>
 </tr>
 </tbody>
 </table>
@@ -1614,7 +1740,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../symbol_markets/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Symbol Markets">
+          <a href="../../api-conventions/" class="md-footer__link md-footer__link--prev" aria-label="Previous: API Conventions">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -1624,20 +1750,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Symbol Markets
+                API Conventions
               </div>
             </div>
           </a>
         
         
           
-          <a href="../../streaming/" class="md-footer__link md-footer__link--next" aria-label="Next: Overview">
+          <a href="../technicals/" class="md-footer__link md-footer__link--next" aria-label="Next: Technicals">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Overview
+                Technicals
               </div>
             </div>
             <div class="md-footer__button md-icon">
