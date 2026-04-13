@@ -5,7 +5,7 @@
          <lastmod>2026-04-13</lastmod>
     </url>
     <url>
-         <loc>https://smitkunpara.github.io/tv-scraper/v0.5.1/api-conventions/</loc>
+         <loc>https://smitkunpara.github.io/tv-scraper/v0.5.1/calendar/</loc>
          <lastmod>2026-04-13</lastmod>
     </url>
     <url>
@@ -13,7 +13,7 @@
          <lastmod>2026-04-13</lastmod>
     </url>
     <url>
-         <loc>https://smitkunpara.github.io/tv-scraper/v0.5.1/getting-started/</loc>
+         <loc>https://smitkunpara.github.io/tv-scraper/v0.5.1/fundamentals/</loc>
          <lastmod>2026-04-13</lastmod>
     </url>
     <url>
@@ -21,79 +21,51 @@
          <lastmod>2026-04-13</lastmod>
     </url>
     <url>
+         <loc>https://smitkunpara.github.io/tv-scraper/v0.5.1/ideas/</loc>
+         <lastmod>2026-04-13</lastmod>
+    </url>
+    <url>
+         <loc>https://smitkunpara.github.io/tv-scraper/v0.5.1/indicators/</loc>
+         <lastmod>2026-04-13</lastmod>
+    </url>
+    <url>
+         <loc>https://smitkunpara.github.io/tv-scraper/v0.5.1/installation/</loc>
+         <lastmod>2026-04-13</lastmod>
+    </url>
+    <url>
+         <loc>https://smitkunpara.github.io/tv-scraper/v0.5.1/market_movers/</loc>
+         <lastmod>2026-04-13</lastmod>
+    </url>
+    <url>
+         <loc>https://smitkunpara.github.io/tv-scraper/v0.5.1/markets/</loc>
+         <lastmod>2026-04-13</lastmod>
+    </url>
+    <url>
+         <loc>https://smitkunpara.github.io/tv-scraper/v0.5.1/minds/</loc>
+         <lastmod>2026-04-13</lastmod>
+    </url>
+    <url>
+         <loc>https://smitkunpara.github.io/tv-scraper/v0.5.1/news/</loc>
+         <lastmod>2026-04-13</lastmod>
+    </url>
+    <url>
+         <loc>https://smitkunpara.github.io/tv-scraper/v0.5.1/overview/</loc>
+         <lastmod>2026-04-13</lastmod>
+    </url>
+    <url>
+         <loc>https://smitkunpara.github.io/tv-scraper/v0.5.1/quick_start/</loc>
+         <lastmod>2026-04-13</lastmod>
+    </url>
+    <url>
+         <loc>https://smitkunpara.github.io/tv-scraper/v0.5.1/realtime/</loc>
+         <lastmod>2026-04-13</lastmod>
+    </url>
+    <url>
+         <loc>https://smitkunpara.github.io/tv-scraper/v0.5.1/screener/</loc>
+         <lastmod>2026-04-13</lastmod>
+    </url>
+    <url>
          <loc>https://smitkunpara.github.io/tv-scraper/v0.5.1/supported_data/</loc>
-         <lastmod>2026-04-13</lastmod>
-    </url>
-    <url>
-         <loc>https://smitkunpara.github.io/tv-scraper/v0.5.1/reference/</loc>
-         <lastmod>2026-04-13</lastmod>
-    </url>
-    <url>
-         <loc>https://smitkunpara.github.io/tv-scraper/v0.5.1/reference/releases/</loc>
-         <lastmod>2026-04-13</lastmod>
-    </url>
-    <url>
-         <loc>https://smitkunpara.github.io/tv-scraper/v0.5.1/scrapers/calendar/</loc>
-         <lastmod>2026-04-13</lastmod>
-    </url>
-    <url>
-         <loc>https://smitkunpara.github.io/tv-scraper/v0.5.1/scrapers/fundamentals/</loc>
-         <lastmod>2026-04-13</lastmod>
-    </url>
-    <url>
-         <loc>https://smitkunpara.github.io/tv-scraper/v0.5.1/scrapers/ideas/</loc>
-         <lastmod>2026-04-13</lastmod>
-    </url>
-    <url>
-         <loc>https://smitkunpara.github.io/tv-scraper/v0.5.1/scrapers/market_movers/</loc>
-         <lastmod>2026-04-13</lastmod>
-    </url>
-    <url>
-         <loc>https://smitkunpara.github.io/tv-scraper/v0.5.1/scrapers/markets/</loc>
-         <lastmod>2026-04-13</lastmod>
-    </url>
-    <url>
-         <loc>https://smitkunpara.github.io/tv-scraper/v0.5.1/scrapers/minds/</loc>
-         <lastmod>2026-04-13</lastmod>
-    </url>
-    <url>
-         <loc>https://smitkunpara.github.io/tv-scraper/v0.5.1/scrapers/news/</loc>
-         <lastmod>2026-04-13</lastmod>
-    </url>
-    <url>
-         <loc>https://smitkunpara.github.io/tv-scraper/v0.5.1/scrapers/options/</loc>
-         <lastmod>2026-04-13</lastmod>
-    </url>
-    <url>
-         <loc>https://smitkunpara.github.io/tv-scraper/v0.5.1/scrapers/pine/</loc>
-         <lastmod>2026-04-13</lastmod>
-    </url>
-    <url>
-         <loc>https://smitkunpara.github.io/tv-scraper/v0.5.1/scrapers/screener/</loc>
-         <lastmod>2026-04-13</lastmod>
-    </url>
-    <url>
-         <loc>https://smitkunpara.github.io/tv-scraper/v0.5.1/scrapers/symbol_markets/</loc>
-         <lastmod>2026-04-13</lastmod>
-    </url>
-    <url>
-         <loc>https://smitkunpara.github.io/tv-scraper/v0.5.1/scrapers/technicals/</loc>
-         <lastmod>2026-04-13</lastmod>
-    </url>
-    <url>
-         <loc>https://smitkunpara.github.io/tv-scraper/v0.5.1/streaming/</loc>
-         <lastmod>2026-04-13</lastmod>
-    </url>
-    <url>
-         <loc>https://smitkunpara.github.io/tv-scraper/v0.5.1/streaming/candle_streamer/</loc>
-         <lastmod>2026-04-13</lastmod>
-    </url>
-    <url>
-         <loc>https://smitkunpara.github.io/tv-scraper/v0.5.1/streaming/forecast_streamer/</loc>
-         <lastmod>2026-04-13</lastmod>
-    </url>
-    <url>
-         <loc>https://smitkunpara.github.io/tv-scraper/v0.5.1/streaming/streamer/</loc>
          <lastmod>2026-04-13</lastmod>
     </url>
 </urlset>
