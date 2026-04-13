@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- **Streaming**: `CandleStreamer` now validates custom Pine indicators before creating studies by using Pine tools (`get_script` + `validate_script`). When a custom script has compile/validation errors, `get_candles()` now returns a clear failed response instead of continuing with missing indicator diagnostics.
+- **Tests**: Added unit coverage for custom indicator script-validation failures and custom-script fetch failures in `tests/unit/test_candle_streamer.py`.
+
 ## [1.4.0b2] - 2026-04-13
 
 ### Added

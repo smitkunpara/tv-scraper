@@ -394,12 +394,20 @@ class TestGetCandlesWithIndicators:
 
     @patch("tv_scraper.streaming.base_streamer.create_connection")
     @patch("tv_scraper.streaming.candle_streamer.fetch_indicator_metadata")
+    @patch("tv_scraper.streaming.candle_streamer.Pine")
     @patch("tv_scraper.core.validators.verify_symbol_exchange")
-    def test_single_indicator(self, mock_validate, mock_fetch_meta, mock_cc):
+    def test_single_indicator(
+        self,
+        mock_validate,
+        mock_pine,
+        mock_fetch_meta,
+        mock_cc,
+    ):
         """Test with single indicator."""
         mock_ws = MagicMock()
         mock_cc.return_value = mock_ws
         mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+        mock_pine.return_value = MagicMock()
         mock_fetch_meta.return_value = {
             "status": "success",
             "data": {
@@ -436,11 +444,19 @@ class TestGetCandlesWithIndicators:
         assert result["status"] == STATUS_SUCCESS
         assert "indicators" in result["data"]
         assert "STD;RSI" in result["data"]["indicators"]
+        mock_pine.assert_not_called()
 
     @patch("tv_scraper.streaming.base_streamer.create_connection")
     @patch("tv_scraper.streaming.candle_streamer.fetch_indicator_metadata")
+    @patch("tv_scraper.streaming.candle_streamer.Pine")
     @patch("tv_scraper.core.validators.verify_symbol_exchange")
-    def test_multiple_indicators(self, mock_validate, mock_fetch_meta, mock_cc):
+    def test_multiple_indicators(
+        self,
+        mock_validate,
+        mock_pine,
+        mock_fetch_meta,
+        mock_cc,
+    ):
         """Test with multiple indicators — verifies each is added to the session.
 
         When indicators are requested but no du packets arrive before disconnect,
@@ -449,6 +465,7 @@ class TestGetCandlesWithIndicators:
         mock_ws = MagicMock()
         mock_cc.return_value = mock_ws
         mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+        mock_pine.return_value = MagicMock()
         # Called once per indicator — return a unique study id each time
         study_responses = [
             {
@@ -485,6 +502,91 @@ class TestGetCandlesWithIndicators:
         assert result["status"] == STATUS_FAILED
         assert result["error"] is not None
         assert "Failed to fetch indicator data" in result["error"]
+        mock_pine.assert_not_called()
+
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
+    @patch("tv_scraper.streaming.candle_streamer.fetch_indicator_metadata")
+    @patch("tv_scraper.streaming.candle_streamer.Pine")
+    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    def test_custom_indicator_validation_error(
+        self,
+        mock_validate,
+        mock_pine,
+        mock_fetch_meta,
+        mock_cc,
+    ):
+        """Custom indicators should fail early when Pine validation returns errors."""
+        mock_ws = MagicMock()
+        mock_cc.return_value = mock_ws
+        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+
+        pine_instance = MagicMock()
+        pine_instance.get_script.return_value = {
+            "status": "success",
+            "data": {
+                "source": "//@version=5\nindicator('Broken')\nplot(bad_name)",
+            },
+        }
+        pine_instance.validate_script.return_value = {
+            "status": "failed",
+            "error": "Pine script validation failed.",
+            "metadata": {
+                "errors": [{"message": "Undeclared identifier 'bad_name'"}],
+            },
+        }
+        mock_pine.return_value = pine_instance
+
+        cs = CandleStreamer()
+        result = cs.get_candles(
+            exchange="NASDAQ",
+            symbol="AAPL",
+            numb_candles=1,
+            indicators=[("USER;BROKEN", "1.0")],
+        )
+
+        assert result["status"] == STATUS_FAILED
+        assert "Custom Pine script USER;BROKEN v1.0 has validation errors" in (
+            result["error"] or ""
+        )
+        assert "Undeclared identifier 'bad_name'" in (result["error"] or "")
+        mock_fetch_meta.assert_not_called()
+
+    @patch("tv_scraper.streaming.base_streamer.create_connection")
+    @patch("tv_scraper.streaming.candle_streamer.fetch_indicator_metadata")
+    @patch("tv_scraper.streaming.candle_streamer.Pine")
+    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    def test_custom_indicator_get_script_error(
+        self,
+        mock_validate,
+        mock_pine,
+        mock_fetch_meta,
+        mock_cc,
+    ):
+        """Custom indicators should return a clear error when script source cannot be fetched."""
+        mock_ws = MagicMock()
+        mock_cc.return_value = mock_ws
+        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+
+        pine_instance = MagicMock()
+        pine_instance.get_script.return_value = {
+            "status": "failed",
+            "error": "TradingView cookie is required for Pine Script operations.",
+        }
+        mock_pine.return_value = pine_instance
+
+        cs = CandleStreamer(cookie=None)
+        result = cs.get_candles(
+            exchange="NASDAQ",
+            symbol="AAPL",
+            numb_candles=1,
+            indicators=[("USER;PRIVATE", "1.0")],
+        )
+
+        assert result["status"] == STATUS_FAILED
+        assert "Failed to fetch custom Pine script USER;PRIVATE v1.0" in (
+            result["error"] or ""
+        )
+        mock_fetch_meta.assert_not_called()
 
 
 class TestGetCandlesExport:

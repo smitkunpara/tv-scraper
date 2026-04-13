@@ -6,9 +6,11 @@ from typing import Any
 
 from tv_scraper.core import validators
 from tv_scraper.core.base import catch_errors
+from tv_scraper.core.constants import STATUS_SUCCESS
 from tv_scraper.core.validation_data import (
     EXCHANGE_LITERAL,
 )
+from tv_scraper.scrapers.scripts.pine import Pine
 from tv_scraper.streaming.base_streamer import BaseStreamer
 from tv_scraper.streaming.utils import (
     fetch_available_indicators,
@@ -219,10 +221,78 @@ class CandleStreamer(BaseStreamer):
         """Fetch available built-in indicators with standardized response envelope."""
         return fetch_available_indicators()
 
+    @staticmethod
+    def _is_standard_indicator(script_id: str) -> bool:
+        """Return True if the indicator is a TradingView standard built-in script."""
+        return script_id.startswith("STD;")
+
+    @staticmethod
+    def _format_pine_error_details(errors: Any) -> str:
+        """Format Pine validation errors into a concise readable message."""
+        if not isinstance(errors, list) or not errors:
+            return "unknown validation error"
+
+        details: list[str] = []
+        for error_item in errors:
+            if isinstance(error_item, dict):
+                msg = (
+                    error_item.get("message")
+                    or error_item.get("text")
+                    or error_item.get("error")
+                )
+                details.append(str(msg) if msg else str(error_item))
+            else:
+                details.append(str(error_item))
+
+        return "; ".join(details)
+
+    def _validate_custom_indicator_script(
+        self,
+        script_id: str,
+        script_version: str,
+    ) -> None:
+        """Validate custom Pine script before creating a chart study.
+
+        For built-in indicators (``STD;...``), no additional validation is needed.
+        For custom scripts, we fetch the source and run Pine validation so
+        compile/runtime script issues are surfaced clearly in streamer responses.
+        """
+        if self._is_standard_indicator(script_id):
+            return
+
+        pine = Pine(cookie=self.cookie)
+
+        script_response = pine.get_script(script_id, script_version)
+        if script_response.get("status") != STATUS_SUCCESS:
+            error_text = script_response.get("error") or "unknown error"
+            raise RuntimeError(
+                f"Failed to fetch custom Pine script {script_id} v{script_version}: {error_text}"
+            )
+
+        script_payload = script_response.get("data")
+        source = (
+            script_payload.get("source") if isinstance(script_payload, dict) else None
+        )
+        if not isinstance(source, str) or not source.strip():
+            raise RuntimeError(
+                f"Custom Pine script {script_id} v{script_version} returned empty source."
+            )
+
+        validation = pine.validate_script(source)
+        if validation.get("status") != STATUS_SUCCESS:
+            validation_meta = validation.get("metadata")
+            error_list = (
+                validation_meta.get("errors")
+                if isinstance(validation_meta, dict)
+                else None
+            )
+            formatted_errors = self._format_pine_error_details(error_list)
+            raise RuntimeError(
+                f"Custom Pine script {script_id} v{script_version} has validation errors: {formatted_errors}"
+            )
+
     def _add_indicators(self, indicators: list[tuple[str, str]]) -> None:
         """Add one or more indicator studies to the chart session."""
-        from tv_scraper.core.constants import STATUS_SUCCESS
-
         for idx, (script_id, script_version) in enumerate(indicators):
             logger.info(
                 "Processing indicator %d/%d: %s v%s",
@@ -231,6 +301,8 @@ class CandleStreamer(BaseStreamer):
                 script_id,
                 script_version,
             )
+
+            self._validate_custom_indicator_script(script_id, script_version)
 
             res = fetch_indicator_metadata(
                 script_id=script_id,
