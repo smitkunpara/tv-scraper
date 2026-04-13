@@ -10,31 +10,31 @@
       
       
       
-        <link rel="canonical" href="https://smitkunpara.github.io/tv-scraper/v1.1.0/reference/releases/">
+        <link rel="canonical" href="https://smitkunpara.github.io/tv-scraper/v1.1.0/architecture/">
       
       
-        <link rel="prev" href="../../supported_data/">
+        <link rel="prev" href="../migration-guide/">
       
       
-        <link rel="next" href="../../getting_cookies/">
+        <link rel="next" href="../api-conventions/">
       
       
         
       
       
-      <link rel="icon" href="../../assets/images/favicon.png">
+      <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
     
     
       
-        <title>Releases & Versioning - tv-scraper</title>
+        <title>Architecture - tv-scraper v1.1.0</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.618322db.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -53,9 +53,9 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/custom.css">
+      <link rel="stylesheet" href="../assets/custom.css">
     
-    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#releases-versioning" class="md-skip">
+        <a href="#architecture-overview" class="md-skip">
           Skip to content
         </a>
       
@@ -89,10 +89,6 @@
       
     </div>
     
-      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
-        
-      </div>
-    
     
       
 
@@ -100,7 +96,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="tv-scraper" class="md-header__button md-logo" aria-label="tv-scraper" data-md-component="logo">
+    <a href=".." title="tv-scraper v1.1.0" class="md-header__button md-logo" aria-label="tv-scraper v1.1.0" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -114,13 +110,13 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            tv-scraper
+            tv-scraper v1.1.0
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Releases & Versioning
+              Architecture
             
           </span>
         </div>
@@ -243,13 +239,13 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="tv-scraper" class="md-nav__button md-logo" aria-label="tv-scraper" data-md-component="logo">
+    <a href=".." title="tv-scraper v1.1.0" class="md-nav__button md-logo" aria-label="tv-scraper v1.1.0" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
-    tv-scraper
+    tv-scraper v1.1.0
   </label>
   
     <div class="md-nav__source">
@@ -273,7 +269,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../.." class="md-nav__link">
+      <a href=".." class="md-nav__link">
         
   
   
@@ -300,7 +296,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../getting-started/" class="md-nav__link">
+      <a href="../getting-started/" class="md-nav__link">
         
   
   
@@ -327,14 +323,259 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api-conventions/" class="md-nav__link">
+      <a href="../migration-guide/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    API Basics
+    Migration Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#package-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Package Structure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-categories" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module Categories
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Module Categories">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#market-data-scrapersmarket_data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Market Data (scrapers/market_data/)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#social-scraperssocial" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Social (scrapers/social/)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#screening-scrapersscreening" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Screening (scrapers/screening/)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#events-scrapersevents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Events (scrapers/events/)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#streaming-streaming" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Streaming (streaming/)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#core-concepts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Concepts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Core Concepts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basescraper" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BaseScraper
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#datavalidator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DataValidator
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#response-envelope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Response Envelope
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#export-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Export Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api-conventions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Conventions
   
 
     
@@ -357,7 +598,21 @@
     
       
         
-          
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
         
       
         
@@ -381,190 +636,10 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
         
           
-          <div class="md-nav__link md-nav__container">
-            <a href="../../streaming/" class="md-nav__link ">
-              
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Streaming
-  
-
-    
-  </span>
-  
-  
-
-            </a>
-            
-              
-              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
-                <span class="md-nav__icon md-icon"></span>
-              </label>
-            
-          </div>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Streaming
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../streaming/candle_streamer/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Candles
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../streaming/forecast_streamer/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Forecast
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../streaming/streamer/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Streamer (Legacy Wrapper)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-    
-    
-    
-      
-        
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
-      
-        
-        
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
-        
-          
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
             
   
   
@@ -582,8 +657,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -600,14 +675,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../scrapers/pine/" class="md-nav__link">
+      <a href="../scrapers/overview/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Pine
+    Overview
   
 
     
@@ -628,7 +703,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../scrapers/technicals/" class="md-nav__link">
+      <a href="../scrapers/technicals/" class="md-nav__link">
         
   
   
@@ -656,7 +731,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../scrapers/fundamentals/" class="md-nav__link">
+      <a href="../scrapers/fundamentals/" class="md-nav__link">
         
   
   
@@ -684,7 +759,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../scrapers/markets/" class="md-nav__link">
+      <a href="../scrapers/markets/" class="md-nav__link">
         
   
   
@@ -712,7 +787,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../scrapers/options/" class="md-nav__link">
+      <a href="../scrapers/options/" class="md-nav__link">
         
   
   
@@ -740,7 +815,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../scrapers/ideas/" class="md-nav__link">
+      <a href="../scrapers/ideas/" class="md-nav__link">
         
   
   
@@ -768,7 +843,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../scrapers/minds/" class="md-nav__link">
+      <a href="../scrapers/minds/" class="md-nav__link">
         
   
   
@@ -796,7 +871,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../scrapers/news/" class="md-nav__link">
+      <a href="../scrapers/news/" class="md-nav__link">
         
   
   
@@ -824,7 +899,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../scrapers/screener/" class="md-nav__link">
+      <a href="../scrapers/screener/" class="md-nav__link">
         
   
   
@@ -852,7 +927,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../scrapers/market_movers/" class="md-nav__link">
+      <a href="../scrapers/market_movers/" class="md-nav__link">
         
   
   
@@ -880,7 +955,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../scrapers/symbol_markets/" class="md-nav__link">
+      <a href="../scrapers/symbol_markets/" class="md-nav__link">
         
   
   
@@ -908,7 +983,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../scrapers/calendar/" class="md-nav__link">
+      <a href="../scrapers/calendar/" class="md-nav__link">
         
   
   
@@ -940,8 +1015,6 @@
       
   
   
-    
-  
   
   
     
@@ -955,8 +1028,6 @@
       
         
       
-        
-      
     
     
     
@@ -966,22 +1037,24 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../" class="md-nav__link ">
+            <a href="../streaming/" class="md-nav__link ">
               
   
   
   <span class="md-ellipsis">
     
   
-    Reference
+    Streaming
   
 
     
@@ -992,18 +1065,18 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="">
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_6">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             
   
-    Reference
+    Streaming
   
 
           </label>
@@ -1018,14 +1091,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../supported_data/" class="md-nav__link">
+      <a href="../streaming/streamer/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Validation & Supported Values
+    Streamer
   
 
     
@@ -1034,136 +1107,6 @@
   
 
       </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-    
-  
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Releases & Versioning
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Releases & Versioning
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#what-readers-should-expect" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What Readers Should Expect
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#docs-availability" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Docs Availability
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#known-versions-in-this-repository" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Known Versions In This Repository
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#current-docs-target" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Current Docs Target
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#publishing-notes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Publishing Notes
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1176,7 +1119,130 @@
   
   
     <li class="md-nav__item">
-      <a href="../../getting_cookies/" class="md-nav__link">
+      <a href="../streaming/realtime-price/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Real-time Price
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../supported_data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Supported Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting_cookies/" class="md-nav__link">
         
   
   
@@ -1211,7 +1277,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../contributing/" class="md-nav__link">
+      <a href="../contributing/" class="md-nav__link">
         
   
   
@@ -1258,10 +1324,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#what-readers-should-expect" class="md-nav__link">
+  <a href="#package-structure" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What Readers Should Expect
+        Package Structure
       
     </span>
   </a>
@@ -1269,46 +1335,135 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#docs-availability" class="md-nav__link">
+  <a href="#module-categories" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Docs Availability
+        Module Categories
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Module Categories">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#market-data-scrapersmarket_data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Market Data (scrapers/market_data/)
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#known-versions-in-this-repository" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#social-scraperssocial" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known Versions In This Repository
+        Social (scrapers/social/)
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#current-docs-target" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#screening-scrapersscreening" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Current Docs Target
+        Screening (scrapers/screening/)
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#publishing-notes" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#events-scrapersevents" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Publishing Notes
+        Events (scrapers/events/)
       
     </span>
   </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#streaming-streaming" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Streaming (streaming/)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#core-concepts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Concepts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Core Concepts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basescraper" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BaseScraper
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#datavalidator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DataValidator
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#response-envelope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Response Envelope
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#export-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Export Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1332,78 +1487,67 @@
   
 
 
-<h1 id="releases-versioning">Releases &amp; Versioning</h1>
-<p>This project is set up to use versioned MkDocs builds with <code>mike</code>, so readers can switch between released docs when those versions are published to GitHub Pages.</p>
-<h2 id="what-readers-should-expect">What Readers Should Expect</h2>
-<ul>
-<li>The deployed site should offer a version switcher in the header.</li>
-<li><code>latest</code> should point to the newest stable branch build.</li>
-<li>tagged releases such as <code>v1.3.2</code> or <code>v1.4.0b2</code> should appear as their own docs versions.</li>
-</ul>
-<h2 id="docs-availability">Docs Availability</h2>
-<p>The documentation site was introduced in <strong><code>v0.5.0</code></strong>. That means the release-aware docs story starts from <code>v0.5.0</code> onward.</p>
-<h2 id="known-versions-in-this-repository">Known Versions In This Repository</h2>
-<table>
-<thead>
-<tr>
-<th>Version</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>v0.5.0</code></td>
-</tr>
-<tr>
-<td><code>v0.5.1</code></td>
-</tr>
-<tr>
-<td><code>v0.5.2</code></td>
-</tr>
-<tr>
-<td><code>v1.0.0</code></td>
-</tr>
-<tr>
-<td><code>v1.0.2</code></td>
-</tr>
-<tr>
-<td><code>v1.0.3</code></td>
-</tr>
-<tr>
-<td><code>v1.1.0</code></td>
-</tr>
-<tr>
-<td><code>v1.2.0</code></td>
-</tr>
-<tr>
-<td><code>v1.2.1</code></td>
-</tr>
-<tr>
-<td><code>v1.3.0</code></td>
-</tr>
-<tr>
-<td><code>v1.3.1</code></td>
-</tr>
-<tr>
-<td><code>v1.3.2</code></td>
-</tr>
-<tr>
-<td><code>v1.4.0b1</code></td>
-</tr>
-<tr>
-<td><code>v1.4.0b2</code></td>
-</tr>
-</tbody>
-</table>
-<h2 id="current-docs-target">Current Docs Target</h2>
-<p>The current package version is <strong><code>1.4.0b2</code></strong>.</p>
-<h2 id="publishing-notes">Publishing Notes</h2>
-<p>For maintainers:</p>
-<ul>
-<li>branch builds should publish the moving alias such as <code>latest</code></li>
-<li>tag builds should publish the exact release version</li>
-<li>older tags may need a backfill pass if they were created before the version switcher config was added</li>
-</ul>
-<p>If repo instructions or contributor workflow docs still describe a non-versioned docs flow, update them alongside the docs changes.</p>
+<h1 id="architecture-overview">Architecture Overview</h1>
+<h2 id="package-structure">Package Structure</h2>
+<p>The <code>tv-scraper</code> package is organized into a clean, modular architecture:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>tv_scraper/
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── __init__.py              # Package root, exports __version__
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>├── core/                    # Core infrastructure
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   ├── base.py              # BaseScraper — parent class for all scrapers
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   ├── constants.py         # Shared constants (URLs, defaults, status codes)
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   ├── exceptions.py        # Exception hierarchy
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   ├── types.py             # TypedDict definitions for response formats
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   └── validators.py        # DataValidator singleton for input validation
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>├── utils/                   # Shared utilities
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   ├── helpers.py           # User-agent generation, symbol formatting
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   ├── http.py              # HTTP request wrapper with error handling
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   └── io.py                # File export (JSON/CSV) utilities
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>├── data/                    # Static data files (JSON)
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   ├── exchanges.json       # Valid exchange names
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   ├── indicators.json      # Valid indicator names
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   ├── timeframes.json      # Timeframe key → API value mappings
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   ├── languages.json       # Language name → code mappings
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   ├── areas.json           # Geographic area → code mappings
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   └── news_providers.json  # Valid news provider slugs
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>├── scrapers/                # HTTP-based scrapers
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   ├── market_data/         # Indicators, overview, fundamental graphs
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   ├── social/              # Ideas, minds, news
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   ├── screening/           # Screener, market movers, markets
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│   └── events/              # Calendar (earnings, dividends)
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>└── streaming/               # WebSocket-based real-time data
+</span></code></pre></div>
+<h2 id="module-categories">Module Categories</h2>
+<h3 id="market-data-scrapersmarket_data">Market Data (<code>scrapers/market_data/</code>)</h3>
+<p>Scrapers for technical indicators, symbol overviews, and fundamental financial data. These use the TradingView Scanner API and symbol page scraping.</p>
+<h3 id="social-scraperssocial">Social (<code>scrapers/social/</code>)</h3>
+<p>Scrapers for community-generated content: trading ideas, Minds discussions, and news articles.</p>
+<h3 id="screening-scrapersscreening">Screening (<code>scrapers/screening/</code>)</h3>
+<p>Screener tools for filtering and ranking symbols: stock/crypto/forex screeners, market movers (gainers/losers), and market listings.</p>
+<h3 id="events-scrapersevents">Events (<code>scrapers/events/</code>)</h3>
+<p>Calendar-based scrapers for corporate events like earnings and dividend dates.</p>
+<h3 id="streaming-streaming">Streaming (<code>streaming/</code>)</h3>
+<p>WebSocket-based real-time data streaming for OHLCV candles, indicators, and watchlist data.</p>
+<h2 id="core-concepts">Core Concepts</h2>
+<h3 id="basescraper">BaseScraper</h3>
+<p>All HTTP scrapers inherit from <code>BaseScraper</code>, which provides:
+- <strong>Standardized response envelope</strong> via <code>_success_response()</code> and <code>_error_response()</code>
+- <strong>HTTP request handling</strong> via <code>_make_request()</code> with automatic User-Agent and timeout
+- <strong>Data export</strong> via <code>_export()</code> supporting JSON and CSV formats
+- <strong>Scanner row mapping</strong> via <code>_map_scanner_rows()</code> for TradingView scanner API responses
+- <strong>Input validation</strong> via the shared <code>DataValidator</code> instance</p>
+<h3 id="datavalidator">DataValidator</h3>
+<p>A singleton that loads all validation data (exchanges, indicators, timeframes, etc.) from JSON files once. All validation methods raise <code>ValidationError</code> with helpful suggestions for invalid input.</p>
+<h3 id="response-envelope">Response Envelope</h3>
+<p>Every scraper method returns a standardized dict:
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span> <span class="o">|</span> <span class="s2">&quot;failed&quot;</span><span class="p">,</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">payload</span> <span class="ow">or</span> <span class="kc">None</span><span class="o">&gt;</span><span class="p">,</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">,</span> <span class="s2">&quot;exchange&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">,</span> <span class="o">...</span><span class="p">},</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">error</span> <span class="n">message</span> <span class="ow">or</span> <span class="kc">None</span><span class="o">&gt;</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="p">}</span>
+</span></code></pre></div></p>
+<h3 id="export-pattern">Export Pattern</h3>
+<p>All scrapers accept <code>export_result</code> and <code>export_type</code> constructor parameters. When enabled, results are automatically saved to the <code>export/</code> directory with timestamped filenames.</p>
 
 
 
@@ -1441,7 +1585,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../../supported_data/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Validation &amp; Supported Values">
+          <a href="../migration-guide/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Migration Guide">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -1451,20 +1595,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Validation & Supported Values
+                Migration Guide
               </div>
             </div>
           </a>
         
         
           
-          <a href="../../getting_cookies/" class="md-footer__link md-footer__link--next" aria-label="Next: Getting Cookies">
+          <a href="../api-conventions/" class="md-footer__link md-footer__link--next" aria-label="Next: API Conventions">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Getting Cookies
+                API Conventions
               </div>
             </div>
             <div class="md-footer__button md-icon">
@@ -1517,10 +1661,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.expand", "navigation.top", "navigation.tracking", "navigation.indexes", "navigation.instant", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.tabs.link", "content.code.annotation", "content.code.copy", "content.tooltips", "navigation.footer"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.expand", "navigation.top", "navigation.tracking", "navigation.indexes", "navigation.instant", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.tabs.link", "content.code.annotation", "content.code.copy", "content.tooltips", "navigation.footer"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
       
     
   </body>
