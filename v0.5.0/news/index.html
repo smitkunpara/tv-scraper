@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://smitkunpara.github.io/tv-scraper/v0.5.0/supported_data/">
+        <link rel="canonical" href="https://smitkunpara.github.io/tv-scraper/v0.5.0/news/">
       
       
-        <link rel="prev" href="../calendar/">
+        <link rel="prev" href="../indicators/">
       
       
-        <link rel="next" href="../contributing/">
+        <link rel="next" href="../realtime/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>Supported Data - TradingView Scraper</title>
+        <title>News & Sentiment - TradingView Scraper</title>
       
     
     
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#supported-data" class="md-skip">
+        <a href="#news-scraper" class="md-skip">
           Skip to content
         </a>
       
@@ -116,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Supported Data
+              News & Sentiment
             
           </span>
         </div>
@@ -416,8 +416,10 @@
       
   
   
+    
   
   
+  
     
     
       
@@ -442,13 +444,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
           <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
@@ -469,7 +469,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             
@@ -540,10 +540,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../news/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    News & Sentiment
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -559,6 +586,137 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#input-specification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Input Specification
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Input Specification">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#constructor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Constructor
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scrape-headlines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scrape Headlines
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scrape-content" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scrape Content
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#output-schema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output Schema
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Output Schema">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#headlines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Headlines
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#story-content" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Story Content
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage Examples
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -872,10 +1030,8 @@
       
   
   
-    
   
   
-  
     
     
       
@@ -890,11 +1046,13 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
         
           
           <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
@@ -915,7 +1073,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
@@ -930,37 +1088,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Supported Data
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../supported_data/" class="md-nav__link">
         
   
   
@@ -976,225 +1107,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#supported-areas" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Supported Areas
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#supported-exchanges" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Supported Exchanges
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#supported-indicators" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Supported Indicators
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Supported Indicators">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#momentum-indicators" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Momentum Indicators
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#moving-averages" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Moving Averages
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#macd-components" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        MACD Components
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#pivot-points" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pivot Points
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Pivot Points">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#classic" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Classic
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#fibonacci" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Fibonacci
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#camarilla" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Camarilla
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#woodie" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Woodie
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#demark" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        DeMark
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#recommendation-indicators" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Recommendation Indicators
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#other-indicators" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Other Indicators
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#supported-languages" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Supported Languages
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#supported-news-providers" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Supported News Providers
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#supported-timeframes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Supported Timeframes
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1261,10 +1173,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#supported-areas" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Supported Areas
+        Overview
       
     </span>
   </a>
@@ -1272,33 +1184,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#supported-exchanges" class="md-nav__link">
+  <a href="#input-specification" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Supported Exchanges
+        Input Specification
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#supported-indicators" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Supported Indicators
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Supported Indicators">
+    <nav class="md-nav" aria-label="Input Specification">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#momentum-indicators" class="md-nav__link">
+  <a href="#constructor" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Momentum Indicators
+        Constructor
       
     </span>
   </a>
@@ -1306,10 +1207,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#moving-averages" class="md-nav__link">
+  <a href="#scrape-headlines" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Moving Averages
+        Scrape Headlines
       
     </span>
   </a>
@@ -1317,104 +1218,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#macd-components" class="md-nav__link">
+  <a href="#scrape-content" class="md-nav__link">
     <span class="md-ellipsis">
       
-        MACD Components
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#pivot-points" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pivot Points
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Pivot Points">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#classic" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Classic
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#fibonacci" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Fibonacci
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#camarilla" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Camarilla
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#woodie" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Woodie
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#demark" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        DeMark
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#recommendation-indicators" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Recommendation Indicators
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#other-indicators" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Other Indicators
+        Scrape Content
       
     </span>
   </a>
@@ -1427,32 +1234,49 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#supported-languages" class="md-nav__link">
+  <a href="#output-schema" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Supported Languages
+        Output Schema
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Output Schema">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#headlines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Headlines
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#supported-news-providers" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#story-content" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Supported News Providers
+        Story Content
       
     </span>
   </a>
   
 </li>
+        
+      </ul>
+    </nav>
+  
+</li>
       
         <li class="md-nav__item">
-  <a href="#supported-timeframes" class="md-nav__link">
+  <a href="#usage-examples" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Supported Timeframes
+        Usage Examples
       
     </span>
   </a>
@@ -1479,740 +1303,121 @@
   
 
 
-<h1 id="supported-data">Supported Data</h1>
-<h2 id="supported-areas">Supported Areas</h2>
-<table>
-<thead>
-<tr>
-<th>Code</th>
-<th>Name</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>WLD</td>
-<td>World</td>
-<td>Global coverage</td>
-</tr>
-<tr>
-<td>AME</td>
-<td>Americas</td>
-<td>North and South America</td>
-</tr>
-<tr>
-<td>EUR</td>
-<td>Europe</td>
-<td>European continent</td>
-</tr>
-<tr>
-<td>ASI</td>
-<td>Asia</td>
-<td>Asian continent</td>
-</tr>
-<tr>
-<td>OCN</td>
-<td>Oceania</td>
-<td>Australia, New Zealand, Pacific Islands</td>
-</tr>
-<tr>
-<td>AFR</td>
-<td>Africa</td>
-<td>African continent</td>
-</tr>
-</tbody>
-</table>
-<h2 id="supported-exchanges">Supported Exchanges</h2>
-<p>The following exchanges are supported:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ADX ALOR AMEX ASX ATHEX BAHRAIN BASESWAP BCBA BCS BELEX
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>BER BET BINANCE BINANCEUS BINGX BIST BISWAP BITAZZA BITBNS BITCOKE
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>BITFINEX BITFLYER BITGET BITHUMB BITKUB BITMART BITMEX BITPANDAPRO
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>BITRUE BITSTAMP BITTREX BITVAVO BIVA BLACKBULL BLOFIN BME BMFBOVESPA BMV BSE BSSE
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>BTSE BVB BVC BVCV BVL BVMT BX BYBIT CAMELOT CAMELOT3ARBITRUM
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>CAPITALCOM CBOE CBOT CBOT_MINI CEXIO CFFEX CITYINDEX CME CME_MINI COINBASE
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>COINEX COMEX COMEX_MINI CRYPTO CRYPTOCAP CRYPTOCOM CSE CSECY CSELK CSEMA
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>CURRENCYCOM CURVE DELTA DERIBIT DFM DJ DSEBD DUS DYDX EASYMARKETS
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>ECONOMICS EGX EIGHTCAP EURONEXT EUROTLX EUREX EXMO FINRA FOREXCOM FSE
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>FTSEMYX FTX FWB FX FX_IDC FXCM FXOPEN GATEIO GEMINI GETTEX
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>GLOBALPRIME GPW HAM HAN HITBTC HKEX HNX HONEYSWAP HONEYSWAPPOLYGON
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>HOSE HSI HTX HUOBI ICEAD ICEEUR ICESG ICEUS IDX INDEX
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>JSE KATANA KRX KRAKEN KSE KUCOIN LS LSE LSIN LSX
-</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>LUXSE MATBAROFEX MCX MERCADO MEXC MGEX MIL MMFINANCE MOEX MUN MYX
-</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>NAG NASDAQ NASDAQDUBAI NCDEX NEO NEWCONNECT NGM NSE
-</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>NSEKE NSENG NYMEX NYMEX_MINI NYSE NZX OANDA OKCOIN OKX OMXCOP
-</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>OMXHEX OMXICE OMXRSE OMXSTO OMXTSE OMXVSE ORCA OSE OSL OTC
-</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>PANCAKESWAP PANCAKESWAP3BSC PANCAKESWAP3ETH PANGOLIN PEPPERSTONE PHEMEX PHILLIPNOVA PIONEX POLONIEX PSE
-</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>PSECZ PSX PULSEX QSE QUICKSWAP QUICKSWAP3POLYGON QUICKSWAP3POLYGONZKEVM RAYDIUM RUS SAPSE
-</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>SAXO SET SGX SHFE SIX SKILLING SP SPARKS SPOOKYSWAP SSE
-</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>SUSHISWAP SUSHISWAPPOLYGON SWB SZSE TADAWUL TAIFEX TASE TFEX TFX THRUSTER3
-</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>TIMEX TOCOM TOKENIZE TPEX TRADEGATE TRADERJOE TRADESTATION TSE TSX TSXV
-</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>TVC TWSE UNISWAP UNISWAP3ARBITRUM UNISWAP3AVALANCHE UNISWAP3BASE UNISWAP3BSC UNISWAP3ETH UNISWAP3OPTIMISM
-</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>UNISWAP3POLYGON UPBIT UPCOM VANTAGE VELODROME VERSEETH VIE VVSFINANCE WAGYUSWAP WHITEBIT WOONETWORK XETR XEXCHANGE ZOOMEX
+<h1 id="news-scraper">News Scraper</h1>
+<h2 id="overview">Overview</h2>
+<p>Scrape headlines and full article content from TradingView news providers.</p>
+<div class="admonition note">
+<p class="admonition-title">Supported Data</p>
+<p>See <a href="../supported_data/">Supported Data</a> for providers, areas, and languages.</p>
+</div>
+<h2 id="input-specification">Input Specification</h2>
+<h3 id="constructor">Constructor</h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">NewsScraper</span><span class="p">(</span><span class="n">export_result</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">export_type</span><span class="o">=</span><span class="s1">&#39;json&#39;</span><span class="p">,</span> <span class="n">cookie</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 </span></code></pre></div>
-<h2 id="supported-indicators">Supported Indicators</h2>
-<h3 id="momentum-indicators">Momentum Indicators</h3>
+<h3 id="scrape-headlines">Scrape Headlines</h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">scrape_headlines</span><span class="p">(</span><span class="n">symbol</span><span class="p">,</span> <span class="n">exchange</span><span class="p">,</span> <span class="n">provider</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">area</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="s2">&quot;latest&quot;</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en&quot;</span><span class="p">)</span>
+</span></code></pre></div>
 <table>
 <thead>
 <tr>
-<th>Indicator</th>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>RSI</td>
-<td>Relative Strength Index</td>
+<td><code>symbol</code></td>
+<td>str</td>
+<td>-</td>
+<td>Trading symbol (e.g., "AAPL")</td>
 </tr>
 <tr>
-<td>RSI[1]</td>
-<td>RSI (previous value)</td>
+<td><code>exchange</code></td>
+<td>str</td>
+<td>-</td>
+<td>Exchange (e.g., "NASDAQ")</td>
 </tr>
 <tr>
-<td>Stoch.K</td>
-<td>Stochastic %K</td>
+<td><code>provider</code></td>
+<td>str</td>
+<td>None</td>
+<td>Provider code (e.g., "cointelegraph")</td>
 </tr>
 <tr>
-<td>Stoch.D</td>
-<td>Stochastic %D</td>
+<td><code>area</code></td>
+<td>str</td>
+<td>None</td>
+<td>Region code (e.g., "americas")</td>
 </tr>
 <tr>
-<td>Stoch.K[1]</td>
-<td>Stochastic %K (previous)</td>
+<td><code>sort</code></td>
+<td>str</td>
+<td>"latest"</td>
+<td><code>latest</code>, <code>oldest</code>, <code>most_urgent</code></td>
 </tr>
 <tr>
-<td>Stoch.D[1]</td>
-<td>Stochastic %D (previous)</td>
+<td><code>section</code></td>
+<td>str</td>
+<td>"all"</td>
+<td><code>all</code>, <code>esg</code>, <code>press_release</code></td>
 </tr>
 <tr>
-<td>CCI20</td>
-<td>Commodity Channel Index (20-period)</td>
-</tr>
-<tr>
-<td>CCI20[1]</td>
-<td>CCI20 (previous)</td>
-</tr>
-<tr>
-<td>ADX</td>
-<td>Average Directional Index</td>
-</tr>
-<tr>
-<td>ADX+DI</td>
-<td>ADX + Directional Indicator</td>
-</tr>
-<tr>
-<td>ADX-DI</td>
-<td>ADX - Directional Indicator</td>
-</tr>
-<tr>
-<td>ADX+DI[1]</td>
-<td>ADX+DI (previous)</td>
-</tr>
-<tr>
-<td>ADX-DI[1]</td>
-<td>ADX-DI (previous)</td>
-</tr>
-<tr>
-<td>AO</td>
-<td>Awesome Oscillator</td>
-</tr>
-<tr>
-<td>AO[1]</td>
-<td>AO (previous)</td>
-</tr>
-<tr>
-<td>AO[2]</td>
-<td>AO (previous 2)</td>
-</tr>
-<tr>
-<td>Mom</td>
-<td>Momentum</td>
-</tr>
-<tr>
-<td>Mom[1]</td>
-<td>Momentum (previous)</td>
+<td><code>language</code></td>
+<td>str</td>
+<td>"en"</td>
+<td>Language code (e.g., "en", "fr")</td>
 </tr>
 </tbody>
 </table>
-<h3 id="moving-averages">Moving Averages</h3>
-<table>
-<thead>
-<tr>
-<th>Indicator</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>EMA10</td>
-<td>Exponential Moving Average (10)</td>
-</tr>
-<tr>
-<td>EMA20</td>
-<td>Exponential Moving Average (20)</td>
-</tr>
-<tr>
-<td>EMA30</td>
-<td>Exponential Moving Average (30)</td>
-</tr>
-<tr>
-<td>EMA50</td>
-<td>Exponential Moving Average (50)</td>
-</tr>
-<tr>
-<td>EMA100</td>
-<td>Exponential Moving Average (100)</td>
-</tr>
-<tr>
-<td>EMA200</td>
-<td>Exponential Moving Average (200)</td>
-</tr>
-<tr>
-<td>SMA10</td>
-<td>Simple Moving Average (10)</td>
-</tr>
-<tr>
-<td>SMA20</td>
-<td>Simple Moving Average (20)</td>
-</tr>
-<tr>
-<td>SMA30</td>
-<td>Simple Moving Average (30)</td>
-</tr>
-<tr>
-<td>SMA50</td>
-<td>Simple Moving Average (50)</td>
-</tr>
-<tr>
-<td>SMA100</td>
-<td>Simple Moving Average (100)</td>
-</tr>
-<tr>
-<td>SMA200</td>
-<td>Simple Moving Average (200)</td>
-</tr>
-<tr>
-<td>VWMA</td>
-<td>Volume Weighted Moving Average</td>
-</tr>
-<tr>
-<td>HullMA9</td>
-<td>Hull Moving Average (9)</td>
-</tr>
-</tbody>
-</table>
-<h3 id="macd-components">MACD Components</h3>
-<table>
-<thead>
-<tr>
-<th>Indicator</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>MACD.macd</td>
-<td>MACD Line</td>
-</tr>
-<tr>
-<td>MACD.signal</td>
-<td>MACD Signal Line</td>
-</tr>
-</tbody>
-</table>
-<h3 id="pivot-points">Pivot Points</h3>
-<h4 id="classic">Classic</h4>
-<table>
-<thead>
-<tr>
-<th>Indicator</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Pivot.M.Classic.S3</td>
-<td>Classic Pivot S3</td>
-</tr>
-<tr>
-<td>Pivot.M.Classic.S2</td>
-<td>Classic Pivot S2</td>
-</tr>
-<tr>
-<td>Pivot.M.Classic.S1</td>
-<td>Classic Pivot S1</td>
-</tr>
-<tr>
-<td>Pivot.M.Classic.Middle</td>
-<td>Classic Pivot Middle</td>
-</tr>
-<tr>
-<td>Pivot.M.Classic.R1</td>
-<td>Classic Pivot R1</td>
-</tr>
-<tr>
-<td>Pivot.M.Classic.R2</td>
-<td>Classic Pivot R2</td>
-</tr>
-<tr>
-<td>Pivot.M.Classic.R3</td>
-<td>Classic Pivot R3</td>
-</tr>
-</tbody>
-</table>
-<h4 id="fibonacci">Fibonacci</h4>
-<table>
-<thead>
-<tr>
-<th>Indicator</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Pivot.M.Fibonacci.S3</td>
-<td>Fibonacci Pivot S3</td>
-</tr>
-<tr>
-<td>Pivot.M.Fibonacci.S2</td>
-<td>Fibonacci Pivot S2</td>
-</tr>
-<tr>
-<td>Pivot.M.Fibonacci.S1</td>
-<td>Fibonacci Pivot S1</td>
-</tr>
-<tr>
-<td>Pivot.M.Fibonacci.Middle</td>
-<td>Fibonacci Pivot Middle</td>
-</tr>
-<tr>
-<td>Pivot.M.Fibonacci.R1</td>
-<td>Fibonacci Pivot R1</td>
-</tr>
-<tr>
-<td>Pivot.M.Fibonacci.R2</td>
-<td>Fibonacci Pivot R2</td>
-</tr>
-<tr>
-<td>Pivot.M.Fibonacci.R3</td>
-<td>Fibonacci Pivot R3</td>
-</tr>
-</tbody>
-</table>
-<h4 id="camarilla">Camarilla</h4>
-<table>
-<thead>
-<tr>
-<th>Indicator</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Pivot.M.Camarilla.S3</td>
-<td>Camarilla Pivot S3</td>
-</tr>
-<tr>
-<td>Pivot.M.Camarilla.S2</td>
-<td>Camarilla Pivot S2</td>
-</tr>
-<tr>
-<td>Pivot.M.Camarilla.S1</td>
-<td>Camarilla Pivot S1</td>
-</tr>
-<tr>
-<td>Pivot.M.Camarilla.Middle</td>
-<td>Camarilla Pivot Middle</td>
-</tr>
-<tr>
-<td>Pivot.M.Camarilla.R1</td>
-<td>Camarilla Pivot R1</td>
-</tr>
-<tr>
-<td>Pivot.M.Camarilla.R2</td>
-<td>Camarilla Pivot R2</td>
-</tr>
-<tr>
-<td>Pivot.M.Camarilla.R3</td>
-<td>Camarilla Pivot R3</td>
-</tr>
-</tbody>
-</table>
-<h4 id="woodie">Woodie</h4>
-<table>
-<thead>
-<tr>
-<th>Indicator</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Pivot.M.Woodie.S3</td>
-<td>Woodie Pivot S3</td>
-</tr>
-<tr>
-<td>Pivot.M.Woodie.S2</td>
-<td>Woodie Pivot S2</td>
-</tr>
-<tr>
-<td>Pivot.M.Woodie.S1</td>
-<td>Woodie Pivot S1</td>
-</tr>
-<tr>
-<td>Pivot.M.Woodie.Middle</td>
-<td>Woodie Pivot Middle</td>
-</tr>
-<tr>
-<td>Pivot.M.Woodie.R1</td>
-<td>Woodie Pivot R1</td>
-</tr>
-<tr>
-<td>Pivot.M.Woodie.R2</td>
-<td>Woodie Pivot R2</td>
-</tr>
-<tr>
-<td>Pivot.M.Woodie.R3</td>
-<td>Woodie Pivot R3</td>
-</tr>
-</tbody>
-</table>
-<h4 id="demark">DeMark</h4>
-<table>
-<thead>
-<tr>
-<th>Indicator</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Pivot.M.Demark.S1</td>
-<td>DeMark Pivot S1</td>
-</tr>
-<tr>
-<td>Pivot.M.Demark.Middle</td>
-<td>DeMark Pivot Middle</td>
-</tr>
-<tr>
-<td>Pivot.M.Demark.R1</td>
-<td>DeMark Pivot R1</td>
-</tr>
-</tbody>
-</table>
-<h3 id="recommendation-indicators">Recommendation Indicators</h3>
-<table>
-<thead>
-<tr>
-<th>Indicator</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Recommend.Other</td>
-<td>Other Recommendations</td>
-</tr>
-<tr>
-<td>Recommend.All</td>
-<td>All Recommendations</td>
-</tr>
-<tr>
-<td>Recommend.MA</td>
-<td>Moving Average Recommendations</td>
-</tr>
-<tr>
-<td>Rec.Stoch.RSI</td>
-<td>Stochastic RSI Recommendation</td>
-</tr>
-<tr>
-<td>Rec.WR</td>
-<td>Williams %R Recommendation</td>
-</tr>
-<tr>
-<td>Rec.BBPower</td>
-<td>Bollinger Bands Power Recommendation</td>
-</tr>
-<tr>
-<td>Rec.UO</td>
-<td>Ultimate Oscillator Recommendation</td>
-</tr>
-<tr>
-<td>Rec.Ichimoku</td>
-<td>Ichimoku Recommendation</td>
-</tr>
-<tr>
-<td>Rec.VWMA</td>
-<td>VWMA Recommendation</td>
-</tr>
-<tr>
-<td>Rec.HullMA9</td>
-<td>Hull MA9 Recommendation</td>
-</tr>
-</tbody>
-</table>
-<h3 id="other-indicators">Other Indicators</h3>
-<table>
-<thead>
-<tr>
-<th>Indicator</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>BBPower</td>
-<td>Bollinger Bands Power</td>
-</tr>
-<tr>
-<td>UO</td>
-<td>Ultimate Oscillator</td>
-</tr>
-<tr>
-<td>Ichimoku.BLine</td>
-<td>Ichimoku Baseline</td>
-</tr>
-<tr>
-<td>close</td>
-<td>Close Price</td>
-</tr>
-<tr>
-<td>W.R</td>
-<td>Williams %R</td>
-</tr>
-</tbody>
-</table>
-<h2 id="supported-languages">Supported Languages</h2>
-<table>
-<thead>
-<tr>
-<th>Language</th>
-<th>Code</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>English</td>
-<td>en</td>
-</tr>
-<tr>
-<td>German</td>
-<td>de</td>
-</tr>
-<tr>
-<td>French</td>
-<td>fr</td>
-</tr>
-<tr>
-<td>Spanish</td>
-<td>es</td>
-</tr>
-<tr>
-<td>Italian</td>
-<td>it</td>
-</tr>
-<tr>
-<td>Portuguese</td>
-<td>pt</td>
-</tr>
-<tr>
-<td>Russian</td>
-<td>ru</td>
-</tr>
-<tr>
-<td>Japanese</td>
-<td>ja</td>
-</tr>
-<tr>
-<td>Korean</td>
-<td>ko</td>
-</tr>
-<tr>
-<td>Arabic</td>
-<td>ar</td>
-</tr>
-<tr>
-<td>Hindi</td>
-<td>hi</td>
-</tr>
-<tr>
-<td>Swedish</td>
-<td>sv</td>
-</tr>
-<tr>
-<td>Turkish</td>
-<td>tr</td>
-</tr>
-<tr>
-<td>Thai</td>
-<td>th</td>
-</tr>
-<tr>
-<td>Vietnamese</td>
-<td>vi</td>
-</tr>
-<tr>
-<td>Indonesian</td>
-<td>id</td>
-</tr>
-<tr>
-<td>Persian</td>
-<td>fa</td>
-</tr>
-<tr>
-<td>Chinese</td>
-<td>ch</td>
-</tr>
-<tr>
-<td>Malay</td>
-<td>ms</td>
-</tr>
-<tr>
-<td>Greek</td>
-<td>el</td>
-</tr>
-<tr>
-<td>Hebrew</td>
-<td>he</td>
-</tr>
-</tbody>
-</table>
-<h2 id="supported-news-providers">Supported News Providers</h2>
-<table>
-<thead>
-<tr>
-<th>Provider</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>the_block</td>
-<td>The Block - Crypto news</td>
-</tr>
-<tr>
-<td>cointelegraph</td>
-<td>Cointelegraph - Crypto news</td>
-</tr>
-<tr>
-<td>beincrypto</td>
-<td>BeInCrypto - Crypto news</td>
-</tr>
-<tr>
-<td>newsbtc</td>
-<td>NewsBTC - Crypto news</td>
-</tr>
-<tr>
-<td>dow-jones</td>
-<td>Dow Jones - Financial news</td>
-</tr>
-<tr>
-<td>cryptonews</td>
-<td>CryptoNews - Crypto news</td>
-</tr>
-<tr>
-<td>coindesk</td>
-<td>CoinDesk - Crypto news</td>
-</tr>
-<tr>
-<td>cryptoglobe</td>
-<td>CryptoGlobe - Crypto news</td>
-</tr>
-<tr>
-<td>tradingview</td>
-<td>TradingView - Market analysis</td>
-</tr>
-<tr>
-<td>zycrypto</td>
-<td>ZyCrypto - Crypto news</td>
-</tr>
-<tr>
-<td>todayq</td>
-<td>Todayq - Financial news</td>
-</tr>
-<tr>
-<td>cryptopotato</td>
-<td>CryptoPotato - Crypto news</td>
-</tr>
-<tr>
-<td>u_today</td>
-<td>U.Today - Crypto news</td>
-</tr>
-<tr>
-<td>cryptobriefing</td>
-<td>CryptoBriefing - Crypto news</td>
-</tr>
-<tr>
-<td>coindar</td>
-<td>Coindar - Crypto events</td>
-</tr>
-<tr>
-<td>bitcoin_com</td>
-<td>Bitcoin.com - Crypto news</td>
-</tr>
-</tbody>
-</table>
-<h2 id="supported-timeframes">Supported Timeframes</h2>
-<table>
-<thead>
-<tr>
-<th>Timeframe</th>
-<th>Code</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1m</td>
-<td>1</td>
-<td>1 minute</td>
-</tr>
-<tr>
-<td>5m</td>
-<td>5</td>
-<td>5 minutes</td>
-</tr>
-<tr>
-<td>15m</td>
-<td>15</td>
-<td>15 minutes</td>
-</tr>
-<tr>
-<td>30m</td>
-<td>30</td>
-<td>30 minutes</td>
-</tr>
-<tr>
-<td>1h</td>
-<td>60</td>
-<td>1 hour</td>
-</tr>
-<tr>
-<td>2h</td>
-<td>120</td>
-<td>2 hours</td>
-</tr>
-<tr>
-<td>4h</td>
-<td>240</td>
-<td>4 hours</td>
-</tr>
-<tr>
-<td>1d</td>
-<td></td>
-<td>1 day</td>
-</tr>
-<tr>
-<td>1w</td>
-<td>1W</td>
-<td>1 week</td>
-</tr>
-<tr>
-<td>1M</td>
-<td>1M</td>
-<td>1 month</td>
-</tr>
-</tbody>
-</table>
+<h3 id="scrape-content">Scrape Content</h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">scrape_news_content</span><span class="p">(</span><span class="n">story_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span>
+</span></code></pre></div>
+<ul>
+<li><code>story_path</code>: Relative path from headline object (e.g., <code>/news/story/123</code>).</li>
+</ul>
+<h2 id="output-schema">Output Schema</h2>
+<h3 id="headlines">Headlines</h3>
+<p>List of dictionaries:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;12345&quot;</span><span class="p">,</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;Bitcoin Hits New High&quot;</span><span class="p">,</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="s2">&quot;provider&quot;</span><span class="p">:</span> <span class="s2">&quot;cointelegraph&quot;</span><span class="p">,</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="s2">&quot;published&quot;</span><span class="p">:</span> <span class="mi">1678900000</span><span class="p">,</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="s2">&quot;urgency&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="s2">&quot;storyPath&quot;</span><span class="p">:</span> <span class="s2">&quot;/news/story/12345&quot;</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="p">}</span>
+</span></code></pre></div>
+<h3 id="story-content">Story Content</h3>
+<p>Dictionary with article details:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;Article Title&quot;</span><span class="p">,</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="s2">&quot;published_datetime&quot;</span><span class="p">:</span> <span class="s2">&quot;2023-03-15T10:00:00Z&quot;</span><span class="p">,</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="p">[</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>        <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Paragraph 1...&quot;</span><span class="p">},</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>        <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;image&quot;</span><span class="p">,</span> <span class="s2">&quot;src&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">}</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    <span class="p">],</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    <span class="s2">&quot;tags&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Bitcoin&quot;</span><span class="p">,</span> <span class="s2">&quot;Crypto&quot;</span><span class="p">]</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="p">}</span>
+</span></code></pre></div>
+<h2 id="usage-examples">Usage Examples</h2>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">tradingview_scraper.symbols.news</span><span class="w"> </span><span class="kn">import</span> <span class="n">NewsScraper</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">scraper</span> <span class="o">=</span> <span class="n">NewsScraper</span><span class="p">()</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># 1. Get Headlines</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="n">headlines</span> <span class="o">=</span> <span class="n">scraper</span><span class="o">.</span><span class="n">scrape_headlines</span><span class="p">(</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    <span class="n">symbol</span><span class="o">=</span><span class="s1">&#39;BTCUSD&#39;</span><span class="p">,</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    <span class="n">exchange</span><span class="o">=</span><span class="s1">&#39;BINANCE&#39;</span><span class="p">,</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>    <span class="n">sort</span><span class="o">=</span><span class="s1">&#39;most_urgent&#39;</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="p">)</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># 2. Get Full Content</span>
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="k">if</span> <span class="n">headlines</span><span class="p">:</span>
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>    <span class="n">story</span> <span class="o">=</span> <span class="n">scraper</span><span class="o">.</span><span class="n">scrape_news_content</span><span class="p">(</span><span class="n">headlines</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;storyPath&#39;</span><span class="p">])</span>
+</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">story</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">])</span>
+</span></code></pre></div>
 
 
 
@@ -2250,7 +1455,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../calendar/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Calendar Events">
+          <a href="../indicators/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Indicators">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -2260,20 +1465,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Calendar Events
+                Indicators
               </div>
             </div>
           </a>
         
         
           
-          <a href="../contributing/" class="md-footer__link md-footer__link--next" aria-label="Next: Contributing">
+          <a href="../realtime/" class="md-footer__link md-footer__link--next" aria-label="Next: Realtime Stream">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Contributing
+                Realtime Stream
               </div>
             </div>
             <div class="md-footer__button md-icon">
