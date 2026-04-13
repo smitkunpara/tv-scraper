@@ -1,22 +1,20 @@
 # Getting Started
 
-This guide covers installation, basic usage, response format, export options, and error handling for `tv-scraper`.
+This page is the shortest path to a successful request. It covers install, the common call pattern, exports, cookies, and one invalid-input example so you can see how failures look.
 
-## Installation
-
-### Using pip
+## Install
 
 ```bash
 pip install tv-scraper
 ```
 
-### Using uv
+Or with `uv`:
 
 ```bash
 uv add tv-scraper
 ```
 
-### Development Installation
+For local development:
 
 ```bash
 git clone https://github.com/smitkunpara/tv-scraper.git
@@ -24,183 +22,136 @@ cd tv-scraper
 uv sync --extra dev
 ```
 
-## Basic Usage
-
-### Market Data
+## First Successful Call
 
 ```python
-from tv_scraper import Technicals, Fundamentals, Markets
+from tv_scraper import Technicals
 
-# Technical indicators
-tech = Technicals()
-result = tech.get_technicals(exchange="NASDAQ", symbol="AAPL")
-print(result["data"])  # {"RSI": 65.5, "MACD.macd": 1.23, ...}
-
-# Fundamental data
-fundamentals = Fundamentals()
-result = fundamentals.get_fundamentals(exchange="NASDAQ", symbol="AAPL")
-print(result["data"])
-
-# Market listings (top stocks by market cap)
-markets = Markets()
-result = markets.get_markets(market="america")
-print(result["data"])
-```
-
-### Social
-
-```python
-from tv_scraper import Ideas, Minds, News
-
-# Trading ideas
-ideas = Ideas()
-result = ideas.get_ideas(exchange="CRYPTO", symbol="BTCUSD")
-for idea in result["data"]:
-    print(idea["title"], idea["author"])
-
-# Minds discussions
-minds = Minds()
-result = minds.get_minds(exchange="NASDAQ", symbol="AAPL")
-print(result["data"])
-
-# News
-news = News()
-result = news.get_news_headlines(exchange="NASDAQ", symbol="AAPL")
-for article in result["data"]:
-    print(article["title"])
-```
-
-### Screening
-
-```python
-from tv_scraper import Screener, MarketMovers, SymbolMarkets
-
-# Stock screener
-screener = Screener()
-result = screener.get_screener(market="america")
-print(result["data"])
-
-# Market movers
-movers = MarketMovers()
-result = movers.get_market_movers(market="stocks-usa", category="gainers")
-print(result["data"])
-
-# Find all exchanges for a symbol
-sym_markets = SymbolMarkets()
-result = sym_markets.get_markets(symbol="AAPL")
-print(result["data"])
-```
-
-### Events
-
-```python
-from tv_scraper import Calendar
-
-calendar = Calendar()
-result = calendar.get_dividends(markets=["america"])
-print(result["data"])
-```
-
-### Streaming
-
-```python
-from tv_scraper import Streamer
-
-# Get historical candles with indicators (with optional cookies for auth)
-streamer = Streamer(cookie="<TRADINGVIEW_COOKIE>")
-result = streamer.get_candles(
-    exchange="BINANCE",
-    symbol="BTCUSDT",
-    indicators=[("STD;RSI", "21.0")]  # (script_id, version) tuples
+scraper = Technicals()
+result = scraper.get_technicals(
+    exchange="NASDAQ",
+    symbol="AAPL",
+    technical_indicators=["RSI", "MACD.macd"],
 )
 
-# Real-time price streaming
-for tick in streamer.stream_realtime_price(exchange="BINANCE", symbol="BTCUSDT"):
-    print(tick["price"])
+if result["status"] == "success":
+    print(result["data"])
+else:
+    print(result["error"])
 ```
 
-## Response Format
-
-All scraper methods return a **standardized response envelope**:
+Output structure (success):
 
 ```python
 {
-    "status": "success",   # "success" or "failed"
-    "data": { ... },       # the response payload (dict, list, etc.)
-    "metadata": {          # contextual information
+    "status": "success",
+    "data": {"RSI": 54.21, "MACD.macd": 0.15},
+    "metadata": {
+        "exchange": "NASDAQ",
         "symbol": "AAPL",
-        "exchange": "NASDAQ"
+        "timeframe": "1d",
+        "technical_indicators": ["RSI", "MACD.macd"],
     },
-    "error": None          # error string if status == "failed", else None
+    "error": None,
 }
 ```
 
-### Checking for Errors
+Output structure (failure):
 
 ```python
-result = tech.get_technicals(exchange="NASDAQ", symbol="AAPL")
-
-if result["status"] == "success":
-    data = result["data"]
-    # process data
-else:
-    print(f"Error: {result['error']}")
+{
+    "status": "failed",
+    "data": None,
+    "metadata": {"exchange": "INVALID", "symbol": "AAPL"},
+    "error": "Invalid exchange: 'INVALID'. ...",
+}
 ```
 
-## Export Options
+Use this same pattern across the library:
 
-All scrapers support automatic export to JSON or CSV:
+1. Create the scraper or streamer.
+2. Call a public method with keyword arguments.
+3. Check `result["status"]`.
+4. Read `result["data"]` on success or `result["error"]` on failure.
+
+## Common Input Pattern
+
+Most symbol-based methods take `exchange` and `symbol` separately:
 
 ```python
-# Export to JSON
-tech = Technicals(export_result=True, export_type="json")
-result = tech.get_technicals(exchange="NASDAQ", symbol="AAPL")
-# File saved to export/ directory
-
-# Export to CSV
-tech = Technicals(export_result=True, export_type="csv")
-result = tech.get_technicals(exchange="NASDAQ", symbol="AAPL")
+result = scraper.get_technicals(exchange="NASDAQ", symbol="AAPL")
 ```
 
-Supported export types:
-- `"json"` — saves as a `.json` file
-- `"csv"` — saves as a `.csv` file
+To find accepted values quickly, jump straight to:
 
-Invalid export types raise a `ValueError` at construction time:
+- [Exchanges](supported_data.md#exchanges)
+- [Technical indicators](supported_data.md#technical-indicators)
+- [Timeframes](supported_data.md#timeframes)
+- [Languages](supported_data.md#languages)
+
+## Response Shape
+
+All public methods return the same outer envelope:
 
 ```python
-try:
-    tech = Technicals(export_type="xml")  # ValueError!
-except ValueError as e:
-    print(e)
+{
+    "status": "success" | "failed",
+    "data": ...,
+    "metadata": {...},
+    "error": None | "message",
+}
 ```
 
-## Error Handling
+## Exports
 
-Scrapers **never raise exceptions** for data errors. Instead, they return an error response:
-
-```python
-result = tech.get_technicals(exchange="INVALID", symbol="AAPL")
-# {
-#     "status": "failed",
-#     "data": None,
-#     "metadata": {"exchange": "INVALID", "symbol": "AAPL"},
-#     "error": "Invalid exchange: 'INVALID'. ..."
-# }
-```
-
-Only construction-time validation (like invalid `export_type`) raises exceptions.
-
-### Exception Types
-
-For advanced usage, the exception hierarchy is available in `tv_scraper.core.exceptions`:
+Most scrapers can export successful responses to JSON or CSV:
 
 ```python
-from tv_scraper.core import (
-    TvScraperError,     # Base exception
-    ValidationError,    # Invalid parameters
-    DataNotFoundError,  # Requested data not found
-    NetworkError,       # HTTP/WebSocket failures
-    ExportError,        # File export failures
+from tv_scraper import Technicals
+
+scraper = Technicals(export_result=True, export_type="json")
+result = scraper.get_technicals(
+    exchange="NASDAQ",
+    symbol="AAPL",
+    technical_indicators=["RSI"],
 )
 ```
+
+Supported export formats:
+
+- `"json"`
+- `"csv"`
+
+Invalid export formats are one of the few cases that fail at construction time:
+
+```python
+Technicals(export_type="xml")
+```
+
+## Cookie-Based Features
+
+A cookie is optional for most HTTP scrapers, but required for:
+
+- [Pine](scrapers/pine.md)
+- authenticated streaming flows such as custom indicator access
+
+The library will use `TRADINGVIEW_COOKIE` automatically when the constructor `cookie` argument is omitted. See [Getting Cookies](getting_cookies.md).
+
+!!! failure "wrong input"
+    This input shape is wrong because `exchange` and `symbol` are separate arguments.
+
+    ```python
+    scraper.get_technicals(exchange="NASDAQ:AAPL", symbol="AAPL")
+    ```
+
+    Use this instead:
+
+    ```python
+    scraper.get_technicals(exchange="NASDAQ", symbol="AAPL")
+    ```
+
+## Next Steps
+
+- Want exact request rules and response behavior: [API Basics](api-conventions.md)
+- Need a method-specific page: browse the [scraper docs](index.md#choose-by-task)
+- Need valid values fast: [Validation & Supported Values](supported_data.md)

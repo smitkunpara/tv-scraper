@@ -1,110 +1,147 @@
-# API Conventions
+# API Basics
 
-This document defines the standards for the `tv-scraper` public API.
+This page covers the request and response patterns that stay consistent across `tv-scraper`.
 
-## Input Parameters
+## Request Style
 
-### Symbol Identification
-All scrapers accept `exchange` and `symbol` as **separate** string parameters:
+### Separate `exchange` and `symbol`
+
+For symbol-based methods, pass them as two arguments:
+
 ```python
 scraper.get_technicals(exchange="NASDAQ", symbol="AAPL")
 ```
 
-### Field Selection
-Optional field selection uses a list of strings:
-```python
-scraper.get_technicals(exchange="NASDAQ", symbol="AAPL", fields=["close", "volume", "change"])
-```
-
-### Sorting
-Sorting follows a consistent pattern:
-```python
-scraper.get_technicals(sort_by="volume", sort_order="desc")  # or "asc"
-```
-`sort_order` defaults to `"desc"` when not specified.
-
-### Naming Convention
-All parameters use **snake_case**:
-```python
-# Correct
-scraper.get_technicals(export_result=True, export_type="json", sort_by="change")
-
-# Wrong — never use camelCase
-scraper.get_technicals(exportResult=True)
-```
-
-## Output Format
-
-### Response Envelope
-Every public scraper method returns a standardized response dict:
+Output structure:
 
 ```python
 {
-    "status": "success",        # or "failed"
-    "data": [...],              # payload (list, dict, or None on failure)
-    "metadata": {               # contextual info
-        "symbol": "AAPL",
+    "status": "success",
+    "data": {"RSI": 54.21},
+    "metadata": {
         "exchange": "NASDAQ",
-        "total": 25
+        "symbol": "AAPL",
+        "timeframe": "1d",
+        "technical_indicators": ["RSI"],
     },
-    "error": None               # error message string, or None on success
+    "error": None,
 }
 ```
 
-### Success Response
-- `status` is always `"success"`
-- `data` contains the requested payload
-- `error` is always `None`
-- `metadata` contains relevant context (symbol, exchange, counts, etc.)
+### Use keyword arguments
 
-### Error Response
-- `status` is always `"failed"`
-- `data` is usually `None`, but may contain partial data (e.g. in `get_forecast` timeouts)
-- `error` contains a descriptive error message
-- `metadata` contains relevant context (symbol, exchange, provided parameters)
+Keyword arguments make the calls easier to read and reduce mistakes:
+
+```python
+scraper.get_market_movers(
+    market="stocks-usa",
+    category="gainers",
+    limit=10,
+)
+```
+
+### Optional lists stay as Python lists
+
+```python
+scraper.get_news(
+    provider=["reuters", "tradingview"],
+    market_country=["US", "IN"],
+    market=["stock", "crypto"],
+)
+```
+
+### Naming stays snake_case
+
+```python
+scraper.get_technicals(export_result=True, export_type="json")
+```
+
+## Response Envelope
+
+Every public scraper method returns:
+
+```python
+{
+    "status": "success" | "failed",
+    "data": ...,
+    "metadata": {...},
+    "error": None | "message",
+}
+```
+
+### What changes by method
+
+- `data` can be a dict, list, or `None`
+- `metadata` keeps the call context and method-specific details
+- `error` is `None` on success and a message on failure
+
+### Important nuance
+
+Most failures return `data=None`, but some methods can return partial data with `status="failed"` when that is the intended behavior. The forecast streaming methods are the main example.
 
 ## Error Handling
 
-### Scraper Methods Never Raise
-Public scraper methods **never raise exceptions**. All errors are caught internally and returned as error responses:
+!!! warning "Error Handling"
+    Public scraper methods return failures instead of raising data-access errors.
 
 ```python
-result = scraper.get_technicals(exchange="INVALID", symbol="AAPL")
-# Returns: {"status": "failed", "data": None, "error": "Invalid exchange: ...", "metadata": {}}
+result = scraper.get_technicals(
+    exchange="INVALID",
+    symbol="AAPL",
+    technical_indicators=["RSI"],
+)
 ```
 
-### Validators Raise Internally
-The `DataValidator` raises `ValidationError` for invalid input. `BaseScraper` subclasses catch these and convert them to error responses — exceptions never escape to user code.
-
-## Type Hints
-
-All functions and methods have **100% type hints**:
 ```python
-def get_technicals(
-    self,
-    exchange: str,
-    symbol: str,
-    fields: Optional[List[str]] = None,
-    sort_by: Optional[str] = None,
-    sort_order: str = "desc",
-) -> Dict[str, Any]:
-    ...
+{
+    "status": "failed",
+    "data": None,
+    "metadata": {
+        "exchange": "INVALID",
+        "symbol": "AAPL",
+        "technical_indicators": ["RSI"],
+    },
+    "error": "Invalid exchange: 'INVALID'. ...",
+}
 ```
 
-## Docstrings
+!!! failure "wrong input"
+    This is the wrong style for public methods.
 
-All public classes and methods use **Google-style docstrings**:
+    ```python
+    scraper.get_market_movers(market="stocks-usa", sortOrder="desc")
+    ```
+
+    Use snake_case:
+
+    ```python
+    scraper.get_market_movers(market="stocks-usa", language="en")
+    ```
+
+## Construction-Time Errors
+
+!!! warning "Construction-Time Errors"
+    Some constructor arguments are validated immediately. The common ones are:
+
+    - invalid `export_type`
+    - invalid `timeout`
+
+    That means these fail before any network call happens:
+
 ```python
-def validate_exchange(self, exchange: str) -> bool:
-    """Validate exchange exists.
+from tv_scraper import Technicals
 
-    Args:
-        exchange: Exchange name to validate.
-
-    Returns:
-        True if exchange is valid.
-
-    Raises:
-        ValidationError: If exchange is not found.
-    """
+Technicals(export_type="xml")
+Technicals(timeout=0)
 ```
+
+## Finding Accepted Values
+
+When a page says an input must be from a supported list, use the exact section links:
+
+- [Exchanges](supported_data.md#exchanges)
+- [Technical indicators](supported_data.md#technical-indicators)
+- [Timeframes](supported_data.md#timeframes)
+- [Languages](supported_data.md#languages)
+- [News providers](supported_data.md#news-providers)
+- [News countries](supported_data.md#news-countries)

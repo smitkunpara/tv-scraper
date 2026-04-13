@@ -27,7 +27,7 @@ We welcome contributions from the community! This guide will help you get starte
 
 1. **Fork and Clone the Repository**
    ```bash
-   git clone https://github.com/YOUR_USERNAME/tv-scraper.git
+   git clone https://github.com/smitkunpara/tv-scraper.git
    cd tv-scraper
    ```
 
@@ -57,6 +57,35 @@ We welcome contributions from the community! This guide will help you get starte
    # Build docs for production
    mkdocs build
    ```
+
+## 📚 Versioned Docs
+
+This project uses MkDocs Material with `mike` for versioned documentation publishing.
+
+### Local docs commands
+
+```bash
+# Install docs tooling
+uv sync --extra dev
+
+# Preview current docs
+uv run mkdocs serve
+
+# Preview versioned docs locally
+uv run mike serve
+```
+
+### Release-oriented docs publishing
+
+```bash
+# Publish a release docs version
+uv run mike deploy --update-aliases <version> <alias>
+
+# Set the default docs version
+uv run mike set-default latest
+```
+
+Keep the docs flow aligned with release tags, and update `AGENTS.md` if it still describes older docs instructions or outdated project structure.
 
 ## 🧪 Testing
 

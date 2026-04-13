@@ -39,7 +39,7 @@ A comprehensive reference for tv-scraper's architecture, design patterns, and im
 
 ### Install from Source
 ```bash
-git clone https://github.com/yourusername/tv-scraper.git
+git clone https://github.com/smitkunpara/tv-scraper.git
 cd tv-scraper
 pip install -e .
 ```
@@ -48,13 +48,13 @@ pip install -e .
 ```bash
 pytest tests/           # All tests
 pytest tests/unit/      # Unit tests
-pytest tests/live_api/  # Live TradingView API tests (live connection required)
+pytest tests/live/      # Live TradingView API tests (live connection required)
 pytest tests/integration/  # Cross-module integration tests
 ```
 
 ### Key Test Files
 - `tests/unit/test_*.py` — Isolated component tests
-- `tests/live_api/` — Tests requiring live TradingView connection
+- `tests/live/` — Tests requiring live TradingView connection
 - `tests/integration/test_cross_module.py` — Multi-module workflows
 
 ---
@@ -144,7 +144,7 @@ Extends `BaseScraper` for scanner-driven scrapers (e.g., `Fundamentals`, `Market
 
 ### BaseStreamer
 Extends `BaseScraper` for real-time WebSocket interactions. Provides:
-- **`connect()`**: Builds a `StreamHandler` using either `unauthorized_user_token` or cookie-resolved JWT.
+- **`connect()`**: Initializes the WebSocket connection on the streamer instance using either `unauthorized_user_token` or a cookie-resolved JWT.
 - Runtime JWT resolution failure is raised as `RuntimeError` from `connect()`.
 - Shared indicator study mapping state via `study_id_to_name_map`.
 
@@ -212,7 +212,7 @@ def generate_session(prefix="qs_"):
 
 **Pattern Recognition:** `~m~\d+~m~~h~\d+$`
 
-**Response:** Echo identical heartbeat back to server (automatically handled by `StreamHandler.receive_packets()`)
+**Response:** Echo identical heartbeat back to server (automatically handled by `BaseStreamer.receive_packets()`)
 
 ---
 
@@ -874,7 +874,7 @@ def get_news_content(
 
 **Method Signature:**
 ```python
-def connect(self) -> StreamHandler:
+def connect(self) -> None:
 ```
 
 **Flow:**
@@ -882,7 +882,7 @@ def connect(self) -> StreamHandler:
 1. Start with websocket_jwt_token="unauthorized_user_token".
 2. If cookie exists, resolve JWT via get_valid_jwt_token(cookie).
 3. On JWT resolution failure, raise RuntimeError.
-4. Return StreamHandler(jwt_token=resolved_token).
+4. Create the WebSocket connection, initialize quote/chart sessions, and store state on the instance.
 ```
 
 **Known Behavior Nuance:**
@@ -1072,18 +1072,16 @@ def get_available_indicators() -> dict[str, Any]
 - Generator runs until stream ends; no internal max packet stop condition.
 - This method is not envelope-wrapped and may raise during iteration (validation/connect/network/runtime errors).
 
-### StreamHandler Core Implementation
+### BaseStreamer WebSocket Implementation
 
-**Source:** `tv_scraper/streaming/stream_handler.py`
+**Source:** `tv_scraper/streaming/base_streamer.py`
 
 **Core Methods:**
 
 | Method | Purpose | Returns |
 |--------|---------|---------|
-| `generate_session(prefix="qs_")` | Create unique session ID | `"qs_abcdefghijklm"` |
-| `create_message(method, params)` | Build JSON-RPC message | `{"m":method, "p":params}` |
-| `prepend_header(json_str)` | Add length prefix | `"~m~53~m~{json}"` |
-| `send_message(msg)` | Transmit via WebSocket | None (logs errors) |
+| `_generate_session(prefix="qs_")` | Create unique session ID | `"qs_abcdefghijklm"` |
+| `_send_msg(method, params)` | Build and send JSON-RPC message | None |
 | `receive_packets()` | Generator yields JSON packets | Iterator[dict] |
 
 **Packet Reception Logic:**
@@ -1099,7 +1097,7 @@ def get_available_indicators() -> dict[str, Any]
 - `WebSocketConnectionClosedException` → Log, break
 - `TimeoutError` → Continue (non-fatal)
 - `OSError/ConnectionError` → Log, break
-- Always close socket in `finally` block
+- The connected socket is stored on the streamer instance
 
 ---
 

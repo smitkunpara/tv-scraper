@@ -1,34 +1,39 @@
-# Supported Data
+# Validation & Supported Values
 
-## Supported Areas
+Use this page when a method asks for a specific exchange, timeframe, language, or filter value. The sections below are meant to be the lookup surface for the valid values documented across the scraper pages.
 
-| Code | Name | Description |
-|------|------|-------------|
-| WLD | World | Global coverage |
-| AME | Americas | North and South America |
-| EUR | Europe | European continent |
-| ASI | Asia | Asian continent |
-| OCN | Oceania | Australia, New Zealand, Pacific Islands |
-| AFR | Africa | African continent |
+## Jump To
 
-## Supported Exchanges
+- [Exchanges](#exchanges)
+- [Technical indicators](#technical-indicators)
+- [Timeframes](#timeframes)
+- [Languages](#languages)
+- [News areas](#news-areas)
+- [News countries](#news-countries)
+- [News providers](#news-providers)
+- [News sectors](#news-sectors)
+- [News corporate activities](#news-corporate-activities)
+- [News economic categories](#news-economic-categories)
+- [News asset markets](#news-asset-markets)
 
-The following exchanges are supported:
+## Exchanges
 
-```
+These are the documented exchange values used by symbol-based methods such as `get_technicals()`, `get_fundamentals()`, `get_news_headlines()`, and most streaming calls.
+
+```text
 ADX ALOR AMEX ASX ATHEX BAHRAIN BASESWAP BCBA BCS BELEX
 BER BET BINANCE BINANCEUS BINGX BIST BISWAP BITAZZA BITBNS BITCOKE
 BITFINEX BITFLYER BITGET BITHUMB BITKUB BITMART BITMEX BITPANDAPRO
 BITRUE BITSTAMP BITTREX BITVAVO BIVA BLACKBULL BLOFIN BME BMFBOVESPA BMV BSE BSSE
 BTSE BVB BVC BVCV BVL BVMT BX BYBIT CAMELOT CAMELOT3ARBITRUM
 CAPITALCOM CBOE CBOT CBOT_MINI CEXIO CFFEX CITYINDEX CME CME_MINI COINBASE
-COINEX COMEX COMEX_MINI CRYPTO CRYPTOCAP CRYPTOCOM CSE CSECY CSELK CSEMA
+COINEX COMEX COMEX_MINI CRYPTO CRYPTOCAP CRYPTOCOM CRYPTO_SCAN CSE CSECY CSELK CSEMA
 CURRENCYCOM CURVE DELTA DERIBIT DFM DJ DSEBD DUS DYDX EASYMARKETS
-ECONOMICS EGX EIGHTCAP EURONEXT EUROTLX EUREX EXMO FINRA FOREXCOM FSE
-FTSEMYX FTX FWB FX FX_IDC FXCM FXOPEN GATEIO GEMINI GETTEX
+ECONOMICS EGX EIGHTCAP EUREX EURONEXT EUROTLX EXMO FINRA FOREXCOM FSE
+FTSEMYX FTX FWB FX FXCM FXOPEN FX_IDC GATEIO GEMINI GETTEX
 GLOBALPRIME GPW HAM HAN HITBTC HKEX HNX HONEYSWAP HONEYSWAPPOLYGON
 HOSE HSI HTX HUOBI ICEAD ICEEUR ICESG ICEUS IDX INDEX
-JSE KATANA KRX KRAKEN KSE KUCOIN LS LSE LSIN LSX
+JSE KATANA KRAKEN KRX KSE KUCOIN LS LSE LSIN LSX
 LUXSE MATBAROFEX MCX MERCADO MEXC MGEX MIL MMFINANCE MOEX MUN MYX
 NAG NASDAQ NASDAQDUBAI NCDEX NEO NEWCONNECT NGM NSE
 NSEKE NSENG NYMEX NYMEX_MINI NYSE NZX OANDA OKCOIN OKX OMXCOP
@@ -42,141 +47,170 @@ TVC TWSE UNISWAP UNISWAP3ARBITRUM UNISWAP3AVALANCHE UNISWAP3BASE UNISWAP3BSC UNI
 UNISWAP3POLYGON UPBIT UPCOM VANTAGE VELODROME VERSEETH VIE VVSFINANCE WAGYUSWAP WHITEBIT WOONETWORK XETR XEXCHANGE ZOOMEX
 ```
 
-## Supported Indicators
+## Technical Indicators
 
-### Momentum Indicators
+These values are used by `Technicals.get_technicals(..., technical_indicators=[...])`.
+
+### Momentum & Oscillators
 
 | Indicator | Description |
 |-----------|-------------|
 | RSI | Relative Strength Index |
-| RSI[1] | RSI (previous value) |
+| RSI[1] | Previous RSI value |
 | Stoch.K | Stochastic %K |
 | Stoch.D | Stochastic %D |
-| Stoch.K[1] | Stochastic %K (previous) |
-| Stoch.D[1] | Stochastic %D (previous) |
-| CCI20 | Commodity Channel Index (20-period) |
-| CCI20[1] | CCI20 (previous) |
+| Stoch.K[1] | Previous Stochastic %K |
+| Stoch.D[1] | Previous Stochastic %D |
+| CCI20 | Commodity Channel Index (20) |
+| CCI20[1] | Previous CCI20 value |
 | ADX | Average Directional Index |
-| ADX+DI | ADX + Directional Indicator |
-| ADX-DI | ADX - Directional Indicator |
-| ADX+DI[1] | ADX+DI (previous) |
-| ADX-DI[1] | ADX-DI (previous) |
+| ADX+DI | Positive directional indicator |
+| ADX-DI | Negative directional indicator |
+| ADX+DI[1] | Previous ADX+DI value |
+| ADX-DI[1] | Previous ADX-DI value |
 | AO | Awesome Oscillator |
-| AO[1] | AO (previous) |
-| AO[2] | AO (previous 2) |
+| AO[1] | Previous Awesome Oscillator |
+| AO[2] | Two periods back Awesome Oscillator |
 | Mom | Momentum |
-| Mom[1] | Momentum (previous) |
+| Mom[1] | Previous momentum |
+| Rec.Stoch.RSI | Stochastic RSI recommendation |
+| Stoch.RSI.K | Stochastic RSI %K |
+| Rec.WR | Williams %R recommendation |
+| W.R | Williams %R |
+| Rec.BBPower | Bollinger Bands Power recommendation |
+| BBPower | Bollinger Bands Power |
+| Rec.UO | Ultimate Oscillator recommendation |
+| UO | Ultimate Oscillator |
 
-### Moving Averages
-
-| Indicator | Description |
-|-----------|-------------|
-| EMA10 | Exponential Moving Average (10) |
-| EMA20 | Exponential Moving Average (20) |
-| EMA30 | Exponential Moving Average (30) |
-| EMA50 | Exponential Moving Average (50) |
-| EMA100 | Exponential Moving Average (100) |
-| EMA200 | Exponential Moving Average (200) |
-| SMA10 | Simple Moving Average (10) |
-| SMA20 | Simple Moving Average (20) |
-| SMA30 | Simple Moving Average (30) |
-| SMA50 | Simple Moving Average (50) |
-| SMA100 | Simple Moving Average (100) |
-| SMA200 | Simple Moving Average (200) |
-| VWMA | Volume Weighted Moving Average |
-| HullMA9 | Hull Moving Average (9) |
-
-### MACD Components
+### Trend, Price & Averages
 
 | Indicator | Description |
 |-----------|-------------|
-| MACD.macd | MACD Line |
-| MACD.signal | MACD Signal Line |
+| EMA10 | Exponential moving average (10) |
+| EMA20 | Exponential moving average (20) |
+| EMA30 | Exponential moving average (30) |
+| EMA50 | Exponential moving average (50) |
+| EMA100 | Exponential moving average (100) |
+| EMA200 | Exponential moving average (200) |
+| SMA10 | Simple moving average (10) |
+| SMA20 | Simple moving average (20) |
+| SMA30 | Simple moving average (30) |
+| SMA50 | Simple moving average (50) |
+| SMA100 | Simple moving average (100) |
+| SMA200 | Simple moving average (200) |
+| Rec.Ichimoku | Ichimoku recommendation |
+| Ichimoku.BLine | Ichimoku baseline |
+| Rec.VWMA | VWMA recommendation |
+| VWMA | Volume weighted moving average |
+| Rec.HullMA9 | Hull MA9 recommendation |
+| HullMA9 | Hull moving average (9) |
+| close | Close price |
+
+### Recommendations & MACD
+
+| Indicator | Description |
+|-----------|-------------|
+| Recommend.Other | Other recommendation score |
+| Recommend.All | Overall recommendation score |
+| Recommend.MA | Moving-average recommendation score |
+| MACD.macd | MACD line |
+| MACD.signal | MACD signal line |
 
 ### Pivot Points
 
-#### Classic
 | Indicator | Description |
 |-----------|-------------|
-| Pivot.M.Classic.S3 | Classic Pivot S3 |
-| Pivot.M.Classic.S2 | Classic Pivot S2 |
-| Pivot.M.Classic.S1 | Classic Pivot S1 |
-| Pivot.M.Classic.Middle | Classic Pivot Middle |
-| Pivot.M.Classic.R1 | Classic Pivot R1 |
-| Pivot.M.Classic.R2 | Classic Pivot R2 |
-| Pivot.M.Classic.R3 | Classic Pivot R3 |
+| Pivot.M.Classic.S3 | Classic pivot S3 |
+| Pivot.M.Classic.S2 | Classic pivot S2 |
+| Pivot.M.Classic.S1 | Classic pivot S1 |
+| Pivot.M.Classic.Middle | Classic pivot middle |
+| Pivot.M.Classic.R1 | Classic pivot R1 |
+| Pivot.M.Classic.R2 | Classic pivot R2 |
+| Pivot.M.Classic.R3 | Classic pivot R3 |
+| Pivot.M.Fibonacci.S3 | Fibonacci pivot S3 |
+| Pivot.M.Fibonacci.S2 | Fibonacci pivot S2 |
+| Pivot.M.Fibonacci.S1 | Fibonacci pivot S1 |
+| Pivot.M.Fibonacci.Middle | Fibonacci pivot middle |
+| Pivot.M.Fibonacci.R1 | Fibonacci pivot R1 |
+| Pivot.M.Fibonacci.R2 | Fibonacci pivot R2 |
+| Pivot.M.Fibonacci.R3 | Fibonacci pivot R3 |
+| Pivot.M.Camarilla.S3 | Camarilla pivot S3 |
+| Pivot.M.Camarilla.S2 | Camarilla pivot S2 |
+| Pivot.M.Camarilla.S1 | Camarilla pivot S1 |
+| Pivot.M.Camarilla.Middle | Camarilla pivot middle |
+| Pivot.M.Camarilla.R1 | Camarilla pivot R1 |
+| Pivot.M.Camarilla.R2 | Camarilla pivot R2 |
+| Pivot.M.Camarilla.R3 | Camarilla pivot R3 |
+| Pivot.M.Woodie.S3 | Woodie pivot S3 |
+| Pivot.M.Woodie.S2 | Woodie pivot S2 |
+| Pivot.M.Woodie.S1 | Woodie pivot S1 |
+| Pivot.M.Woodie.Middle | Woodie pivot middle |
+| Pivot.M.Woodie.R1 | Woodie pivot R1 |
+| Pivot.M.Woodie.R2 | Woodie pivot R2 |
+| Pivot.M.Woodie.R3 | Woodie pivot R3 |
+| Pivot.M.Demark.S1 | DeMark pivot S1 |
+| Pivot.M.Demark.Middle | DeMark pivot middle |
+| Pivot.M.Demark.R1 | DeMark pivot R1 |
 
-#### Fibonacci
-| Indicator | Description |
-|-----------|-------------|
-| Pivot.M.Fibonacci.S3 | Fibonacci Pivot S3 |
-| Pivot.M.Fibonacci.S2 | Fibonacci Pivot S2 |
-| Pivot.M.Fibonacci.S1 | Fibonacci Pivot S1 |
-| Pivot.M.Fibonacci.Middle | Fibonacci Pivot Middle |
-| Pivot.M.Fibonacci.R1 | Fibonacci Pivot R1 |
-| Pivot.M.Fibonacci.R2 | Fibonacci Pivot R2 |
-| Pivot.M.Fibonacci.R3 | Fibonacci Pivot R3 |
+## Timeframes
 
-#### Camarilla
-| Indicator | Description |
-|-----------|-------------|
-| Pivot.M.Camarilla.S3 | Camarilla Pivot S3 |
-| Pivot.M.Camarilla.S2 | Camarilla Pivot S2 |
-| Pivot.M.Camarilla.S1 | Camarilla Pivot S1 |
-| Pivot.M.Camarilla.Middle | Camarilla Pivot Middle |
-| Pivot.M.Camarilla.R1 | Camarilla Pivot R1 |
-| Pivot.M.Camarilla.R2 | Camarilla Pivot R2 |
-| Pivot.M.Camarilla.R3 | Camarilla Pivot R3 |
+These values are used by `Technicals`, `CandleStreamer`, and other timeframe-aware methods.
 
-#### Woodie
-| Indicator | Description |
-|-----------|-------------|
-| Pivot.M.Woodie.S3 | Woodie Pivot S3 |
-| Pivot.M.Woodie.S2 | Woodie Pivot S2 |
-| Pivot.M.Woodie.S1 | Woodie Pivot S1 |
-| Pivot.M.Woodie.Middle | Woodie Pivot Middle |
-| Pivot.M.Woodie.R1 | Woodie Pivot R1 |
-| Pivot.M.Woodie.R2 | Woodie Pivot R2 |
-| Pivot.M.Woodie.R3 | Woodie Pivot R3 |
+| Input | API code |
+|-------|----------|
+| `1m` | `1` |
+| `5m` | `5` |
+| `15m` | `15` |
+| `30m` | `30` |
+| `1h` | `60` |
+| `2h` | `120` |
+| `4h` | `240` |
+| `1d` | `1D` |
+| `1w` | `1W` |
+| `1M` | `1M` |
 
-#### DeMark
-| Indicator | Description |
-|-----------|-------------|
-| Pivot.M.Demark.S1 | DeMark Pivot S1 |
-| Pivot.M.Demark.Middle | DeMark Pivot Middle |
-| Pivot.M.Demark.R1 | DeMark Pivot R1 |
+## Languages
 
-### Recommendation Indicators
+| Language | Code |
+|----------|------|
+| English | `en` |
+| German | `de` |
+| French | `fr` |
+| Spanish | `es` |
+| Italian | `it` |
+| Portuguese | `pt` |
+| Russian | `ru` |
+| Japanese | `ja` |
+| Korean | `ko` |
+| Arabic | `ar` |
+| Hindi | `hi` |
+| Swedish | `sv` |
+| Turkish | `tr` |
+| Thai | `th` |
+| Vietnamese | `vi` |
+| Indonesian | `id` |
+| Persian | `fa` |
+| Chinese | `ch` |
+| Malay | `ms` |
+| Greek | `el` |
+| Hebrew | `he` |
 
-| Indicator | Description |
-|-----------|-------------|
-| Recommend.Other | Other Recommendations |
-| Recommend.All | All Recommendations |
-| Recommend.MA | Moving Average Recommendations |
-| Rec.Stoch.RSI | Stochastic RSI Recommendation |
-| Rec.WR | Williams %R Recommendation |
-| Rec.BBPower | Bollinger Bands Power Recommendation |
-| Rec.UO | Ultimate Oscillator Recommendation |
-| Rec.Ichimoku | Ichimoku Recommendation |
-| Rec.VWMA | VWMA Recommendation |
-| Rec.HullMA9 | Hull MA9 Recommendation |
+## News Areas
 
-### Other Indicators
+Used by `get_news_headlines(..., area=...)`.
 
-| Indicator | Description |
-|-----------|-------------|
-| BBPower | Bollinger Bands Power |
-| UO | Ultimate Oscillator |
-| Ichimoku.BLine | Ichimoku Baseline |
-| close | Close Price |
-| W.R | Williams %R |
-| Stoch.RSI.K | Stochastic RSI %K |
+| Input value | Code |
+|-------------|------|
+| `world` | `WLD` |
+| `americas` | `AME` |
+| `europe` | `EUR` |
+| `asia` | `ASI` |
+| `oceania` | `OCN` |
+| `africa` | `AFR` |
 
-## Supported News Filters (Flow v2)
+## News Countries
 
-The `get_news()` method supports the following categorical filters.
-
-### News Countries
+Used by `get_news(..., market_country=[...])`.
 
 | Code | Country/Region |
 |------|----------------|
@@ -269,75 +303,67 @@ The `get_news()` method supports the following categorical filters.
 | ZM | Zambia |
 | ZW | Zimbabwe |
 
-### News Providers
+## News Providers
 
-The following providers are supported across the Flow and Headlines APIs:
+Used by `get_news(..., provider=[...])` and `get_news_headlines(..., provider=...)`.
 
-| Code | Description |
-|------|-------------|
-| 99Bitcoins | 99Bitcoins |
-| acceswire | Accesswire |
-| acn | ACN Newswire |
-| barchart | Barchart |
-| beincrypto | BeInCrypto |
-| bitcoin_com | Bitcoin.com |
-| bitcoinist | Bitcoinist |
-| blockonomi | Blockonomi |
-| bloomberg | Bloomberg (Limited) |
-| bravenewcoin | Brave New Coin |
-| chainwire | Chainwire |
-| cme_group | CME Group |
-| coindar | Coindar |
-| coindesk | CoinDesk |
-| coinmarketcal | CoinMarketCal |
-| coinpedia | Coinpedia |
-| cointelegraph | Cointelegraph |
-| cryptobriefing | CryptoBriefing |
-| cryptoglobe | CryptoGlobe |
-| cryptomiso | CryptoMiso |
-| cryptonews | CryptoNews |
-| cryptopotato | CryptoPotato |
-| cryptoslate | CryptoSlate |
-| dailyfx | DailyFX |
-| decrypt | Decrypt |
-| dow-jones | Dow Jones |
-| dpa_afx | dpa-AFX |
-| eqs | EQS Group |
-| etfcom | ETF.com |
-| financemagnates | Finance Magnates |
-| financewire | FinanceWire |
-| forexlive | ForexLive |
-| globenewswire | GlobeNewswire |
-| gurufocus | GuruFocus |
-| investorplace | InvestorPlace |
-| invezz | Invezz |
-| jcn | JCN Newswire |
-| leverage_shares | Leverage Shares |
-| macenews | MaceNews |
-| market-watch | MarketWatch |
-| marketbeat | MarketBeat |
-| marketindex | MarketIndex |
-| miranda_partners | Miranda Partners |
-| modular_finance | Modular Finance |
-| moneycontrol | Moneycontrol |
-| nbd | National Bank of Dubai |
-| newsbtc | NewsBTC |
-| pressetext | pressetext |
-| quartr | Quartr |
-| reuters | Reuters |
-| rns | RNS |
-| stocktitan | Stocktitan |
-| streetinsider | StreetInsider |
-| technode | TechNode |
-| the_block | The Block |
-| todayq | Todayq |
-| tradingview | TradingView |
-| u_today | U.Today |
-| utoday | U.Today (Alternative) |
-| zycrypto | ZyCrypto |
-| ... and many others | (Refer to constants in `validation_data.py`) |
+| Provider |
+|----------|
+| 99Bitcoins |
+| acceswire |
+| acn |
+| barchart |
+| beincrypto |
+| bravenewcoin |
+| chainwire |
+| cme_group |
+| coindar |
+| coinmarketcal |
+| coinpedia |
+| cointelegraph |
+| cryptobriefing |
+| cryptonews |
+| dow-jones |
+| dpa_afx |
+| eqs |
+| etfcom |
+| financemagnates |
+| financewire |
+| forexlive |
+| globenewswire |
+| gurufocus |
+| investorplace |
+| invezz |
+| jcn |
+| leverage_shares |
+| macenews |
+| market-watch |
+| marketbeat |
+| marketindex |
+| miranda_partners |
+| modular_finance |
+| moneycontrol |
+| nbd |
+| newsbtc |
+| pressetext |
+| quartr |
+| reuters |
+| sharecast |
+| smallcaps |
+| stockstory |
+| stocktwits |
+| the_block |
+| thenewswire |
+| tmx_newsfile |
+| trading-economics |
+| tradingview |
+| u_today |
+| zacks |
+| zawya |
 
-### News Sectors
+## News Sectors
+
+Used by `get_news(..., sector=[...])`.
 
 | Sector |
 |--------|
@@ -363,25 +389,29 @@ The following providers are supported across the Flow and Headlines APIs:
 | Transportation |
 | Utilities |
 
-### News Corporate Activities
+## News Corporate Activities
+
+Used by `get_news(..., corp_activity=[...])`.
 
 | Activity | Description |
 |----------|-------------|
-| credit_ratings | Credit Ratings |
+| credit_ratings | Credit ratings |
 | dividends | Dividends |
 | earnings | Earnings |
-| earnings_calls | Earnings Calls |
+| earnings_calls | Earnings calls |
 | esg | ESG |
-| insider_trading | Insider Trading |
-| ipo | IPOs |
-| management | Management Changes |
-| mergers_and_acquisitions | M&A |
-| ownership_changes | Ownership Changes |
+| insider_trading | Insider trading |
+| ipo | IPO |
+| management | Management changes |
+| mergers_and_acquisitions | Mergers and acquisitions |
+| ownership_changes | Ownership changes |
 | recommendation | Recommendations |
-| share_buybacks | Share Buybacks |
-| strategy_business_products | Business Strategy |
+| share_buybacks | Share buybacks |
+| strategy_business_products | Strategy, business, and products |
 
-### News Economic Categories
+## News Economic Categories
+
+Used by `get_news(..., economic_category=[...])`.
 
 | Category | Description |
 |----------|-------------|
@@ -397,12 +427,14 @@ The following providers are supported across the Flow and Headlines APIs:
 | taxes | Taxes |
 | trade | Trade |
 
-### News Asset Markets
+## News Asset Markets
+
+Used by `get_news(..., market=[...])`.
 
 | Market | Description |
 |--------|-------------|
 | bond | Bonds |
-| corp_bond | Corporate Bonds |
+| corp_bond | Corporate bonds |
 | crypto | Crypto |
 | economic | Economic |
 | etf | ETF |
@@ -410,25 +442,3 @@ The following providers are supported across the Flow and Headlines APIs:
 | futures | Futures |
 | index | Indices |
 | stock | Stocks |
-
-## Supported Languages
-
-| Language | Code |
-|----------|------|
-| English | en |
-| German | de |
-| French | fr |
-| ... | (See standard codes) |
-
-## Supported Timeframes
-
-| Timeframe | Code |
-|-----------|------|
-| 1m | 1 |
-| 5m | 5 |
-| 15m | 15 |
-| 30m | 30 |
-| 1h | 60 |
-| 1d | 1D |
-| 1w | 1W |
-| 1M | 1M |

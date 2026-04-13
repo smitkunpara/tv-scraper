@@ -52,14 +52,12 @@ theme:
 nav:
   - Home: index.md
   - Getting Started: getting-started.md
-  - Architecture: architecture.md
-  - API Conventions: api-conventions.md
+  - API Basics: api-conventions.md
   - Streaming:
     - Overview: streaming/index.md
     - Candles: streaming/candle_streamer.md
     - Forecast: streaming/forecast_streamer.md
-    - Streamer (Convenience Wrapper): streaming/streamer.md
-    - Extending (BaseStreamer): streaming/base_streamer.md
+    - Streamer (Legacy Wrapper): streaming/streamer.md
   - Scrapers:
     - Pine: scrapers/pine.md
     - Technicals: scrapers/technicals.md
@@ -74,7 +72,9 @@ nav:
     - Symbol Markets: scrapers/symbol_markets.md
     - Calendar: scrapers/calendar.md
   - Reference:
-    - Supported Data: supported_data.md
+    - Overview: reference/index.md
+    - Validation & Supported Values: supported_data.md
+    - Releases & Versioning: reference/releases.md
     - Getting Cookies: getting_cookies.md
   - Contributing: contributing.md
 
@@ -98,6 +98,9 @@ markdown_extensions:
 
 extra_css:
   - assets/custom.css
+
+hooks:
+  - mkdocs_hooks.py
 
 extra:
   version:

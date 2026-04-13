@@ -1,62 +1,79 @@
 # Getting Cookies
 
-TradingView may present captcha challenges when scraping ideas or requiring authentication for WebSocket-based indicators in the `Streamer` class. To continue scraping without interruptions and access protected indicators, you need to obtain and use a valid session cookie.
+Use a TradingView session cookie when a scraper hits a captcha challenge or when a feature requires authenticated access.
 
-!!! note "Captcha Frequency"
-    TradingView typically requires captcha verification every 24 hours. When you encounter a captcha error, you'll need to repeat this process to get a fresh cookie.
+## When You Need A Cookie
 
-## Steps to Obtain Session Cookie
+- `Pine` always requires one
+- `Ideas` may need one after TradingView presents a captcha
+- `CandleStreamer` may need one for custom or private indicators
+- any workflow where you want the library to reuse your authenticated TradingView session
 
-Follow these steps to get a valid TradingView session cookie after solving the captcha:
+## How To Capture The Cookie
 
-1. **Open the Ideas Page**: Navigate to `https://www.tradingview.com/symbols/BTCUSD/ideas/` in your web browser.
+1. Open a TradingView page in your browser, for example `https://www.tradingview.com/symbols/BTCUSD/ideas/`.
+2. Open developer tools and switch to the **Network** tab.
+3. If a captcha appears, solve it.
+4. Refresh the page once the captcha is complete.
+5. Open the page request in the Network list.
+6. Copy the full `Cookie` request header value.
 
-2. **Open Developer Tools**: Press `F12` to open the browser's developer tools and switch to the **Network** tab.
+## Use It In Code
 
-3. **Solve the Captcha**: If a captcha challenge appears, complete it manually.
-
-4. **Refresh the Page**: After solving the captcha, refresh the page to ensure a clean request.
-
-5. **Capture the Request**: In the Network tab, look for the GET request to `https://www.tradingview.com/symbols/BTCUSD/ideas/` (usually at the top of the list).
-
-6. **Extract the Cookie**:
-    - Select the request
-    - Go to the **Headers** section
-    - Find the **Cookie** header in the request headers
-    - Copy the entire cookie value
-
-## Using the Cookie in Code
-
-### With Ideas Scraper
+### Ideas
 
 ```python
 from tv_scraper import Ideas
 
-# Your copied cookie string
-TRADINGVIEW_COOKIE = r"paste_your_cookie_string_here"
+TRADINGVIEW_COOKIE = "paste_your_cookie_here"
 
-# Initialize scraper with cookie
-ideas_scraper = Ideas(cookie=TRADINGVIEW_COOKIE)
-
-# Scrape ideas
-ideas = ideas_scraper.get_ideas(symbol="BTCUSD", exchange="CRYPTO", start_page=1, end_page=5)
-```
-
-### With Streamer (for Indicators)
-
-```python
-from tv_scraper import Streamer
-
-# Initialize streamer with cookie
-s = Streamer(cookie=TRADINGVIEW_COOKIE)
-
-# Get candles with indicators (requires auth)
-result = s.get_candles(
-    exchange="BINANCE",
-    symbol="BTCUSDT",
-    indicators=[("STD;RSI", "37.0")]
+scraper = Ideas(cookie=TRADINGVIEW_COOKIE)
+result = scraper.get_ideas(
+    exchange="CRYPTO",
+    symbol="BTCUSD",
+    start_page=1,
+    end_page=2,
 )
 ```
 
-!!! warning "Cookie Expiration"
-    The cookie remains valid for approximately 24 hours. After that, you'll need to repeat the process to get a new cookie when scraping encounters captcha challenges or indicator authentication fails.
+### Pine
+
+```python
+from tv_scraper import Pine
+
+pine = Pine(cookie=TRADINGVIEW_COOKIE)
+result = pine.list_saved_scripts()
+```
+
+### CandleStreamer With Indicators
+
+```python
+from tv_scraper.streaming import CandleStreamer
+
+streamer = CandleStreamer(cookie=TRADINGVIEW_COOKIE)
+result = streamer.get_candles(
+    exchange="BINANCE",
+    symbol="BTCUSDT",
+    indicators=[("STD;RSI", "37.0")],
+)
+```
+
+## Environment Variable Option
+
+If you do not want to pass the cookie to every constructor, set:
+
+```bash
+export TRADINGVIEW_COOKIE='paste_your_cookie_here'
+```
+
+Then create scrapers normally:
+
+```python
+from tv_scraper import Pine
+
+pine = Pine()
+```
+
+## Expiration
+
+Cookies are not permanent. If a request starts failing with captcha or auth-related errors again, capture a fresh cookie and retry.
