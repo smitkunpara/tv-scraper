@@ -1,8 +1,4 @@
-"""Unit tests for Options scraper.
-
-Comprehensive tests covering valid inputs, invalid inputs, edge cases,
-and various parameter combinations using mocking - no actual API calls.
-"""
+"""Unit tests for Options scraper."""
 
 from unittest.mock import patch
 
@@ -65,44 +61,140 @@ class TestDefaultColumns:
 
 
 class TestPublicValidation:
-    """Tests for validation in public methods."""
+    """Tests for validation in public method."""
 
     @patch("tv_scraper.core.validators.verify_options_symbol")
-    def test_get_options_by_strike_invalid_exchange(self, mock_verify) -> None:
-        """Verify invalid exchange returns error via get_options_by_strike."""
+    def test_get_options_invalid_exchange(self, mock_verify) -> None:
+        """Verify invalid exchange returns failed envelope."""
         from tv_scraper.core.exceptions import ValidationError
 
         mock_verify.side_effect = ValidationError("Invalid exchange")
 
         options = Options()
-        result = options.get_options_by_strike(
-            exchange="INVALID", symbol="AAPL", strike=100
+        result = options.get_options(
+            exchange="INVALID",
+            symbol="AAPL",
+            strike=100,
         )
 
         assert result["status"] == STATUS_FAILED
         assert "Invalid exchange" in result["error"]
 
     @patch("tv_scraper.core.validators.verify_options_symbol")
-    def test_get_options_by_strike_invalid_columns(self, mock_verify) -> None:
-        """Verify invalid columns return error via get_options_by_strike."""
+    def test_get_options_invalid_columns(self, mock_verify) -> None:
+        """Verify invalid columns return failed envelope."""
         mock_verify.return_value = ("NASDAQ", "AAPL")
 
         options = Options()
-        result = options.get_options_by_strike(
-            exchange="NASDAQ", symbol="AAPL", strike=100, columns=["invalid_column"]
+        result = options.get_options(
+            exchange="NASDAQ",
+            symbol="AAPL",
+            strike=100,
+            columns=["invalid_column"],
         )
 
         assert result["status"] == STATUS_FAILED
         assert "Invalid columns" in result["error"]
 
+    @patch("tv_scraper.core.validators.verify_options_symbol")
+    def test_get_options_requires_at_least_one_filter(self, mock_verify) -> None:
+        """Verify request fails if both expiration and strike are missing."""
+        mock_verify.return_value = ("NASDAQ", "AAPL")
 
-class TestGetOptionsByStrike:
-    """Tests for get_options_by_strike method."""
+        options = Options()
+        result = options.get_options(exchange="NASDAQ", symbol="AAPL")
+
+        assert result["status"] == STATUS_FAILED
+        assert "At least one filter" in result["error"]
+
+    @patch("tv_scraper.core.validators.verify_options_symbol")
+    def test_get_options_invalid_strike_type(self, mock_verify) -> None:
+        """Verify invalid strike type returns failed envelope."""
+        mock_verify.return_value = ("NASDAQ", "AAPL")
+
+        options = Options()
+        result = options.get_options(
+            exchange="NASDAQ",
+            symbol="AAPL",
+            strike="invalid",
+        )
+
+        assert result["status"] == STATUS_FAILED
+        assert result["data"] is None
+        assert "Invalid strike value" in result["error"]
+
+    @patch("tv_scraper.core.validators.verify_options_symbol")
+    def test_get_options_invalid_expiration_type(self, mock_verify) -> None:
+        """Verify invalid expiration type returns failed envelope."""
+        mock_verify.return_value = ("BSE", "SENSEX")
+
+        options = Options()
+        result = options.get_options(
+            exchange="BSE",
+            symbol="SENSEX",
+            expiration="20260419",
+        )
+
+        assert result["status"] == STATUS_FAILED
+        assert result["data"] is None
+        assert "Invalid expiration value" in result["error"]
+
+    @patch("tv_scraper.core.validators.verify_options_symbol")
+    def test_get_options_invalid_expiration_month(self, mock_verify) -> None:
+        """Verify invalid expiration month returns failed envelope."""
+        mock_verify.return_value = ("BSE", "SENSEX")
+
+        options = Options()
+        result = options.get_options(
+            exchange="BSE",
+            symbol="SENSEX",
+            expiration=20261319,
+        )
+
+        assert result["status"] == STATUS_FAILED
+        assert result["data"] is None
+        assert "0 < MM <= 12" in result["error"]
+
+    @patch("tv_scraper.core.validators.verify_options_symbol")
+    def test_get_options_invalid_expiration_day(self, mock_verify) -> None:
+        """Verify invalid expiration day returns failed envelope."""
+        mock_verify.return_value = ("BSE", "SENSEX")
+
+        options = Options()
+        result = options.get_options(
+            exchange="BSE",
+            symbol="SENSEX",
+            expiration=20260400,
+        )
+
+        assert result["status"] == STATUS_FAILED
+        assert result["data"] is None
+        assert "0 < DD <= 31" in result["error"]
+
+    @patch("tv_scraper.core.validators.verify_options_symbol")
+    def test_get_options_invalid_calendar_date(self, mock_verify) -> None:
+        """Verify invalid calendar date returns failed envelope."""
+        mock_verify.return_value = ("BSE", "SENSEX")
+
+        options = Options()
+        result = options.get_options(
+            exchange="BSE",
+            symbol="SENSEX",
+            expiration=20260231,
+        )
+
+        assert result["status"] == STATUS_FAILED
+        assert result["data"] is None
+        assert "day is out of range" in result["error"]
+
+
+class TestGetOptions:
+    """Tests for get_options method."""
 
     @patch("tv_scraper.core.validators.verify_options_symbol")
     @patch.object(Options, "_request")
-    def test_get_options_by_strike_success(self, mock_request, mock_verify) -> None:
-        """Verify successful options by strike fetching."""
+    def test_get_options_with_strike_success(self, mock_request, mock_verify) -> None:
+        """Verify successful options fetching by strike filter."""
         mock_verify.return_value = ("NASDAQ", "AAPL")
         mock_request.return_value = (
             {
@@ -117,11 +209,7 @@ class TestGetOptionsByStrike:
         )
 
         options = Options()
-        result = options.get_options_by_strike(
-            exchange="NASDAQ",
-            symbol="AAPL",
-            strike=200,
-        )
+        result = options.get_options(exchange="NASDAQ", symbol="AAPL", strike=200)
 
         assert result["status"] == STATUS_SUCCESS
         assert len(result["data"]) == 2
@@ -129,127 +217,18 @@ class TestGetOptionsByStrike:
         assert result["metadata"]["filter_value"] == 200
 
     @patch("tv_scraper.core.validators.verify_options_symbol")
-    def test_get_options_by_strike_invalid_strike_type(self, mock_verify) -> None:
-        """Verify invalid strike type returns error."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
-
-        options = Options()
-        result = options.get_options_by_strike(
-            exchange="NASDAQ",
-            symbol="AAPL",
-            strike="invalid",
-        )
-
-        assert result["status"] == STATUS_FAILED
-        assert result["data"] is None
-        assert "Invalid strike value" in result["error"]
-
-    @patch("tv_scraper.core.validators.verify_options_symbol")
-    def test_get_options_by_strike_none_strike(self, mock_verify) -> None:
-        """Verify None strike returns error."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
-
-        options = Options()
-        result = options.get_options_by_strike(
-            exchange="NASDAQ",
-            symbol="AAPL",
-            strike=None,
-        )
-
-        assert result["status"] == STATUS_FAILED
-        assert "Invalid strike value" in result["error"]
-
-    @patch("tv_scraper.core.validators.verify_options_symbol")
-    def test_get_options_by_strike_string_strike(self, mock_verify) -> None:
-        """Verify string strike returns error."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
-
-        options = Options()
-        result = options.get_options_by_strike(
-            exchange="NASDAQ",
-            symbol="AAPL",
-            strike="200",
-        )
-
-        assert result["status"] == STATUS_FAILED
-
-    @patch("tv_scraper.core.validators.verify_options_symbol")
     @patch.object(Options, "_request")
-    def test_get_options_by_strike_with_custom_columns(
+    def test_get_options_with_expiration_success(
         self, mock_request, mock_verify
     ) -> None:
-        """Verify options by strike with custom columns."""
+        """Verify successful options fetching by expiration filter."""
         mock_verify.return_value = ("BSE", "SENSEX")
         mock_request.return_value = (
             {
-                "fields": ["strike", "bid", "ask"],
+                "fields": ["expiration", "strike", "bid", "ask"],
                 "symbols": [
-                    {"s": "BSE:SENSEX240419C083000", "f": [83000, 500, 510]},
-                ],
-                "totalCount": 1,
-            },
-            None,
-        )
-
-        options = Options()
-        result = options.get_options_by_strike(
-            exchange="BSE",
-            symbol="SENSEX",
-            strike=83000,
-            columns=["strike", "bid", "ask"],
-        )
-
-        assert result["status"] == STATUS_SUCCESS
-        assert result["data"][0]["strike"] == 83000
-
-    @patch("tv_scraper.core.validators.verify_options_symbol")
-    @patch.object(Options, "_request")
-    def test_get_options_by_strike_float_strike(
-        self, mock_request, mock_verify
-    ) -> None:
-        """Verify float strike values work."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
-        mock_request.return_value = (
-            {
-                "fields": ["strike", "bid", "ask"],
-                "symbols": [
-                    {"s": "NASDAQ:AAPL240419C00200500", "f": [200.5, 2.5, 2.6]},
-                ],
-                "totalCount": 1,
-            },
-            None,
-        )
-
-        options = Options()
-        result = options.get_options_by_strike(
-            exchange="NASDAQ",
-            symbol="AAPL",
-            strike=200.5,
-        )
-
-        assert result["status"] == STATUS_SUCCESS
-
-
-class TestGetOptionsByExpiry:
-    """Tests for get_options_by_expiry method."""
-
-    @patch("tv_scraper.core.validators.verify_options_symbol")
-    @patch.object(Options, "_request")
-    def test_get_options_by_expiry_success(self, mock_request, mock_verify) -> None:
-        """Verify successful options by expiry fetching."""
-        mock_verify.return_value = ("BSE", "SENSEX")
-        mock_request.return_value = (
-            {
-                "fields": ["expiration", "strike", "bid", "ask", "root"],
-                "symbols": [
-                    {
-                        "s": "BSE:SENSEX240419C083000",
-                        "f": [20260419, 83000, 500, 510, "BSX"],
-                    },
-                    {
-                        "s": "BSE:SENSEX240419P083000",
-                        "f": [20260419, 83000, 100, 110, "BSX"],
-                    },
+                    {"s": "BSE:SENSEX240419C083000", "f": [20260419, 83000, 500, 510]},
+                    {"s": "BSE:SENSEX240419P083000", "f": [20260419, 83000, 100, 110]},
                 ],
                 "totalCount": 2,
             },
@@ -257,24 +236,52 @@ class TestGetOptionsByExpiry:
         )
 
         options = Options()
-        result = options.get_options_by_expiry(
+        result = options.get_options(
             exchange="BSE",
             symbol="SENSEX",
             expiration=20260419,
-            root="BSX",
         )
 
         assert result["status"] == STATUS_SUCCESS
-        assert len(result["data"]) == 2
-        assert result["data"][0]["expiration"] == 20260419
         assert result["metadata"]["filter_value"] == 20260419
+        assert result["data"][0]["expiration"] == 20260419
 
     @patch("tv_scraper.core.validators.verify_options_symbol")
     @patch.object(Options, "_request")
-    def test_get_options_by_expiry_with_custom_columns(
+    def test_get_options_by_expiration_and_strike(
         self, mock_request, mock_verify
     ) -> None:
-        """Verify options by expiry with custom columns."""
+        """Verify successful options fetching with combined filters."""
+        mock_verify.return_value = ("BSE", "SENSEX")
+        mock_request.return_value = (
+            {
+                "fields": ["expiration", "strike", "bid", "ask"],
+                "symbols": [
+                    {"s": "BSE:SENSEX240419C083000", "f": [20260419, 83000, 500, 510]},
+                ],
+                "totalCount": 1,
+            },
+            None,
+        )
+
+        options = Options()
+        result = options.get_options(
+            exchange="BSE",
+            symbol="SENSEX",
+            expiration=20260419,
+            strike=83000,
+        )
+
+        assert result["status"] == STATUS_SUCCESS
+        assert result["metadata"]["filter_value"] == {
+            "expiration": 20260419,
+            "strike": 83000,
+        }
+
+    @patch("tv_scraper.core.validators.verify_options_symbol")
+    @patch.object(Options, "_request")
+    def test_get_options_with_custom_columns(self, mock_request, mock_verify) -> None:
+        """Verify options fetching with custom columns."""
         mock_verify.return_value = ("NSE", "NIFTY")
         mock_request.return_value = (
             {
@@ -288,11 +295,10 @@ class TestGetOptionsByExpiry:
         )
 
         options = Options()
-        result = options.get_options_by_expiry(
+        result = options.get_options(
             exchange="NSE",
             symbol="NIFTY",
-            expiration=20260419,
-            root="NIFTY",
+            strike=22000,
             columns=["strike", "iv", "theta"],
         )
 
@@ -430,9 +436,7 @@ class TestResponseEnvelope:
         )
 
         options = Options()
-        result = options.get_options_by_strike(
-            exchange="NASDAQ", symbol="AAPL", strike=100
-        )
+        result = options.get_options(exchange="NASDAQ", symbol="AAPL", strike=100)
 
         assert "status" in result
         assert "data" in result
@@ -449,8 +453,10 @@ class TestResponseEnvelope:
         mock_verify.side_effect = ValidationError("Invalid exchange")
 
         options = Options()
-        result = options.get_options_by_strike(
-            exchange="INVALID", symbol="INVALID", strike=100
+        result = options.get_options(
+            exchange="INVALID",
+            symbol="INVALID",
+            strike=100,
         )
 
         assert "status" in result
@@ -480,9 +486,7 @@ class TestMetadata:
         )
 
         options = Options()
-        result = options.get_options_by_strike(
-            exchange="BSE", symbol="SENSEX", strike=83000
-        )
+        result = options.get_options(exchange="BSE", symbol="SENSEX", strike=83000)
 
         assert result["metadata"]["exchange"] == "BSE"
         assert result["metadata"]["symbol"] == "SENSEX"
@@ -502,9 +506,7 @@ class TestMetadata:
         )
 
         options = Options()
-        result = options.get_options_by_strike(
-            exchange="NASDAQ", symbol="AAPL", strike=200.5
-        )
+        result = options.get_options(exchange="NASDAQ", symbol="AAPL", strike=200.5)
 
         assert result["metadata"]["filter_value"] == 200.5
 
@@ -523,83 +525,9 @@ class TestMetadata:
         )
 
         options = Options()
-        result = options.get_options_by_strike(
-            exchange="NASDAQ", symbol="AAPL", strike=200
-        )
+        result = options.get_options(exchange="NASDAQ", symbol="AAPL", strike=200)
 
         assert result["metadata"]["total"] == 10
-
-
-class TestEdgeCases:
-    """Tests for edge cases and boundary conditions."""
-
-    @patch("tv_scraper.core.validators.verify_options_symbol")
-    def test_empty_symbol_string(self, mock_verify) -> None:
-        """Verify empty symbol string returns error."""
-        mock_verify.return_value = ("NASDAQ", "")
-
-        options = Options()
-        result = options.get_options_by_strike(exchange="NASDAQ", symbol="", strike=100)
-
-        assert result["status"] == STATUS_FAILED
-
-    @patch("tv_scraper.core.validators.verify_options_symbol")
-    def test_whitespace_symbol(self, mock_verify) -> None:
-        """Verify whitespace symbol returns error."""
-        mock_verify.return_value = ("NASDAQ", "  ")
-
-        options = Options()
-        result = options.get_options_by_strike(
-            exchange="NASDAQ", symbol="   ", strike=100
-        )
-
-        assert result["status"] == STATUS_FAILED
-
-    @patch.object(Options, "_request")
-    def test_very_large_strike_value(self, mock_request) -> None:
-        """Verify very large strike value is handled."""
-        mock_request.return_value = (
-            {
-                "fields": ["strike"],
-                "symbols": [],
-                "totalCount": 0,
-            },
-            None,
-        )
-
-        options = Options()
-        with patch(
-            "tv_scraper.core.validators.verify_options_symbol",
-            return_value=("NASDAQ", "AAPL"),
-        ):
-            result = options.get_options_by_strike(
-                exchange="NASDAQ", symbol="AAPL", strike=999999999
-            )
-
-            assert "status" in result
-
-    @patch.object(Options, "_request")
-    def test_negative_strike_value(self, mock_request) -> None:
-        """Verify negative strike value is handled."""
-        mock_request.return_value = (
-            {
-                "fields": ["strike"],
-                "symbols": [],
-                "totalCount": 0,
-            },
-            None,
-        )
-
-        options = Options()
-        with patch(
-            "tv_scraper.core.validators.verify_options_symbol",
-            return_value=("NASDAQ", "AAPL"),
-        ):
-            result = options.get_options_by_strike(
-                exchange="NASDAQ", symbol="AAPL", strike=-100
-            )
-
-            assert "status" in result
 
 
 class TestExport:
@@ -621,7 +549,7 @@ class TestExport:
         )
 
         options = Options(export_result=True, export_type="json")
-        options.get_options_by_strike(exchange="NASDAQ", symbol="AAPL", strike=200)
+        options.get_options(exchange="NASDAQ", symbol="AAPL", strike=200)
 
         assert mock_save.called
 
@@ -641,7 +569,7 @@ class TestExport:
         )
 
         options = Options(export_result=True, export_type="csv")
-        options.get_options_by_strike(exchange="NASDAQ", symbol="AAPL", strike=200)
+        options.get_options(exchange="NASDAQ", symbol="AAPL", strike=200)
 
         assert mock_save.called
 
@@ -661,5 +589,5 @@ class TestExport:
 
         options = Options()
         with patch("tv_scraper.core.base.save_json_file") as mock_save:
-            options.get_options_by_strike(exchange="NASDAQ", symbol="AAPL", strike=200)
+            options.get_options(exchange="NASDAQ", symbol="AAPL", strike=200)
             mock_save.assert_not_called()

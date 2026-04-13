@@ -9,10 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - **Streaming**: Added `stream_realtime_price()` and `get_available_indicators()` to `CandleStreamer` for better feature isolation.
+- **Core Validation**: Added `validate_yyyymmdd_date(field_name, value)` to validate `YYYYMMDD` dates with month/day bounds and real calendar-date checks.
+- **Test Suite**: Added `tests/unit/test_validators.py` to cover date validation rules and failure cases.
 
 ### Changed
 - **Streaming**: Consolidated `stream_handler.py` into `base_streamer.py`, reducing the number of internal files.
 - **Streaming**: `StreamHandler` is now imported from `tv_scraper.streaming.base_streamer`.
+- **Options Scraper**: Unified options lookup into `get_options(exchange, symbol, expiration=None, strike=None, columns=None)`.
+- **Options Scraper**: `get_options()` now supports combined filtering (`expiration` + `strike`) and uses standardized `filter_value` metadata for single and combined filters.
+- **Options Scraper**: Added IDE-friendly `OPTION_COLUMN_LITERAL` typing for `columns` and kept runtime column validation against allowed option fields.
+- **Options Scraper**: `expiration` now uses centralized validator checks (`0 < MM <= 12`, `0 < DD <= 31`, plus calendar validity).
+- **Documentation**: Updated options and architecture docs to reflect the unified options API, strict date validation behavior, and column literal guidance.
+- **Tests**: Updated options unit/mock/integration/live tests to use `get_options()` and added combined-filter coverage.
 
 ### Deprecated
 - **Streaming**: The `Streamer` class in `tv_scraper.streaming.streamer` is now deprecated. It has been moved to a multi-streamer architecture for easier maintenance.

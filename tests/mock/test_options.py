@@ -55,8 +55,8 @@ def mock_response_factory():
     return _create_response
 
 
-class TestMockGetOptionsByStrike:
-    """Tests for get_options_by_strike using mocks."""
+class TestMockGetOptionsByStrikeFilter:
+    """Tests for get_options using strike filter with mocks."""
 
     def test_mock_by_strike_basic_response_structure(
         self, options_scraper: Options
@@ -117,7 +117,7 @@ class TestMockGetOptionsByStrike:
             "tv_scraper.core.validators.verify_options_symbol",
             return_value=("NASDAQ", "AAPL"),
         ):
-            result = options_scraper.get_options_by_strike(
+            result = options_scraper.get_options(
                 exchange="NASDAQ",
                 symbol="AAPL",
                 strike=200,
@@ -145,7 +145,7 @@ class TestMockGetOptionsByStrike:
             "tv_scraper.core.validators.verify_options_symbol",
             return_value=("NASDAQ", "AAPL"),
         ):
-            result = options_scraper.get_options_by_strike(
+            result = options_scraper.get_options(
                 exchange="NASDAQ",
                 symbol="AAPL",
                 strike=999,
@@ -155,8 +155,8 @@ class TestMockGetOptionsByStrike:
         assert "No options found" in result["error"]
 
 
-class TestMockGetOptionsByExpiry:
-    """Tests for get_options_by_expiry using mocks."""
+class TestMockGetOptionsByExpirationFilter:
+    """Tests for get_options using expiration filter with mocks."""
 
     def test_mock_by_expiry_basic_response_structure(
         self, options_scraper: Options
@@ -207,11 +207,10 @@ class TestMockGetOptionsByExpiry:
             "tv_scraper.core.validators.verify_options_symbol",
             return_value=("BSE", "SENSEX"),
         ):
-            result = options_scraper.get_options_by_expiry(
+            result = options_scraper.get_options(
                 exchange="BSE",
                 symbol="SENSEX",
                 expiration=20260419,
-                root="BSX",
             )
 
         assert result["status"] == STATUS_SUCCESS
@@ -241,15 +240,47 @@ class TestMockGetOptionsByExpiry:
             "tv_scraper.core.validators.verify_options_symbol",
             return_value=("BSE", "SENSEX"),
         ):
-            result = options_scraper.get_options_by_expiry(
+            result = options_scraper.get_options(
                 exchange="BSE",
                 symbol="SENSEX",
                 expiration=20260417,
-                root="BSX",
             )
 
         assert result["status"] == STATUS_SUCCESS
         assert len(result["data"]) == 3
+
+    @patch.object(Options, "_request")
+    def test_mock_by_expiry_and_strike_combined_filters(
+        self, mock_request: MagicMock, options_scraper: Options
+    ) -> None:
+        """Verify combined expiration and strike filters are supported."""
+        mock_request.return_value = (
+            {
+                "fields": ["expiration", "strike", "bid", "ask"],
+                "symbols": [
+                    {"s": "BSE:SENSEX240419C083000", "f": [20260419, 83000, 500, 510]},
+                ],
+                "totalCount": 1,
+            },
+            None,
+        )
+
+        with patch(
+            "tv_scraper.core.validators.verify_options_symbol",
+            return_value=("BSE", "SENSEX"),
+        ):
+            result = options_scraper.get_options(
+                exchange="BSE",
+                symbol="SENSEX",
+                expiration=20260419,
+                strike=83000,
+            )
+
+        assert result["status"] == STATUS_SUCCESS
+        assert result["metadata"]["filter_value"] == {
+            "expiration": 20260419,
+            "strike": 83000,
+        }
 
 
 class TestMockValidation:
@@ -264,7 +295,7 @@ class TestMockValidation:
             "Invalid exchange: 'INVALID'. Valid exchanges include: ..."
         )
 
-        result = options_scraper.get_options_by_strike(
+        result = options_scraper.get_options(
             exchange="INVALID",
             symbol="AAPL",
             strike=200,
@@ -279,7 +310,7 @@ class TestMockValidation:
         """Verify invalid columns return error."""
         mock_verify.return_value = ("NASDAQ", "AAPL")
 
-        result = options_scraper.get_options_by_strike(
+        result = options_scraper.get_options(
             exchange="NASDAQ",
             symbol="AAPL",
             strike=200,
@@ -296,7 +327,7 @@ class TestMockValidation:
         """Verify invalid strike type returns error."""
         mock_verify.return_value = ("NASDAQ", "AAPL")
 
-        result = options_scraper.get_options_by_strike(
+        result = options_scraper.get_options(
             exchange="NASDAQ",
             symbol="AAPL",
             strike="not_a_number",
@@ -353,11 +384,10 @@ class TestMockMetadata:
             "tv_scraper.core.validators.verify_options_symbol",
             return_value=("BSE", "SENSEX"),
         ):
-            result = options_scraper.get_options_by_expiry(
+            result = options_scraper.get_options(
                 exchange="BSE",
                 symbol="SENSEX",
                 expiration=20260419,
-                root="BSX",
             )
 
         assert result["metadata"]["filter_value"] == 20260419
@@ -377,7 +407,7 @@ class TestMockErrorHandling:
             "tv_scraper.core.validators.verify_options_symbol",
             return_value=("NASDAQ", "AAPL"),
         ):
-            result = options_scraper.get_options_by_strike(
+            result = options_scraper.get_options(
                 exchange="NASDAQ",
                 symbol="AAPL",
                 strike=200,
@@ -397,7 +427,7 @@ class TestMockErrorHandling:
             "tv_scraper.core.validators.verify_options_symbol",
             return_value=("INVALID", "INVALID"),
         ):
-            result = options_scraper.get_options_by_strike(
+            result = options_scraper.get_options(
                 exchange="INVALID",
                 symbol="INVALID",
                 strike=100,
@@ -417,7 +447,7 @@ class TestMockErrorHandling:
             "tv_scraper.core.validators.verify_options_symbol",
             return_value=("NASDAQ", "AAPL"),
         ):
-            result = options_scraper.get_options_by_strike(
+            result = options_scraper.get_options(
                 exchange="NASDAQ",
                 symbol="AAPL",
                 strike=200,
@@ -450,7 +480,7 @@ class TestMockDataMapping:
             "tv_scraper.core.validators.verify_options_symbol",
             return_value=("NASDAQ", "AAPL"),
         ):
-            result = options_scraper.get_options_by_strike(
+            result = options_scraper.get_options(
                 exchange="NASDAQ",
                 symbol="AAPL",
                 strike=200,
@@ -484,7 +514,7 @@ class TestMockDataMapping:
             "tv_scraper.core.validators.verify_options_symbol",
             return_value=("NASDAQ", "AAPL"),
         ):
-            result = options_scraper.get_options_by_strike(
+            result = options_scraper.get_options(
                 exchange="NASDAQ",
                 symbol="AAPL",
                 strike=200,
@@ -524,7 +554,7 @@ class TestMockResponseEnvelope:
             "tv_scraper.core.validators.verify_options_symbol",
             side_effect=ValidationError("Invalid exchange"),
         ):
-            result = options_scraper.get_options_by_strike(
+            result = options_scraper.get_options(
                 exchange="INVALID",
                 symbol="INVALID",
                 strike=100,
@@ -562,7 +592,7 @@ class TestMockExport:
         ):
             options_scraper.export_result = True
             options_scraper.export_type = "json"
-            options_scraper.get_options_by_strike(
+            options_scraper.get_options(
                 exchange="NASDAQ",
                 symbol="AAPL",
                 strike=200,
@@ -591,7 +621,7 @@ class TestMockExport:
         ):
             options_scraper.export_result = True
             options_scraper.export_type = "csv"
-            options_scraper.get_options_by_strike(
+            options_scraper.get_options(
                 exchange="NASDAQ",
                 symbol="AAPL",
                 strike=200,

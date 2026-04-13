@@ -12,8 +12,8 @@ from tv_scraper.core.constants import STATUS_SUCCESS
 from tv_scraper.scrapers.market_data.options import Options
 
 
-def _get_live_options_snapshot() -> tuple[str, str, int | float, int, str]:
-    """Find a live symbol with options and return strike/expiry/root snapshot."""
+def _get_live_options_snapshot() -> tuple[str, str, int | float, int]:
+    """Find a live symbol with options and return strike/expiry snapshot."""
     candidates: list[tuple[str, str, int | float]] = [
         ("NASDAQ", "AAPL", 200),
         ("BSE", "SENSEX", 83000),
@@ -23,15 +23,12 @@ def _get_live_options_snapshot() -> tuple[str, str, int | float, int, str]:
     scraper = Options()
     errors: list[str] = []
     for exchange, symbol, strike in candidates:
-        result = scraper.get_options_by_strike(
-            exchange=exchange, symbol=symbol, strike=strike
-        )
+        result = scraper.get_options(exchange=exchange, symbol=symbol, strike=strike)
         if result.get("status") == STATUS_SUCCESS and result.get("data"):
             first = result["data"][0]
             expiration = first.get("expiration")
-            root = first.get("root")
-            if isinstance(expiration, int) and isinstance(root, str) and root:
-                return exchange, symbol, strike, expiration, root
+            if isinstance(expiration, int):
+                return exchange, symbol, strike, expiration
         errors.append(f"{exchange}:{symbol} -> {result.get('error')}")
 
     pytest.skip(
@@ -44,25 +41,23 @@ def _get_live_options_snapshot() -> tuple[str, str, int | float, int, str]:
 class TestLiveOptions:
     """Live tests for Options scraper."""
 
-    def test_live_get_options_by_strike_basic(self) -> None:
+    def test_live_get_options_with_strike_basic(self) -> None:
         """Verify basic options by strike fetching works."""
-        exchange, symbol, strike, _expiration, _root = _get_live_options_snapshot()
+        exchange, symbol, strike, _expiration = _get_live_options_snapshot()
 
         scraper = Options()
-        result = scraper.get_options_by_strike(
-            exchange=exchange, symbol=symbol, strike=strike
-        )
+        result = scraper.get_options(exchange=exchange, symbol=symbol, strike=strike)
 
         assert result["status"] == STATUS_SUCCESS, result.get("error")
         assert isinstance(result["data"], list)
         assert len(result["data"]) > 0
 
-    def test_live_get_options_by_strike_with_columns(self) -> None:
+    def test_live_get_options_with_strike_and_columns(self) -> None:
         """Verify options by strike with custom columns."""
-        exchange, symbol, strike, _expiration, _root = _get_live_options_snapshot()
+        exchange, symbol, strike, _expiration = _get_live_options_snapshot()
 
         scraper = Options()
-        result = scraper.get_options_by_strike(
+        result = scraper.get_options(
             exchange=exchange,
             symbol=symbol,
             strike=strike,
@@ -76,32 +71,30 @@ class TestLiveOptions:
             assert "strike" in first
             assert "delta" in first
 
-    def test_live_get_options_by_expiry_basic(self) -> None:
+    def test_live_get_options_with_expiry_basic(self) -> None:
         """Verify basic options by expiry fetching works."""
-        exchange, symbol, _strike, expiration, root = _get_live_options_snapshot()
+        exchange, symbol, _strike, expiration = _get_live_options_snapshot()
 
         scraper = Options()
-        result = scraper.get_options_by_expiry(
+        result = scraper.get_options(
             exchange=exchange,
             symbol=symbol,
             expiration=expiration,
-            root=root,
         )
 
         assert result["status"] == STATUS_SUCCESS, result.get("error")
         assert isinstance(result["data"], list)
         assert len(result["data"]) > 0
 
-    def test_live_get_options_by_expiry_with_columns(self) -> None:
+    def test_live_get_options_with_expiry_and_columns(self) -> None:
         """Verify options by expiry with custom columns."""
-        exchange, symbol, _strike, expiration, root = _get_live_options_snapshot()
+        exchange, symbol, _strike, expiration = _get_live_options_snapshot()
 
         scraper = Options()
-        result = scraper.get_options_by_expiry(
+        result = scraper.get_options(
             exchange=exchange,
             symbol=symbol,
             expiration=expiration,
-            root=root,
             columns=["ask", "bid", "strike", "iv", "theta"],
         )
 
@@ -115,7 +108,7 @@ class TestLiveOptions:
     def test_live_get_options_invalid_exchange(self) -> None:
         """Verify invalid exchange returns error."""
         scraper = Options()
-        result = scraper.get_options_by_strike(
+        result = scraper.get_options(
             exchange="INVALID_EXCHANGE",
             symbol="AAPL",
             strike=200,
@@ -128,7 +121,7 @@ class TestLiveOptions:
     def test_live_get_options_invalid_columns(self) -> None:
         """Verify invalid column names return error."""
         scraper = Options()
-        result = scraper.get_options_by_strike(
+        result = scraper.get_options(
             exchange="NASDAQ",
             symbol="AAPL",
             strike=200,
@@ -143,7 +136,7 @@ class TestLiveOptions:
     def test_live_get_options_invalid_strike_type(self) -> None:
         """Verify invalid strike type returns error."""
         scraper = Options()
-        result: dict[str, Any] = scraper.get_options_by_strike(
+        result: dict[str, Any] = scraper.get_options(
             exchange="NASDAQ",
             symbol="AAPL",
             strike="bad",
@@ -157,7 +150,7 @@ class TestLiveOptions:
     def test_live_get_options_empty_strike(self) -> None:
         """Verify empty strike value returns error."""
         scraper = Options()
-        result = scraper.get_options_by_strike(
+        result = scraper.get_options(
             exchange="NASDAQ",
             symbol="AAPL",
             strike=None,
@@ -168,10 +161,10 @@ class TestLiveOptions:
 
     def test_live_get_options_float_strike(self) -> None:
         """Verify float strike values work."""
-        exchange, symbol, _strike, _expiration, _root = _get_live_options_snapshot()
+        exchange, symbol, _strike, _expiration = _get_live_options_snapshot()
 
         scraper = Options()
-        result = scraper.get_options_by_strike(
+        result = scraper.get_options(
             exchange=exchange,
             symbol=symbol,
             strike=200.50,
@@ -182,7 +175,7 @@ class TestLiveOptions:
     def test_live_get_options_zero_strike(self) -> None:
         """Verify zero strike value is handled."""
         scraper = Options()
-        result = scraper.get_options_by_strike(
+        result = scraper.get_options(
             exchange="NASDAQ",
             symbol="AAPL",
             strike=0,
@@ -197,12 +190,10 @@ class TestLiveOptionsMetadata:
 
     def test_live_options_metadata_contains_exchange_symbol(self) -> None:
         """Verify metadata contains exchange and symbol."""
-        exchange, symbol, strike, _expiration, _root = _get_live_options_snapshot()
+        exchange, symbol, strike, _expiration = _get_live_options_snapshot()
 
         scraper = Options()
-        result = scraper.get_options_by_strike(
-            exchange=exchange, symbol=symbol, strike=strike
-        )
+        result = scraper.get_options(exchange=exchange, symbol=symbol, strike=strike)
 
         assert "metadata" in result
         assert result["metadata"]["exchange"] == exchange.upper()
@@ -210,12 +201,10 @@ class TestLiveOptionsMetadata:
 
     def test_live_options_metadata_contains_filter_value(self) -> None:
         """Verify metadata contains filter value (strike or expiry)."""
-        exchange, symbol, strike, _expiration, _root = _get_live_options_snapshot()
+        exchange, symbol, strike, _expiration = _get_live_options_snapshot()
 
         scraper = Options()
-        result = scraper.get_options_by_strike(
-            exchange=exchange, symbol=symbol, strike=strike
-        )
+        result = scraper.get_options(exchange=exchange, symbol=symbol, strike=strike)
 
         assert "metadata" in result
         assert "filter_value" in result["metadata"]
@@ -223,12 +212,10 @@ class TestLiveOptionsMetadata:
 
     def test_live_options_response_envelope_keys(self) -> None:
         """Verify response has all required envelope keys."""
-        exchange, symbol, strike, _expiration, _root = _get_live_options_snapshot()
+        exchange, symbol, strike, _expiration = _get_live_options_snapshot()
 
         scraper = Options()
-        result = scraper.get_options_by_strike(
-            exchange=exchange, symbol=symbol, strike=strike
-        )
+        result = scraper.get_options(exchange=exchange, symbol=symbol, strike=strike)
 
         assert "status" in result
         assert "data" in result
@@ -242,12 +229,10 @@ class TestLiveOptionsData:
 
     def test_live_options_data_contains_required_fields(self) -> None:
         """Verify options data contains required fields."""
-        exchange, symbol, strike, _expiration, _root = _get_live_options_snapshot()
+        exchange, symbol, strike, _expiration = _get_live_options_snapshot()
 
         scraper = Options()
-        result = scraper.get_options_by_strike(
-            exchange=exchange, symbol=symbol, strike=strike
-        )
+        result = scraper.get_options(exchange=exchange, symbol=symbol, strike=strike)
 
         if result["status"] == STATUS_SUCCESS and result["data"]:
             first = result["data"][0]
@@ -256,12 +241,10 @@ class TestLiveOptionsData:
 
     def test_live_options_data_total_count(self) -> None:
         """Verify metadata contains total count."""
-        exchange, symbol, strike, _expiration, _root = _get_live_options_snapshot()
+        exchange, symbol, strike, _expiration = _get_live_options_snapshot()
 
         scraper = Options()
-        result = scraper.get_options_by_strike(
-            exchange=exchange, symbol=symbol, strike=strike
-        )
+        result = scraper.get_options(exchange=exchange, symbol=symbol, strike=strike)
 
         if result["status"] == STATUS_SUCCESS:
             assert "total" in result["metadata"]
@@ -275,7 +258,7 @@ class TestLiveOptionsBSE:
     def test_live_bse_sensex_options(self) -> None:
         """Verify BSE SENSEX options work."""
         scraper = Options()
-        result = scraper.get_options_by_strike(
+        result = scraper.get_options(
             exchange="BSE",
             symbol="SENSEX",
             strike=83000,
@@ -286,11 +269,24 @@ class TestLiveOptionsBSE:
     def test_live_bse_sensex_expiry_options(self) -> None:
         """Verify BSE SENSEX expiry options work."""
         scraper = Options()
-        result = scraper.get_options_by_expiry(
+        result = scraper.get_options(
             exchange="BSE",
             symbol="SENSEX",
             expiration=20260219,
-            root="BSX",
+        )
+
+        assert "status" in result
+
+    def test_live_bse_sensex_expiry_and_strike_options(self) -> None:
+        """Verify combined expiry and strike filters work in live mode."""
+        exchange, symbol, strike, expiration = _get_live_options_snapshot()
+
+        scraper = Options()
+        result = scraper.get_options(
+            exchange=exchange,
+            symbol=symbol,
+            expiration=expiration,
+            strike=strike,
         )
 
         assert "status" in result

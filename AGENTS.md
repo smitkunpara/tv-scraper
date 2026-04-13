@@ -369,31 +369,30 @@ def get_markets(
 
 **Method Signatures:**
 ```python
-def get_options_by_expiry(
+def get_options(
     exchange: str,
     symbol: str,
-    expiration: int,
-    root: str,
-    columns: list[str] | None = None,
-) -> dict[str, Any]
-
-def get_options_by_strike(
-    exchange: str,
-    symbol: str,
-    strike: int | float,
-    columns: list[str] | None = None,
+    expiration: int | None = None,
+    strike: int | float | None = None,
+        columns: list[OPTION_COLUMN_LITERAL] | None = None,
 ) -> dict[str, Any]
 ```
 
 **Validation:**
-- Both methods call `verify_options_symbol(exchange, symbol)`.
+- The method calls `verify_options_symbol(exchange, symbol)`.
 - `columns` are validated against `DEFAULT_OPTION_COLUMNS` when provided.
-- `strike` must be `int | float` in `get_options_by_strike()`.
-- `expiration` and `root` are passed through without extra type checks.
+- At least one filter must be provided: `expiration`, `strike`, or both.
+- `expiration` is validated by `validate_yyyymmdd_date("expiration", expiration)` when provided.
+    - Format must be 8-digit `YYYYMMDD`.
+    - Month range: `0 < MM <= 12`.
+    - Day range: `0 < DD <= 31`.
+    - Calendar validity is enforced (for example, 31 February is rejected).
+- `strike` must be `int | float` when provided.
 
 **Data Extraction:**
 ```
-1. Build payload with filters + index_filters on underlying_symbol.
+1. Build payload with base option filter + index_filters on underlying_symbol.
+2. Add expiration and/or strike filters depending on provided arguments.
 2. POST options scanner endpoint.
 3. Parse response fields list + symbols list.
 4. Map each symbol row: {"symbol": item["s"], field_i: values[i], ...}.
@@ -414,6 +413,7 @@ def get_options_by_strike(
 - Error messages with `"404"` are rewritten to "options chain not found" wording.
 - Empty `symbols` list returns failed response.
 - Success metadata includes `total` and `filter_value`.
+- Combined filtering (`expiration` + `strike`) returns metadata `filter_value` as a dict.
 
 ### Technicals Scraper
 
@@ -1122,6 +1122,7 @@ Validation logic is centralized in `tv_scraper/core/validators.py`. Developers s
 | `verify_options_symbol(exc, sym)` | Specifically verifies if a symbol has an options market. |
 | `validate_exchange(exc)` | Offline check against known exchange list. |
 | `validate_timeframe(tf)` | Validates TradingView-compatible timeframe strings. |
+| `validate_yyyymmdd_date(name, val)` | Validates integer dates in `YYYYMMDD` format and real calendar validity. |
 | `validate_choice(name, val, choices)`| Generic validator for string literal choices. |
 | `validate_range(name, val, min, max)` | Generic numeric range validator. |
 | `validate_fields(fields, allowed)` | Validates a list of requested data fields. |
@@ -1225,7 +1226,7 @@ EXCHANGES, INDICATORS, TIMEFRAMES, NEWS_PROVIDERS, LANGUAGES, AREAS
 | Calendar Events | `scrapers.events.calendar.get_dividends/get_earnings` | HTTP (Scanner) | Single request (default +/-3 day range) | ✅ Active |
 | Fundamentals | `scrapers.market_data.fundamentals.get_fundamentals()` | HTTP (Scanner /symbol) | Single request | ✅ Active |
 | Markets Ranking | `scrapers.market_data.markets.get_markets()` | HTTP (Scanner) | Single request | ✅ Active |
-| Options Chain | `scrapers.market_data.options.get_options_by_expiry/by_strike` | HTTP (Options Scanner) | Single request | ✅ Active |
+| Options Chain | `scrapers.market_data.options.get_options()` | HTTP (Options Scanner) | Single request | ✅ Active |
 | Technical Indicators | `scrapers.market_data.technicals.get_technicals()` | HTTP (Scanner /symbol) | Single request | ✅ Active |
 | Screener | `scrapers.screening.screener.get_screener()` | HTTP (Scanner) | Single request | ✅ Active |
 | Market Movers | `scrapers.screening.market_movers.get_market_movers()` | HTTP (Scanner) | Single request | ✅ Active |

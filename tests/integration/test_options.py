@@ -52,7 +52,7 @@ class TestOptionsWithOtherScrapers:
             "tv_scraper.core.validators.verify_options_symbol",
             return_value=("NASDAQ", "AAPL"),
         ):
-            result = options_scraper.get_options_by_strike(
+            result = options_scraper.get_options(
                 exchange="NASDAQ",
                 symbol="AAPL",
                 strike=200,
@@ -101,10 +101,10 @@ class TestOptionsWithOtherScrapers:
             "tv_scraper.core.validators.verify_options_symbol",
             side_effect=lambda e, s: (e.upper(), s.upper()),
         ):
-            result_aapl = options_scraper.get_options_by_strike(
+            result_aapl = options_scraper.get_options(
                 exchange="NASDAQ", symbol="AAPL", strike=200
             )
-            result_msft = options_scraper.get_options_by_strike(
+            result_msft = options_scraper.get_options(
                 exchange="NASDAQ", symbol="MSFT", strike=400
             )
 
@@ -178,11 +178,10 @@ class TestOptionsWorkflowScenarios:
             "tv_scraper.core.validators.verify_options_symbol",
             return_value=("BSE", "SENSEX"),
         ):
-            expiry_result = options_scraper.get_options_by_expiry(
+            expiry_result = options_scraper.get_options(
                 exchange="BSE",
                 symbol="SENSEX",
                 expiration=20260419,
-                root="BSX",
             )
 
         assert expiry_result["status"] == STATUS_SUCCESS
@@ -215,7 +214,7 @@ class TestOptionsWorkflowScenarios:
             "tv_scraper.core.validators.verify_options_symbol",
             return_value=("NASDAQ", "AAPL"),
         ):
-            result = options_scraper.get_options_by_strike(
+            result = options_scraper.get_options(
                 exchange="NASDAQ",
                 symbol="AAPL",
                 strike=200,
@@ -224,6 +223,40 @@ class TestOptionsWorkflowScenarios:
         assert result["status"] == STATUS_SUCCESS
         itm_calls = [opt for opt in result["data"] if opt.get("delta", 0) > 0.5]
         assert len(itm_calls) >= 1
+
+    @patch.object(Options, "_request")
+    def test_combined_expiration_and_strike_filters(
+        self, mock_request: MagicMock, options_scraper: Options
+    ) -> None:
+        """Verify combined expiration + strike filtering workflow."""
+        mock_request.return_value = (
+            {
+                "fields": ["expiration", "strike", "bid", "ask"],
+                "symbols": [
+                    {"s": "BSE:SENSEX240419C083000", "f": [20260419, 83000, 500, 510]},
+                ],
+                "totalCount": 1,
+            },
+            None,
+        )
+
+        with patch(
+            "tv_scraper.core.validators.verify_options_symbol",
+            return_value=("BSE", "SENSEX"),
+        ):
+            result = options_scraper.get_options(
+                exchange="BSE",
+                symbol="SENSEX",
+                expiration=20260419,
+                strike=83000,
+            )
+
+        assert result["status"] == STATUS_SUCCESS
+        assert len(result["data"]) == 1
+        assert result["metadata"]["filter_value"] == {
+            "expiration": 20260419,
+            "strike": 83000,
+        }
 
 
 class TestOptionsWithValidationIntegration:
@@ -246,7 +279,7 @@ class TestOptionsWithValidationIntegration:
                 None,
             )
 
-            options_scraper.get_options_by_strike(
+            options_scraper.get_options(
                 exchange="BSE",
                 symbol="SENSEX",
                 strike=83000,
@@ -265,7 +298,7 @@ class TestOptionsWithValidationIntegration:
         mock_verify.side_effect = ValidationError("Invalid exchange")
 
         with patch.object(Options, "_request") as mock_request:
-            result = options_scraper.get_options_by_strike(
+            result = options_scraper.get_options(
                 exchange="INVALID",
                 symbol="INVALID",
                 strike=100,
@@ -305,7 +338,7 @@ class TestOptionsErrorRecovery:
             "tv_scraper.core.validators.verify_options_symbol",
             return_value=("NASDAQ", "AAPL"),
         ):
-            result = options_scraper.get_options_by_strike(
+            result = options_scraper.get_options(
                 exchange="NASDAQ",
                 symbol="AAPL",
                 strike=200,
@@ -344,10 +377,10 @@ class TestOptionsDataIntegrity:
             "tv_scraper.core.validators.verify_options_symbol",
             side_effect=lambda e, s: (e.upper(), s.upper()),
         ):
-            result1 = options_scraper.get_options_by_strike(
+            result1 = options_scraper.get_options(
                 exchange="NASDAQ", symbol="AAPL", strike=100
             )
-            result2 = options_scraper.get_options_by_strike(
+            result2 = options_scraper.get_options(
                 exchange="NASDAQ", symbol="MSFT", strike=200
             )
 
@@ -381,7 +414,7 @@ class TestOptionsExportIntegration:
             return_value=("NASDAQ", "AAPL"),
         ):
             options_scraper.export_result = True
-            options_scraper.get_options_by_strike(
+            options_scraper.get_options(
                 exchange="NASDAQ",
                 symbol="AAPL",
                 strike=200,
@@ -421,7 +454,7 @@ class TestOptionsConcurrency:
         ):
             results = []
             for i, strike in enumerate([100, 200, 300], 1):
-                result = options_scraper.get_options_by_strike(
+                result = options_scraper.get_options(
                     exchange="NASDAQ",
                     symbol=f"SYM{i}",
                     strike=strike,
@@ -474,11 +507,10 @@ class TestOptionsBSEIntegration:
             "tv_scraper.core.validators.verify_options_symbol",
             return_value=("BSE", "SENSEX"),
         ):
-            result = options_scraper.get_options_by_expiry(
+            result = options_scraper.get_options(
                 exchange="BSE",
                 symbol="SENSEX",
                 expiration=20260419,
-                root="BSX",
             )
 
         assert result["status"] == STATUS_SUCCESS

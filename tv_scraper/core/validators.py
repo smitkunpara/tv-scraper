@@ -2,6 +2,8 @@
 
 import logging
 import re
+from collections.abc import Sequence
+from datetime import date
 from difflib import get_close_matches
 from typing import TypeVar
 
@@ -63,6 +65,8 @@ _OPTIONS_SEARCH_HEADERS = {
     "Origin": "https://www.tradingview.com",
     "Accept": "application/json",
 }
+
+_YYYYMMDD_DATE_PATTERN = re.compile(r"^\d{8}$")
 
 
 def validate_exchange(exchange: str) -> bool:
@@ -277,8 +281,56 @@ def validate_range(field_name: str, value: int, min_val: int, max_val: int) -> b
     )
 
 
+def validate_yyyymmdd_date(field_name: str, value: int) -> bool:
+    """Validate date integer in YYYYMMDD format with calendar checks.
+
+    Args:
+        field_name: Name of the field for error messages.
+        value: Date value in YYYYMMDD format.
+
+    Returns:
+        True if date is a valid calendar date.
+
+    Raises:
+        ValidationError: If value is not a valid YYYYMMDD date.
+    """
+    if not isinstance(value, int):
+        raise ValidationError(
+            f"Invalid {field_name} value: {value!r}. Must be int in YYYYMMDD format."
+        )
+
+    value_str = str(value)
+    if not _YYYYMMDD_DATE_PATTERN.fullmatch(value_str):
+        raise ValidationError(
+            f"Invalid {field_name} value: {value!r}. Must be in YYYYMMDD format."
+        )
+
+    year = int(value_str[:4])
+    month = int(value_str[4:6])
+    day = int(value_str[6:8])
+
+    if not 1 <= month <= 12:
+        raise ValidationError(
+            f"Invalid {field_name} value: {value!r}. Month must satisfy 0 < MM <= 12."
+        )
+
+    if not 1 <= day <= 31:
+        raise ValidationError(
+            f"Invalid {field_name} value: {value!r}. Day must satisfy 0 < DD <= 31."
+        )
+
+    try:
+        date(year, month, day)
+    except ValueError as exc:
+        raise ValidationError(f"Invalid {field_name} value: {value!r}. {exc}.") from exc
+
+    return True
+
+
 def validate_fields(
-    fields: list[str], allowed: list[str], field_name: str = "fields"
+    fields: Sequence[str],
+    allowed: Sequence[str],
+    field_name: str = "fields",
 ) -> bool:
     """Validate a list of fields against allowed values.
 
@@ -293,7 +345,7 @@ def validate_fields(
     Raises:
         ValidationError: If any field is not in allowed list.
     """
-    if not isinstance(fields, (list, tuple)):
+    if isinstance(fields, str) or not isinstance(fields, Sequence):
         raise ValidationError(f"Invalid {field_name} parameter: expected list.")
     if not all(isinstance(f, str) for f in fields):
         raise ValidationError(

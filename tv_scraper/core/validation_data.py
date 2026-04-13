@@ -2,6 +2,26 @@
 
 from typing import Literal
 
+OPTION_COLUMN_LITERAL = Literal[
+    "ask",
+    "bid",
+    "currency",
+    "delta",
+    "expiration",
+    "gamma",
+    "iv",
+    "option-type",
+    "pricescale",
+    "rho",
+    "root",
+    "strike",
+    "theoPrice",
+    "theta",
+    "vega",
+    "bid_iv",
+    "ask_iv",
+]
+
 EXCHANGE_LITERAL = Literal[
     "ADX",
     "ALOR",
