@@ -65,13 +65,13 @@ class TestLiveTechnicals:
         assert "RSI" in result["data"]
         assert "MACD.macd" in result["data"]
 
-    def test_live_all_indicators(self) -> None:
-        """Test fetching all indicators."""
+    def test_live_none_indicators_fetches_all_indicators(self) -> None:
+        """Test technical_indicators=None fetches all indicators."""
         scraper = Technicals()
         result = scraper.get_technicals(
             exchange="NASDAQ",
             symbol="AAPL",
-            all_indicators=True,
+            technical_indicators=None,
         )
 
         assert result["status"] == STATUS_SUCCESS, result.get("error")
@@ -287,18 +287,17 @@ class TestLiveTechnicalsErrorHandling:
         assert result["error"] is not None
 
     def test_live_no_indicators_provided(self):
-        """Test no indicators provided returns error."""
+        """Test technical_indicators=None fetches all indicators."""
         scraper = Technicals()
         result = scraper.get_technicals(
             exchange="NASDAQ",
             symbol="AAPL",
             technical_indicators=None,
-            all_indicators=False,
         )
 
-        assert result["status"] == "failed"
-        assert result["data"] is None
-        assert "No indicators provided" in result["error"]
+        assert result["status"] == STATUS_SUCCESS, result.get("error")
+        assert isinstance(result["data"], dict)
+        assert len(result["data"]) > 20
 
     def test_live_empty_indicators_list(self):
         """Test empty indicators list returns error."""
@@ -314,22 +313,21 @@ class TestLiveTechnicalsErrorHandling:
 
 
 @pytest.mark.live
-class TestLiveTechnicalsFieldsFiltering:
-    """Test fields filtering with real API."""
+class TestLiveTechnicalsSelectedIndicators:
+    """Test selected indicator behavior with real API."""
 
-    def test_live_fields_filtering(self):
-        """Test fields parameter filters output."""
+    def test_live_selected_indicators_only(self):
+        """Test provided technical_indicators returns only those indicators."""
         scraper = Technicals()
+        requested = ["RSI", "MACD.macd"]
         result = scraper.get_technicals(
             exchange="NASDAQ",
             symbol="AAPL",
-            technical_indicators=["RSI", "MACD.macd", "Stoch.K"],
-            fields=["RSI", "MACD.macd"],
+            technical_indicators=requested,
         )
 
         assert result["status"] == STATUS_SUCCESS, result.get("error")
-        assert "RSI" in result["data"]
-        assert "MACD.macd" in result["data"]
+        assert set(result["data"].keys()) == set(requested)
 
 
 @pytest.mark.live
@@ -351,21 +349,22 @@ class TestLiveTechnicalsMetadata:
         assert meta["exchange"] == "NASDAQ"
         assert meta["symbol"] == "AAPL"
         assert meta["timeframe"] == "4h"
-        assert meta["all_indicators"] is False
         assert meta["technical_indicators"] == ["RSI", "MACD.macd"]
 
-    def test_live_metadata_all_indicators_mode(self):
-        """Test metadata for all_indicators mode."""
+    def test_live_metadata_with_none_indicators(self):
+        """Test metadata when technical_indicators is None."""
         scraper = Technicals()
         result = scraper.get_technicals(
             exchange="NASDAQ",
             symbol="AAPL",
-            all_indicators=True,
+            technical_indicators=None,
         )
 
         assert result["status"] == STATUS_SUCCESS, result.get("error")
         meta = result["metadata"]
-        assert meta["all_indicators"] is True
+        assert meta["exchange"] == "NASDAQ"
+        assert meta["symbol"] == "AAPL"
+        assert meta["timeframe"] == "1d"
         assert "technical_indicators" not in meta
 
 

@@ -363,15 +363,15 @@ class TestMockTechnicalsTimeframes:
 
 
 class TestMockTechnicalsAllIndicators:
-    """Test mock scenarios with all_indicators=True."""
+    """Test mock scenarios when technical_indicators is omitted/None."""
 
     @patch("tv_scraper.core.validators.verify_symbol_exchange")
     @patch("tv_scraper.core.validators.validate_timeframe")
     @patch("tv_scraper.core.base.requests.request")
-    def test_nasdaq_aapl_all_indicators(
+    def test_nasdaq_aapl_none_indicators_fetches_all(
         self, mock_request, mock_validate_tf, mock_verify
     ):
-        """Test NASDAQ:AAPL with all indicators."""
+        """Test NASDAQ:AAPL fetches all indicators when None is provided."""
         mock_verify.return_value = ("NASDAQ", "AAPL")
         mock_validate_tf.return_value = True
         mock_request.return_value = _mock_response("nasdaq_aapl_all_indicators.json")
@@ -380,11 +380,11 @@ class TestMockTechnicalsAllIndicators:
         result = t.get_technicals(
             exchange="NASDAQ",
             symbol="AAPL",
-            all_indicators=True,
+            technical_indicators=None,
         )
 
         assert result["status"] == STATUS_SUCCESS
-        assert result["metadata"]["all_indicators"] is True
+        assert "technical_indicators" not in result["metadata"]
         assert len(result["data"]) > 0
 
 
@@ -495,17 +495,17 @@ class TestMockTechnicalsErrorHandling:
         assert result["data"] is None
 
 
-class TestMockTechnicalsFieldsFiltering:
-    """Test fields filtering with mock fixtures."""
+class TestMockTechnicalsSelectedIndicators:
+    """Test selected-indicator behavior with mock fixtures."""
 
     @patch("tv_scraper.core.validators.verify_symbol_exchange")
     @patch("tv_scraper.core.validators.validate_timeframe")
     @patch("tv_scraper.core.validators.validate_indicators")
     @patch("tv_scraper.core.base.requests.request")
-    def test_fields_filtering(
+    def test_selected_indicators_only(
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
     ):
-        """Test fields parameter filters output correctly."""
+        """Test provided technical_indicators returns only those indicators."""
         mock_verify.return_value = ("NASDAQ", "AAPL")
         mock_validate_tf.return_value = True
         mock_validate_ind.return_value = True
@@ -515,12 +515,11 @@ class TestMockTechnicalsFieldsFiltering:
         result = t.get_technicals(
             exchange="NASDAQ",
             symbol="AAPL",
-            technical_indicators=["RSI", "MACD.macd"],
-            fields=["RSI"],
+            technical_indicators=["RSI"],
         )
 
         assert result["status"] == STATUS_SUCCESS
-        assert "RSI" in result["data"]
+        assert set(result["data"].keys()) == {"RSI"}
 
 
 class TestMockTechnicalsResponseEnvelope:
@@ -555,7 +554,6 @@ class TestMockTechnicalsResponseEnvelope:
         assert "exchange" in result["metadata"]
         assert "symbol" in result["metadata"]
         assert "timeframe" in result["metadata"]
-        assert "all_indicators" in result["metadata"]
         assert "technical_indicators" in result["metadata"]
 
     @patch("tv_scraper.core.validators.verify_symbol_exchange")

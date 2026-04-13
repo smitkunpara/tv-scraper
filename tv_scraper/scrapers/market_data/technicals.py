@@ -7,10 +7,10 @@ from typing import Any
 from tv_scraper.core import validators
 from tv_scraper.core.base import catch_errors
 from tv_scraper.core.constants import SCANNER_URL
-from tv_scraper.core.exceptions import ValidationError
 from tv_scraper.core.scanner import ScannerScraper
 from tv_scraper.core.validation_data import (
     EXCHANGE_LITERAL,
+    INDICATOR_LITERAL,
     INDICATORS,
     TIMEFRAME_LITERAL,
     TIMEFRAMES,
@@ -48,9 +48,7 @@ class Technicals(ScannerScraper):
         exchange: EXCHANGE_LITERAL,
         symbol: str,
         timeframe: TIMEFRAME_LITERAL = "1d",
-        technical_indicators: list[str] | None = None,
-        all_indicators: bool = False,
-        fields: list[str] | None = None,
+        technical_indicators: list[INDICATOR_LITERAL] | None = None,
     ) -> dict[str, Any]:
         """Scrape technical indicator values for a symbol.
 
@@ -58,11 +56,8 @@ class Technicals(ScannerScraper):
             exchange: Exchange name (e.g. ``"BINANCE"``).
             symbol: Trading symbol slug (e.g. ``"NIFTY"``).
             timeframe: Timeframe string (e.g. ``"1d"``, ``"4h"``, ``"1w"``).
-            technical_indicators: List of indicator names to fetch.
-                Required unless ``all_indicators=True``.
-            all_indicators: If ``True``, fetch all known indicators.
-            fields: Optional list of indicator names to include in the
-                output (post-fetch filtering).
+            technical_indicators: Optional list of indicator names to fetch.
+                If ``None``, all known indicators are fetched.
 
         Returns:
             Standardized response dict with keys
@@ -76,16 +71,11 @@ class Technicals(ScannerScraper):
 
         # All local validations first (before any network calls)
         validators.validate_timeframe(timeframe)
-        if all_indicators:
+        if technical_indicators is None:
             indicators = list(INDICATORS)
-        elif technical_indicators is not None:
-            validators.validate_indicators(technical_indicators)
-            indicators = technical_indicators
         else:
-            raise ValidationError(
-                "No indicators provided. "
-                "Use technical_indicators or set all_indicators=True."
-            )
+            indicators = [str(ind) for ind in technical_indicators]
+            validators.validate_indicators(indicators)
         # Symbol/exchange verification requires network - do last
         validators.verify_symbol_exchange(exchange, symbol)
 
@@ -135,11 +125,6 @@ class Technicals(ScannerScraper):
 
         # Strip timeframe suffix from keys
         result = self._revise_response(result, timeframe_value)
-
-        # Optional field filtering - strip suffixes from fields to match revised keys
-        if fields:
-            stripped_fields = [re.sub(r"\|.*", "", f) for f in fields]
-            result = {k: v for k, v in result.items() if k in stripped_fields}
 
         # --- Export ---
         if self.export_result:

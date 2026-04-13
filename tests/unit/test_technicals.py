@@ -132,22 +132,6 @@ class TestGetTechnicalsInvalidIndicators:
         assert result["status"] == STATUS_FAILED
         assert result["error"] is not None
 
-    @patch("tv_scraper.core.validators.verify_symbol_exchange")
-    def test_none_indicators_without_all_indicators(self, mock_verify):
-        """Test None indicators without all_indicators returns error."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
-
-        t = Technicals()
-        result = t.get_technicals(
-            exchange="NASDAQ",
-            symbol="AAPL",
-            technical_indicators=None,
-            all_indicators=False,
-        )
-
-        assert result["status"] == STATUS_FAILED
-        assert "No indicators provided" in result["error"]
-
 
 class TestGetTechnicalsValidInputs:
     """Test get_technicals with valid inputs and various combinations."""
@@ -211,8 +195,8 @@ class TestGetTechnicalsValidInputs:
         )
 
         assert result["status"] == STATUS_SUCCESS
-        assert "RSI" in result["data"]
-        assert "MACD.macd" in result["data"]
+        assert result["data"] == {"RSI": 55.5, "MACD.macd": 0.12}
+        mock_validate_ind.assert_called_once_with(["RSI", "MACD.macd"])
 
     @patch("tv_scraper.core.validators.verify_symbol_exchange")
     @patch("tv_scraper.core.validators.validate_timeframe")
@@ -220,8 +204,10 @@ class TestGetTechnicalsValidInputs:
         "tv_scraper.scrapers.market_data.technicals.INDICATORS", ["RSI", "MACD.macd"]
     )
     @patch("tv_scraper.core.base.requests.request")
-    def test_all_indicators_success(self, mock_request, mock_validate_tf, mock_verify):
-        """Test all_indicators=True returns success."""
+    def test_none_indicators_fetches_all_indicators(
+        self, mock_request, mock_validate_tf, mock_verify
+    ):
+        """Test technical_indicators=None fetches all indicators."""
         mock_verify.return_value = ("NASDAQ", "AAPL")
         mock_validate_tf.return_value = True
 
@@ -235,11 +221,12 @@ class TestGetTechnicalsValidInputs:
         result = t.get_technicals(
             exchange="NASDAQ",
             symbol="AAPL",
-            all_indicators=True,
+            technical_indicators=None,
         )
 
         assert result["status"] == STATUS_SUCCESS
-        assert result["metadata"]["all_indicators"] is True
+        assert result["data"] == {"RSI": 55.5, "MACD.macd": 0.12}
+        assert "technical_indicators" not in result["metadata"]
 
 
 class TestGetTechnicalsTimeframes:
@@ -341,17 +328,17 @@ class TestGetTechnicalsExchanges:
         assert result["metadata"]["exchange"] == "BINANCE"
 
 
-class TestGetTechnicalsFieldsFiltering:
-    """Test fields filtering parameter."""
+class TestGetTechnicalsRequestPayload:
+    """Test API request payload only includes needed indicator fields."""
 
     @patch("tv_scraper.core.validators.verify_symbol_exchange")
     @patch("tv_scraper.core.validators.validate_timeframe")
     @patch("tv_scraper.core.validators.validate_indicators")
     @patch("tv_scraper.core.base.requests.request")
-    def test_fields_filtering(
+    def test_request_includes_selected_indicator_fields_only(
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
     ):
-        """Test fields parameter filters output."""
+        """Test request only includes selected technical indicators."""
         mock_verify.return_value = ("NASDAQ", "AAPL")
         mock_validate_tf.return_value = True
         mock_validate_ind.return_value = True
@@ -370,13 +357,46 @@ class TestGetTechnicalsFieldsFiltering:
         result = t.get_technicals(
             exchange="NASDAQ",
             symbol="AAPL",
-            technical_indicators=["RSI", "MACD.macd", "MACD.signal"],
-            fields=["RSI", "MACD.macd"],
+            technical_indicators=["RSI", "MACD.macd"],
         )
 
         assert result["status"] == STATUS_SUCCESS
-        assert "RSI" in result["data"]
-        assert "MACD.macd" in result["data"]
+        assert result["data"] == {"RSI": 55.5, "MACD.macd": 0.12}
+        params = mock_request.call_args.kwargs["params"]
+        assert params["fields"] == "RSI,MACD.macd"
+
+    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.core.validators.validate_timeframe")
+    @patch(
+        "tv_scraper.scrapers.market_data.technicals.INDICATORS", ["RSI", "MACD.macd"]
+    )
+    @patch("tv_scraper.core.base.requests.request")
+    def test_request_includes_all_indicator_fields_when_none_provided(
+        self, mock_request, mock_validate_tf, mock_verify
+    ):
+        """Test None indicators expands request fields to full indicator list."""
+        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_validate_tf.return_value = True
+
+        mock_response = MagicMock()
+        mock_response.raise_for_status = MagicMock()
+        mock_response.json.return_value = {
+            "RSI": 55.5,
+            "MACD.macd": 0.12,
+        }
+        mock_response.text = json.dumps(mock_response.json.return_value)
+        mock_request.return_value = mock_response
+
+        t = Technicals()
+        result = t.get_technicals(
+            exchange="NASDAQ",
+            symbol="AAPL",
+            technical_indicators=None,
+        )
+
+        assert result["status"] == STATUS_SUCCESS
+        params = mock_request.call_args.kwargs["params"]
+        assert params["fields"] == "RSI,MACD.macd"
 
 
 class TestGetTechnicalsExport:
@@ -527,7 +547,6 @@ class TestGetTechnicalsMetadata:
         assert meta["exchange"] == "NASDAQ"
         assert meta["symbol"] == "AAPL"
         assert meta["timeframe"] == "4h"
-        assert meta["all_indicators"] is False
         assert meta["technical_indicators"] == ["RSI", "MACD.macd"]
 
     @patch("tv_scraper.core.validators.verify_symbol_exchange")
@@ -536,8 +555,10 @@ class TestGetTechnicalsMetadata:
         "tv_scraper.scrapers.market_data.technicals.INDICATORS", ["RSI", "MACD.macd"]
     )
     @patch("tv_scraper.core.base.requests.request")
-    def test_all_indicators_metadata(self, mock_request, mock_validate_tf, mock_verify):
-        """Test all_indicators metadata."""
+    def test_none_indicators_metadata(
+        self, mock_request, mock_validate_tf, mock_verify
+    ):
+        """Test metadata when technical_indicators is None."""
         mock_verify.return_value = ("NASDAQ", "AAPL")
         mock_validate_tf.return_value = True
 
@@ -551,13 +572,13 @@ class TestGetTechnicalsMetadata:
         result = t.get_technicals(
             exchange="NASDAQ",
             symbol="AAPL",
-            all_indicators=True,
+            technical_indicators=None,
         )
 
         meta = result["metadata"]
-        assert meta["all_indicators"] is True
-        # Note: Automated metadata includes all non-None arguments.
-        # Since technical_indicators defaults to None, it is excluded.
+        assert meta["exchange"] == "NASDAQ"
+        assert meta["symbol"] == "AAPL"
+        assert meta["timeframe"] == "1d"
         assert "technical_indicators" not in meta
 
 

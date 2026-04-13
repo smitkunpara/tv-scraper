@@ -5,12 +5,13 @@ on:
     branches:
       - main
       - master
-      - improve/docs-experience
-      - refactor/core-revamp
+    tags:
+      - 'v*'
     paths:
       - 'docs/**'
       - 'mkdocs.yml'
       - '.github/workflows/gh-pages.yml'
+      - 'CHANGELOG.md'
   workflow_dispatch:
 
 jobs:
@@ -46,15 +47,19 @@ jobs:
           # Fetch gh-pages branch to ensure mike can see it
           git fetch origin gh-pages --depth=1 || true
 
-          # Resolve version name
-          BRANCH_NAME="${{ github.ref_name }}"
-          if [[ "$BRANCH_NAME" == "main" || "$BRANCH_NAME" == "master" ]]; then
+          # Resolve version name from branch or tag
+          REF_NAME="${{ github.ref_name }}"
+          REF_TYPE="${{ github.ref_type }}"
+
+          if [[ "$REF_TYPE" == "tag" ]]; then
+            VERSION_NAME="$REF_NAME"
+          elif [[ "$REF_NAME" == "main" || "$REF_NAME" == "master" ]]; then
             VERSION_NAME="latest"
-          elif [[ "$BRANCH_NAME" == "refactor/core-revamp" ]]; then
-            VERSION_NAME="beta"
           else
-            VERSION_NAME="$BRANCH_NAME"
+            VERSION_NAME="$REF_NAME"
           fi
 
           mike deploy --push --update-aliases "$VERSION_NAME"
-          mike set-default --push latest
+          if [[ "$VERSION_NAME" == "latest" ]]; then
+            mike set-default --push latest
+          fi
