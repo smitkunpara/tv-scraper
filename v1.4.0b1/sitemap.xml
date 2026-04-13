@@ -25,14 +25,6 @@
          <lastmod>2026-04-13</lastmod>
     </url>
     <url>
-         <loc>https://smitkunpara.github.io/tv-scraper/v1.4.0b1/reference/</loc>
-         <lastmod>2026-04-13</lastmod>
-    </url>
-    <url>
-         <loc>https://smitkunpara.github.io/tv-scraper/v1.4.0b1/reference/releases/</loc>
-         <lastmod>2026-04-13</lastmod>
-    </url>
-    <url>
          <loc>https://smitkunpara.github.io/tv-scraper/v1.4.0b1/scrapers/calendar/</loc>
          <lastmod>2026-04-13</lastmod>
     </url>
@@ -82,6 +74,10 @@
     </url>
     <url>
          <loc>https://smitkunpara.github.io/tv-scraper/v1.4.0b1/streaming/</loc>
+         <lastmod>2026-04-13</lastmod>
+    </url>
+    <url>
+         <loc>https://smitkunpara.github.io/tv-scraper/v1.4.0b1/streaming/base_streamer/</loc>
          <lastmod>2026-04-13</lastmod>
     </url>
     <url>

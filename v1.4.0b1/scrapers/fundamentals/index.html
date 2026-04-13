@@ -327,6 +327,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../../architecture.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../api-conventions/" class="md-nav__link">
         
   
@@ -334,7 +361,7 @@
   <span class="md-ellipsis">
     
   
-    API Basics
+    API Conventions
   
 
     
@@ -366,6 +393,8 @@
       
         
       
+        
+      
     
     
     
@@ -381,7 +410,7 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
         
           
           <div class="md-nav__link md-nav__container">
@@ -403,14 +432,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -492,7 +521,35 @@
   <span class="md-ellipsis">
     
   
-    Streamer (Legacy Wrapper)
+    Streamer (Convenience Wrapper)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../streaming/base_streamer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extending (BaseStreamer)
   
 
     
@@ -561,10 +618,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
             
   
   
@@ -582,8 +639,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_5">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -716,70 +773,47 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#quick-use" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Quick Use
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Quick Use">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#all-fields" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        All fields
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="All fields">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#output-structure-truncated" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Output structure (truncated)
+        Overview
       
     </span>
   </a>
   
 </li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#selected-fields" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#constructor" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Selected fields
+        Constructor
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Selected fields">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#method" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Method">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#output-structure" class="md-nav__link">
+  <a href="#get_fundamentalsexchange-symbol-fieldsnone" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Output structure
+        get_fundamentals(exchange, symbol, fields=None)
       
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
         
@@ -789,10 +823,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#inputs" class="md-nav__link">
+  <a href="#request-behavior" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Inputs
+        Request Behavior
       
     </span>
   </a>
@@ -800,10 +834,82 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#field-groups" class="md-nav__link">
+  <a href="#field-behavior" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Field Groups
+        Field Behavior
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Field Behavior">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#selection-and-validation-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Selection and Validation Rules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#field-sets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Field Sets
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#response-and-data-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Response and Data Mapping
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#metadata-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metadata Behavior
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error Behavior
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Examples
       
     </span>
   </a>
@@ -1088,12 +1194,6 @@
     
       
         
-          
-        
-      
-        
-      
-        
       
         
       
@@ -1112,12 +1212,11 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
         
           
-          <div class="md-nav__link md-nav__container">
-            <a href="../../reference/" class="md-nav__link ">
-              
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
   
   
   <span class="md-ellipsis">
@@ -1131,17 +1230,11 @@
   
   
 
-            </a>
-            
-              
-              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="">
-                <span class="md-nav__icon md-icon"></span>
-              </label>
-            
-          </div>
+            <span class="md-nav__icon md-icon"></span>
+          </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1150,8 +1243,6 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
-            
-              
             
               
                 
@@ -1167,35 +1258,7 @@
   <span class="md-ellipsis">
     
   
-    Validation & Supported Values
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/releases/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Releases & Versioning
+    Supported Data
   
 
     
@@ -1298,70 +1361,47 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#quick-use" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Quick Use
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Quick Use">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#all-fields" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        All fields
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="All fields">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#output-structure-truncated" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Output structure (truncated)
+        Overview
       
     </span>
   </a>
   
 </li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#selected-fields" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#constructor" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Selected fields
+        Constructor
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Selected fields">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#method" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Method">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#output-structure" class="md-nav__link">
+  <a href="#get_fundamentalsexchange-symbol-fieldsnone" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Output structure
+        get_fundamentals(exchange, symbol, fields=None)
       
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
         
@@ -1371,10 +1411,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#inputs" class="md-nav__link">
+  <a href="#request-behavior" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Inputs
+        Request Behavior
       
     </span>
   </a>
@@ -1382,10 +1422,82 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#field-groups" class="md-nav__link">
+  <a href="#field-behavior" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Field Groups
+        Field Behavior
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Field Behavior">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#selection-and-validation-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Selection and Validation Rules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#field-sets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Field Sets
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#response-and-data-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Response and Data Mapping
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#metadata-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metadata Behavior
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error Behavior
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Examples
       
     </span>
   </a>
@@ -1413,143 +1525,373 @@
 
 
 <h1 id="fundamentals">Fundamentals</h1>
-<p><code>Fundamentals</code> returns fundamental fields for one symbol through the TradingView scanner endpoint.</p>
-<h2 id="quick-use">Quick Use</h2>
-<h3 id="all-fields">All fields</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">tv_scraper</span><span class="w"> </span><span class="kn">import</span> <span class="n">Fundamentals</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">scraper</span> <span class="o">=</span> <span class="n">Fundamentals</span><span class="p">()</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">result</span> <span class="o">=</span> <span class="n">scraper</span><span class="o">.</span><span class="n">get_fundamentals</span><span class="p">(</span><span class="n">exchange</span><span class="o">=</span><span class="s2">&quot;NASDAQ&quot;</span><span class="p">,</span> <span class="n">symbol</span><span class="o">=</span><span class="s2">&quot;AAPL&quot;</span><span class="p">)</span>
+<h2 id="overview">Overview</h2>
+<p><code>Fundamentals</code> fetches fundamental fields for a single <code>exchange:symbol</code>
+from the TradingView scanner <code>GET /symbol</code> endpoint.</p>
+<p>Public API surface in this class is currently:</p>
+<ul>
+<li><code>get_fundamentals(exchange, symbol, fields=None)</code></li>
+</ul>
+<p>There are no category-specific helper methods (such as
+<code>get_income_statement()</code> or <code>get_margins()</code>) implemented in this class.</p>
+<h2 id="constructor">Constructor</h2>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">Fundamentals</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>        <span class="n">export_result</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>        <span class="n">export_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;json&quot;</span><span class="p">,</span>   <span class="c1"># &quot;json&quot; or &quot;csv&quot;</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>        <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>             <span class="c1"># integer in [1, 300]</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>        <span class="n">cookie</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p">)</span>
 </span></code></pre></div>
-<h4 id="output-structure-truncated">Output structure (truncated)</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>        <span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="s2">&quot;NASDAQ:AAPL&quot;</span><span class="p">,</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>        <span class="s2">&quot;market_cap_basic&quot;</span><span class="p">:</span> <span class="mi">2950000000000</span><span class="p">,</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>        <span class="o">...</span>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="p">},</span>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>        <span class="s2">&quot;exchange&quot;</span><span class="p">:</span> <span class="s2">&quot;NASDAQ&quot;</span><span class="p">,</span>
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>        <span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="s2">&quot;AAPL&quot;</span><span class="p">,</span>
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>        <span class="s2">&quot;fields&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">],</span>
-</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>        <span class="s2">&quot;data_category&quot;</span><span class="p">:</span> <span class="s2">&quot;fundamentals&quot;</span><span class="p">,</span>
-</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    <span class="p">},</span>
-</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="p">}</span>
-</span></code></pre></div>
-<h3 id="selected-fields">Selected fields</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">result</span> <span class="o">=</span> <span class="n">scraper</span><span class="o">.</span><span class="n">get_fundamentals</span><span class="p">(</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="n">exchange</span><span class="o">=</span><span class="s2">&quot;NASDAQ&quot;</span><span class="p">,</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="n">symbol</span><span class="o">=</span><span class="s2">&quot;AAPL&quot;</span><span class="p">,</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;total_revenue&quot;</span><span class="p">,</span> <span class="s2">&quot;net_income&quot;</span><span class="p">,</span> <span class="s2">&quot;price_earnings_ttm&quot;</span><span class="p">],</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="p">)</span>
-</span></code></pre></div>
-<h4 id="output-structure">Output structure</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>        <span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="s2">&quot;NASDAQ:AAPL&quot;</span><span class="p">,</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>        <span class="s2">&quot;total_revenue&quot;</span><span class="p">:</span> <span class="mi">416161000000</span><span class="p">,</span>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>        <span class="s2">&quot;net_income&quot;</span><span class="p">:</span> <span class="mi">108000000000</span><span class="p">,</span>
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>        <span class="s2">&quot;price_earnings_ttm&quot;</span><span class="p">:</span> <span class="mf">29.4</span><span class="p">,</span>
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="p">},</span>
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>        <span class="s2">&quot;exchange&quot;</span><span class="p">:</span> <span class="s2">&quot;NASDAQ&quot;</span><span class="p">,</span>
-</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>        <span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="s2">&quot;AAPL&quot;</span><span class="p">,</span>
-</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>        <span class="s2">&quot;fields&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;total_revenue&quot;</span><span class="p">,</span> <span class="s2">&quot;net_income&quot;</span><span class="p">,</span> <span class="s2">&quot;price_earnings_ttm&quot;</span><span class="p">],</span>
-</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>        <span class="s2">&quot;data_category&quot;</span><span class="p">:</span> <span class="s2">&quot;fundamentals&quot;</span><span class="p">,</span>
-</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>    <span class="p">},</span>
-</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="p">}</span>
-</span></code></pre></div>
-<h2 id="inputs">Inputs</h2>
 <table>
 <thead>
 <tr>
 <th>Parameter</th>
-<th>Notes</th>
+<th>Type</th>
+<th>Default</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>export_result</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td>When <code>True</code>, successful data is exported via <code>_export()</code>.</td>
+</tr>
+<tr>
+<td><code>export_type</code></td>
+<td><code>str</code></td>
+<td><code>"json"</code></td>
+<td>Must be <code>"json"</code> or <code>"csv"</code>; invalid values raise <code>ValueError</code> at init.</td>
+</tr>
+<tr>
+<td><code>timeout</code></td>
+<td><code>int</code></td>
+<td><code>10</code></td>
+<td>Request timeout in seconds; must be an integer in <code>[1, 300]</code>.</td>
+</tr>
+<tr>
+<td><code>cookie</code></td>
+<td><code>str \| None</code></td>
+<td><code>None</code></td>
+<td>Optional cookie header; if <code>None</code>, <code>TRADINGVIEW_COOKIE</code> env var is used.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="method">Method</h2>
+<h3 id="get_fundamentalsexchange-symbol-fieldsnone"><code>get_fundamentals(exchange, symbol, fields=None)</code></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">get_fundamentals</span><span class="p">(</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>        <span class="n">exchange</span><span class="p">:</span> <span class="n">EXCHANGE_LITERAL</span><span class="p">,</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>        <span class="n">symbol</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>        <span class="n">fields</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+</span></code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Behavior</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>exchange</code></td>
-<td>Use a supported exchange from <a href="../../supported_data/#exchanges">Exchanges</a></td>
+<td><code>str</code></td>
+<td>Yes</td>
+<td>Passed to live exchange/symbol verification before data fetch.</td>
 </tr>
 <tr>
 <td><code>symbol</code></td>
-<td>Symbol slug such as <code>AAPL</code></td>
+<td><code>str</code></td>
+<td>Yes</td>
+<td>Passed to live exchange/symbol verification before data fetch.</td>
 </tr>
 <tr>
 <td><code>fields</code></td>
-<td><code>None</code> or <code>[]</code> fetches all fields; otherwise use a list of field names from the groups below</td>
+<td><code>list[str] \| None</code></td>
+<td>No</td>
+<td><code>None</code> or <code>[]</code> means all fields in <code>ALL_FIELDS</code>; otherwise validates each requested field name.</td>
 </tr>
 </tbody>
 </table>
-<h2 id="field-groups">Field Groups</h2>
+<h2 id="request-behavior">Request Behavior</h2>
+<p>Each successful call path performs two HTTP GET calls to
+<code>https://scanner.tradingview.com/symbol</code>:</p>
+<ol>
+<li>Symbol verification (<code>verify_symbol_exchange</code>):<ul>
+<li><code>symbol={EXCHANGE}:{SYMBOL}</code> (uppercased internally)</li>
+<li><code>fields=market</code></li>
+<li><code>no_404=false</code></li>
+</ul>
+</li>
+<li>Fundamentals fetch (<code>_fetch_symbol_fields</code>):<ul>
+<li><code>symbol={EXCHANGE}:{SYMBOL}</code> (validated uppercase values)</li>
+<li><code>fields=&lt;comma-separated requested fields&gt;</code></li>
+<li><code>no_404=true</code></li>
+</ul>
+</li>
+</ol>
+<p>Additional request behavior:</p>
+<ul>
+<li>Headers include a browser <code>User-Agent</code> by default.</li>
+<li>If <code>cookie</code> is provided (or loaded from <code>TRADINGVIEW_COOKIE</code>), it is sent as
+    the <code>cookie</code> header.</li>
+<li>Captcha pages are detected and returned as error responses.</li>
+</ul>
+<h2 id="field-behavior">Field Behavior</h2>
+<h3 id="selection-and-validation-rules">Selection and Validation Rules</h3>
+<ul>
+<li>If <code>fields is None</code>, all 60 fields in <code>ALL_FIELDS</code> are requested.</li>
+<li>If <code>fields == []</code>, all 60 fields are also requested (<code>fields</code> is treated as
+    falsy and replaced with <code>ALL_FIELDS</code>).</li>
+<li>If <code>fields</code> is not <code>None</code> and not a Python <code>list</code>, request fails with:<ul>
+<li><code>Fields must be a list of strings or None.</code></li>
+</ul>
+</li>
+<li>Field names are case-sensitive.</li>
+<li>Duplicate requested field names are allowed by validation.<ul>
+<li>Result data is a dictionary, so duplicate keys collapse to one key.</li>
+</ul>
+</li>
+</ul>
+<h3 id="field-sets">Field Sets</h3>
 <table>
 <thead>
 <tr>
-<th>Group</th>
-<th>Examples</th>
+<th>Category</th>
+<th style="text-align: right;">Count</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Income statement</td>
-<td><code>total_revenue</code>, <code>gross_profit</code>, <code>net_income</code>, <code>EBITDA</code></td>
+<td style="text-align: right;">13</td>
 </tr>
 <tr>
 <td>Balance sheet</td>
-<td><code>total_assets</code>, <code>total_debt</code>, <code>stockholders_equity</code></td>
+<td style="text-align: right;">9</td>
 </tr>
 <tr>
 <td>Cash flow</td>
-<td><code>cash_f_operating_activities</code>, <code>free_cash_flow</code></td>
+<td style="text-align: right;">7</td>
 </tr>
 <tr>
 <td>Margins</td>
-<td><code>gross_margin</code>, <code>operating_margin_ttm</code>, <code>net_margin_percent_ttm</code></td>
+<td style="text-align: right;">8</td>
 </tr>
 <tr>
 <td>Profitability</td>
-<td><code>return_on_equity</code>, <code>return_on_assets_fq</code></td>
+<td style="text-align: right;">5</td>
 </tr>
 <tr>
 <td>Liquidity</td>
-<td><code>current_ratio</code>, <code>quick_ratio_fq</code></td>
+<td style="text-align: right;">4</td>
 </tr>
 <tr>
 <td>Leverage</td>
-<td><code>debt_to_equity</code>, <code>debt_to_assets</code></td>
+<td style="text-align: right;">3</td>
 </tr>
 <tr>
 <td>Valuation</td>
-<td><code>market_cap_basic</code>, <code>price_earnings_ttm</code>, <code>price_sales_ttm</code></td>
+<td style="text-align: right;">8</td>
 </tr>
 <tr>
 <td>Dividends</td>
-<td><code>dividends_yield</code>, <code>dividend_payout_ratio_ttm</code></td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr>
+<td><strong>Total (<code>ALL_FIELDS</code>)</strong></td>
+<td style="text-align: right;"><strong>60</strong></td>
 </tr>
 </tbody>
 </table>
-<div class="admonition failure">
-<p class="admonition-title">wrong input</p>
-<p>This fails because <code>fields</code> must be a list or <code>None</code>.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">scraper</span><span class="o">.</span><span class="n">get_fundamentals</span><span class="p">(</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="n">exchange</span><span class="o">=</span><span class="s2">&quot;NASDAQ&quot;</span><span class="p">,</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="n">symbol</span><span class="o">=</span><span class="s2">&quot;AAPL&quot;</span><span class="p">,</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="n">fields</span><span class="o">=</span><span class="s2">&quot;total_revenue&quot;</span><span class="p">,</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="p">)</span>
-</span></code></pre></div>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Notes</p>
+<p>Income statement:</p>
+<p><code>total_revenue</code>, <code>revenue_per_share_ttm</code>, <code>total_revenue_fy</code>, <code>gross_profit</code>, <code>gross_profit_fy</code>, <code>operating_income</code>, <code>operating_income_fy</code>, <code>net_income</code>, <code>net_income_fy</code>, <code>EBITDA</code>, <code>basic_eps_net_income</code>, <code>earnings_per_share_basic_ttm</code>, <code>earnings_per_share_diluted_ttm</code></p>
+<p>Balance sheet:</p>
+<p><code>total_assets</code>, <code>total_assets_fy</code>, <code>cash_n_short_term_invest</code>, <code>cash_n_short_term_invest_fy</code>, <code>total_debt</code>, <code>total_debt_fy</code>, <code>stockholders_equity</code>, <code>stockholders_equity_fy</code>, <code>book_value_per_share_fq</code></p>
+<p>Cash flow:</p>
+<p><code>cash_f_operating_activities</code>, <code>cash_f_operating_activities_fy</code>, <code>cash_f_investing_activities</code>, <code>cash_f_investing_activities_fy</code>, <code>cash_f_financing_activities</code>, <code>cash_f_financing_activities_fy</code>, <code>free_cash_flow</code></p>
+<p>Margins:</p>
+<p><code>gross_margin</code>, <code>gross_margin_percent_ttm</code>, <code>operating_margin</code>, <code>operating_margin_ttm</code>, <code>pretax_margin_percent_ttm</code>, <code>net_margin</code>, <code>net_margin_percent_ttm</code>, <code>EBITDA_margin</code></p>
+<p>Profitability:</p>
+<p><code>return_on_equity</code>, <code>return_on_equity_fq</code>, <code>return_on_assets</code>, <code>return_on_assets_fq</code>, <code>return_on_investment_ttm</code></p>
+<p>Liquidity:</p>
+<p><code>current_ratio</code>, <code>current_ratio_fq</code>, <code>quick_ratio</code>, <code>quick_ratio_fq</code></p>
+<p>Leverage:</p>
+<p><code>debt_to_equity</code>, <code>debt_to_equity_fq</code>, <code>debt_to_assets</code></p>
+<p>Valuation:</p>
+<p><code>market_cap_basic</code>, <code>market_cap_calc</code>, <code>market_cap_diluted_calc</code>, <code>enterprise_value_fq</code>, <code>price_earnings_ttm</code>, <code>price_book_fq</code>, <code>price_sales_ttm</code>, <code>price_free_cash_flow_ttm</code></p>
+<p>Dividends:</p>
+<p><code>dividends_yield</code>, <code>dividends_per_share_fq</code>, <code>dividend_payout_ratio_ttm</code></p>
+<p>Note:</p>
 <ul>
-<li>The method verifies the live <code>exchange:symbol</code> before the main fetch.</li>
-<li>Missing fields still appear in <code>data</code> with value <code>None</code>.</li>
+<li><code>DEFAULT_COMPARISON_FIELDS</code> exists as a class constant but is not used by
+    <code>get_fundamentals()</code>.</li>
 </ul>
-</div>
+<h2 id="response-and-data-mapping">Response and Data Mapping</h2>
+<p>All responses use the standard envelope:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>        <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span> <span class="o">|</span> <span class="s2">&quot;failed&quot;</span><span class="p">,</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>        <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>        <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>        <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Successful <code>data</code> mapping:</p>
+<ul>
+<li>Always includes <code>"symbol": "{VALIDATED_EXCHANGE}:{VALIDATED_SYMBOL}"</code>
+    (uppercase normalized by live verifier).</li>
+<li>For each requested field, value is read via <code>json_response.get(field)</code>.</li>
+<li>If a field is missing in API response, it is still present in output with
+    value <code>None</code>.</li>
+</ul>
+<p>Example success envelope:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>        <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>        <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>                <span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="s2">&quot;NASDAQ:AAPL&quot;</span><span class="p">,</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>                <span class="s2">&quot;total_revenue&quot;</span><span class="p">:</span> <span class="mi">416161000000</span><span class="p">,</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>                <span class="s2">&quot;net_income&quot;</span><span class="p">:</span> <span class="mi">108000000000</span><span class="p">,</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>        <span class="p">},</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>        <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>                <span class="s2">&quot;exchange&quot;</span><span class="p">:</span> <span class="s2">&quot;NASDAQ&quot;</span><span class="p">,</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>                <span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="s2">&quot;AAPL&quot;</span><span class="p">,</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>                <span class="s2">&quot;fields&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;total_revenue&quot;</span><span class="p">,</span> <span class="s2">&quot;net_income&quot;</span><span class="p">],</span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>                <span class="s2">&quot;data_category&quot;</span><span class="p">:</span> <span class="s2">&quot;fundamentals&quot;</span><span class="p">,</span>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>        <span class="p">},</span>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>        <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="p">}</span>
+</span></code></pre></div>
+<h2 id="metadata-behavior">Metadata Behavior</h2>
+<p>Metadata content depends on where validation/error occurs:</p>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Metadata keys typically present</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Success or fetch-stage failure (<code>_fetch_symbol_fields</code>)</td>
+<td><code>exchange</code>, <code>symbol</code>, <code>fields</code>, <code>data_category</code></td>
+</tr>
+<tr>
+<td>Early failure in <code>get_fundamentals</code> (<code>fields</code> type/name validation)</td>
+<td><code>exchange</code>, <code>symbol</code>, <code>fields</code> (no <code>data_category</code>)</td>
+</tr>
+</tbody>
+</table>
+<p>Notes:</p>
+<ul>
+<li>Metadata uses function argument values captured by decorators.</li>
+<li><code>metadata.exchange</code> and <code>metadata.symbol</code> are the values passed into
+    <code>get_fundamentals()</code> (not forced to uppercase there).</li>
+<li><code>data.symbol</code> is uppercase-normalized after verifier success.</li>
+</ul>
+<h2 id="error-behavior">Error Behavior</h2>
+<p>Representative failures and message forms:</p>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+<th><code>status</code></th>
+<th><code>data</code></th>
+<th>Error message form</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fields</code> is not <code>list</code>/<code>None</code></td>
+<td><code>failed</code></td>
+<td><code>None</code></td>
+<td><code>Fields must be a list of strings or None.</code></td>
+</tr>
+<tr>
+<td>Invalid field name(s)</td>
+<td><code>failed</code></td>
+<td><code>None</code></td>
+<td><code>Invalid field: ... Allowed field: ...</code></td>
+</tr>
+<tr>
+<td>Invalid exchange</td>
+<td><code>failed</code></td>
+<td><code>None</code></td>
+<td><code>Invalid exchange: '...'. ...</code></td>
+</tr>
+<tr>
+<td>Empty/invalid symbol</td>
+<td><code>failed</code></td>
+<td><code>None</code></td>
+<td><code>Symbol must be a non-empty string for exchange '...'.</code></td>
+</tr>
+<tr>
+<td>Unknown exchange:symbol (404 during verify)</td>
+<td><code>failed</code></td>
+<td><code>None</code></td>
+<td><code>Symbol '...' not found on exchange '...'. ...</code></td>
+</tr>
+<tr>
+<td>Verify retries exhausted</td>
+<td><code>failed</code></td>
+<td><code>None</code></td>
+<td><code>Could not verify 'EXCHANGE:SYMBOL' after 2 attempt(s): ...</code></td>
+</tr>
+<tr>
+<td>Captcha challenge</td>
+<td><code>failed</code></td>
+<td><code>None</code></td>
+<td><code>TradingView requested a captcha challenge.</code></td>
+</tr>
+<tr>
+<td>Network/HTTP request error</td>
+<td><code>failed</code></td>
+<td><code>None</code></td>
+<td><code>Network error: ...</code></td>
+</tr>
+<tr>
+<td>Empty HTTP body</td>
+<td><code>failed</code></td>
+<td><code>None</code></td>
+<td><code>Empty response from server.</code></td>
+</tr>
+<tr>
+<td>JSON decode failure</td>
+<td><code>failed</code></td>
+<td><code>None</code></td>
+<td><code>Failed to parse API response: ...</code></td>
+</tr>
+<tr>
+<td>Empty parsed payload (<code>{}</code> / falsy)</td>
+<td><code>failed</code></td>
+<td><code>None</code></td>
+<td><code>No data returned from API.</code></td>
+</tr>
+<tr>
+<td>API-level error payload</td>
+<td><code>failed</code></td>
+<td><code>None</code></td>
+<td><code>API error: ...</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="quick-examples">Quick Examples</h2>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">tv_scraper.scrapers.market_data</span><span class="w"> </span><span class="kn">import</span> <span class="n">Fundamentals</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">scraper</span> <span class="o">=</span> <span class="n">Fundamentals</span><span class="p">()</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># All 60 fields (same behavior for fields=None or fields=[])</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="n">all_fields</span> <span class="o">=</span> <span class="n">scraper</span><span class="o">.</span><span class="n">get_fundamentals</span><span class="p">(</span><span class="n">exchange</span><span class="o">=</span><span class="s2">&quot;NASDAQ&quot;</span><span class="p">,</span> <span class="n">symbol</span><span class="o">=</span><span class="s2">&quot;AAPL&quot;</span><span class="p">)</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Specific field subset</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="n">subset</span> <span class="o">=</span> <span class="n">scraper</span><span class="o">.</span><span class="n">get_fundamentals</span><span class="p">(</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>        <span class="n">exchange</span><span class="o">=</span><span class="s2">&quot;NASDAQ&quot;</span><span class="p">,</span>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>        <span class="n">symbol</span><span class="o">=</span><span class="s2">&quot;AAPL&quot;</span><span class="p">,</span>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>        <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;total_revenue&quot;</span><span class="p">,</span> <span class="s2">&quot;net_income&quot;</span><span class="p">,</span> <span class="s2">&quot;price_earnings_ttm&quot;</span><span class="p">],</span>
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="p">)</span>
+</span></code></pre></div>
 
 
 

@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://smitkunpara.github.io/tv-scraper/v1.4.0b1/reference/releases/">
+        <link rel="canonical" href="https://smitkunpara.github.io/tv-scraper/v1.4.0b1/streaming/base_streamer/">
       
       
-        <link rel="prev" href="../../supported_data/">
+        <link rel="prev" href="../streamer/">
       
       
-        <link rel="next" href="../../getting_cookies/">
+        <link rel="next" href="../../scrapers/pine/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>Releases & Versioning - tv-scraper</title>
+        <title>Extending (BaseStreamer) - tv-scraper</title>
       
     
     
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#releases-versioning" class="md-skip">
+        <a href="#basestreamer-api" class="md-skip">
           Skip to content
         </a>
       
@@ -120,7 +120,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Releases & Versioning
+              Extending (BaseStreamer)
             
           </span>
         </div>
@@ -327,14 +327,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api-conventions/" class="md-nav__link">
+      <a href="../../architecture.md" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    API Basics
+    Architecture
   
 
     
@@ -353,6 +353,35 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="../../api-conventions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Conventions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
     
     
       
@@ -366,6 +395,8 @@
       
         
       
+        
+      
     
     
     
@@ -375,17 +406,15 @@
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../streaming/" class="md-nav__link ">
+            <a href="../" class="md-nav__link ">
               
   
   
@@ -403,14 +432,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -429,7 +458,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../streaming/candle_streamer/" class="md-nav__link">
+      <a href="../candle_streamer/" class="md-nav__link">
         
   
   
@@ -457,7 +486,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../streaming/forecast_streamer/" class="md-nav__link">
+      <a href="../forecast_streamer/" class="md-nav__link">
         
   
   
@@ -485,14 +514,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../streaming/streamer/" class="md-nav__link">
+      <a href="../streamer/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Streamer (Legacy Wrapper)
+    Streamer (Convenience Wrapper)
   
 
     
@@ -501,6 +530,275 @@
   
 
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extending (BaseStreamer)
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extending (BaseStreamer)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#import" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Import
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#constructor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Constructor
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Constructor">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#constructor-arguments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Constructor Arguments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inherited-initialization-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inherited Initialization Notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#method-connect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method: connect()
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Method: connect()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exact-runtime-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exact Runtime Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-connected-means-here" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What "connected" means here
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exceptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exceptions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inherited-response-envelope-expectations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inherited Response Envelope Expectations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Inherited Response Envelope Expectations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#success-envelope-_success_response" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Success envelope (_success_response)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-envelope-_error_response" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error envelope (_error_response)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#metadata-merge-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metadata merge behavior
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#catch_errors-expectations-for-subclasses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        @catch_errors expectations for subclasses
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inheritance-hierarchy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inheritance Hierarchy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#minimal-extension-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Minimal Extension Example
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -561,10 +859,10 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
             
   
   
@@ -582,8 +880,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -940,42 +1238,35 @@
       
   
   
-    
-  
   
   
     
     
       
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
         
           
         
-      
-        
-      
-        
-      
-        
-      
-    
-    
-    
-      
-        
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
         
           
-          <div class="md-nav__link md-nav__container">
-            <a href="../" class="md-nav__link ">
-              
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
   
   
   <span class="md-ellipsis">
@@ -989,17 +1280,11 @@
   
   
 
-            </a>
-            
-              
-              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="">
-                <span class="md-nav__icon md-icon"></span>
-              </label>
-            
-          </div>
+            <span class="md-nav__icon md-icon"></span>
+          </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_6">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1008,8 +1293,6 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
-            
-              
             
               
                 
@@ -1025,7 +1308,7 @@
   <span class="md-ellipsis">
     
   
-    Validation & Supported Values
+    Supported Data
   
 
     
@@ -1034,136 +1317,6 @@
   
 
       </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-    
-  
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Releases & Versioning
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Releases & Versioning
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#what-readers-should-expect" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What Readers Should Expect
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#docs-availability" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Docs Availability
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#known-versions-in-this-repository" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Known Versions In This Repository
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#current-docs-target" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Current Docs Target
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#publishing-notes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Publishing Notes
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1258,10 +1411,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#what-readers-should-expect" class="md-nav__link">
+  <a href="#purpose" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What Readers Should Expect
+        Purpose
       
     </span>
   </a>
@@ -1269,10 +1422,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#docs-availability" class="md-nav__link">
+  <a href="#import" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Docs Availability
+        Import
       
     </span>
   </a>
@@ -1280,10 +1433,160 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-versions-in-this-repository" class="md-nav__link">
+  <a href="#constructor" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known Versions In This Repository
+        Constructor
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Constructor">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#constructor-arguments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Constructor Arguments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inherited-initialization-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inherited Initialization Notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#method-connect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method: connect()
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Method: connect()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exact-runtime-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exact Runtime Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-connected-means-here" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What "connected" means here
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exceptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exceptions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inherited-response-envelope-expectations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inherited Response Envelope Expectations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Inherited Response Envelope Expectations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#success-envelope-_success_response" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Success envelope (_success_response)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-envelope-_error_response" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error envelope (_error_response)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#metadata-merge-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metadata merge behavior
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#catch_errors-expectations-for-subclasses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        @catch_errors expectations for subclasses
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inheritance-hierarchy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inheritance Hierarchy
       
     </span>
   </a>
@@ -1291,21 +1594,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#current-docs-target" class="md-nav__link">
+  <a href="#minimal-extension-example" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Current Docs Target
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#publishing-notes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Publishing Notes
+        Minimal Extension Example
       
     </span>
   </a>
@@ -1332,78 +1624,155 @@
   
 
 
-<h1 id="releases-versioning">Releases &amp; Versioning</h1>
-<p>This project is set up to use versioned MkDocs builds with <code>mike</code>, so readers can switch between released docs when those versions are published to GitHub Pages.</p>
-<h2 id="what-readers-should-expect">What Readers Should Expect</h2>
+<h1 id="basestreamer-api">BaseStreamer API</h1>
+<p><code>BaseStreamer</code> is the shared streaming base class in <code>tv_scraper/streaming/base_streamer.py</code>.
+It extends <code>BaseScraper</code> and adds a single connection helper, <code>connect()</code>, plus
+the <code>study_id_to_name_map</code> attribute used by indicator-aware streamers.</p>
+<h2 id="purpose">Purpose</h2>
+<p><code>BaseStreamer</code> is a concrete class, but it is primarily meant to be inherited by
+higher-level streamers:</p>
 <ul>
-<li>The deployed site should offer a version switcher in the header.</li>
-<li><code>latest</code> should point to the newest stable branch build.</li>
-<li>tagged releases such as <code>v1.3.2</code> or <code>v1.4.0b2</code> should appear as their own docs versions.</li>
+<li><code>CandleStreamer</code></li>
+<li><code>ForecastStreamer</code></li>
+<li><code>Streamer</code></li>
 </ul>
-<h2 id="docs-availability">Docs Availability</h2>
-<p>The documentation site was introduced in <strong><code>v0.5.0</code></strong>. That means the release-aware docs story starts from <code>v0.5.0</code> onward.</p>
-<h2 id="known-versions-in-this-repository">Known Versions In This Repository</h2>
+<h2 id="import">Import</h2>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">tv_scraper.streaming</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseStreamer</span>
+</span></code></pre></div>
+<h2 id="constructor">Constructor</h2>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">bs</span> <span class="o">=</span> <span class="n">BaseStreamer</span><span class="p">(</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="n">export_result</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">export_type</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">,</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="n">cookie</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="constructor-arguments">Constructor Arguments</h3>
 <table>
 <thead>
 <tr>
-<th>Version</th>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Exact behavior</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>v0.5.0</code></td>
+<td><code>export_result</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td>Stored on the instance and used by inherited <code>_export(...)</code>.</td>
 </tr>
 <tr>
-<td><code>v0.5.1</code></td>
+<td><code>export_type</code></td>
+<td><code>str</code></td>
+<td><code>"json"</code></td>
+<td>Validated by <code>BaseScraper</code> against <code>{ "json", "csv" }</code>. Invalid values raise <code>ValueError</code> during construction.</td>
 </tr>
 <tr>
-<td><code>v0.5.2</code></td>
-</tr>
-<tr>
-<td><code>v1.0.0</code></td>
-</tr>
-<tr>
-<td><code>v1.0.2</code></td>
-</tr>
-<tr>
-<td><code>v1.0.3</code></td>
-</tr>
-<tr>
-<td><code>v1.1.0</code></td>
-</tr>
-<tr>
-<td><code>v1.2.0</code></td>
-</tr>
-<tr>
-<td><code>v1.2.1</code></td>
-</tr>
-<tr>
-<td><code>v1.3.0</code></td>
-</tr>
-<tr>
-<td><code>v1.3.1</code></td>
-</tr>
-<tr>
-<td><code>v1.3.2</code></td>
-</tr>
-<tr>
-<td><code>v1.4.0b1</code></td>
-</tr>
-<tr>
-<td><code>v1.4.0b2</code></td>
+<td><code>cookie</code></td>
+<td><code>str \| None</code></td>
+<td><code>None</code></td>
+<td>Passed to <code>BaseScraper</code>. If <code>None</code>, <code>BaseScraper</code> falls back to <code>TRADINGVIEW_COOKIE</code> environment variable.</td>
 </tr>
 </tbody>
 </table>
-<h2 id="current-docs-target">Current Docs Target</h2>
-<p>The current package version is <strong><code>1.4.0b2</code></strong>.</p>
-<h2 id="publishing-notes">Publishing Notes</h2>
-<p>For maintainers:</p>
+<h3 id="inherited-initialization-notes">Inherited Initialization Notes</h3>
+<p>From <code>BaseScraper.__init__</code>:</p>
 <ul>
-<li>branch builds should publish the moving alias such as <code>latest</code></li>
-<li>tag builds should publish the exact release version</li>
-<li>older tags may need a backfill pass if they were created before the version switcher config was added</li>
+<li><code>timeout</code> is not exposed by <code>BaseStreamer</code>, so it remains the base default (<code>REQUEST_TIMEOUT</code>, currently <code>10</code> seconds).</li>
+<li><code>self.cookie</code> becomes <code>cookie or os.environ.get("TRADINGVIEW_COOKIE")</code>.</li>
+<li><code>self._headers</code> always includes <code>User-Agent</code>; it also includes <code>cookie</code> when <code>self.cookie</code> exists.</li>
 </ul>
-<p>If repo instructions or contributor workflow docs still describe a non-versioned docs flow, update them alongside the docs changes.</p>
+<p><code>BaseStreamer</code> then initializes:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="bp">self</span><span class="o">.</span><span class="n">study_id_to_name_map</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+</span></code></pre></div>
+<h2 id="method-connect">Method: connect()</h2>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">handler</span> <span class="o">=</span> <span class="n">bs</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+</span></code></pre></div>
+<p>Creates and returns <code>StreamHandler(jwt_token=...)</code>.</p>
+<h3 id="exact-runtime-flow">Exact Runtime Flow</h3>
+<ol>
+<li>Start with fallback token: <code>"unauthorized_user_token"</code>.</li>
+<li>If <code>self.cookie</code> is truthy, lazily import <code>get_valid_jwt_token</code> and attempt JWT resolution.</li>
+<li>If token resolution succeeds, use that JWT.</li>
+<li>If token resolution fails, log an error and raise:
+   <code>RuntimeError("Failed to resolve JWT token from cookie: ...")</code>.</li>
+<li>Construct and return <code>StreamHandler(jwt_token=websocket_jwt_token)</code>.</li>
+</ol>
+<h3 id="what-connected-means-here">What "connected" means here</h3>
+<p><code>StreamHandler</code> connects in its constructor:</p>
+<ul>
+<li>opens WebSocket connection,</li>
+<li>generates <code>quote_session</code> and <code>chart_session</code>,</li>
+<li>sends initialization messages (<code>set_auth_token</code>, <code>set_locale</code>,
+  <code>chart_create_session</code>, <code>quote_create_session</code>, <code>quote_set_fields</code>,
+  <code>quote_hibernate_all</code>).</li>
+</ul>
+<p>So <code>connect()</code> returns a ready-initialized handler, not a lazy wrapper.</p>
+<h3 id="exceptions">Exceptions</h3>
+<ul>
+<li><code>RuntimeError</code> when cookie-based JWT resolution fails.</li>
+<li>Any exception from <code>StreamHandler(...)</code> setup is not caught in <code>connect()</code> and propagates.</li>
+</ul>
+<h2 id="inherited-response-envelope-expectations">Inherited Response Envelope Expectations</h2>
+<p><code>BaseStreamer</code> inherits response helpers from <code>BaseScraper</code>.</p>
+<h3 id="success-envelope-_success_response">Success envelope (<code>_success_response</code>)</h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">payload</span><span class="o">&gt;</span><span class="p">,</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">merged</span> <span class="n">metadata</span><span class="o">&gt;</span><span class="p">,</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="p">}</span>
+</span></code></pre></div>
+<h3 id="error-envelope-_error_response">Error envelope (<code>_error_response</code>)</h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;failed&quot;</span><span class="p">,</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">optional</span> <span class="n">payload</span><span class="p">,</span> <span class="n">default</span> <span class="kc">None</span><span class="o">&gt;</span><span class="p">,</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">merged</span> <span class="n">metadata</span><span class="o">&gt;</span><span class="p">,</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;error message&gt;&quot;</span><span class="p">,</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="p">}</span>
+</span></code></pre></div>
+<h3 id="metadata-merge-behavior">Metadata merge behavior</h3>
+<p>Both helpers merge:</p>
+<ol>
+<li><code>self._last_metadata</code> (usually captured by <code>@catch_errors</code>), then</li>
+<li>explicit <code>**metadata</code> passed to the helper.</li>
+</ol>
+<p>Later keys overwrite earlier keys.</p>
+<h3 id="catch_errors-expectations-for-subclasses"><code>@catch_errors</code> expectations for subclasses</h3>
+<p>Public methods in streaming subclasses (for example <code>get_candles</code> and
+<code>get_forecast</code>) are typically decorated with <code>@catch_errors</code>, which:</p>
+<ul>
+<li>captures bound, non-<code>None</code> arguments into metadata,</li>
+<li>converts <code>ValidationError</code> to <code>_error_response(str(exc), ...)</code>,</li>
+<li>converts unexpected exceptions to
+  <code>_error_response("Unexpected error: ...", ...)</code>.</li>
+</ul>
+<p><code>connect()</code> itself is not decorated with <code>@catch_errors</code>, so it does not
+return an envelope on failure; it raises.</p>
+<h2 id="inheritance-hierarchy">Inheritance Hierarchy</h2>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>BaseScraper
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  └── BaseStreamer
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>      ├── CandleStreamer
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>      ├── ForecastStreamer
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>      └── Streamer
+</span></code></pre></div>
+<h2 id="minimal-extension-example">Minimal Extension Example</h2>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">tv_scraper.core.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">catch_errors</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">tv_scraper.streaming</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseStreamer</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="k">class</span><span class="w"> </span><span class="nc">CustomStreamer</span><span class="p">(</span><span class="n">BaseStreamer</span><span class="p">):</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>    <span class="nd">@catch_errors</span>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_custom_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exchange</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">symbol</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>        <span class="n">handler</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>        <span class="c1"># custom packet handling with handler.receive_packets()</span>
+</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>        <span class="n">result</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;exchange&quot;</span><span class="p">:</span> <span class="n">exchange</span><span class="p">,</span> <span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="n">symbol</span><span class="p">}</span>
+</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_success_response</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</span></code></pre></div>
 
 
 
@@ -1441,7 +1810,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../../supported_data/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Validation &amp; Supported Values">
+          <a href="../streamer/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Streamer (Convenience Wrapper)">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -1451,20 +1820,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Validation & Supported Values
+                Streamer (Convenience Wrapper)
               </div>
             </div>
           </a>
         
         
           
-          <a href="../../getting_cookies/" class="md-footer__link md-footer__link--next" aria-label="Next: Getting Cookies">
+          <a href="../../scrapers/pine/" class="md-footer__link md-footer__link--next" aria-label="Next: Pine">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Getting Cookies
+                Pine
               </div>
             </div>
             <div class="md-footer__button md-icon">

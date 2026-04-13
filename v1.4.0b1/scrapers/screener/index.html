@@ -327,6 +327,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../../architecture.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../api-conventions/" class="md-nav__link">
         
   
@@ -334,7 +361,7 @@
   <span class="md-ellipsis">
     
   
-    API Basics
+    API Conventions
   
 
     
@@ -366,6 +393,8 @@
       
         
       
+        
+      
     
     
     
@@ -381,7 +410,7 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
         
           
           <div class="md-nav__link md-nav__container">
@@ -403,14 +432,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -492,7 +521,35 @@
   <span class="md-ellipsis">
     
   
-    Streamer (Legacy Wrapper)
+    Streamer (Convenience Wrapper)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../streaming/base_streamer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extending (BaseStreamer)
   
 
     
@@ -561,10 +618,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
             
   
   
@@ -582,8 +639,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_5">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -884,33 +941,44 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#quick-use" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Quick Use
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Quick Use">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#basic-market-scan" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Basic market scan
+        Overview
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#restrict-to-a-symbol-set" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#constructor" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Restrict to a symbol set
+        Constructor
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#method" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Method">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#get_screener" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_screener(...)
       
     </span>
   </a>
@@ -923,13 +991,135 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#inputs" class="md-nav__link">
+  <a href="#validation-behavior" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Inputs
+        Validation Behavior
       
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#filters-filter2-and-symbols-inclusion-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        filters, filter2, and symbols Inclusion Rules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sort_by-and-limit-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        sort_by and limit Behavior
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#default-fields-by-market-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Default Fields by Market Type
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Default Fields by Market Type">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stock-like-markets-all-except-crypto-and-forex" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stock-like markets (all except crypto and forex)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#crypto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        crypto
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#forex" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        forex
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#request-payload-shape" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Request Payload Shape
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#response-envelope-and-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Response Envelope and Mapping
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Response Envelope and Mapping">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#success-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Success behavior
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#failure-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failure behavior
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1043,12 +1233,6 @@
     
       
         
-          
-        
-      
-        
-      
-        
       
         
       
@@ -1067,12 +1251,11 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
         
           
-          <div class="md-nav__link md-nav__container">
-            <a href="../../reference/" class="md-nav__link ">
-              
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
   
   
   <span class="md-ellipsis">
@@ -1086,17 +1269,11 @@
   
   
 
-            </a>
-            
-              
-              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="">
-                <span class="md-nav__icon md-icon"></span>
-              </label>
-            
-          </div>
+            <span class="md-nav__icon md-icon"></span>
+          </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1105,8 +1282,6 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
-            
-              
             
               
                 
@@ -1122,35 +1297,7 @@
   <span class="md-ellipsis">
     
   
-    Validation & Supported Values
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/releases/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Releases & Versioning
+    Supported Data
   
 
     
@@ -1253,33 +1400,44 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#quick-use" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Quick Use
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Quick Use">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#basic-market-scan" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Basic market scan
+        Overview
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#restrict-to-a-symbol-set" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#constructor" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Restrict to a symbol set
+        Constructor
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#method" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Method">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#get_screener" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_screener(...)
       
     </span>
   </a>
@@ -1292,13 +1450,135 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#inputs" class="md-nav__link">
+  <a href="#validation-behavior" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Inputs
+        Validation Behavior
       
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#filters-filter2-and-symbols-inclusion-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        filters, filter2, and symbols Inclusion Rules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sort_by-and-limit-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        sort_by and limit Behavior
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#default-fields-by-market-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Default Fields by Market Type
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Default Fields by Market Type">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stock-like-markets-all-except-crypto-and-forex" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stock-like markets (all except crypto and forex)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#crypto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        crypto
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#forex" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        forex
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#request-payload-shape" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Request Payload Shape
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#response-envelope-and-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Response Envelope and Mapping
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Response Envelope and Mapping">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#success-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Success behavior
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#failure-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failure behavior
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1323,122 +1603,320 @@
 
 
 <h1 id="screener">Screener</h1>
-<p><code>Screener</code> is the flexible scan API. Use it when you want custom filters, sorting, field selection, or symbol sets.</p>
-<h2 id="quick-use">Quick Use</h2>
-<h3 id="basic-market-scan">Basic market scan</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">tv_scraper</span><span class="w"> </span><span class="kn">import</span> <span class="n">Screener</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">scraper</span> <span class="o">=</span> <span class="n">Screener</span><span class="p">()</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">result</span> <span class="o">=</span> <span class="n">scraper</span><span class="o">.</span><span class="n">get_screener</span><span class="p">(</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">market</span><span class="o">=</span><span class="s2">&quot;america&quot;</span><span class="p">,</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">filters</span><span class="o">=</span><span class="p">[{</span><span class="s2">&quot;left&quot;</span><span class="p">:</span> <span class="s2">&quot;close&quot;</span><span class="p">,</span> <span class="s2">&quot;operation&quot;</span><span class="p">:</span> <span class="s2">&quot;greater&quot;</span><span class="p">,</span> <span class="s2">&quot;right&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">}],</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;close&quot;</span><span class="p">,</span> <span class="s2">&quot;volume&quot;</span><span class="p">,</span> <span class="s2">&quot;market_cap_basic&quot;</span><span class="p">],</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">sort_by</span><span class="o">=</span><span class="s2">&quot;market_cap_basic&quot;</span><span class="p">,</span>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="n">sort_order</span><span class="o">=</span><span class="s2">&quot;desc&quot;</span><span class="p">,</span>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="n">limit</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span>
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="p">)</span>
+<h2 id="overview">Overview</h2>
+<p><code>Screener</code> posts scan payloads to TradingView's scanner endpoint and maps tabular
+rows into dictionaries keyed by requested column names.</p>
+<p>Request endpoint per call:</p>
+<ul>
+<li><code>POST https://scanner.tradingview.com/{market}/scan</code></li>
+</ul>
+<p>The method returns the standardized response envelope used across the project
+(<code>status</code>, <code>data</code>, <code>metadata</code>, <code>error</code>).</p>
+<h2 id="constructor">Constructor</h2>
+<p><code>Screener</code> does not override <code>__init__</code>, so it uses <code>BaseScraper</code> constructor
+arguments directly:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">Screener</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">export_result</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">export_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;json&quot;</span><span class="p">,</span>   <span class="c1"># &quot;json&quot; or &quot;csv&quot;</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>             <span class="c1"># integer in [1, 300]</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">cookie</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p">)</span>
 </span></code></pre></div>
-<p>Output structure:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">[</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>        <span class="p">{</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>            <span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="s2">&quot;NASDAQ:AAPL&quot;</span><span class="p">,</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Apple Inc.&quot;</span><span class="p">,</span>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>            <span class="s2">&quot;close&quot;</span><span class="p">:</span> <span class="mf">187.21</span><span class="p">,</span>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>            <span class="s2">&quot;volume&quot;</span><span class="p">:</span> <span class="mi">51234567</span><span class="p">,</span>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>            <span class="s2">&quot;market_cap_basic&quot;</span><span class="p">:</span> <span class="mf">2800000000000.0</span><span class="p">,</span>
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>        <span class="p">},</span>
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>        <span class="o">...</span>
-</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    <span class="p">],</span>
-</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>        <span class="s2">&quot;market&quot;</span><span class="p">:</span> <span class="s2">&quot;america&quot;</span><span class="p">,</span>
-</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>        <span class="s2">&quot;total&quot;</span><span class="p">:</span> <span class="mi">25</span><span class="p">,</span>
-</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>        <span class="s2">&quot;total_available&quot;</span><span class="p">:</span> <span class="mi">10342</span><span class="p">,</span>
-</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>        <span class="o">...</span>
-</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>    <span class="p">},</span>
-</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="p">}</span>
-</span></code></pre></div>
-<h3 id="restrict-to-a-symbol-set">Restrict to a symbol set</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">result</span> <span class="o">=</span> <span class="n">scraper</span><span class="o">.</span><span class="n">get_screener</span><span class="p">(</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="n">market</span><span class="o">=</span><span class="s2">&quot;america&quot;</span><span class="p">,</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="n">symbols</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;tickers&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;NASDAQ:AAPL&quot;</span><span class="p">,</span> <span class="s2">&quot;NYSE:JPM&quot;</span><span class="p">]},</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;close&quot;</span><span class="p">,</span> <span class="s2">&quot;change&quot;</span><span class="p">],</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="p">)</span>
-</span></code></pre></div>
-<p>Output structure:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">[</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>        <span class="p">{</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>            <span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="s2">&quot;NASDAQ:AAPL&quot;</span><span class="p">,</span>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Apple Inc.&quot;</span><span class="p">,</span>
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>            <span class="s2">&quot;close&quot;</span><span class="p">:</span> <span class="mf">187.21</span><span class="p">,</span>
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>            <span class="s2">&quot;change&quot;</span><span class="p">:</span> <span class="mf">1.1</span><span class="p">,</span>
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>        <span class="p">},</span>
-</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>        <span class="o">...</span>
-</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    <span class="p">],</span>
-</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>        <span class="s2">&quot;market&quot;</span><span class="p">:</span> <span class="s2">&quot;america&quot;</span><span class="p">,</span>
-</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>        <span class="s2">&quot;symbols&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;tickers&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;NASDAQ:AAPL&quot;</span><span class="p">,</span> <span class="s2">&quot;NYSE:JPM&quot;</span><span class="p">]},</span>
-</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>        <span class="s2">&quot;total&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>        <span class="s2">&quot;total_available&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>        <span class="o">...</span>
-</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>    <span class="p">},</span>
-</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="p">}</span>
-</span></code></pre></div>
-<h2 id="inputs">Inputs</h2>
 <table>
 <thead>
 <tr>
 <th>Parameter</th>
-<th>Accepted values</th>
+<th>Type</th>
+<th>Default</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>export_result</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td>When <code>True</code>, successful results are exported via <code>_export()</code>.</td>
+</tr>
+<tr>
+<td><code>export_type</code></td>
+<td><code>str</code></td>
+<td><code>"json"</code></td>
+<td>Must be <code>"json"</code> or <code>"csv"</code>; invalid values raise <code>ValueError</code> at init time.</td>
+</tr>
+<tr>
+<td><code>timeout</code></td>
+<td><code>int</code></td>
+<td><code>10</code></td>
+<td>Must be an integer in <code>[1, 300]</code>; invalid values raise <code>ValueError</code> at init time.</td>
+</tr>
+<tr>
+<td><code>cookie</code></td>
+<td><code>str \| None</code></td>
+<td><code>None</code></td>
+<td>Optional cookie header; if <code>None</code>, <code>TRADINGVIEW_COOKIE</code> env var is used.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="method">Method</h2>
+<h3 id="get_screener"><code>get_screener(...)</code></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">get_screener</span><span class="p">(</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="n">market</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>        <span class="s2">&quot;america&quot;</span><span class="p">,</span> <span class="s2">&quot;australia&quot;</span><span class="p">,</span> <span class="s2">&quot;canada&quot;</span><span class="p">,</span> <span class="s2">&quot;germany&quot;</span><span class="p">,</span> <span class="s2">&quot;india&quot;</span><span class="p">,</span> <span class="s2">&quot;israel&quot;</span><span class="p">,</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>        <span class="s2">&quot;italy&quot;</span><span class="p">,</span> <span class="s2">&quot;luxembourg&quot;</span><span class="p">,</span> <span class="s2">&quot;mexico&quot;</span><span class="p">,</span> <span class="s2">&quot;spain&quot;</span><span class="p">,</span> <span class="s2">&quot;turkey&quot;</span><span class="p">,</span> <span class="s2">&quot;uk&quot;</span><span class="p">,</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>        <span class="s2">&quot;crypto&quot;</span><span class="p">,</span> <span class="s2">&quot;forex&quot;</span><span class="p">,</span> <span class="s2">&quot;cfd&quot;</span><span class="p">,</span> <span class="s2">&quot;futures&quot;</span><span class="p">,</span> <span class="s2">&quot;bonds&quot;</span><span class="p">,</span> <span class="s2">&quot;global&quot;</span><span class="p">,</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;america&quot;</span><span class="p">,</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="n">filters</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="n">fields</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    <span class="n">sort_by</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    <span class="n">sort_order</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;asc&quot;</span><span class="p">,</span> <span class="s2">&quot;desc&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;desc&quot;</span><span class="p">,</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    <span class="n">symbols</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    <span class="n">filter2</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+</span></code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Implementation behavior</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>market</code></td>
-<td><code>america</code>, <code>australia</code>, <code>canada</code>, <code>germany</code>, <code>india</code>, <code>israel</code>, <code>italy</code>, <code>luxembourg</code>, <code>mexico</code>, <code>spain</code>, <code>turkey</code>, <code>uk</code>, <code>crypto</code>, <code>forex</code>, <code>cfd</code>, <code>futures</code>, <code>bonds</code>, <code>global</code></td>
-</tr>
-<tr>
-<td><code>sort_order</code></td>
-<td><code>asc</code>, <code>desc</code></td>
-</tr>
-<tr>
-<td><code>limit</code></td>
-<td><code>1</code> to <code>10000</code></td>
+<td><code>str</code></td>
+<td><code>"america"</code></td>
+<td>Validated with <code>validate_choice</code> against <code>SUPPORTED_MARKETS</code>.</td>
 </tr>
 <tr>
 <td><code>filters</code></td>
-<td>list of filter dicts</td>
+<td><code>list[dict[str, Any]] \| None</code></td>
+<td><code>None</code></td>
+<td>If not <code>None</code>, each entry is validated by <code>_validate_filter()</code> (see below).</td>
 </tr>
 <tr>
-<td><code>filter2</code></td>
-<td>advanced expression dict with <code>operator</code></td>
+<td><code>fields</code></td>
+<td><code>list[str] \| None</code></td>
+<td><code>None</code></td>
+<td>If <code>None</code>, market-specific defaults are used. Otherwise passed through as provided (no field-name validation).</td>
+</tr>
+<tr>
+<td><code>sort_by</code></td>
+<td><code>str \| None</code></td>
+<td><code>None</code></td>
+<td>If truthy, adds a <code>sort</code> block to payload. No validation of field name.</td>
+</tr>
+<tr>
+<td><code>sort_order</code></td>
+<td><code>"asc" \| "desc"</code></td>
+<td><code>"desc"</code></td>
+<td>Always validated, even when <code>sort_by</code> is not provided.</td>
+</tr>
+<tr>
+<td><code>limit</code></td>
+<td><code>int</code></td>
+<td><code>50</code></td>
+<td>Validated by <code>validate_range("limit", limit, 1, 10000)</code> then used in payload <code>range=[0, limit]</code>.</td>
 </tr>
 <tr>
 <td><code>symbols</code></td>
-<td>optional symbol restriction object</td>
+<td><code>dict[str, Any] \| None</code></td>
+<td><code>None</code></td>
+<td>Not validated for schema/content. Included only when truthy.</td>
+</tr>
+<tr>
+<td><code>filter2</code></td>
+<td><code>dict[str, Any] \| None</code></td>
+<td><code>None</code></td>
+<td>If not <code>None</code>, validated by <code>_validate_filter2()</code> (must be dict with <code>operator</code>). Included only when truthy.</td>
 </tr>
 </tbody>
 </table>
-<p>Supported filter operations:</p>
-<p><code>greater</code>, <code>less</code>, <code>egreater</code>, <code>eless</code>, <code>equal</code>, <code>nequal</code>, <code>in_range</code>, <code>not_in_range</code>, <code>above</code>, <code>below</code>, <code>crosses</code>, <code>crosses_above</code>, <code>crosses_below</code>, <code>has</code>, <code>has_none_of</code></p>
-<div class="admonition failure">
-<p class="admonition-title">wrong input</p>
-<p>This fails because <code>sort_order</code> must be <code>asc</code> or <code>desc</code>.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">scraper</span><span class="o">.</span><span class="n">get_screener</span><span class="p">(</span><span class="n">market</span><span class="o">=</span><span class="s2">&quot;america&quot;</span><span class="p">,</span> <span class="n">sort_order</span><span class="o">=</span><span class="s2">&quot;descending&quot;</span><span class="p">)</span>
-</span></code></pre></div>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Notes</p>
+<h2 id="validation-behavior">Validation Behavior</h2>
+<p>Validation performed directly in <code>get_screener</code>:</p>
 <ul>
-<li>If no rows match, <code>Screener</code> returns success with <code>data=[]</code>.</li>
-<li><code>fields</code>, <code>sort_by</code>, and <code>symbols</code> are passed through with minimal schema checking, so typoed field names usually become empty or <code>None</code> values rather than validation errors.</li>
+<li><code>market</code> must be in supported markets.</li>
+<li><code>sort_order</code> must be <code>"asc"</code> or <code>"desc"</code>.</li>
+<li><code>limit</code> must be numeric and between <code>1</code> and <code>10000</code> (inclusive).</li>
 </ul>
-</div>
+<p><code>filters</code> validation (<code>_validate_filter</code>):</p>
+<ul>
+<li>Each element must be a dictionary.</li>
+<li>Each dictionary must include keys <code>left</code> and <code>operation</code>.</li>
+<li><code>operation</code> must be one of:
+  <code>greater</code>, <code>less</code>, <code>egreater</code>, <code>eless</code>, <code>equal</code>, <code>nequal</code>, <code>in_range</code>,
+  <code>not_in_range</code>, <code>above</code>, <code>below</code>, <code>crosses</code>, <code>crosses_above</code>,
+  <code>crosses_below</code>, <code>has</code>, <code>has_none_of</code>.</li>
+<li><code>right</code> is not validated by this method.</li>
+</ul>
+<p><code>filter2</code> validation (<code>_validate_filter2</code>):</p>
+<ul>
+<li>Must be a dictionary.</li>
+<li>Must include key <code>operator</code>.</li>
+<li>Other keys (such as <code>operands</code>, <code>expression</code>) are not validated.</li>
+</ul>
+<p>No direct validation is applied to:</p>
+<ul>
+<li><code>fields</code> content</li>
+<li><code>sort_by</code> value</li>
+<li><code>symbols</code> structure</li>
+</ul>
+<h2 id="filters-filter2-and-symbols-inclusion-rules"><code>filters</code>, <code>filter2</code>, and <code>symbols</code> Inclusion Rules</h2>
+<p>Payload inclusion uses truthiness checks after validation:</p>
+<ul>
+<li><code>filters</code> is included only when <code>filters</code> is truthy.</li>
+<li><code>filters=[]</code> passes validation loop but is omitted from payload.</li>
+<li><code>symbols</code> is included only when <code>symbols</code> is truthy.</li>
+<li><code>symbols={}</code> is omitted from payload.</li>
+<li><code>filter2</code> is included only when <code>filter2</code> is truthy.</li>
+<li><code>filter2={"operator": "and"}</code> is included.</li>
+</ul>
+<p>Common <code>symbols</code> patterns supported by TradingView (passed through by this
+implementation without schema checks):</p>
+<ul>
+<li><code>{"symbolset": ["SYML:SP;SPX"]}</code></li>
+<li><code>{"symbolset": ["SYML:NASDAQ;NDX"]}</code></li>
+<li><code>{"tickers": ["NASDAQ:AAPL", "NYSE:JPM"]}</code></li>
+</ul>
+<h2 id="sort_by-and-limit-behavior"><code>sort_by</code> and <code>limit</code> Behavior</h2>
+<ul>
+<li><code>sort_order</code> is validated on every call, regardless of whether sorting is
+  requested.</li>
+<li>Sorting is applied only when <code>sort_by</code> is truthy; then payload includes:</li>
+</ul>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="s2">&quot;sort&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="s2">&quot;sortBy&quot;</span><span class="p">:</span> <span class="n">sort_by</span><span class="p">,</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="s2">&quot;sortOrder&quot;</span><span class="p">:</span> <span class="n">sort_order</span><span class="p">,</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="p">}</span>
+</span></code></pre></div>
+<ul>
+<li><code>limit</code> is not used for client-side slicing after response.</li>
+<li>The method sends <code>"range": [0, limit]</code> and returns whatever rows are
+  returned by the API.</li>
+</ul>
+<h2 id="default-fields-by-market-type">Default Fields by Market Type</h2>
+<p>When <code>fields is None</code>, defaults come from <code>_get_default_fields(market)</code>:</p>
+<h3 id="stock-like-markets-all-except-crypto-and-forex">Stock-like markets (all except <code>crypto</code> and <code>forex</code>)</h3>
+<p>Used for:
+<code>america</code>, <code>australia</code>, <code>canada</code>, <code>germany</code>, <code>india</code>, <code>israel</code>, <code>italy</code>,
+<code>luxembourg</code>, <code>mexico</code>, <code>spain</code>, <code>turkey</code>, <code>uk</code>, <code>cfd</code>, <code>futures</code>, <code>bonds</code>,
+<code>global</code>.</p>
+<p>Fields:</p>
+<ul>
+<li><code>name</code></li>
+<li><code>close</code></li>
+<li><code>change</code></li>
+<li><code>change_abs</code></li>
+<li><code>volume</code></li>
+<li><code>Recommend.All</code></li>
+<li><code>market_cap_basic</code></li>
+<li><code>price_earnings_ttm</code></li>
+<li><code>earnings_per_share_basic_ttm</code></li>
+</ul>
+<h3 id="crypto"><code>crypto</code></h3>
+<ul>
+<li><code>name</code></li>
+<li><code>close</code></li>
+<li><code>change</code></li>
+<li><code>change_abs</code></li>
+<li><code>volume</code></li>
+<li><code>market_cap_calc</code></li>
+<li><code>Recommend.All</code></li>
+</ul>
+<h3 id="forex"><code>forex</code></h3>
+<ul>
+<li><code>name</code></li>
+<li><code>close</code></li>
+<li><code>change</code></li>
+<li><code>change_abs</code></li>
+<li><code>Recommend.All</code></li>
+</ul>
+<h2 id="request-payload-shape">Request Payload Shape</h2>
+<p>Base payload always sent:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="s2">&quot;columns&quot;</span><span class="p">:</span> <span class="n">resolved_fields</span><span class="p">,</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;lang&quot;</span><span class="p">:</span> <span class="s2">&quot;en&quot;</span><span class="p">},</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="s2">&quot;range&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">limit</span><span class="p">],</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="s2">&quot;markets&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">market</span><span class="p">],</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Optional keys:</p>
+<ul>
+<li><code>filter</code> (when <code>filters</code> is truthy)</li>
+<li><code>sort</code> (when <code>sort_by</code> is truthy)</li>
+<li><code>symbols</code> (when <code>symbols</code> is truthy)</li>
+<li><code>filter2</code> (when <code>filter2</code> is truthy)</li>
+</ul>
+<h2 id="response-envelope-and-mapping">Response Envelope and Mapping</h2>
+<p>All responses follow:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span> <span class="o">|</span> <span class="s2">&quot;failed&quot;</span><span class="p">,</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="p">}</span>
+</span></code></pre></div>
+<h3 id="success-behavior">Success behavior</h3>
+<ul>
+<li><code>status</code> = <code>"success"</code></li>
+<li><code>error</code> = <code>None</code></li>
+<li><code>data</code> = mapped rows from scanner response <code>data</code></li>
+<li><code>metadata</code> = captured call arguments (non-<code>None</code> only) plus:</li>
+<li><code>total</code>: <code>len(formatted_data)</code></li>
+<li><code>total_available</code>: <code>json_response.get("totalCount", len(formatted_data))</code></li>
+</ul>
+<p>Row mapping uses <code>_map_scanner_rows(raw_items, resolved_fields)</code>:</p>
+<ul>
+<li>Each row starts with: <code>{"symbol": item.get("s", "")}</code></li>
+<li>For each requested field index <code>i</code>, sets:</li>
+<li><code>row[field] = values[i]</code> when present</li>
+<li><code>row[field] = None</code> when missing</li>
+</ul>
+<p>Example success envelope:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">[</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>        <span class="p">{</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>            <span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="s2">&quot;NASDAQ:AAPL&quot;</span><span class="p">,</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Apple Inc.&quot;</span><span class="p">,</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>            <span class="s2">&quot;close&quot;</span><span class="p">:</span> <span class="mf">187.21</span><span class="p">,</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>            <span class="s2">&quot;change&quot;</span><span class="p">:</span> <span class="mf">1.1</span><span class="p">,</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>            <span class="s2">&quot;change_abs&quot;</span><span class="p">:</span> <span class="mf">2.04</span><span class="p">,</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>            <span class="s2">&quot;volume&quot;</span><span class="p">:</span> <span class="mi">51234567</span><span class="p">,</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>            <span class="s2">&quot;Recommend.All&quot;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span>
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>            <span class="s2">&quot;market_cap_basic&quot;</span><span class="p">:</span> <span class="mf">2800000000000.0</span><span class="p">,</span>
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>            <span class="s2">&quot;price_earnings_ttm&quot;</span><span class="p">:</span> <span class="mf">29.4</span><span class="p">,</span>
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>            <span class="s2">&quot;earnings_per_share_basic_ttm&quot;</span><span class="p">:</span> <span class="mf">6.37</span><span class="p">,</span>
+</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>        <span class="p">}</span>
+</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>    <span class="p">],</span>
+</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>    <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>        <span class="s2">&quot;market&quot;</span><span class="p">:</span> <span class="s2">&quot;america&quot;</span><span class="p">,</span>
+</span><span id="__span-5-19"><a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>        <span class="s2">&quot;sort_order&quot;</span><span class="p">:</span> <span class="s2">&quot;desc&quot;</span><span class="p">,</span>
+</span><span id="__span-5-20"><a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>        <span class="s2">&quot;limit&quot;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
+</span><span id="__span-5-21"><a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>        <span class="s2">&quot;total&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+</span><span id="__span-5-22"><a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>        <span class="s2">&quot;total_available&quot;</span><span class="p">:</span> <span class="mi">8143</span><span class="p">,</span>
+</span><span id="__span-5-23"><a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>    <span class="p">},</span>
+</span><span id="__span-5-24"><a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-5-25"><a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="p">}</span>
+</span></code></pre></div>
+<h3 id="failure-behavior">Failure behavior</h3>
+<ul>
+<li><code>status</code> = <code>"failed"</code></li>
+<li><code>error</code> = validation/network/unexpected error message</li>
+<li><code>data</code> = <code>None</code> for current screener failure paths</li>
+<li><code>metadata</code> = captured method arguments (non-<code>None</code>), without
+  <code>total</code>/<code>total_available</code></li>
+</ul>
+<p>Representative failures:</p>
+<ul>
+<li>Invalid <code>market</code> / <code>sort_order</code> / <code>limit</code></li>
+<li>Invalid <code>filters</code> item shape or operation</li>
+<li>Invalid <code>filter2</code> type or missing <code>operator</code></li>
+<li>HTTP/network/captcha/parse errors returned by <code>_request()</code></li>
+</ul>
 
 
 

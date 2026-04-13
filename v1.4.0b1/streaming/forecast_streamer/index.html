@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#forecaststreamer" class="md-skip">
+        <a href="#forecaststreamer-api" class="md-skip">
           Skip to content
         </a>
       
@@ -327,6 +327,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../../architecture.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../api-conventions/" class="md-nav__link">
         
   
@@ -334,7 +361,7 @@
   <span class="md-ellipsis">
     
   
-    API Basics
+    API Conventions
   
 
     
@@ -368,6 +395,8 @@
       
         
       
+        
+      
     
     
     
@@ -381,7 +410,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
         
           
           <div class="md-nav__link md-nav__container">
@@ -403,14 +432,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_4">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -517,10 +546,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#quick-use" class="md-nav__link">
+  <a href="#installation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Quick Use
+        Installation
       
     </span>
   </a>
@@ -528,10 +557,83 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#inputs" class="md-nav__link">
+  <a href="#constructor" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Inputs
+        Constructor
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Constructor">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#method" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Method">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#get_forecastexchange-symbol" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_forecast(exchange, symbol)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="get_forecast(exchange, symbol)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#runtime-flow-exact-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Runtime Flow (Exact Behavior)
       
     </span>
   </a>
@@ -539,10 +641,126 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#output-keys" class="md-nav__link">
+  <a href="#packet-capture-behavior" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Output Keys
+        Packet Capture Behavior
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#required-output-key-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Required Output Key Mapping
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stop-conditions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stop Conditions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#response-semantics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Response Semantics
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Response Semantics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#success-response" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Success Response
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#failed-response-missing-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failed Response: Missing Keys
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#failed-response-non-stock-symbol" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failed Response: Non-Stock Symbol
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#failed-response-unexpected-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failed Response: Unexpected Errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#output-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output Metadata
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#export-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Export Behavior
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-field-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Field Notes
       
     </span>
   </a>
@@ -572,7 +790,35 @@
   <span class="md-ellipsis">
     
   
-    Streamer (Legacy Wrapper)
+    Streamer (Convenience Wrapper)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../base_streamer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extending (BaseStreamer)
   
 
     
@@ -641,10 +887,10 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
             
   
   
@@ -662,8 +908,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1026,12 +1272,6 @@
     
       
         
-          
-        
-      
-        
-      
-        
       
         
       
@@ -1050,12 +1290,11 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
         
           
-          <div class="md-nav__link md-nav__container">
-            <a href="../../reference/" class="md-nav__link ">
-              
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
   
   
   <span class="md-ellipsis">
@@ -1069,17 +1308,11 @@
   
   
 
-            </a>
-            
-              
-              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="">
-                <span class="md-nav__icon md-icon"></span>
-              </label>
-            
-          </div>
+            <span class="md-nav__icon md-icon"></span>
+          </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1088,8 +1321,6 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
-            
-              
             
               
                 
@@ -1105,35 +1336,7 @@
   <span class="md-ellipsis">
     
   
-    Validation & Supported Values
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/releases/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Releases & Versioning
+    Supported Data
   
 
     
@@ -1236,10 +1439,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#quick-use" class="md-nav__link">
+  <a href="#installation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Quick Use
+        Installation
       
     </span>
   </a>
@@ -1247,10 +1450,83 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#inputs" class="md-nav__link">
+  <a href="#constructor" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Inputs
+        Constructor
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Constructor">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#method" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Method">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#get_forecastexchange-symbol" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_forecast(exchange, symbol)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="get_forecast(exchange, symbol)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#runtime-flow-exact-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Runtime Flow (Exact Behavior)
       
     </span>
   </a>
@@ -1258,10 +1534,126 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#output-keys" class="md-nav__link">
+  <a href="#packet-capture-behavior" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Output Keys
+        Packet Capture Behavior
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#required-output-key-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Required Output Key Mapping
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stop-conditions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stop Conditions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#response-semantics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Response Semantics
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Response Semantics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#success-response" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Success Response
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#failed-response-missing-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failed Response: Missing Keys
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#failed-response-non-stock-symbol" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failed Response: Non-Stock Symbol
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#failed-response-unexpected-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failed Response: Unexpected Errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#output-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output Metadata
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#export-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Export Behavior
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-field-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Field Notes
       
     </span>
   </a>
@@ -1288,141 +1680,295 @@
   
 
 
-<h1 id="forecaststreamer">ForecastStreamer</h1>
-<p><code>ForecastStreamer</code> captures analyst forecast fields from TradingView quote updates. It is only available for stock symbols.</p>
-<h2 id="quick-use">Quick Use</h2>
+<h1 id="forecaststreamer-api">ForecastStreamer API</h1>
+<p>The <code>ForecastStreamer</code> class captures forecast fields from TradingView quote stream (<code>qsd</code> packets) and returns them in a standardized response envelope.</p>
+<h2 id="installation">Installation</h2>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">tv_scraper.streaming</span><span class="w"> </span><span class="kn">import</span> <span class="n">ForecastStreamer</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">streamer</span> <span class="o">=</span> <span class="n">ForecastStreamer</span><span class="p">()</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">result</span> <span class="o">=</span> <span class="n">streamer</span><span class="o">.</span><span class="n">get_forecast</span><span class="p">(</span><span class="n">exchange</span><span class="o">=</span><span class="s2">&quot;NASDAQ&quot;</span><span class="p">,</span> <span class="n">symbol</span><span class="o">=</span><span class="s2">&quot;AAPL&quot;</span><span class="p">)</span>
 </span></code></pre></div>
-<p>Output structure:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>        <span class="s2">&quot;revenue_currency&quot;</span><span class="p">:</span> <span class="s2">&quot;USD&quot;</span><span class="p">,</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>        <span class="s2">&quot;previous_close_price&quot;</span><span class="p">:</span> <span class="mf">171.2</span><span class="p">,</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>        <span class="s2">&quot;average_price_target&quot;</span><span class="p">:</span> <span class="mf">195.0</span><span class="p">,</span>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>        <span class="s2">&quot;highest_price_target&quot;</span><span class="p">:</span> <span class="mf">220.0</span><span class="p">,</span>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>        <span class="s2">&quot;lowest_price_target&quot;</span><span class="p">:</span> <span class="mf">175.0</span><span class="p">,</span>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>        <span class="s2">&quot;median_price_target&quot;</span><span class="p">:</span> <span class="mf">193.0</span><span class="p">,</span>
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>        <span class="s2">&quot;yearly_eps_data&quot;</span><span class="p">:</span> <span class="p">[</span>
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>            <span class="p">{</span>
-</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>                <span class="s2">&quot;Actual&quot;</span><span class="p">:</span> <span class="mf">2.3025</span><span class="p">,</span>
-</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>                <span class="s2">&quot;Estimate&quot;</span><span class="p">:</span> <span class="mf">2.248051</span><span class="p">,</span>
-</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>                <span class="s2">&quot;FiscalPeriod&quot;</span><span class="p">:</span> <span class="s2">&quot;2017&quot;</span><span class="p">,</span>
-</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>                <span class="s2">&quot;IsReported&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>                <span class="s2">&quot;Type&quot;</span><span class="p">:</span> <span class="mi">22</span><span class="p">,</span>
-</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>            <span class="p">},</span>
-</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>            <span class="c1"># ... more yearly EPS rows</span>
-</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>        <span class="p">],</span>
-</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>        <span class="s2">&quot;quarterly_eps_data&quot;</span><span class="p">:</span> <span class="p">[</span>
-</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>            <span class="p">{</span>
-</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>                <span class="s2">&quot;Actual&quot;</span><span class="p">:</span> <span class="mf">1.4</span><span class="p">,</span>
-</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>                <span class="s2">&quot;Estimate&quot;</span><span class="p">:</span> <span class="mf">0.986396</span><span class="p">,</span>
-</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>                <span class="s2">&quot;FiscalPeriod&quot;</span><span class="p">:</span> <span class="s2">&quot;2021-Q2&quot;</span><span class="p">,</span>
-</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>                <span class="s2">&quot;IsReported&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>                <span class="s2">&quot;Type&quot;</span><span class="p">:</span> <span class="mi">22</span><span class="p">,</span>
-</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>            <span class="p">},</span>
-</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>            <span class="c1"># ... more quarterly EPS rows</span>
-</span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>        <span class="p">],</span>
-</span><span id="__span-1-30"><a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>        <span class="s2">&quot;yearly_revenue_data&quot;</span><span class="p">:</span> <span class="p">[</span>
-</span><span id="__span-1-31"><a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>            <span class="p">{</span>
-</span><span id="__span-1-32"><a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>                <span class="s2">&quot;Actual&quot;</span><span class="p">:</span> <span class="mi">229234000000</span><span class="p">,</span>
-</span><span id="__span-1-33"><a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>                <span class="s2">&quot;Estimate&quot;</span><span class="p">:</span> <span class="mi">227461939394</span><span class="p">,</span>
-</span><span id="__span-1-34"><a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>                <span class="s2">&quot;FiscalPeriod&quot;</span><span class="p">:</span> <span class="s2">&quot;2017&quot;</span><span class="p">,</span>
-</span><span id="__span-1-35"><a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>                <span class="s2">&quot;IsReported&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-</span><span id="__span-1-36"><a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>                <span class="s2">&quot;Type&quot;</span><span class="p">:</span> <span class="mi">22</span><span class="p">,</span>
-</span><span id="__span-1-37"><a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>            <span class="p">},</span>
-</span><span id="__span-1-38"><a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>            <span class="c1"># ... more yearly revenue rows</span>
-</span><span id="__span-1-39"><a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>        <span class="p">],</span>
-</span><span id="__span-1-40"><a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>        <span class="s2">&quot;quarterly_revenue_data&quot;</span><span class="p">:</span> <span class="p">[</span>
-</span><span id="__span-1-41"><a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>            <span class="p">{</span>
-</span><span id="__span-1-42"><a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>                <span class="s2">&quot;Actual&quot;</span><span class="p">:</span> <span class="mi">89584000000</span><span class="p">,</span>
-</span><span id="__span-1-43"><a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>                <span class="s2">&quot;Estimate&quot;</span><span class="p">:</span> <span class="mi">77088700724</span><span class="p">,</span>
-</span><span id="__span-1-44"><a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>                <span class="s2">&quot;FiscalPeriod&quot;</span><span class="p">:</span> <span class="s2">&quot;2021-Q2&quot;</span><span class="p">,</span>
-</span><span id="__span-1-45"><a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>                <span class="s2">&quot;IsReported&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-</span><span id="__span-1-46"><a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>                <span class="s2">&quot;Type&quot;</span><span class="p">:</span> <span class="mi">22</span><span class="p">,</span>
-</span><span id="__span-1-47"><a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>            <span class="p">},</span>
-</span><span id="__span-1-48"><a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>            <span class="c1"># ... more quarterly revenue rows</span>
-</span><span id="__span-1-49"><a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>        <span class="p">],</span>
-</span><span id="__span-1-50"><a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>    <span class="p">},</span>
-</span><span id="__span-1-51"><a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>    <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="__span-1-52"><a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>        <span class="s2">&quot;exchange&quot;</span><span class="p">:</span> <span class="s2">&quot;NASDAQ&quot;</span><span class="p">,</span>
-</span><span id="__span-1-53"><a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>        <span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="s2">&quot;AAPL&quot;</span><span class="p">,</span>
-</span><span id="__span-1-54"><a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>        <span class="s2">&quot;available_output_keys&quot;</span><span class="p">:</span> <span class="p">[</span>
-</span><span id="__span-1-55"><a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a>            <span class="s2">&quot;average_price_target&quot;</span><span class="p">,</span>
-</span><span id="__span-1-56"><a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a>            <span class="s2">&quot;highest_price_target&quot;</span><span class="p">,</span>
-</span><span id="__span-1-57"><a id="__codelineno-1-57" name="__codelineno-1-57" href="#__codelineno-1-57"></a>            <span class="s2">&quot;lowest_price_target&quot;</span><span class="p">,</span>
-</span><span id="__span-1-58"><a id="__codelineno-1-58" name="__codelineno-1-58" href="#__codelineno-1-58"></a>            <span class="s2">&quot;median_price_target&quot;</span><span class="p">,</span>
-</span><span id="__span-1-59"><a id="__codelineno-1-59" name="__codelineno-1-59" href="#__codelineno-1-59"></a>            <span class="s2">&quot;previous_close_price&quot;</span><span class="p">,</span>
-</span><span id="__span-1-60"><a id="__codelineno-1-60" name="__codelineno-1-60" href="#__codelineno-1-60"></a>            <span class="s2">&quot;quarterly_eps_data&quot;</span><span class="p">,</span>
-</span><span id="__span-1-61"><a id="__codelineno-1-61" name="__codelineno-1-61" href="#__codelineno-1-61"></a>            <span class="s2">&quot;quarterly_revenue_data&quot;</span><span class="p">,</span>
-</span><span id="__span-1-62"><a id="__codelineno-1-62" name="__codelineno-1-62" href="#__codelineno-1-62"></a>            <span class="s2">&quot;revenue_currency&quot;</span><span class="p">,</span>
-</span><span id="__span-1-63"><a id="__codelineno-1-63" name="__codelineno-1-63" href="#__codelineno-1-63"></a>            <span class="s2">&quot;yearly_eps_data&quot;</span><span class="p">,</span>
-</span><span id="__span-1-64"><a id="__codelineno-1-64" name="__codelineno-1-64" href="#__codelineno-1-64"></a>            <span class="s2">&quot;yearly_revenue_data&quot;</span><span class="p">,</span>
-</span><span id="__span-1-65"><a id="__codelineno-1-65" name="__codelineno-1-65" href="#__codelineno-1-65"></a>        <span class="p">],</span>
-</span><span id="__span-1-66"><a id="__codelineno-1-66" name="__codelineno-1-66" href="#__codelineno-1-66"></a>    <span class="p">},</span>
-</span><span id="__span-1-67"><a id="__codelineno-1-67" name="__codelineno-1-67" href="#__codelineno-1-67"></a>    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-1-68"><a id="__codelineno-1-68" name="__codelineno-1-68" href="#__codelineno-1-68"></a><span class="p">}</span>
+<h2 id="constructor">Constructor</h2>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">fs</span> <span class="o">=</span> <span class="n">ForecastStreamer</span><span class="p">(</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="n">export_result</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">export_type</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">,</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="n">cookie</span><span class="o">=</span><span class="s2">&quot;&lt;TRADINGVIEW_COOKIE&gt;&quot;</span><span class="p">,</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="p">)</span>
 </span></code></pre></div>
-<p>Partial result behavior:</p>
-<ul>
-<li>if one or more required keys are still missing after capture, the method returns <code>status="failed"</code></li>
-<li><code>data</code> is still included</li>
-<li>missing keys are listed in <code>error</code></li>
-</ul>
-<h2 id="inputs">Inputs</h2>
+<h3 id="parameters">Parameters</h3>
 <table>
 <thead>
 <tr>
 <th>Parameter</th>
-<th>Notes</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>export_result</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td>Whether to export successful forecast results</td>
+</tr>
+<tr>
+<td><code>export_type</code></td>
+<td><code>str</code></td>
+<td><code>"json"</code></td>
+<td>Export format: <code>"json"</code> or <code>"csv"</code></td>
+</tr>
+<tr>
+<td><code>cookie</code></td>
+<td><code>str \| None</code></td>
+<td><code>None</code></td>
+<td>TradingView cookie (used for JWT resolution in <code>connect()</code>)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="method">Method</h2>
+<h3 id="get_forecastexchange-symbol"><code>get_forecast(exchange, symbol)</code></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">result</span> <span class="o">=</span> <span class="n">fs</span><span class="o">.</span><span class="n">get_forecast</span><span class="p">(</span><span class="n">exchange</span><span class="o">=</span><span class="s2">&quot;NASDAQ&quot;</span><span class="p">,</span> <span class="n">symbol</span><span class="o">=</span><span class="s2">&quot;AAPL&quot;</span><span class="p">)</span>
+</span></code></pre></div>
+<h4 id="parameters_1">Parameters</h4>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>exchange</code></td>
-<td>Use a supported exchange from <a href="../../supported_data/#exchanges">Exchanges</a></td>
+<td><code>str</code></td>
+<td>Yes</td>
+<td>Exchange name</td>
 </tr>
 <tr>
 <td><code>symbol</code></td>
-<td>Stock symbol slug such as <code>AAPL</code></td>
+<td><code>str</code></td>
+<td>Yes</td>
+<td>Symbol name</td>
 </tr>
 </tbody>
 </table>
-<p>The method verifies the symbol first and then checks the symbol type. If the instrument is not a stock, the call fails.</p>
-<h2 id="output-keys">Output Keys</h2>
-<p>The <code>data</code> payload always uses these keys:</p>
-<ul>
-<li><code>revenue_currency</code></li>
-<li><code>previous_close_price</code></li>
-<li><code>average_price_target</code></li>
-<li><code>highest_price_target</code></li>
-<li><code>lowest_price_target</code></li>
-<li><code>median_price_target</code></li>
-<li><code>yearly_eps_data</code></li>
-<li><code>quarterly_eps_data</code></li>
-<li><code>yearly_revenue_data</code></li>
-<li><code>quarterly_revenue_data</code></li>
+<h2 id="runtime-flow-exact-behavior">Runtime Flow (Exact Behavior)</h2>
+<ol>
+<li>Validates and normalizes symbol via <code>validators.verify_symbol_exchange(exchange, symbol)</code>.</li>
+<li>Builds <code>exchange_symbol</code> with <code>format_symbol(exchange, normalized_symbol)</code>.</li>
+<li>Resolves instrument type using HTTP GET to <code>f"{SCANNER_URL}/symbol"</code> with params:</li>
+<li><code>symbol=&lt;EXCHANGE:SYMBOL&gt;</code></li>
+<li><code>fields=type</code></li>
+<li><code>no_404=false</code></li>
+<li>Enforces stock-only access:</li>
+<li>If resolved type is not <code>"stock"</code>, returns failed response with error:<ul>
+<li><code>forecast is not available for this symbol because it is type: &lt;type&gt;</code></li>
 </ul>
-<div class="admonition note">
-<p class="admonition-title">Data Structure</p>
-<p>The <code>yearly_eps_data</code>, <code>quarterly_eps_data</code>, <code>yearly_revenue_data</code>, and <code>quarterly_revenue_data</code> fields are lists of row objects. Each row includes <code>Actual</code>, <code>Estimate</code>, <code>FiscalPeriod</code>, <code>IsReported</code>, and <code>Type</code>. <code>FiscalPeriod</code> is yearly (for example, <code>"2017"</code>) or quarterly (for example, <code>"2021-Q2"</code>) depending on the field.</p>
-</div>
-<div class="admonition failure">
-<p class="admonition-title">wrong input</p>
-<p>This fails because forecast data is stock-only.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">streamer</span><span class="o">.</span><span class="n">get_forecast</span><span class="p">(</span><span class="n">exchange</span><span class="o">=</span><span class="s2">&quot;BINANCE&quot;</span><span class="p">,</span> <span class="n">symbol</span><span class="o">=</span><span class="s2">&quot;BTCUSDT&quot;</span><span class="p">)</span>
+</li>
+<li>Opens WebSocket handler through <code>connect()</code>.</li>
+<li>Sends quote-stream setup messages in this order:</li>
+<li><code>set_data_quality</code>, <code>["low"]</code></li>
+<li><code>quote_set_fields</code>, <code>[quote_session, *capture_fields]</code></li>
+<li><code>quote_hibernate_all</code>, <code>[quote_session]</code></li>
+<li><code>quote_add_symbols</code>, <code>[quote_session, f"={resolve_symbol_json}"]</code></li>
+<li><code>quote_fast_symbols</code>, <code>[quote_session, exchange_symbol]</code></li>
+<li>Captures packets from <code>handler.receive_packets()</code> and accumulates snapshot values.</li>
+</ol>
+<h2 id="packet-capture-behavior">Packet Capture Behavior</h2>
+<ul>
+<li>Every packet increments <code>packet_count</code> and is appended to internal <code>raw_packets</code>.</li>
+<li>Only packets with <code>m == "qsd"</code> are parsed for forecast values.</li>
+<li>A <code>qsd</code> packet is parsed only when:</li>
+<li><code>p</code> exists with at least 2 items,</li>
+<li><code>p[1]</code> is a dict,</li>
+<li><code>p[1]["v"]</code> is a dict.</li>
+<li>Parsed values are merged with <code>snapshot.update(values)</code>.</li>
+<li>Non-<code>qsd</code> packets are ignored for field extraction.</li>
+<li><code>raw_packets</code> is internal only and is not included in the method response.</li>
+</ul>
+<h2 id="required-output-key-mapping">Required Output Key Mapping</h2>
+<p>The method always produces this fixed output schema by mapping output keys to TradingView source keys.</p>
+<table>
+<thead>
+<tr>
+<th>Output key</th>
+<th>Source key in snapshot</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>revenue_currency</code></td>
+<td><code>fundamental_currency_code</code></td>
+</tr>
+<tr>
+<td><code>previous_close_price</code></td>
+<td><code>regular_close</code></td>
+</tr>
+<tr>
+<td><code>average_price_target</code></td>
+<td><code>price_target_average</code></td>
+</tr>
+<tr>
+<td><code>highest_price_target</code></td>
+<td><code>price_target_high</code></td>
+</tr>
+<tr>
+<td><code>lowest_price_target</code></td>
+<td><code>price_target_low</code></td>
+</tr>
+<tr>
+<td><code>median_price_target</code></td>
+<td><code>price_target_median</code></td>
+</tr>
+<tr>
+<td><code>yearly_eps_data</code></td>
+<td><code>earnings_fy_h</code></td>
+</tr>
+<tr>
+<td><code>quarterly_eps_data</code></td>
+<td><code>earnings_fq_h</code></td>
+</tr>
+<tr>
+<td><code>yearly_revenue_data</code></td>
+<td><code>revenues_fy_h</code></td>
+</tr>
+<tr>
+<td><code>quarterly_revenue_data</code></td>
+<td><code>revenues_fq_h</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>capture_fields</code> sent to <code>quote_set_fields</code> is <code>sorted(set(source_keys))</code> from the mapping above.</p>
+<h2 id="stop-conditions">Stop Conditions</h2>
+<p>The receive loop stops when either condition is met:</p>
+<ol>
+<li>All required output keys are found with non-<code>None</code> values.</li>
+<li>Timeout branch triggers when <code>packet_count &gt; 15</code> (checked inside the parsed <code>qsd</code> branch).</li>
+</ol>
+<p>On timeout, a warning is logged with currently found keys.</p>
+<h2 id="response-semantics">Response Semantics</h2>
+<p>All responses follow:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span> <span class="o">|</span> <span class="s2">&quot;failed&quot;</span><span class="p">,</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">payload</span> <span class="ow">or</span> <span class="kc">None</span><span class="o">&gt;</span><span class="p">,</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span><span class="o">...</span><span class="p">},</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">string</span> <span class="ow">or</span> <span class="kc">None</span><span class="o">&gt;</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="p">}</span>
 </span></code></pre></div>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Notes</p>
+<h3 id="success-response">Success Response</h3>
+<p>When all required keys are present and non-<code>None</code>:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>        <span class="s2">&quot;revenue_currency&quot;</span><span class="p">:</span> <span class="s2">&quot;USD&quot;</span><span class="p">,</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>        <span class="s2">&quot;previous_close_price&quot;</span><span class="p">:</span> <span class="mf">114.5</span><span class="p">,</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>        <span class="s2">&quot;average_price_target&quot;</span><span class="p">:</span> <span class="mf">162.8</span><span class="p">,</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>        <span class="s2">&quot;highest_price_target&quot;</span><span class="p">:</span> <span class="mf">185.0</span><span class="p">,</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>        <span class="s2">&quot;lowest_price_target&quot;</span><span class="p">:</span> <span class="mf">145.0</span><span class="p">,</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>        <span class="s2">&quot;median_price_target&quot;</span><span class="p">:</span> <span class="mf">160.0</span><span class="p">,</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>        <span class="s2">&quot;yearly_eps_data&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">],</span>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>        <span class="s2">&quot;quarterly_eps_data&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">],</span>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>        <span class="s2">&quot;yearly_revenue_data&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">],</span>
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>        <span class="s2">&quot;quarterly_revenue_data&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">]</span>
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>    <span class="p">},</span>
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>    <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>        <span class="s2">&quot;exchange&quot;</span><span class="p">:</span> <span class="s2">&quot;NASDAQ&quot;</span><span class="p">,</span>
+</span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>        <span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="s2">&quot;AAPL&quot;</span><span class="p">,</span>
+</span><span id="__span-4-18"><a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>        <span class="s2">&quot;available_output_keys&quot;</span><span class="p">:</span> <span class="p">[</span>
+</span><span id="__span-4-19"><a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>            <span class="s2">&quot;average_price_target&quot;</span><span class="p">,</span>
+</span><span id="__span-4-20"><a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>            <span class="s2">&quot;highest_price_target&quot;</span><span class="p">,</span>
+</span><span id="__span-4-21"><a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>            <span class="s2">&quot;lowest_price_target&quot;</span><span class="p">,</span>
+</span><span id="__span-4-22"><a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>            <span class="s2">&quot;median_price_target&quot;</span><span class="p">,</span>
+</span><span id="__span-4-23"><a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>            <span class="s2">&quot;previous_close_price&quot;</span><span class="p">,</span>
+</span><span id="__span-4-24"><a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>            <span class="s2">&quot;quarterly_eps_data&quot;</span><span class="p">,</span>
+</span><span id="__span-4-25"><a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>            <span class="s2">&quot;quarterly_revenue_data&quot;</span><span class="p">,</span>
+</span><span id="__span-4-26"><a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>            <span class="s2">&quot;revenue_currency&quot;</span><span class="p">,</span>
+</span><span id="__span-4-27"><a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>            <span class="s2">&quot;yearly_eps_data&quot;</span><span class="p">,</span>
+</span><span id="__span-4-28"><a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>            <span class="s2">&quot;yearly_revenue_data&quot;</span>
+</span><span id="__span-4-29"><a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>        <span class="p">]</span>
+</span><span id="__span-4-30"><a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a>    <span class="p">},</span>
+</span><span id="__span-4-31"><a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a>    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="n">null</span>
+</span><span id="__span-4-32"><a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a><span class="p">}</span>
+</span></code></pre></div>
+<h3 id="failed-response-missing-keys">Failed Response: Missing Keys</h3>
+<p>If any required output key is missing (<code>None</code> in final cleaned payload):</p>
 <ul>
-<li>The capture loop stops once all required keys are found or the packet limit is reached.</li>
-<li>Export runs only on full success.</li>
+<li><code>status</code> is <code>"failed"</code></li>
+<li><code>data</code> is still returned (all 10 output keys, with missing ones set to <code>None</code>)</li>
+<li><code>metadata.available_output_keys</code> contains only non-<code>None</code> keys</li>
+<li><code>error</code> is exactly:</li>
+<li><code>failed to fetch keys: &lt;comma-separated-missing-keys&gt;</code></li>
 </ul>
-</div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;failed&quot;</span><span class="p">,</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>        <span class="s2">&quot;revenue_currency&quot;</span><span class="p">:</span> <span class="s2">&quot;USD&quot;</span><span class="p">,</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>        <span class="s2">&quot;previous_close_price&quot;</span><span class="p">:</span> <span class="n">null</span><span class="p">,</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>        <span class="s2">&quot;average_price_target&quot;</span><span class="p">:</span> <span class="mf">162.8</span><span class="p">,</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>        <span class="s2">&quot;highest_price_target&quot;</span><span class="p">:</span> <span class="mf">185.0</span><span class="p">,</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>        <span class="s2">&quot;lowest_price_target&quot;</span><span class="p">:</span> <span class="mf">145.0</span><span class="p">,</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>        <span class="s2">&quot;median_price_target&quot;</span><span class="p">:</span> <span class="mf">160.0</span><span class="p">,</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>        <span class="s2">&quot;yearly_eps_data&quot;</span><span class="p">:</span> <span class="n">null</span><span class="p">,</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>        <span class="s2">&quot;quarterly_eps_data&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">],</span>
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>        <span class="s2">&quot;yearly_revenue_data&quot;</span><span class="p">:</span> <span class="n">null</span><span class="p">,</span>
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>        <span class="s2">&quot;quarterly_revenue_data&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">]</span>
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>    <span class="p">},</span>
+</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>    <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>        <span class="s2">&quot;exchange&quot;</span><span class="p">:</span> <span class="s2">&quot;NASDAQ&quot;</span><span class="p">,</span>
+</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>        <span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="s2">&quot;AAPL&quot;</span><span class="p">,</span>
+</span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>        <span class="s2">&quot;available_output_keys&quot;</span><span class="p">:</span> <span class="p">[</span>
+</span><span id="__span-5-19"><a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>            <span class="s2">&quot;average_price_target&quot;</span><span class="p">,</span>
+</span><span id="__span-5-20"><a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>            <span class="s2">&quot;highest_price_target&quot;</span><span class="p">,</span>
+</span><span id="__span-5-21"><a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>            <span class="s2">&quot;lowest_price_target&quot;</span><span class="p">,</span>
+</span><span id="__span-5-22"><a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>            <span class="s2">&quot;median_price_target&quot;</span><span class="p">,</span>
+</span><span id="__span-5-23"><a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>            <span class="s2">&quot;quarterly_eps_data&quot;</span><span class="p">,</span>
+</span><span id="__span-5-24"><a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>            <span class="s2">&quot;quarterly_revenue_data&quot;</span><span class="p">,</span>
+</span><span id="__span-5-25"><a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>            <span class="s2">&quot;revenue_currency&quot;</span>
+</span><span id="__span-5-26"><a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>        <span class="p">]</span>
+</span><span id="__span-5-27"><a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>    <span class="p">},</span>
+</span><span id="__span-5-28"><a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;failed to fetch keys: previous_close_price, yearly_eps_data, yearly_revenue_data&quot;</span>
+</span><span id="__span-5-29"><a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a><span class="p">}</span>
+</span></code></pre></div>
+<h3 id="failed-response-non-stock-symbol">Failed Response: Non-Stock Symbol</h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p">{</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;failed&quot;</span><span class="p">,</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">null</span><span class="p">,</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>        <span class="s2">&quot;exchange&quot;</span><span class="p">:</span> <span class="s2">&quot;BINANCE&quot;</span><span class="p">,</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>        <span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="s2">&quot;BTCUSDT&quot;</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    <span class="p">},</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;forecast is not available for this symbol because it is type: crypto&quot;</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="p">}</span>
+</span></code></pre></div>
+<h3 id="failed-response-unexpected-errors">Failed Response: Unexpected Errors</h3>
+<p>Unexpected runtime exceptions (for example symbol-type lookup failures) are wrapped by <code>@catch_errors</code>:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">{</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;failed&quot;</span><span class="p">,</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">null</span><span class="p">,</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>        <span class="s2">&quot;exchange&quot;</span><span class="p">:</span> <span class="s2">&quot;NASDAQ&quot;</span><span class="p">,</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>        <span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="s2">&quot;AAPL&quot;</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    <span class="p">},</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Unexpected error: &lt;exception message&gt;&quot;</span>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="p">}</span>
+</span></code></pre></div>
+<h2 id="output-metadata">Output Metadata</h2>
+<p><code>metadata</code> always starts with method arguments captured by <code>@catch_errors</code> and is then extended by method-level metadata:</p>
+<ul>
+<li>Always includes: <code>exchange</code>, <code>symbol</code></li>
+<li>On success and missing-keys failure: includes <code>available_output_keys</code></li>
+</ul>
+<h2 id="export-behavior">Export Behavior</h2>
+<ul>
+<li>Export runs only on successful completion (all required keys present).</li>
+<li>Export call is <code>_export(cleaned_data, symbol, "forecast")</code>.</li>
+</ul>
+<h2 id="data-field-notes">Data Field Notes</h2>
+<ul>
+<li>Values are passed through from TradingView snapshot values.</li>
+<li>No additional schema transformation is applied beyond source-to-output key mapping.</li>
+<li>Any field may be <code>None</code> when unavailable in the captured snapshot.</li>
+</ul>
 
 
 
@@ -1477,13 +2023,13 @@
         
         
           
-          <a href="../streamer/" class="md-footer__link md-footer__link--next" aria-label="Next: Streamer (Legacy Wrapper)">
+          <a href="../streamer/" class="md-footer__link md-footer__link--next" aria-label="Next: Streamer (Convenience Wrapper)">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Streamer (Legacy Wrapper)
+                Streamer (Convenience Wrapper)
               </div>
             </div>
             <div class="md-footer__button md-icon">

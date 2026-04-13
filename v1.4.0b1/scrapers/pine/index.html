@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://smitkunpara.github.io/tv-scraper/v1.4.0b1/scrapers/pine/">
       
       
-        <link rel="prev" href="../../streaming/streamer/">
+        <link rel="prev" href="../../streaming/base_streamer/">
       
       
         <link rel="next" href="../technicals/">
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#pine" class="md-skip">
+        <a href="#pine-scraper" class="md-skip">
           Skip to content
         </a>
       
@@ -327,6 +327,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../../architecture.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../api-conventions/" class="md-nav__link">
         
   
@@ -334,7 +361,7 @@
   <span class="md-ellipsis">
     
   
-    API Basics
+    API Conventions
   
 
     
@@ -366,6 +393,8 @@
       
         
       
+        
+      
     
     
     
@@ -381,7 +410,7 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
         
           
           <div class="md-nav__link md-nav__container">
@@ -403,14 +432,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -492,7 +521,35 @@
   <span class="md-ellipsis">
     
   
-    Streamer (Legacy Wrapper)
+    Streamer (Convenience Wrapper)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../streaming/base_streamer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extending (BaseStreamer)
   
 
     
@@ -561,10 +618,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
             
   
   
@@ -582,8 +639,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_5">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -660,10 +717,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#cookie-required" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Cookie Required
+        Overview
       
     </span>
   </a>
@@ -671,34 +728,77 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#quick-use" class="md-nav__link">
+  <a href="#import-and-constructor" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Quick Use
+        Import and Constructor
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Quick Use">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#list-saved-scripts" class="md-nav__link">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cookie-required-behavior" class="md-nav__link">
     <span class="md-ellipsis">
       
-        List saved scripts
+        Cookie-Required Behavior
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="List saved scripts">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#response-envelope-semantics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Response Envelope Semantics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#endpoint-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Endpoint Behavior
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validation-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation Flow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Validation Flow">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#output-structure-truncated" class="md-nav__link">
+  <a href="#shared-validators" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Output structure (truncated)
+        Shared validators
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#per-method-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Per-method sequence
       
     </span>
   </a>
@@ -709,24 +809,79 @@
     </nav>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#validate-source" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#public-methods" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Validate source
+        Public Methods
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Validate source">
+    <nav class="md-nav" aria-label="Public Methods">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#output-structure-warnings-only-success" class="md-nav__link">
+  <a href="#1-list_saved_scripts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Output structure (warnings-only success)
+        1) list_saved_scripts()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-validate_scriptsource" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2) validate_script(source)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-get_scriptpine_id-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3) get_script(pine_id, version)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-create_scriptname-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4) create_script(name, source)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-edit_scriptpine_id-name-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5) edit_script(pine_id, name, source)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-delete_scriptpine_id" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6) delete_script(pine_id)
       
     </span>
   </a>
@@ -737,121 +892,26 @@
     </nav>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#create-a-script" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#warning-and-error-metadata-matrix" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Create a script
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Create a script">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#output-structure" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Output structure
+        Warning and Error Metadata Matrix
       
     </span>
   </a>
   
 </li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#edit-a-script" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#known-edge-behavior" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Edit a script
+        Known Edge Behavior
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Edit a script">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#output-structure_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Output structure
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#fetch-script-content" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Fetch script content
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Fetch script content">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#output-structure_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Output structure
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#delete-a-script" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Delete a script
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Delete a script">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#output-structure_3" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Output structure
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1189,12 +1249,6 @@
     
       
         
-          
-        
-      
-        
-      
-        
       
         
       
@@ -1213,12 +1267,11 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
         
           
-          <div class="md-nav__link md-nav__container">
-            <a href="../../reference/" class="md-nav__link ">
-              
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
   
   
   <span class="md-ellipsis">
@@ -1232,17 +1285,11 @@
   
   
 
-            </a>
-            
-              
-              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="">
-                <span class="md-nav__icon md-icon"></span>
-              </label>
-            
-          </div>
+            <span class="md-nav__icon md-icon"></span>
+          </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1251,8 +1298,6 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
-            
-              
             
               
                 
@@ -1268,35 +1313,7 @@
   <span class="md-ellipsis">
     
   
-    Validation & Supported Values
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/releases/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Releases & Versioning
+    Supported Data
   
 
     
@@ -1399,10 +1416,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#cookie-required" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Cookie Required
+        Overview
       
     </span>
   </a>
@@ -1410,34 +1427,77 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#quick-use" class="md-nav__link">
+  <a href="#import-and-constructor" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Quick Use
+        Import and Constructor
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Quick Use">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#list-saved-scripts" class="md-nav__link">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cookie-required-behavior" class="md-nav__link">
     <span class="md-ellipsis">
       
-        List saved scripts
+        Cookie-Required Behavior
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="List saved scripts">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#response-envelope-semantics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Response Envelope Semantics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#endpoint-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Endpoint Behavior
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validation-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation Flow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Validation Flow">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#output-structure-truncated" class="md-nav__link">
+  <a href="#shared-validators" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Output structure (truncated)
+        Shared validators
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#per-method-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Per-method sequence
       
     </span>
   </a>
@@ -1448,24 +1508,79 @@
     </nav>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#validate-source" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#public-methods" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Validate source
+        Public Methods
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Validate source">
+    <nav class="md-nav" aria-label="Public Methods">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#output-structure-warnings-only-success" class="md-nav__link">
+  <a href="#1-list_saved_scripts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Output structure (warnings-only success)
+        1) list_saved_scripts()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-validate_scriptsource" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2) validate_script(source)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-get_scriptpine_id-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3) get_script(pine_id, version)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-create_scriptname-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4) create_script(name, source)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-edit_scriptpine_id-name-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5) edit_script(pine_id, name, source)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-delete_scriptpine_id" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6) delete_script(pine_id)
       
     </span>
   </a>
@@ -1476,121 +1591,26 @@
     </nav>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#create-a-script" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#warning-and-error-metadata-matrix" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Create a script
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Create a script">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#output-structure" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Output structure
+        Warning and Error Metadata Matrix
       
     </span>
   </a>
   
 </li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#edit-a-script" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#known-edge-behavior" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Edit a script
+        Known Edge Behavior
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Edit a script">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#output-structure_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Output structure
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#fetch-script-content" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Fetch script content
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Fetch script content">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#output-structure_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Output structure
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#delete-a-script" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Delete a script
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Delete a script">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#output-structure_3" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Output structure
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1614,154 +1634,405 @@
   
 
 
-<h1 id="pine">Pine</h1>
-<div class="admonition info">
-<p class="admonition-title">Version Note</p>
-<p><code>list_saved_scripts()</code> includes each script <code>version</code> in the returned data as of <code>1.2.1</code>.</p>
-</div>
-<p><code>Pine</code> manages authenticated Pine Script operations through the TradingView Pine facade.</p>
-<h2 id="cookie-required">Cookie Required</h2>
-<p>Every public <code>Pine</code> method requires a TradingView cookie.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">tv_scraper</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pine</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">pine</span> <span class="o">=</span> <span class="n">Pine</span><span class="p">(</span><span class="n">cookie</span><span class="o">=</span><span class="s2">&quot;paste_your_cookie_here&quot;</span><span class="p">)</span>
+<h1 id="pine-scraper">Pine Scraper</h1>
+<h2 id="overview">Overview</h2>
+<p>The Pine scraper manages authenticated TradingView Pine Script operations through the Pine facade API.</p>
+<p>Public methods:</p>
+<ul>
+<li><code>list_saved_scripts()</code></li>
+<li><code>validate_script(source)</code></li>
+<li><code>get_script(pine_id, version)</code></li>
+<li><code>create_script(name, source)</code></li>
+<li><code>edit_script(pine_id, name, source)</code></li>
+<li><code>delete_script(pine_id)</code></li>
+</ul>
+<p>All public methods are decorated with <code>catch_errors</code> and return the standardized response envelope.</p>
+<h2 id="import-and-constructor">Import and Constructor</h2>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">tv_scraper.scrapers.scripts</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pine</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">pine</span> <span class="o">=</span> <span class="n">Pine</span><span class="p">(</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">export_result</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">export_type</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">,</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">cookie</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;TRADINGVIEW_COOKIE&quot;</span><span class="p">),</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="p">)</span>
 </span></code></pre></div>
-<p>If the cookie is missing, the method returns a failed response instead of making the request.</p>
-<h2 id="quick-use">Quick Use</h2>
-<h3 id="list-saved-scripts">List saved scripts</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">result</span> <span class="o">=</span> <span class="n">pine</span><span class="o">.</span><span class="n">list_saved_scripts</span><span class="p">()</span>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>export_result</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td>Enables export when a method supports export.</td>
+</tr>
+<tr>
+<td><code>export_type</code></td>
+<td><code>str</code></td>
+<td><code>"json"</code></td>
+<td>Export format (<code>"json"</code> or <code>"csv"</code>).</td>
+</tr>
+<tr>
+<td><code>timeout</code></td>
+<td><code>int</code></td>
+<td><code>10</code></td>
+<td>HTTP timeout in seconds.</td>
+</tr>
+<tr>
+<td><code>cookie</code></td>
+<td><code>str \| None</code></td>
+<td><code>None</code></td>
+<td>TradingView cookie. If <code>None</code>, falls back to <code>TRADINGVIEW_COOKIE</code> environment variable.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="cookie-required-behavior">Cookie-Required Behavior</h2>
+<p>All Pine public methods call <code>_validate_cookie_required()</code> before making network calls.</p>
+<ul>
+<li>If <code>self.cookie</code> is truthy, execution continues.</li>
+<li>If cookie is missing (including empty string), the method returns failed status with this message:</li>
+</ul>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>TradingView cookie is required for Pine Script operations. Provide it via the cookie argument or TRADINGVIEW_COOKIE environment variable.
 </span></code></pre></div>
-<h4 id="output-structure-truncated">Output structure (truncated)</h4>
+<p>Headers for Pine facade requests are built by <code>_build_pine_headers()</code> and include:</p>
+<ul>
+<li><code>User-Agent</code> (from <code>BaseScraper</code>)</li>
+<li><code>cookie</code></li>
+<li><code>accept: */*</code></li>
+<li><code>origin: https://in.tradingview.com</code></li>
+<li><code>referer: https://in.tradingview.com/</code></li>
+</ul>
+<h2 id="response-envelope-semantics">Response Envelope Semantics</h2>
+<p>All methods return this shape:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">[</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>        <span class="p">{</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>            <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;USER;abc123&quot;</span><span class="p">,</span>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;My Script&quot;</span><span class="p">,</span>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>            <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;5.0&quot;</span><span class="p">,</span>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>            <span class="s2">&quot;modified&quot;</span><span class="p">:</span> <span class="mi">1700000000</span><span class="p">,</span>
-</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>        <span class="p">},</span>
-</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>        <span class="o">...</span>
-</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    <span class="p">],</span>
-</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>    <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{},</span>
-</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="p">}</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span> <span class="o">|</span> <span class="s2">&quot;failed&quot;</span><span class="p">,</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">payload</span> <span class="ow">or</span> <span class="kc">None</span><span class="o">&gt;</span><span class="p">,</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">dict</span><span class="o">&gt;</span><span class="p">,</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="kc">None</span> <span class="o">|</span> <span class="s2">&quot;message&quot;</span><span class="p">,</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="p">}</span>
 </span></code></pre></div>
-<h3 id="validate-source">Validate source</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">result</span> <span class="o">=</span> <span class="n">pine</span><span class="o">.</span><span class="n">validate_script</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="s2">&quot;//@version=6</span><span class="se">\n</span><span class="s2">indicator(&#39;Demo&#39;)</span><span class="se">\n</span><span class="s2">plot(close)&quot;</span><span class="p">)</span>
+<p>Metadata semantics come from <code>catch_errors</code> + base response helpers:</p>
+<ul>
+<li><code>catch_errors</code> captures method arguments into <code>metadata</code> before method execution.</li>
+<li>Captured metadata excludes <code>self</code> and arguments whose value is <code>None</code>.</li>
+<li><code>_success_response()</code> and <code>_error_response()</code> merge additional metadata into captured metadata.</li>
+<li>Unexpected exceptions are converted to failed envelopes with <code>error = "Unexpected error: ..."</code>.</li>
+<li><code>create_script</code> and <code>edit_script</code> restore outer metadata after internal <code>validate_script</code> calls so final metadata reflects outer call arguments.</li>
+</ul>
+<h2 id="endpoint-behavior">Endpoint Behavior</h2>
+<p>Base URL: <code>https://pine-facade.tradingview.com/pine-facade</code></p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>HTTP</th>
+<th>Endpoint</th>
+<th>Request details</th>
+<th>Success expectation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>list_saved_scripts</code></td>
+<td>GET</td>
+<td><code>/list</code></td>
+<td>Query params: <code>filter=saved</code></td>
+<td>Parsed JSON payload must be a list</td>
+</tr>
+<tr>
+<td><code>validate_script</code></td>
+<td>POST</td>
+<td><code>/translate_light</code></td>
+<td>Query params: <code>v=3</code>; multipart field <code>source</code></td>
+<td>Parsed JSON payload must be a dict with dict <code>result</code></td>
+</tr>
+<tr>
+<td><code>get_script</code></td>
+<td>GET</td>
+<td><code>/get/{pine_id}/{version}</code></td>
+<td><code>pine_id</code> and <code>version</code> are URL-encoded path segments</td>
+<td>Parsed JSON payload must be a dict</td>
+</tr>
+<tr>
+<td><code>create_script</code></td>
+<td>POST</td>
+<td><code>/save/new</code></td>
+<td>Query params: <code>name</code>, <code>allow_overwrite=true</code>; multipart field <code>source</code></td>
+<td>Parsed JSON payload must include <code>result.metaInfo.scriptIdPart</code></td>
+</tr>
+<tr>
+<td><code>edit_script</code></td>
+<td>POST</td>
+<td><code>/save/next/{pine_id}</code></td>
+<td>URL-encoded <code>pine_id</code>; query params: <code>allow_create_new=false</code>, <code>name</code>; multipart field <code>source</code></td>
+<td>Parsed JSON payload must include <code>result.metaInfo.scriptIdPart</code></td>
+</tr>
+<tr>
+<td><code>delete_script</code></td>
+<td>POST</td>
+<td><code>/delete/{pine_id}</code></td>
+<td>URL-encoded <code>pine_id</code>; no body</td>
+<td>Parsed JSON value must equal string <code>"ok"</code></td>
+</tr>
+</tbody>
+</table>
+<p>Notes:</p>
+<ul>
+<li>Path values are encoded via <code>quote(value, safe="")</code>.</li>
+<li><code>_request()</code> always parses responses using <code>response.json()</code>.</li>
+</ul>
+<h2 id="validation-flow">Validation Flow</h2>
+<h3 id="shared-validators">Shared validators</h3>
+<ul>
+<li><code>_validate_cookie_required()</code></li>
+<li><code>_validate_non_empty(value, field_name)</code> (whitespace-only values are treated as empty)</li>
+</ul>
+<h3 id="per-method-sequence">Per-method sequence</h3>
+<ol>
+<li><code>list_saved_scripts()</code></li>
+<li>
+<p>Cookie check.</p>
+</li>
+<li>
+<p><code>validate_script(source)</code></p>
+</li>
+<li>Cookie check.</li>
+<li>Source non-empty check.</li>
+<li>Payload must be dict.</li>
+<li>
+<p><code>payload["result"]</code> must be dict.</p>
+</li>
+<li>
+<p><code>get_script(pine_id, version)</code></p>
+</li>
+<li>Cookie check.</li>
+<li><code>pine_id</code> non-empty check.</li>
+<li><code>version</code> non-empty check.</li>
+<li>Payload must be dict.</li>
+<li>
+<p>Mapped details must include string <code>source</code>.</p>
+</li>
+<li>
+<p><code>create_script(name, source)</code></p>
+</li>
+<li>Cookie check.</li>
+<li><code>name</code> non-empty check.</li>
+<li><code>source</code> non-empty check.</li>
+<li>Internal <code>validate_script(source)</code> call.</li>
+<li>If validation fails, create returns failed and does not call save endpoint.</li>
+<li>
+<p>Save payload must include <code>result.metaInfo.scriptIdPart</code>.</p>
+</li>
+<li>
+<p><code>edit_script(pine_id, name, source)</code></p>
+</li>
+<li>Cookie check.</li>
+<li><code>pine_id</code> non-empty check.</li>
+<li><code>name</code> non-empty check.</li>
+<li><code>source</code> non-empty check.</li>
+<li>Internal <code>validate_script(source)</code> call.</li>
+<li>If validation fails, edit returns failed and does not call save endpoint.</li>
+<li>
+<p>Save payload must include <code>result.metaInfo.scriptIdPart</code>.</p>
+</li>
+<li>
+<p><code>delete_script(pine_id)</code></p>
+</li>
+<li>Cookie check.</li>
+<li><code>pine_id</code> non-empty check.</li>
+<li>Parsed response must equal <code>"ok"</code>.</li>
+</ol>
+<h2 id="public-methods">Public Methods</h2>
+<h3 id="1-list_saved_scripts">1) <code>list_saved_scripts()</code></h3>
+<p>Returns saved scripts for the authenticated account.</p>
+<p>Mapped item shape:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;scriptIdPart&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;scriptName&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;scriptTitle&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;version&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;scriptVersion&quot;</span><span class="p">),</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="s2">&quot;modified&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">non</span><span class="o">-</span><span class="n">negative</span> <span class="nb">int</span><span class="p">,</span> <span class="k">else</span> <span class="mi">0</span><span class="o">&gt;</span><span class="p">,</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="p">}</span>
 </span></code></pre></div>
-<h4 id="output-structure-warnings-only-success">Output structure (warnings-only success)</h4>
+<p>If <code>export_result=True</code>, this method exports with:</p>
+<ul>
+<li><code>symbol="pine_saved_scripts"</code></li>
+<li><code>data_category="pine"</code></li>
+</ul>
+<p>Success example:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>        <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;//@version=6</span><span class="se">\n</span><span class="s2">var x = na&quot;</span><span class="p">,</span>
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>        <span class="s2">&quot;warnings&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Unused variable&quot;</span><span class="p">}],</span>
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    <span class="p">},</span>
-</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="p">}</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">[</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>        <span class="p">{</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>            <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;USER;abc123&quot;</span><span class="p">,</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;My Script&quot;</span><span class="p">,</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>            <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;4&quot;</span><span class="p">,</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>            <span class="s2">&quot;modified&quot;</span><span class="p">:</span> <span class="mi">1700000000</span><span class="p">,</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>        <span class="p">}</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    <span class="p">],</span>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>    <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{},</span>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="p">}</span>
 </span></code></pre></div>
-<div class="admonition warning">
-<p class="admonition-title">Warning Behavior</p>
-<p>This is the most important response nuance on this page:</p>
+<h3 id="2-validate_scriptsource">2) <code>validate_script(source)</code></h3>
+<p>Validates Pine source through the translate endpoint.</p>
+<p>Behavior:</p>
 <ul>
-<li><code>validate_script()</code> returns warnings in <code>metadata["warnings"]</code></li>
-<li><code>create_script()</code> and <code>edit_script()</code> return warnings in <code>data["warnings"]</code></li>
+<li><code>errors</code> non-empty -&gt; failed response with <code>error="Pine script validation failed."</code>; <code>errors</code> and <code>warnings</code> are placed in metadata.</li>
+<li><code>errors</code> empty and <code>warnings</code> non-empty -&gt; success response, <code>data=None</code>, warnings in metadata.</li>
+<li>both empty -&gt; success response, <code>data=None</code>.</li>
 </ul>
-</div>
-<h3 id="create-a-script">Create a script</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">result</span> <span class="o">=</span> <span class="n">pine</span><span class="o">.</span><span class="n">create_script</span><span class="p">(</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;My Script&quot;</span><span class="p">,</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="n">source</span><span class="o">=</span><span class="s2">&quot;//@version=6</span><span class="se">\n</span><span class="s2">indicator(&#39;Demo&#39;)</span><span class="se">\n</span><span class="s2">plot(close)&quot;</span><span class="p">,</span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="p">)</span>
+<p>Warnings-only success example:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>        <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;//@version=6</span><span class="se">\n</span><span class="s2">var x = na&quot;</span><span class="p">,</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>        <span class="s2">&quot;warnings&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Unused variable&quot;</span><span class="p">}],</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    <span class="p">},</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="p">}</span>
 </span></code></pre></div>
-<h4 id="output-structure">Output structure</h4>
+<p>Compiler-error failure example:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p">{</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>        <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;USER;abc123&quot;</span><span class="p">,</span>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;My Script&quot;</span><span class="p">,</span>
-</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>        <span class="s2">&quot;warnings&quot;</span><span class="p">:</span> <span class="p">[],</span>
-</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    <span class="p">},</span>
-</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>    <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;My Script&quot;</span><span class="p">,</span>
-</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>        <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;//@version=6</span><span class="se">\n</span><span class="s2">indicator(&#39;Demo&#39;)</span><span class="se">\n</span><span class="s2">plot(close)&quot;</span><span class="p">,</span>
-</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>    <span class="p">},</span>
-</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="p">}</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;failed&quot;</span><span class="p">,</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>        <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;//@version=6</span><span class="se">\n</span><span class="s2">undefined()&quot;</span><span class="p">,</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>        <span class="s2">&quot;errors&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Undefined function&quot;</span><span class="p">}],</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>        <span class="s2">&quot;warnings&quot;</span><span class="p">:</span> <span class="p">[],</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>    <span class="p">},</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Pine script validation failed.&quot;</span><span class="p">,</span>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="p">}</span>
 </span></code></pre></div>
-<h3 id="edit-a-script">Edit a script</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">result</span> <span class="o">=</span> <span class="n">pine</span><span class="o">.</span><span class="n">edit_script</span><span class="p">(</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    <span class="n">pine_id</span><span class="o">=</span><span class="s2">&quot;USER;abc123&quot;</span><span class="p">,</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;My Script&quot;</span><span class="p">,</span>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="n">source</span><span class="o">=</span><span class="s2">&quot;//@version=6</span><span class="se">\n</span><span class="s2">indicator(&#39;Demo 2&#39;)</span><span class="se">\n</span><span class="s2">plot(close)&quot;</span><span class="p">,</span>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="p">)</span>
+<h3 id="3-get_scriptpine_id-version">3) <code>get_script(pine_id, version)</code></h3>
+<p>Fetches one script and maps:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">{</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">payload</span> <span class="n">scriptIdPart</span> <span class="ow">or</span> <span class="nb">input</span> <span class="n">pine_id</span><span class="o">&gt;</span><span class="p">,</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">scriptName</span> <span class="ow">or</span> <span class="n">scriptTitle</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="o">&gt;</span><span class="p">,</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">scriptTitle</span> <span class="ow">or</span> <span class="n">scriptName</span><span class="o">&gt;</span><span class="p">,</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">payload</span> <span class="n">version</span> <span class="ow">or</span> <span class="nb">input</span> <span class="n">version</span><span class="o">&gt;</span><span class="p">,</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    <span class="s2">&quot;last_version&quot;</span><span class="p">:</span> <span class="n">payload</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;lastVersionMaj&quot;</span><span class="p">),</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    <span class="s2">&quot;created&quot;</span><span class="p">:</span> <span class="n">payload</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;created&quot;</span><span class="p">),</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>    <span class="s2">&quot;updated&quot;</span><span class="p">:</span> <span class="n">payload</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;updated&quot;</span><span class="p">),</span>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>    <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">required</span> <span class="n">string</span><span class="o">&gt;</span><span class="p">,</span>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>    <span class="s2">&quot;extra&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">dict</span><span class="p">,</span> <span class="n">defaults</span> <span class="n">to</span> <span class="p">{}</span><span class="o">&gt;</span><span class="p">,</span>
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="p">}</span>
 </span></code></pre></div>
-<h4 id="output-structure_1">Output structure</h4>
+<p>If <code>export_result=True</code>, this method exports with:</p>
+<ul>
+<li><code>symbol=&lt;pine_id&gt;</code></li>
+<li><code>data_category="pine_script"</code></li>
+</ul>
+<h3 id="4-create_scriptname-source">4) <code>create_script(name, source)</code></h3>
+<p>Creates a script after internal <code>validate_script(source)</code> succeeds.</p>
+<p>Success data shape:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="p">{</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>        <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;USER;abc123&quot;</span><span class="p">,</span>
-</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;My Script&quot;</span><span class="p">,</span>
-</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>        <span class="s2">&quot;warnings&quot;</span><span class="p">:</span> <span class="p">[],</span>
-</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>    <span class="p">},</span>
-</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>    <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>        <span class="s2">&quot;pine_id&quot;</span><span class="p">:</span> <span class="s2">&quot;USER;abc123&quot;</span><span class="p">,</span>
-</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;My Script&quot;</span><span class="p">,</span>
-</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>        <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;//@version=6</span><span class="se">\n</span><span class="s2">indicator(&#39;Demo 2&#39;)</span><span class="se">\n</span><span class="s2">plot(close)&quot;</span><span class="p">,</span>
-</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>    <span class="p">},</span>
-</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="p">}</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>    <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">script_result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;scriptIdPart&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">script_result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;shortDescription&quot;</span><span class="p">)</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>        <span class="ow">or</span> <span class="n">script_result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;description&quot;</span><span class="p">)</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>        <span class="ow">or</span> <span class="n">name</span><span class="p">,</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>    <span class="s2">&quot;warnings&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">validation</span> <span class="n">warnings</span> <span class="nb">list</span> <span class="ow">or</span> <span class="p">[]</span><span class="o">&gt;</span><span class="p">,</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="p">}</span>
 </span></code></pre></div>
-<h3 id="fetch-script-content">Fetch script content</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">result</span> <span class="o">=</span> <span class="n">pine</span><span class="o">.</span><span class="n">get_script</span><span class="p">(</span><span class="n">pine_id</span><span class="o">=</span><span class="s2">&quot;USER;abc123&quot;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="s2">&quot;5.0&quot;</span><span class="p">)</span>
+<p>Behavior details:</p>
+<ul>
+<li>Validation warnings do not block create.</li>
+<li>Validation errors block create.</li>
+<li>When validation fails, response metadata includes outer args (<code>name</code>, <code>source</code>) and forwards validation <code>errors</code>/<code>warnings</code> into metadata.</li>
+</ul>
+<h3 id="5-edit_scriptpine_id-name-source">5) <code>edit_script(pine_id, name, source)</code></h3>
+<p>Edits a script after internal <code>validate_script(source)</code> succeeds.</p>
+<p>Success data shape:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="p">{</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>    <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">script_result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;scriptIdPart&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">pine_id</span><span class="p">,</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">script_result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;shortDescription&quot;</span><span class="p">)</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>        <span class="ow">or</span> <span class="n">script_result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;description&quot;</span><span class="p">)</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>        <span class="ow">or</span> <span class="n">name</span><span class="p">,</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    <span class="s2">&quot;warnings&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">validation</span> <span class="n">warnings</span> <span class="nb">list</span> <span class="ow">or</span> <span class="p">[]</span><span class="o">&gt;</span><span class="p">,</span>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="p">}</span>
 </span></code></pre></div>
-<h4 id="output-structure_2">Output structure</h4>
+<p>Behavior details:</p>
+<ul>
+<li>Validation warnings do not block edit.</li>
+<li>Validation errors block edit.</li>
+<li>When validation fails, response metadata includes outer args (<code>pine_id</code>, <code>name</code>, <code>source</code>) and forwards validation <code>errors</code>/<code>warnings</code> into metadata.</li>
+</ul>
+<h3 id="6-delete_scriptpine_id">6) <code>delete_script(pine_id)</code></h3>
+<p>Deletes a script by ID.</p>
+<p>Success response:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="p">{</span>
 </span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>        <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;USER;abc123&quot;</span><span class="p">,</span>
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;My Script&quot;</span><span class="p">,</span>
-</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>        <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;My Script&quot;</span><span class="p">,</span>
-</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>        <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;5.0&quot;</span><span class="p">,</span>
-</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>        <span class="s2">&quot;last_version&quot;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
-</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>        <span class="s2">&quot;created&quot;</span><span class="p">:</span> <span class="mi">1700000000</span><span class="p">,</span>
-</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>        <span class="s2">&quot;updated&quot;</span><span class="p">:</span> <span class="mi">1700000500</span><span class="p">,</span>
-</span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>        <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;//@version=6</span><span class="se">\n</span><span class="s2">indicator(&#39;Demo&#39;)</span><span class="se">\n</span><span class="s2">plot(close)&quot;</span><span class="p">,</span>
-</span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>        <span class="s2">&quot;extra&quot;</span><span class="p">:</span> <span class="p">{},</span>
-</span><span id="__span-10-13"><a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>    <span class="p">},</span>
-</span><span id="__span-10-14"><a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>    <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="__span-10-15"><a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>        <span class="s2">&quot;pine_id&quot;</span><span class="p">:</span> <span class="s2">&quot;USER;abc123&quot;</span><span class="p">,</span>
-</span><span id="__span-10-16"><a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>        <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;5.0&quot;</span><span class="p">,</span>
-</span><span id="__span-10-17"><a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>    <span class="p">},</span>
-</span><span id="__span-10-18"><a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-10-19"><a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="p">}</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;USER;test123&quot;</span><span class="p">},</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>    <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;pine_id&quot;</span><span class="p">:</span> <span class="s2">&quot;USER;test123&quot;</span><span class="p">},</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="p">}</span>
 </span></code></pre></div>
-<h3 id="delete-a-script">Delete a script</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="n">result</span> <span class="o">=</span> <span class="n">pine</span><span class="o">.</span><span class="n">delete_script</span><span class="p">(</span><span class="n">pine_id</span><span class="o">=</span><span class="s2">&quot;USER;abc123&quot;</span><span class="p">)</span>
-</span></code></pre></div>
-<h4 id="output-structure_3">Output structure</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="p">{</span>
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;USER;abc123&quot;</span><span class="p">},</span>
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>    <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;pine_id&quot;</span><span class="p">:</span> <span class="s2">&quot;USER;abc123&quot;</span><span class="p">},</span>
-</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="p">}</span>
-</span></code></pre></div>
-<div class="admonition failure">
-<p class="admonition-title">wrong input</p>
-<p>This fails because the source is empty.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="n">pine</span><span class="o">.</span><span class="n">validate_script</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="s2">&quot;   &quot;</span><span class="p">)</span>
-</span></code></pre></div>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Notes</p>
+<p>Failure behavior:</p>
 <ul>
-<li><code>create_script()</code> and <code>edit_script()</code> run <code>validate_script()</code> internally before saving.</li>
-<li><code>get_script()</code> returns the raw Pine source plus metadata such as <code>title</code>, <code>version</code>, <code>created</code>, and <code>updated</code>.</li>
-<li><code>delete_script()</code> succeeds only when the Pine endpoint returns the expected <code>"ok"</code> value.</li>
+<li>If parsed response is not exactly <code>"ok"</code>, returns failed status with:</li>
 </ul>
-</div>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Pine delete endpoint returned unexpected response: &lt;response&gt;
+</span></code></pre></div>
+<p>Important:</p>
+<ul>
+<li>Success data contains only <code>id</code>; there is no <code>deleted</code> field.</li>
+</ul>
+<h2 id="warning-and-error-metadata-matrix">Warning and Error Metadata Matrix</h2>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Success metadata behavior</th>
+<th>Failure metadata behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>list_saved_scripts</code></td>
+<td>Usually <code>{}</code> (no method args)</td>
+<td>Usually <code>{}</code> unless decorator-level metadata is present</td>
+</tr>
+<tr>
+<td><code>validate_script</code></td>
+<td>Includes <code>source</code>; includes <code>warnings</code> when present</td>
+<td>Includes <code>source</code>; compiler failures include <code>errors</code> and <code>warnings</code></td>
+</tr>
+<tr>
+<td><code>get_script</code></td>
+<td>Includes <code>pine_id</code>, <code>version</code></td>
+<td>Includes <code>pine_id</code>, <code>version</code></td>
+</tr>
+<tr>
+<td><code>create_script</code></td>
+<td>Includes <code>name</code>, <code>source</code>; warnings are in <code>data["warnings"]</code></td>
+<td>Includes <code>name</code>, <code>source</code>; validation failure may include <code>errors</code>/<code>warnings</code></td>
+</tr>
+<tr>
+<td><code>edit_script</code></td>
+<td>Includes <code>pine_id</code>, <code>name</code>, <code>source</code>; warnings are in <code>data["warnings"]</code></td>
+<td>Includes <code>pine_id</code>, <code>name</code>, <code>source</code>; validation failure may include <code>errors</code>/<code>warnings</code></td>
+</tr>
+<tr>
+<td><code>delete_script</code></td>
+<td>Includes <code>pine_id</code></td>
+<td>Includes <code>pine_id</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="known-edge-behavior">Known Edge Behavior</h2>
+<p><code>delete_script</code> depends on JSON parsing in <code>_request()</code> and only succeeds when parsed response equals <code>"ok"</code>.</p>
+<ul>
+<li>If the endpoint returns non-JSON plain text <code>ok</code>, <code>_request()</code> returns parse failure.</li>
+<li>If the endpoint returns JSON but not <code>"ok"</code>, delete returns failed status.</li>
+</ul>
 
 
 
@@ -1799,7 +2070,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../../streaming/streamer/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Streamer (Legacy Wrapper)">
+          <a href="../../streaming/base_streamer/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Extending (BaseStreamer)">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -1809,7 +2080,7 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Streamer (Legacy Wrapper)
+                Extending (BaseStreamer)
               </div>
             </div>
           </a>

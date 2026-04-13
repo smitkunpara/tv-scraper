@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#minds" class="md-skip">
+        <a href="#minds-scraper" class="md-skip">
           Skip to content
         </a>
       
@@ -327,6 +327,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../../architecture.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../api-conventions/" class="md-nav__link">
         
   
@@ -334,7 +361,7 @@
   <span class="md-ellipsis">
     
   
-    API Basics
+    API Conventions
   
 
     
@@ -366,6 +393,8 @@
       
         
       
+        
+      
     
     
     
@@ -381,7 +410,7 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
         
           
           <div class="md-nav__link md-nav__container">
@@ -403,14 +432,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -492,7 +521,35 @@
   <span class="md-ellipsis">
     
   
-    Streamer (Legacy Wrapper)
+    Streamer (Convenience Wrapper)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../streaming/base_streamer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extending (BaseStreamer)
   
 
     
@@ -561,10 +618,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
             
   
   
@@ -582,8 +639,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_5">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -828,10 +885,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#quick-use" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Quick Use
+        Overview
       
     </span>
   </a>
@@ -839,10 +896,49 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#output-structure" class="md-nav__link">
+  <a href="#api" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Output Structure
+        API
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#constructor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Constructor
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get_minds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_minds
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cursor-pagination" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cursor Pagination
       
     </span>
   </a>
@@ -850,10 +946,71 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#inputs" class="md-nav__link">
+  <a href="#max_pages-safeguard" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Inputs
+        MAX_PAGES Safeguard
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parsed-output-schema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parsed Output Schema
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parsed Output Schema">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#timestamp-formatting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Timestamp Formatting
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#response-envelope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Response Envelope
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#failure-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failure Behavior
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
       
     </span>
   </a>
@@ -1026,12 +1183,6 @@
     
       
         
-          
-        
-      
-        
-      
-        
       
         
       
@@ -1050,12 +1201,11 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
         
           
-          <div class="md-nav__link md-nav__container">
-            <a href="../../reference/" class="md-nav__link ">
-              
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
   
   
   <span class="md-ellipsis">
@@ -1069,17 +1219,11 @@
   
   
 
-            </a>
-            
-              
-              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="">
-                <span class="md-nav__icon md-icon"></span>
-              </label>
-            
-          </div>
+            <span class="md-nav__icon md-icon"></span>
+          </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1088,8 +1232,6 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
-            
-              
             
               
                 
@@ -1105,35 +1247,7 @@
   <span class="md-ellipsis">
     
   
-    Validation & Supported Values
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/releases/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Releases & Versioning
+    Supported Data
   
 
     
@@ -1236,10 +1350,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#quick-use" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Quick Use
+        Overview
       
     </span>
   </a>
@@ -1247,10 +1361,49 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#output-structure" class="md-nav__link">
+  <a href="#api" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Output Structure
+        API
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#constructor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Constructor
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get_minds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_minds
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cursor-pagination" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cursor Pagination
       
     </span>
   </a>
@@ -1258,10 +1411,71 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#inputs" class="md-nav__link">
+  <a href="#max_pages-safeguard" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Inputs
+        MAX_PAGES Safeguard
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parsed-output-schema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parsed Output Schema
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parsed Output Schema">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#timestamp-formatting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Timestamp Formatting
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#response-envelope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Response Envelope
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#failure-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failure Behavior
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
       
     </span>
   </a>
@@ -1288,74 +1502,246 @@
   
 
 
-<h1 id="minds">Minds</h1>
-<p><code>Minds</code> fetches community discussion posts for a symbol with cursor-based pagination.</p>
-<h2 id="quick-use">Quick Use</h2>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">tv_scraper</span><span class="w"> </span><span class="kn">import</span> <span class="n">Minds</span>
+<h1 id="minds-scraper">Minds Scraper</h1>
+<h2 id="overview">Overview</h2>
+<p><code>Minds</code> fetches community discussions from TradingView Minds with cursor pagination.
+Requests are made to <code>https://www.tradingview.com/api/v1/minds/</code>.</p>
+<p>All public responses use the standard envelope:</p>
+<ul>
+<li><code>status</code>: <code>success</code> or <code>failed</code></li>
+<li><code>data</code>: parsed list on success, <code>None</code> on failure</li>
+<li><code>metadata</code>: call metadata and scraper metadata</li>
+<li><code>error</code>: <code>None</code> on success, message on failure</li>
+</ul>
+<h2 id="api">API</h2>
+<h3 id="constructor">Constructor</h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">tv_scraper.scrapers.social</span><span class="w"> </span><span class="kn">import</span> <span class="n">Minds</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">scraper</span> <span class="o">=</span> <span class="n">Minds</span><span class="p">()</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">result</span> <span class="o">=</span> <span class="n">scraper</span><span class="o">.</span><span class="n">get_minds</span><span class="p">(</span><span class="n">exchange</span><span class="o">=</span><span class="s2">&quot;NASDAQ&quot;</span><span class="p">,</span> <span class="n">symbol</span><span class="o">=</span><span class="s2">&quot;AAPL&quot;</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">scraper</span> <span class="o">=</span> <span class="n">Minds</span><span class="p">(</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">export_result</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">export_type</span><span class="o">=</span><span class="s1">&#39;json&#39;</span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">cookie</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="p">)</span>
 </span></code></pre></div>
-<h2 id="output-structure">Output Structure</h2>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">[</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>        <span class="p">{</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>            <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Community post text&quot;</span><span class="p">,</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>            <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;/mind/1&quot;</span><span class="p">,</span>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>            <span class="s2">&quot;author&quot;</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>                <span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>                <span class="s2">&quot;profile_url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.tradingview.com/u/user&quot;</span><span class="p">,</span>
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>                <span class="s2">&quot;is_broker&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>            <span class="p">},</span>
-</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>            <span class="s2">&quot;created&quot;</span><span class="p">:</span> <span class="s2">&quot;2024-01-01 00:00:00&quot;</span><span class="p">,</span>
-</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>            <span class="s2">&quot;total_likes&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
-</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>            <span class="s2">&quot;total_comments&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>        <span class="p">},</span>
-</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>        <span class="o">...</span><span class="p">,</span>
-</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    <span class="p">],</span>
-</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>    <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;exchange&quot;</span><span class="p">:</span> <span class="s2">&quot;NASDAQ&quot;</span><span class="p">,</span> <span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="s2">&quot;AAPL&quot;</span><span class="p">},</span>
-</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="p">}</span>
-</span></code></pre></div>
-<h2 id="inputs">Inputs</h2>
 <table>
 <thead>
 <tr>
 <th>Parameter</th>
-<th>Notes</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>export_result</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td>Export data to file when <code>True</code></td>
+</tr>
+<tr>
+<td><code>export_type</code></td>
+<td><code>str</code></td>
+<td><code>json</code></td>
+<td>Export format: <code>json</code> or <code>csv</code></td>
+</tr>
+<tr>
+<td><code>timeout</code></td>
+<td><code>int</code></td>
+<td><code>10</code></td>
+<td>HTTP timeout in seconds</td>
+</tr>
+<tr>
+<td><code>cookie</code></td>
+<td><code>str \| None</code></td>
+<td><code>None</code></td>
+<td>Optional TradingView session cookie; falls back to <code>TRADINGVIEW_COOKIE</code> env var</td>
+</tr>
+</tbody>
+</table>
+<h3 id="get_minds">get_minds</h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">result</span> <span class="o">=</span> <span class="n">scraper</span><span class="o">.</span><span class="n">get_minds</span><span class="p">(</span><span class="n">exchange</span><span class="o">=</span><span class="s1">&#39;NASDAQ&#39;</span><span class="p">,</span> <span class="n">symbol</span><span class="o">=</span><span class="s1">&#39;AAPL&#39;</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+</span></code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>exchange</code></td>
-<td>use a supported exchange from <a href="../../supported_data/#exchanges">Exchanges</a></td>
+<td><code>EXCHANGE_LITERAL</code></td>
+<td>-</td>
+<td>Exchange name, validated with <code>symbol</code></td>
 </tr>
 <tr>
 <td><code>symbol</code></td>
-<td>symbol slug such as <code>AAPL</code></td>
+<td><code>str</code></td>
+<td>-</td>
+<td>Trading symbol</td>
 </tr>
 <tr>
 <td><code>limit</code></td>
-<td>optional final slice of the collected rows</td>
+<td><code>int \| None</code></td>
+<td><code>None</code></td>
+<td>Optional final output cap</td>
 </tr>
 </tbody>
 </table>
-<p><code>limit</code> is applied after pagination finishes.</p>
-<div class="admonition failure">
-<p class="admonition-title">wrong input</p>
-<p>This fails because <code>exchange</code> and <code>symbol</code> must still be separate.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">scraper</span><span class="o">.</span><span class="n">get_minds</span><span class="p">(</span><span class="n">exchange</span><span class="o">=</span><span class="s2">&quot;NASDAQ:AAPL&quot;</span><span class="p">,</span> <span class="n">symbol</span><span class="o">=</span><span class="s2">&quot;AAPL&quot;</span><span class="p">)</span>
-</span></code></pre></div>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Notes</p>
+<p><code>limit</code> behavior exactly as implemented:</p>
 <ul>
-<li>The scraper stops after <code>MAX_PAGES = 100</code> even if more pages exist.</li>
-<li><code>symbol_info</code> is included in success metadata when available.</li>
-<li>If a later page fails, the method returns <code>status="failed"</code> and does not return partial rows in <code>data</code>.</li>
+<li>If <code>limit is None</code>, no truncation is applied.</li>
+<li>If <code>limit</code> is provided and <code>len(parsed_data) &gt; limit</code>, the final list is sliced with <code>parsed_data[:limit]</code>.</li>
+<li>Truncation happens after pagination finishes.</li>
+<li><code>limit</code> is included in <code>metadata</code> only when it is not <code>None</code>.</li>
 </ul>
-</div>
+<h2 id="cursor-pagination">Cursor Pagination</h2>
+<p>Pagination flow in <code>get_minds</code>:</p>
+<ol>
+<li>Build <code>combined_symbol = f'{exchange}:{symbol}'</code>.</li>
+<li>Request first page with params <code>{'symbol': combined_symbol}</code>.</li>
+<li>If a cursor exists, request next pages with param <code>c</code>.</li>
+<li>Read cursor from <code>next</code> only if <code>'?c='</code> exists.</li>
+<li>Cursor extraction uses the first value after <code>'?c='</code> up to <code>&amp;</code>.</li>
+</ol>
+<p>The loop stops when:</p>
+<ul>
+<li><code>results</code> is empty</li>
+<li><code>next</code> is empty</li>
+<li><code>next</code> does not contain <code>'?c='</code></li>
+<li>cursor value after <code>'?c='</code> is empty</li>
+<li><code>pages &gt;= MAX_PAGES</code> before a new request</li>
+</ul>
+<h2 id="max_pages-safeguard">MAX_PAGES Safeguard</h2>
+<p><code>MAX_PAGES = 100</code>.</p>
+<p>When the cap is reached, the scraper logs a warning and stops fetching more pages. It still returns a success response with the data collected so far.</p>
+<h2 id="parsed-output-schema">Parsed Output Schema</h2>
+<p>Each result item is normalized by <code>_parse_mind</code> to:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Source / behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>text</code></td>
+<td><code>str</code></td>
+<td><code>item.get('text', '')</code></td>
+</tr>
+<tr>
+<td><code>url</code></td>
+<td><code>str</code></td>
+<td><code>item.get('url', '')</code> (kept as-is, often relative)</td>
+</tr>
+<tr>
+<td><code>author.username</code></td>
+<td><code>str \| None</code></td>
+<td><code>author.get('username')</code></td>
+</tr>
+<tr>
+<td><code>author.profile_url</code></td>
+<td><code>str</code></td>
+<td><code>author.get('uri', '')</code>; prefixed with <code>https://www.tradingview.com</code> when URI does not start with <code>http</code></td>
+</tr>
+<tr>
+<td><code>author.is_broker</code></td>
+<td><code>bool</code></td>
+<td><code>author.get('is_broker', False)</code></td>
+</tr>
+<tr>
+<td><code>created</code></td>
+<td><code>str</code></td>
+<td>Parsed and formatted, or original value on parse failure</td>
+</tr>
+<tr>
+<td><code>total_likes</code></td>
+<td><code>int</code></td>
+<td><code>item.get('total_likes', 0)</code></td>
+</tr>
+<tr>
+<td><code>total_comments</code></td>
+<td><code>int</code></td>
+<td><code>item.get('total_comments', 0)</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="timestamp-formatting">Timestamp Formatting</h3>
+<p>Formatting logic is:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">created_datetime</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">fromisoformat</span><span class="p">(</span><span class="n">created</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;Z&#39;</span><span class="p">,</span> <span class="s1">&#39;+00:00&#39;</span><span class="p">))</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">created_formatted</span> <span class="o">=</span> <span class="n">created_datetime</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span><span class="p">)</span>
+</span></code></pre></div>
+<p>If parsing raises <code>ValueError</code> or <code>AttributeError</code>, <code>created</code> is returned unchanged.</p>
+<h2 id="response-envelope">Response Envelope</h2>
+<p>Success response shape:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="s1">&#39;success&#39;</span><span class="p">,</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="p">[</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>        <span class="p">{</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>            <span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="s1">&#39;Test mind&#39;</span><span class="p">,</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>            <span class="s1">&#39;url&#39;</span><span class="p">:</span> <span class="s1">&#39;/mind/1&#39;</span><span class="p">,</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>            <span class="s1">&#39;author&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>                <span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="s1">&#39;user&#39;</span><span class="p">,</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>                <span class="s1">&#39;profile_url&#39;</span><span class="p">:</span> <span class="s1">&#39;https://www.tradingview.com/u/user&#39;</span><span class="p">,</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>                <span class="s1">&#39;is_broker&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>            <span class="p">},</span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>            <span class="s1">&#39;created&#39;</span><span class="p">:</span> <span class="s1">&#39;2024-01-01 00:00:00&#39;</span><span class="p">,</span>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>            <span class="s1">&#39;total_likes&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>            <span class="s1">&#39;total_comments&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>        <span class="p">}</span>
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>    <span class="p">],</span>
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>    <span class="s1">&#39;metadata&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>        <span class="s1">&#39;exchange&#39;</span><span class="p">:</span> <span class="s1">&#39;NASDAQ&#39;</span><span class="p">,</span>
+</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>        <span class="s1">&#39;symbol&#39;</span><span class="p">:</span> <span class="s1">&#39;AAPL&#39;</span><span class="p">,</span>
+</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>        <span class="s1">&#39;limit&#39;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
+</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>        <span class="s1">&#39;total&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>        <span class="s1">&#39;pages&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+</span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>        <span class="s1">&#39;symbol_info&#39;</span><span class="p">:</span> <span class="p">{},</span>
+</span><span id="__span-3-24"><a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>    <span class="p">},</span>
+</span><span id="__span-3-25"><a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>    <span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-3-26"><a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Metadata details:</p>
+<ul>
+<li><code>@catch_errors</code> captures function args into metadata (<code>exchange</code>, <code>symbol</code>, and <code>limit</code> when not <code>None</code>).</li>
+<li><code>get_minds</code> adds <code>total</code>, <code>pages</code>, and <code>symbol_info</code> on success.</li>
+<li><code>symbol_info</code> is read from <code>meta.symbols_info[combined_symbol]</code> on the first page, or from the first empty page response when no rows are returned.</li>
+</ul>
+<h2 id="failure-behavior">Failure Behavior</h2>
+<p><code>get_minds</code> returns failed envelopes (does not raise) for:</p>
+<ul>
+<li>validation errors from <code>validators.verify_symbol_exchange</code></li>
+<li>request errors returned by <code>_request</code> (network, captcha, HTTP, parse)</li>
+<li>unexpected runtime exceptions (wrapped by <code>@catch_errors</code> with prefix <code>Unexpected error:</code>)</li>
+</ul>
+<p>Failure response shape:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="s1">&#39;failed&#39;</span><span class="p">,</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="s1">&#39;metadata&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>        <span class="s1">&#39;exchange&#39;</span><span class="p">:</span> <span class="s1">&#39;NASDAQ&#39;</span><span class="p">,</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>        <span class="s1">&#39;symbol&#39;</span><span class="p">:</span> <span class="s1">&#39;AAPL&#39;</span><span class="p">,</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    <span class="p">},</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    <span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="s1">&#39;Network error: ...&#39;</span><span class="p">,</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>If a request failure happens after some pages were already fetched, the method returns <code>data=None</code> and does not include partial rows in the failed response.</p>
+<h2 id="examples">Examples</h2>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">tv_scraper.scrapers.social</span><span class="w"> </span><span class="kn">import</span> <span class="n">Minds</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">scraper</span> <span class="o">=</span> <span class="n">Minds</span><span class="p">()</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="n">result</span> <span class="o">=</span> <span class="n">scraper</span><span class="o">.</span><span class="n">get_minds</span><span class="p">(</span><span class="n">exchange</span><span class="o">=</span><span class="s1">&#39;NYSE&#39;</span><span class="p">,</span> <span class="n">symbol</span><span class="o">=</span><span class="s1">&#39;BRK.B&#39;</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;success&#39;</span><span class="p">:</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;metadata&#39;</span><span class="p">][</span><span class="s1">&#39;total&#39;</span><span class="p">])</span>
+</span></code></pre></div>
 
 
 

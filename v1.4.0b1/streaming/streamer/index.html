@@ -16,7 +16,7 @@
         <link rel="prev" href="../forecast_streamer/">
       
       
-        <link rel="next" href="../../scrapers/pine/">
+        <link rel="next" href="../base_streamer/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>Streamer (Legacy Wrapper) - tv-scraper</title>
+        <title>Streamer (Convenience Wrapper) - tv-scraper</title>
       
     
     
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#streamer-legacy-wrapper" class="md-skip">
+        <a href="#streamer-api" class="md-skip">
           Skip to content
         </a>
       
@@ -120,7 +120,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Streamer (Legacy Wrapper)
+              Streamer (Convenience Wrapper)
             
           </span>
         </div>
@@ -327,6 +327,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../../architecture.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../api-conventions/" class="md-nav__link">
         
   
@@ -334,7 +361,7 @@
   <span class="md-ellipsis">
     
   
-    API Basics
+    API Conventions
   
 
     
@@ -368,6 +395,8 @@
       
         
       
+        
+      
     
     
     
@@ -381,7 +410,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
         
           
           <div class="md-nav__link md-nav__container">
@@ -403,14 +432,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_4">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -501,7 +530,7 @@
   <span class="md-ellipsis">
     
   
-    Streamer (Legacy Wrapper)
+    Streamer (Convenience Wrapper)
   
 
     
@@ -519,7 +548,7 @@
   <span class="md-ellipsis">
     
   
-    Streamer (Legacy Wrapper)
+    Streamer (Convenience Wrapper)
   
 
     
@@ -545,10 +574,38 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#what-it-still-does" class="md-nav__link">
+  <a href="#constructor" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What It Still Does
+        Constructor
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Constructor">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#method-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method Summary
       
     </span>
   </a>
@@ -556,10 +613,199 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#replacement-mapping" class="md-nav__link">
+  <a href="#get_candles-proxy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Replacement Mapping
+        get_candles() (Proxy)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="get_candles() (Proxy)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#proxy-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proxy behavior
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validation-and-metadata-origin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation and metadata origin
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#response-shape" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Response shape
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#get_forecast-proxy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_forecast() (Proxy)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="get_forecast() (Proxy)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#proxy-behavior_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proxy behavior
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validation-and-metadata-origin_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation and metadata origin
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#forecast-output-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Forecast output keys
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stream_realtime_price-generator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        stream_realtime_price() (Generator)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="stream_realtime_price() (Generator)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#execution-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Execution model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#session-and-subscription-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Session and subscription flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#yielded-dict-shapes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Yielded dict shapes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Yielded dict shapes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#from-qsd-packets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From qsd packets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#from-du-packets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From du packets
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generator-termination" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generator termination
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#get_available_indicators" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_available_indicators()
       
     </span>
   </a>
@@ -567,10 +813,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#recommendation" class="md-nav__link">
+  <a href="#export-behavior-exact" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Recommendation
+        Export Behavior (Exact)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#metadata-and-error-nuances" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metadata and Error Nuances
       
     </span>
   </a>
@@ -581,6 +838,34 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../base_streamer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extending (BaseStreamer)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -641,10 +926,10 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
             
   
   
@@ -662,8 +947,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1026,12 +1311,6 @@
     
       
         
-          
-        
-      
-        
-      
-        
       
         
       
@@ -1050,12 +1329,11 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
         
           
-          <div class="md-nav__link md-nav__container">
-            <a href="../../reference/" class="md-nav__link ">
-              
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
   
   
   <span class="md-ellipsis">
@@ -1069,17 +1347,11 @@
   
   
 
-            </a>
-            
-              
-              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="">
-                <span class="md-nav__icon md-icon"></span>
-              </label>
-            
-          </div>
+            <span class="md-nav__icon md-icon"></span>
+          </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1088,8 +1360,6 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
-            
-              
             
               
                 
@@ -1105,35 +1375,7 @@
   <span class="md-ellipsis">
     
   
-    Validation & Supported Values
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/releases/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Releases & Versioning
+    Supported Data
   
 
     
@@ -1236,10 +1478,38 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#what-it-still-does" class="md-nav__link">
+  <a href="#constructor" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What It Still Does
+        Constructor
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Constructor">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#method-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method Summary
       
     </span>
   </a>
@@ -1247,10 +1517,199 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#replacement-mapping" class="md-nav__link">
+  <a href="#get_candles-proxy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Replacement Mapping
+        get_candles() (Proxy)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="get_candles() (Proxy)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#proxy-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proxy behavior
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validation-and-metadata-origin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation and metadata origin
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#response-shape" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Response shape
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#get_forecast-proxy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_forecast() (Proxy)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="get_forecast() (Proxy)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#proxy-behavior_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proxy behavior
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validation-and-metadata-origin_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation and metadata origin
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#forecast-output-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Forecast output keys
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stream_realtime_price-generator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        stream_realtime_price() (Generator)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="stream_realtime_price() (Generator)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#execution-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Execution model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#session-and-subscription-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Session and subscription flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#yielded-dict-shapes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Yielded dict shapes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Yielded dict shapes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#from-qsd-packets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From qsd packets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#from-du-packets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From du packets
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generator-termination" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generator termination
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#get_available_indicators" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_available_indicators()
       
     </span>
   </a>
@@ -1258,10 +1717,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#recommendation" class="md-nav__link">
+  <a href="#export-behavior-exact" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Recommendation
+        Export Behavior (Exact)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#metadata-and-error-nuances" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metadata and Error Nuances
       
     </span>
   </a>
@@ -1288,97 +1758,277 @@
   
 
 
-<h1 id="streamer-legacy-wrapper">Streamer (Legacy Wrapper)</h1>
-<div class="admonition warning">
-<p class="admonition-title">Deprecated</p>
-<p><code>Streamer</code> is deprecated. New code should use <a href="../candle_streamer/">CandleStreamer</a> and <a href="../forecast_streamer/">ForecastStreamer</a> directly.</p>
-</div>
-<div class="admonition info">
-<p class="admonition-title">Version Note</p>
-<p>The deprecation is documented in the current changelog for the post-<code>1.4.0b1</code> line of development.</p>
-</div>
-<h2 id="what-it-still-does">What It Still Does</h2>
-<p><code>Streamer</code> keeps the older combined interface:</p>
+<h1 id="streamer-api">Streamer API</h1>
+<p><code>Streamer</code> is a convenience class that combines:</p>
 <ul>
-<li><code>get_candles(...)</code></li>
-<li><code>get_forecast(...)</code></li>
-<li><code>stream_realtime_price(...)</code></li>
-<li><code>get_available_indicators()</code></li>
+<li><code>CandleStreamer.get_candles()</code> via proxy</li>
+<li><code>ForecastStreamer.get_forecast()</code> via proxy</li>
+<li><code>stream_realtime_price()</code> implemented directly in <code>Streamer</code></li>
 </ul>
-<p>Internally:</p>
-<ul>
-<li>candle-related calls delegate to <code>CandleStreamer</code></li>
-<li>forecast calls delegate to <code>ForecastStreamer</code></li>
-</ul>
-<h2 id="replacement-mapping">Replacement Mapping</h2>
+<p>This page documents the behavior of <code>tv_scraper/streaming/streamer.py</code> exactly, including proxy and export side effects.</p>
+<h2 id="constructor">Constructor</h2>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">tv_scraper.streaming</span><span class="w"> </span><span class="kn">import</span> <span class="n">Streamer</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">s</span> <span class="o">=</span> <span class="n">Streamer</span><span class="p">(</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">export_result</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">export_type</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">,</span>   <span class="c1"># &quot;json&quot; or &quot;csv&quot;</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">cookie</span><span class="o">=</span><span class="s2">&quot;&lt;TRADINGVIEW_COOKIE&gt;&quot;</span><span class="p">,</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="parameters">Parameters</h3>
 <table>
 <thead>
 <tr>
-<th>Legacy call</th>
-<th>Preferred replacement</th>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>Streamer.get_candles(...)</code></td>
-<td><code>CandleStreamer.get_candles(...)</code></td>
+<td><code>export_result</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td>Enables export writing in both proxy methods and underlying streamers</td>
 </tr>
 <tr>
-<td><code>Streamer.stream_realtime_price(...)</code></td>
-<td><code>CandleStreamer.stream_realtime_price(...)</code></td>
+<td><code>export_type</code></td>
+<td><code>str</code></td>
+<td><code>"json"</code></td>
+<td>Export format (<code>"json"</code> or <code>"csv"</code>)</td>
 </tr>
 <tr>
-<td><code>Streamer.get_available_indicators()</code></td>
-<td><code>CandleStreamer.get_available_indicators()</code></td>
-</tr>
-<tr>
-<td><code>Streamer.get_forecast(...)</code></td>
-<td><code>ForecastStreamer.get_forecast(...)</code></td>
+<td><code>cookie</code></td>
+<td><code>str \| None</code></td>
+<td><code>None</code></td>
+<td>TradingView cookie used for JWT resolution in WebSocket connections</td>
 </tr>
 </tbody>
 </table>
-<div class="admonition tip">
-<p class="admonition-title">Legacy Example</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">tv_scraper.streaming</span><span class="w"> </span><span class="kn">import</span> <span class="n">Streamer</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">streamer</span> <span class="o">=</span> <span class="n">Streamer</span><span class="p">()</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">result</span> <span class="o">=</span> <span class="n">streamer</span><span class="o">.</span><span class="n">get_candles</span><span class="p">(</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">exchange</span><span class="o">=</span><span class="s2">&quot;BINANCE&quot;</span><span class="p">,</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">symbol</span><span class="o">=</span><span class="s2">&quot;BTCUSDT&quot;</span><span class="p">,</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">timeframe</span><span class="o">=</span><span class="s2">&quot;1h&quot;</span><span class="p">,</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">numb_candles</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="p">)</span>
+<h2 id="method-summary">Method Summary</h2>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Kind</th>
+<th>Returns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>get_candles()</code></td>
+<td>Proxy to <code>CandleStreamer.get_candles()</code></td>
+<td>Standard response envelope</td>
+</tr>
+<tr>
+<td><code>get_forecast()</code></td>
+<td>Proxy to <code>ForecastStreamer.get_forecast()</code></td>
+<td>Standard response envelope</td>
+</tr>
+<tr>
+<td><code>stream_realtime_price()</code></td>
+<td>Native <code>Streamer</code> implementation</td>
+<td><code>Generator[dict[str, Any], None, None]</code></td>
+</tr>
+<tr>
+<td><code>get_available_indicators()</code></td>
+<td>Static passthrough</td>
+<td>Standard response envelope</td>
+</tr>
+</tbody>
+</table>
+<h2 id="get_candles-proxy"><code>get_candles()</code> (Proxy)</h2>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">result</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">get_candles</span><span class="p">(</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="n">exchange</span><span class="o">=</span><span class="s2">&quot;BINANCE&quot;</span><span class="p">,</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">symbol</span><span class="o">=</span><span class="s2">&quot;BTCUSDT&quot;</span><span class="p">,</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="n">timeframe</span><span class="o">=</span><span class="s2">&quot;1h&quot;</span><span class="p">,</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="n">numb_candles</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="n">indicators</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;STD;RSI&quot;</span><span class="p">,</span> <span class="s2">&quot;37.0&quot;</span><span class="p">)],</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="p">)</span>
 </span></code></pre></div>
-<p>Output structure:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>        <span class="s2">&quot;ohlcv&quot;</span><span class="p">:</span> <span class="p">[</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>            <span class="p">{</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>                <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>                <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="mi">1700000000</span><span class="p">,</span>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>                <span class="s2">&quot;open&quot;</span><span class="p">:</span> <span class="mf">185.0</span><span class="p">,</span>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>                <span class="s2">&quot;high&quot;</span><span class="p">:</span> <span class="mf">187.0</span><span class="p">,</span>
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>                <span class="s2">&quot;low&quot;</span><span class="p">:</span> <span class="mf">184.0</span><span class="p">,</span>
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>                <span class="s2">&quot;close&quot;</span><span class="p">:</span> <span class="mf">186.0</span><span class="p">,</span>
-</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>                <span class="s2">&quot;volume&quot;</span><span class="p">:</span> <span class="mi">50000000</span><span class="p">,</span>
-</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>            <span class="p">},</span>
-</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>            <span class="c1"># ... more candles (one row per candle index)</span>
-</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>        <span class="p">],</span>
-</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>        <span class="s2">&quot;indicators&quot;</span><span class="p">:</span> <span class="p">{},</span>
-</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    <span class="p">},</span>
-</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>    <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>        <span class="s2">&quot;exchange&quot;</span><span class="p">:</span> <span class="s2">&quot;BINANCE&quot;</span><span class="p">,</span>
-</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>        <span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="s2">&quot;BTCUSDT&quot;</span><span class="p">,</span>
-</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>        <span class="s2">&quot;timeframe&quot;</span><span class="p">:</span> <span class="s2">&quot;1h&quot;</span><span class="p">,</span>
-</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>        <span class="s2">&quot;numb_candles&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
-</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>    <span class="p">},</span>
-</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="p">}</span>
+<h3 id="proxy-behavior">Proxy behavior</h3>
+<ol>
+<li>Calls <code>self._candle_streamer.get_candles(...)</code> with the same arguments.</li>
+<li>Returns that response object unchanged.</li>
+<li>If <code>self.export_result</code> is <code>True</code> and returned <code>status == "success"</code>, it also calls:
+   <code>self._export(result["data"], symbol, "get_candles")</code>.</li>
+</ol>
+<h3 id="validation-and-metadata-origin">Validation and metadata origin</h3>
+<ul>
+<li>Validation is performed inside <code>CandleStreamer.get_candles()</code>:</li>
+<li><code>verify_symbol_exchange(exchange, symbol)</code></li>
+<li><code>validate_timeframe(timeframe)</code></li>
+<li><code>validate_range("numb_candles", numb_candles, 1, 5000)</code></li>
+<li>Standard response envelope is produced by the underlying method.</li>
+<li>Metadata is therefore sourced from the underlying <code>CandleStreamer</code> call.</li>
+</ul>
+<h3 id="response-shape">Response shape</h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span> <span class="o">|</span> <span class="s2">&quot;failed&quot;</span><span class="p">,</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>        <span class="s2">&quot;ohlcv&quot;</span><span class="p">:</span> <span class="p">[</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>            <span class="p">{</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>                <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>                <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>                <span class="s2">&quot;open&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>                <span class="s2">&quot;high&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>                <span class="s2">&quot;low&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>                <span class="s2">&quot;close&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>                <span class="s2">&quot;volume&quot;</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># optional if not present in packet</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>            <span class="p">}</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>        <span class="p">],</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>        <span class="s2">&quot;indicators&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>            <span class="s2">&quot;STD;RSI&quot;</span><span class="p">:</span> <span class="p">[</span>
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>                <span class="p">{</span><span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">}</span>
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>            <span class="p">]</span>
+</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>        <span class="p">}</span>
+</span><span id="__span-2-20"><a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>    <span class="p">}</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-2-21"><a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>    <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="__span-2-22"><a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>        <span class="s2">&quot;exchange&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+</span><span id="__span-2-23"><a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>        <span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+</span><span id="__span-2-24"><a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>        <span class="s2">&quot;timeframe&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+</span><span id="__span-2-25"><a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>        <span class="s2">&quot;numb_candles&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+</span><span id="__span-2-26"><a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>        <span class="c1"># included only when provided:</span>
+</span><span id="__span-2-27"><a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>        <span class="s2">&quot;indicators&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span>
+</span><span id="__span-2-28"><a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>    <span class="p">},</span>
+</span><span id="__span-2-29"><a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="kc">None</span> <span class="o">|</span> <span class="nb">str</span>
+</span><span id="__span-2-30"><a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a><span class="p">}</span>
 </span></code></pre></div>
-</div>
-<h2 id="recommendation">Recommendation</h2>
-<p>Keep this page only for migration or backward compatibility. For new examples, prefer the dedicated streamer classes.</p>
+<h2 id="get_forecast-proxy"><code>get_forecast()</code> (Proxy)</h2>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">result</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">get_forecast</span><span class="p">(</span><span class="n">exchange</span><span class="o">=</span><span class="s2">&quot;NASDAQ&quot;</span><span class="p">,</span> <span class="n">symbol</span><span class="o">=</span><span class="s2">&quot;AAPL&quot;</span><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="proxy-behavior_1">Proxy behavior</h3>
+<ol>
+<li>Calls <code>self._forecast_streamer.get_forecast(exchange=..., symbol=...)</code>.</li>
+<li>Returns that response object unchanged.</li>
+<li>If <code>self.export_result</code> is <code>True</code> and returned <code>status == "success"</code>, it also calls:
+   <code>self._export(result["data"], symbol, "forecast")</code>.</li>
+</ol>
+<h3 id="validation-and-metadata-origin_1">Validation and metadata origin</h3>
+<ul>
+<li>Validation is performed inside <code>ForecastStreamer.get_forecast()</code>:</li>
+<li><code>verify_symbol_exchange(exchange, symbol)</code></li>
+<li>Symbol type lookup via scanner endpoint (<code>fields=type</code>)</li>
+<li>Forecast allowed only when <code>type == "stock"</code></li>
+<li>On partial data, returned envelope is failed with <code>data</code> containing keys mapped from forecast sources and metadata including <code>available_output_keys</code>.</li>
+</ul>
+<h3 id="forecast-output-keys">Forecast output keys</h3>
+<p><code>data</code> always uses these output keys:</p>
+<ul>
+<li><code>revenue_currency</code></li>
+<li><code>previous_close_price</code></li>
+<li><code>average_price_target</code></li>
+<li><code>highest_price_target</code></li>
+<li><code>lowest_price_target</code></li>
+<li><code>median_price_target</code></li>
+<li><code>yearly_eps_data</code></li>
+<li><code>quarterly_eps_data</code></li>
+<li><code>yearly_revenue_data</code></li>
+<li><code>quarterly_revenue_data</code></li>
+</ul>
+<p>If any value is missing, status is <code>"failed"</code> and error starts with <code>"failed to fetch keys:"</code>.</p>
+<h2 id="stream_realtime_price-generator"><code>stream_realtime_price()</code> (Generator)</h2>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">for</span> <span class="n">tick</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">stream_realtime_price</span><span class="p">(</span><span class="n">exchange</span><span class="o">=</span><span class="s2">&quot;BINANCE&quot;</span><span class="p">,</span> <span class="n">symbol</span><span class="o">=</span><span class="s2">&quot;BTCUSDT&quot;</span><span class="p">):</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">tick</span><span class="p">)</span>
+</span></code></pre></div>
+<p>This method is not wrapped by <code>@catch_errors</code> and does not return the standard envelope.</p>
+<h3 id="execution-model">Execution model</h3>
+<ul>
+<li>Return type: <code>Generator[dict[str, Any], None, None]</code></li>
+<li>Validation and connection setup happen when the generator is iterated:</li>
+<li><code>verify_symbol_exchange(exchange, symbol)</code></li>
+<li><code>format_symbol(exchange, normalized_symbol)</code></li>
+<li><code>self.connect()</code></li>
+</ul>
+<h3 id="session-and-subscription-flow">Session and subscription flow</h3>
+<p><code>self.connect()</code> creates <code>StreamHandler</code>, which initializes:</p>
+<ol>
+<li><code>set_auth_token</code></li>
+<li><code>set_locale</code></li>
+<li><code>chart_create_session</code></li>
+<li><code>quote_create_session</code></li>
+<li><code>quote_set_fields</code></li>
+<li><code>quote_hibernate_all</code></li>
+</ol>
+<p>Then <code>stream_realtime_price()</code> sends:</p>
+<ol>
+<li><code>quote_add_symbols</code> with resolved symbol payload</li>
+<li><code>quote_fast_symbols</code></li>
+<li><code>resolve_symbol</code> on chart session (<code>"sds_sym_1"</code>)</li>
+<li><code>create_series</code> for <code>"sds_1"</code> with timeframe mapped from <code>TIMEFRAMES["1m"]</code> (fallback <code>"1"</code>) and series length <code>1</code></li>
+</ol>
+<h3 id="yielded-dict-shapes">Yielded dict shapes</h3>
+<h4 id="from-qsd-packets">From <code>qsd</code> packets</h4>
+<p>Yielded only when <code>lp</code> exists:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="s2">&quot;exchange&quot;</span><span class="p">:</span> <span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;exchange&quot;</span><span class="p">,</span> <span class="n">exchange</span><span class="p">),</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;short_name&quot;</span><span class="p">,</span> <span class="n">symbol</span><span class="p">),</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="s2">&quot;price&quot;</span><span class="p">:</span> <span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;lp&quot;</span><span class="p">),</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="s2">&quot;volume&quot;</span><span class="p">:</span> <span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;volume&quot;</span><span class="p">),</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    <span class="s2">&quot;change&quot;</span><span class="p">:</span> <span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ch&quot;</span><span class="p">),</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    <span class="s2">&quot;change_percent&quot;</span><span class="p">:</span> <span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;chp&quot;</span><span class="p">),</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    <span class="s2">&quot;high&quot;</span><span class="p">:</span> <span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;high_price&quot;</span><span class="p">),</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>    <span class="s2">&quot;low&quot;</span><span class="p">:</span> <span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;low_price&quot;</span><span class="p">),</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>    <span class="s2">&quot;open&quot;</span><span class="p">:</span> <span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;open_price&quot;</span><span class="p">),</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>    <span class="s2">&quot;prev_close&quot;</span><span class="p">:</span> <span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;prev_close_price&quot;</span><span class="p">),</span>
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>    <span class="s2">&quot;bid&quot;</span><span class="p">:</span> <span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;bid&quot;</span><span class="p">),</span>
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>    <span class="s2">&quot;ask&quot;</span><span class="p">:</span> <span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ask&quot;</span><span class="p">),</span>
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="p">}</span>
+</span></code></pre></div>
+<h4 id="from-du-packets">From <code>du</code> packets</h4>
+<p>For each entry in <code>p[1]["sds_1"]["s"]</code> where <code>len(entry["v"]) &gt;= 5</code>:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p">{</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    <span class="s2">&quot;exchange&quot;</span><span class="p">:</span> <span class="n">exchange</span><span class="p">,</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="n">symbol</span><span class="p">,</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="s2">&quot;price&quot;</span><span class="p">:</span> <span class="n">close_price</span><span class="p">,</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    <span class="s2">&quot;volume&quot;</span><span class="p">:</span> <span class="n">volume_or_none</span><span class="p">,</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="s2">&quot;change&quot;</span><span class="p">:</span> <span class="n">close_price</span> <span class="o">-</span> <span class="n">last_price</span> <span class="k">if</span> <span class="n">last_price</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    <span class="s2">&quot;change_percent&quot;</span><span class="p">:</span> <span class="p">((</span><span class="n">change</span> <span class="o">/</span> <span class="n">last_price</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span> <span class="k">if</span> <span class="n">last_price</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">else</span> <span class="p">(</span><span class="mi">0</span> <span class="k">if</span> <span class="n">last_price</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="kc">None</span><span class="p">),</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>    <span class="s2">&quot;high&quot;</span><span class="p">:</span> <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;v&quot;</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>    <span class="s2">&quot;low&quot;</span><span class="p">:</span> <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;v&quot;</span><span class="p">][</span><span class="mi">3</span><span class="p">],</span>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>    <span class="s2">&quot;open&quot;</span><span class="p">:</span> <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;v&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>    <span class="s2">&quot;prev_close&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>    <span class="s2">&quot;bid&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>    <span class="s2">&quot;ask&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="p">}</span>
+</span></code></pre></div>
+<p><code>last_price</code> is updated from both <code>qsd</code> (<code>lp</code>) and <code>du</code> (<code>close_price</code>).</p>
+<h3 id="generator-termination">Generator termination</h3>
+<p>The method has no explicit stop condition. It ends when <code>handler.receive_packets()</code> ends (for example, WebSocket close/error).</p>
+<h2 id="get_available_indicators"><code>get_available_indicators()</code></h2>
+<p>Static method that directly returns <code>fetch_available_indicators()</code>.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">result</span> <span class="o">=</span> <span class="n">Streamer</span><span class="o">.</span><span class="n">get_available_indicators</span><span class="p">()</span>
+</span></code></pre></div>
+<p>Behavior:</p>
+<ul>
+<li>No use of instance state</li>
+<li>Returns standard envelope from <code>fetch_available_indicators()</code></li>
+<li>Metadata is empty unless that utility changes</li>
+</ul>
+<h2 id="export-behavior-exact">Export Behavior (Exact)</h2>
+<p>When <code>export_result=True</code>:</p>
+<ul>
+<li><code>get_candles()</code> can attempt export twice on success:</li>
+<li>inside <code>CandleStreamer.get_candles()</code></li>
+<li>again inside <code>Streamer.get_candles()</code></li>
+<li><code>get_forecast()</code> can attempt export twice on success:</li>
+<li>inside <code>ForecastStreamer.get_forecast()</code></li>
+<li>again inside <code>Streamer.get_forecast()</code></li>
+</ul>
+<p>Export categories used by the proxy methods are:</p>
+<ul>
+<li><code>get_candles</code></li>
+<li><code>forecast</code></li>
+</ul>
+<p>Filenames are generated under <code>export/</code> by <code>generate_export_filepath(...)</code>.</p>
+<h2 id="metadata-and-error-nuances">Metadata and Error Nuances</h2>
+<ol>
+<li><code>get_candles()</code> and <code>get_forecast()</code> are decorated with <code>@catch_errors</code>, but on normal execution they return the delegated streamer's envelope unchanged.</li>
+<li>If an exception happens in proxy-only code (for example, proxy export call), proxy-level <code>@catch_errors</code> can replace the delegated response with a new failed envelope.</li>
+<li>Metadata values in success/failure envelopes come from the delegated methods in the normal path.</li>
+<li><code>stream_realtime_price()</code> does not use envelope wrapping; validation/network errors can propagate during iteration.</li>
+</ol>
 
 
 
@@ -1433,13 +2083,13 @@
         
         
           
-          <a href="../../scrapers/pine/" class="md-footer__link md-footer__link--next" aria-label="Next: Pine">
+          <a href="../base_streamer/" class="md-footer__link md-footer__link--next" aria-label="Next: Extending (BaseStreamer)">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Pine
+                Extending (BaseStreamer)
               </div>
             </div>
             <div class="md-footer__button md-icon">

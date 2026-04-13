@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#candlestreamer" class="md-skip">
+        <a href="#candlestreamer-api" class="md-skip">
           Skip to content
         </a>
       
@@ -327,6 +327,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../../architecture.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../api-conventions/" class="md-nav__link">
         
   
@@ -334,7 +361,7 @@
   <span class="md-ellipsis">
     
   
-    API Basics
+    API Conventions
   
 
     
@@ -368,6 +395,8 @@
       
         
       
+        
+      
     
     
     
@@ -381,7 +410,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
         
           
           <div class="md-nav__link md-nav__container">
@@ -403,14 +432,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_4">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -489,44 +518,33 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#quick-use" class="md-nav__link">
+  <a href="#installation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Quick Use
+        Installation
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Quick Use">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#constructor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Constructor
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Constructor">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#candles-only" class="md-nav__link">
+  <a href="#parameters" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Candles only
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#candles-with-indicators" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Candles with indicators
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#realtime-prices" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Realtime prices
+        Parameters
       
     </span>
   </a>
@@ -539,10 +557,99 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#inputs" class="md-nav__link">
+  <a href="#method" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Inputs
+        Method
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Method">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#get_candles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_candles()
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validation-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation Rules
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Validation Rules">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exchange-and-symbol-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exchange and symbol verification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#timeframe-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Timeframe validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#candle-count-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Candle count validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#indicator-input-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Indicator input validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#timeframe-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Timeframe Behavior
       
     </span>
   </a>
@@ -550,10 +657,71 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#finding-indicator-ids" class="md-nav__link">
+  <a href="#indicator-handling" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Finding Indicator IDs
+        Indicator Handling
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stop-conditions-and-timeout-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stop Conditions and Timeout Behavior
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#output-schema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output Schema
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Output Schema">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#success-payload-statussuccess" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Success payload (status="success")
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#failure-paths" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failure Paths
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#connect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        connect()
       
     </span>
   </a>
@@ -611,7 +779,35 @@
   <span class="md-ellipsis">
     
   
-    Streamer (Legacy Wrapper)
+    Streamer (Convenience Wrapper)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../base_streamer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extending (BaseStreamer)
   
 
     
@@ -680,10 +876,10 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
             
   
   
@@ -701,8 +897,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1065,12 +1261,6 @@
     
       
         
-          
-        
-      
-        
-      
-        
       
         
       
@@ -1089,12 +1279,11 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
         
           
-          <div class="md-nav__link md-nav__container">
-            <a href="../../reference/" class="md-nav__link ">
-              
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
   
   
   <span class="md-ellipsis">
@@ -1108,17 +1297,11 @@
   
   
 
-            </a>
-            
-              
-              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="">
-                <span class="md-nav__icon md-icon"></span>
-              </label>
-            
-          </div>
+            <span class="md-nav__icon md-icon"></span>
+          </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1127,8 +1310,6 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
-            
-              
             
               
                 
@@ -1144,35 +1325,7 @@
   <span class="md-ellipsis">
     
   
-    Validation & Supported Values
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/releases/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Releases & Versioning
+    Supported Data
   
 
     
@@ -1275,44 +1428,33 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#quick-use" class="md-nav__link">
+  <a href="#installation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Quick Use
+        Installation
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Quick Use">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#constructor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Constructor
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Constructor">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#candles-only" class="md-nav__link">
+  <a href="#parameters" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Candles only
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#candles-with-indicators" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Candles with indicators
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#realtime-prices" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Realtime prices
+        Parameters
       
     </span>
   </a>
@@ -1325,10 +1467,99 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#inputs" class="md-nav__link">
+  <a href="#method" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Inputs
+        Method
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Method">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#get_candles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_candles()
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validation-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation Rules
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Validation Rules">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exchange-and-symbol-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exchange and symbol verification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#timeframe-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Timeframe validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#candle-count-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Candle count validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#indicator-input-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Indicator input validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#timeframe-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Timeframe Behavior
       
     </span>
   </a>
@@ -1336,10 +1567,71 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#finding-indicator-ids" class="md-nav__link">
+  <a href="#indicator-handling" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Finding Indicator IDs
+        Indicator Handling
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stop-conditions-and-timeout-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stop Conditions and Timeout Behavior
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#output-schema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output Schema
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Output Schema">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#success-payload-statussuccess" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Success payload (status="success")
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#failure-paths" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failure Paths
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#connect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        connect()
       
     </span>
   </a>
@@ -1366,168 +1658,261 @@
   
 
 
-<h1 id="candlestreamer">CandleStreamer</h1>
-<p><code>CandleStreamer</code> streams OHLCV candles over TradingView WebSocket sessions. It can also attach indicator studies and provides a realtime price generator.</p>
-<h2 id="quick-use">Quick Use</h2>
-<h3 id="candles-only">Candles only</h3>
+<h1 id="candlestreamer-api">CandleStreamer API</h1>
+<p>The <code>CandleStreamer</code> class streams OHLCV candles and optional indicator series from TradingView over WebSocket.</p>
+<p>This page documents the current implementation in <code>tv_scraper/streaming/candle_streamer.py</code>.</p>
+<h2 id="installation">Installation</h2>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">tv_scraper.streaming</span><span class="w"> </span><span class="kn">import</span> <span class="n">CandleStreamer</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">streamer</span> <span class="o">=</span> <span class="n">CandleStreamer</span><span class="p">()</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">result</span> <span class="o">=</span> <span class="n">streamer</span><span class="o">.</span><span class="n">get_candles</span><span class="p">(</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">exchange</span><span class="o">=</span><span class="s2">&quot;BINANCE&quot;</span><span class="p">,</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">symbol</span><span class="o">=</span><span class="s2">&quot;BTCUSDT&quot;</span><span class="p">,</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">timeframe</span><span class="o">=</span><span class="s2">&quot;1h&quot;</span><span class="p">,</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">numb_candles</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="p">)</span>
 </span></code></pre></div>
-<p>Output structure:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>        <span class="s2">&quot;ohlcv&quot;</span><span class="p">:</span> <span class="p">[</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>            <span class="p">{</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>                <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>                <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="mi">1700000000</span><span class="p">,</span>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>                <span class="s2">&quot;open&quot;</span><span class="p">:</span> <span class="mf">185.0</span><span class="p">,</span>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>                <span class="s2">&quot;high&quot;</span><span class="p">:</span> <span class="mf">187.0</span><span class="p">,</span>
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>                <span class="s2">&quot;low&quot;</span><span class="p">:</span> <span class="mf">184.0</span><span class="p">,</span>
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>                <span class="s2">&quot;close&quot;</span><span class="p">:</span> <span class="mf">186.0</span><span class="p">,</span>
-</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>                <span class="s2">&quot;volume&quot;</span><span class="p">:</span> <span class="mi">50000000</span><span class="p">,</span>
-</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>            <span class="p">},</span>
-</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>            <span class="c1"># ... more candles (one row per candle index)</span>
-</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>        <span class="p">],</span>
-</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>        <span class="s2">&quot;indicators&quot;</span><span class="p">:</span> <span class="p">{},</span>
-</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    <span class="p">},</span>
-</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>    <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>        <span class="s2">&quot;exchange&quot;</span><span class="p">:</span> <span class="s2">&quot;BINANCE&quot;</span><span class="p">,</span>
-</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>        <span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="s2">&quot;BTCUSDT&quot;</span><span class="p">,</span>
-</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>        <span class="s2">&quot;timeframe&quot;</span><span class="p">:</span> <span class="s2">&quot;1h&quot;</span><span class="p">,</span>
-</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>        <span class="s2">&quot;numb_candles&quot;</span><span class="p">:</span> <span class="mi">25</span><span class="p">,</span>
-</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>    <span class="p">},</span>
-</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="p">}</span>
+<h2 id="constructor">Constructor</h2>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">cs</span> <span class="o">=</span> <span class="n">CandleStreamer</span><span class="p">(</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="n">export_result</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">export_type</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">,</span>  <span class="c1"># &quot;json&quot; or &quot;csv&quot;</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="n">cookie</span><span class="o">=</span><span class="s2">&quot;&lt;TRADINGVIEW_COOKIE&gt;&quot;</span><span class="p">,</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="p">)</span>
 </span></code></pre></div>
-<h3 id="candles-with-indicators">Candles with indicators</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">result</span> <span class="o">=</span> <span class="n">streamer</span><span class="o">.</span><span class="n">get_candles</span><span class="p">(</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="n">exchange</span><span class="o">=</span><span class="s2">&quot;BINANCE&quot;</span><span class="p">,</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="n">symbol</span><span class="o">=</span><span class="s2">&quot;BTCUSDT&quot;</span><span class="p">,</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">timeframe</span><span class="o">=</span><span class="s2">&quot;15m&quot;</span><span class="p">,</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="n">numb_candles</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="n">indicators</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;STD;RSI&quot;</span><span class="p">,</span> <span class="s2">&quot;37.0&quot;</span><span class="p">)],</span>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="p">)</span>
-</span></code></pre></div>
-<p>Output structure:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>        <span class="s2">&quot;ohlcv&quot;</span><span class="p">:</span> <span class="p">[</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>            <span class="p">{</span>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>                <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>                <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="mi">1700000000</span><span class="p">,</span>
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>                <span class="s2">&quot;open&quot;</span><span class="p">:</span> <span class="mf">185.0</span><span class="p">,</span>
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>                <span class="s2">&quot;high&quot;</span><span class="p">:</span> <span class="mf">187.0</span><span class="p">,</span>
-</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>                <span class="s2">&quot;low&quot;</span><span class="p">:</span> <span class="mf">184.0</span><span class="p">,</span>
-</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>                <span class="s2">&quot;close&quot;</span><span class="p">:</span> <span class="mf">186.0</span><span class="p">,</span>
-</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>                <span class="s2">&quot;volume&quot;</span><span class="p">:</span> <span class="mi">50000000</span><span class="p">,</span>
-</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>            <span class="p">},</span>
-</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>            <span class="c1"># ... more candles (one row per candle index)</span>
-</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>        <span class="p">],</span>
-</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>        <span class="s2">&quot;indicators&quot;</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>            <span class="s2">&quot;STD;RSI&quot;</span><span class="p">:</span> <span class="p">[</span>
-</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>                <span class="p">{</span><span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="mi">1700000000</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">:</span> <span class="mf">55.5</span><span class="p">},</span>
-</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>                <span class="c1"># ... more rows (one per candle index)</span>
-</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>            <span class="p">]</span>
-</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>        <span class="p">},</span>
-</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>    <span class="p">},</span>
-</span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>    <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="__span-3-24"><a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>        <span class="s2">&quot;exchange&quot;</span><span class="p">:</span> <span class="s2">&quot;BINANCE&quot;</span><span class="p">,</span>
-</span><span id="__span-3-25"><a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>        <span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="s2">&quot;BTCUSDT&quot;</span><span class="p">,</span>
-</span><span id="__span-3-26"><a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>        <span class="s2">&quot;timeframe&quot;</span><span class="p">:</span> <span class="s2">&quot;15m&quot;</span><span class="p">,</span>
-</span><span id="__span-3-27"><a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>        <span class="s2">&quot;numb_candles&quot;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
-</span><span id="__span-3-28"><a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>        <span class="s2">&quot;indicators&quot;</span><span class="p">:</span> <span class="p">[(</span><span class="s2">&quot;STD;RSI&quot;</span><span class="p">,</span> <span class="s2">&quot;37.0&quot;</span><span class="p">)],</span>
-</span><span id="__span-3-29"><a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>    <span class="p">},</span>
-</span><span id="__span-3-30"><a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-3-31"><a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a><span class="p">}</span>
-</span></code></pre></div>
-<div class="admonition note">
-<p class="admonition-title">Multiple rows</p>
-<p>Both <code>ohlcv</code> and indicator arrays contain <strong>one row per candle index</strong>. If you request 5 candles with an indicator, you'll get 5 rows in both arrays. The indicator rows are keyed by study name (for example, <code>"STD;RSI"</code>) and contain an array of values for each candle.</p>
-</div>
-<h3 id="realtime-prices">Realtime prices</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">for</span> <span class="n">tick</span> <span class="ow">in</span> <span class="n">streamer</span><span class="o">.</span><span class="n">stream_realtime_price</span><span class="p">(</span><span class="n">exchange</span><span class="o">=</span><span class="s2">&quot;BINANCE&quot;</span><span class="p">,</span> <span class="n">symbol</span><span class="o">=</span><span class="s2">&quot;BTCUSDT&quot;</span><span class="p">):</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">tick</span><span class="p">[</span><span class="s2">&quot;price&quot;</span><span class="p">],</span> <span class="n">tick</span><span class="p">[</span><span class="s2">&quot;change_percent&quot;</span><span class="p">])</span>
-</span></code></pre></div>
-<p>Output structure (yielded per update):</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="s2">&quot;exchange&quot;</span><span class="p">:</span> <span class="s2">&quot;BINANCE&quot;</span><span class="p">,</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="s2">&quot;BTCUSDT&quot;</span><span class="p">,</span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="s2">&quot;price&quot;</span><span class="p">:</span> <span class="mf">60125.0</span><span class="p">,</span>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="s2">&quot;volume&quot;</span><span class="p">:</span> <span class="mf">1234.56</span><span class="p">,</span>
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    <span class="s2">&quot;change&quot;</span><span class="p">:</span> <span class="mf">45.0</span><span class="p">,</span>
-</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    <span class="s2">&quot;change_percent&quot;</span><span class="p">:</span> <span class="mf">0.08</span><span class="p">,</span>
-</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    <span class="s2">&quot;high&quot;</span><span class="p">:</span> <span class="mf">60250.0</span><span class="p">,</span>
-</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>    <span class="s2">&quot;low&quot;</span><span class="p">:</span> <span class="mf">59800.0</span><span class="p">,</span>
-</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>    <span class="s2">&quot;open&quot;</span><span class="p">:</span> <span class="mf">60010.0</span><span class="p">,</span>
-</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>    <span class="s2">&quot;prev_close&quot;</span><span class="p">:</span> <span class="mf">60080.0</span><span class="p">,</span>
-</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>    <span class="s2">&quot;bid&quot;</span><span class="p">:</span> <span class="mf">60124.5</span><span class="p">,</span>
-</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>    <span class="s2">&quot;ask&quot;</span><span class="p">:</span> <span class="mf">60125.5</span><span class="p">,</span>
-</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="p">}</span>
-</span></code></pre></div>
-<h2 id="inputs">Inputs</h2>
+<h3 id="parameters">Parameters</h3>
 <table>
 <thead>
 <tr>
 <th>Parameter</th>
-<th>Notes</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>exchange</code></td>
-<td>Use a supported exchange from <a href="../../supported_data/#exchanges">Exchanges</a></td>
+<td><code>export_result</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td>Whether to export successful results</td>
 </tr>
 <tr>
-<td><code>symbol</code></td>
-<td>Exchange symbol slug such as <code>BTCUSDT</code></td>
+<td><code>export_type</code></td>
+<td><code>str</code></td>
+<td><code>"json"</code></td>
+<td>Export format (<code>"json"</code> or <code>"csv"</code>)</td>
 </tr>
 <tr>
-<td><code>timeframe</code></td>
-<td>Use a supported timeframe from <a href="../../supported_data/#timeframes">Timeframes</a></td>
-</tr>
-<tr>
-<td><code>numb_candles</code></td>
-<td>Must be between <code>1</code> and <code>5000</code></td>
-</tr>
-<tr>
-<td><code>indicators</code></td>
-<td>Optional list of <code>(script_id, version)</code> tuples</td>
+<td><code>cookie</code></td>
+<td><code>str \| None</code></td>
+<td><code>None</code></td>
+<td>TradingView cookie used for JWT resolution and private indicator access</td>
 </tr>
 </tbody>
 </table>
-<h2 id="finding-indicator-ids">Finding Indicator IDs</h2>
-<p>For built-in indicators:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">result</span> <span class="o">=</span> <span class="n">CandleStreamer</span><span class="o">.</span><span class="n">get_available_indicators</span><span class="p">()</span>
+<h2 id="method">Method</h2>
+<h3 id="get_candles"><code>get_candles()</code></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">result</span> <span class="o">=</span> <span class="n">cs</span><span class="o">.</span><span class="n">get_candles</span><span class="p">(</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="n">exchange</span><span class="o">=</span><span class="s2">&quot;BINANCE&quot;</span><span class="p">,</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="n">symbol</span><span class="o">=</span><span class="s2">&quot;BTCUSDT&quot;</span><span class="p">,</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">timeframe</span><span class="o">=</span><span class="s2">&quot;1h&quot;</span><span class="p">,</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="n">numb_candles</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="n">indicators</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;STD;RSI&quot;</span><span class="p">,</span> <span class="s2">&quot;37.0&quot;</span><span class="p">)],</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="p">)</span>
 </span></code></pre></div>
-<p>For custom indicators or private scripts, use your Pine script ID and version. A cookie may be required if your TradingView account owns the script.</p>
-<div class="admonition failure">
-<p class="admonition-title">wrong input</p>
-<p>This fails because <code>numb_candles</code> must be at least <code>1</code>.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">streamer</span><span class="o">.</span><span class="n">get_candles</span><span class="p">(</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    <span class="n">exchange</span><span class="o">=</span><span class="s2">&quot;BINANCE&quot;</span><span class="p">,</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    <span class="n">symbol</span><span class="o">=</span><span class="s2">&quot;BTCUSDT&quot;</span><span class="p">,</span>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="n">timeframe</span><span class="o">=</span><span class="s2">&quot;1h&quot;</span><span class="p">,</span>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    <span class="n">numb_candles</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="p">)</span>
+<p>Signature:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_candles</span><span class="p">(</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="n">exchange</span><span class="p">:</span> <span class="n">EXCHANGE_LITERAL</span><span class="p">,</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="n">symbol</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="n">timeframe</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;1m&quot;</span><span class="p">,</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="n">numb_candles</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="n">indicators</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
 </span></code></pre></div>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Notes</p>
+<h2 id="validation-rules">Validation Rules</h2>
+<p>Validation happens at the beginning of <code>get_candles()</code>:</p>
+<ol>
+<li><code>verify_symbol_exchange(exchange, symbol)</code></li>
+<li><code>validate_timeframe(timeframe)</code></li>
+<li><code>validate_range("numb_candles", numb_candles, 1, 5000)</code></li>
+</ol>
+<h3 id="exchange-and-symbol-verification">Exchange and symbol verification</h3>
 <ul>
-<li>The receive loop uses a packet-count cutoff, not a wall-clock timeout.</li>
-<li>If no OHLCV data arrives, the method returns <code>status="failed"</code>.</li>
-<li>If you request indicators and one or more studies never resolve, the method returns <code>status="failed"</code> with the missing indicator IDs in the error message.</li>
+<li><code>exchange</code> must be a non-empty string and a known exchange.</li>
+<li><code>symbol</code> must be a non-empty string.</li>
+<li>The <code>exchange:symbol</code> pair is verified against TradingView scanner endpoint.</li>
+<li>On success, both exchange and symbol are normalized to uppercase.</li>
 </ul>
-</div>
+<h3 id="timeframe-validation">Timeframe validation</h3>
+<ul>
+<li>Must be one of the keys in <code>TIMEFRAMES</code>:</li>
+<li><code>"1m"</code>, <code>"5m"</code>, <code>"15m"</code>, <code>"30m"</code>, <code>"1h"</code>, <code>"2h"</code>, <code>"4h"</code>, <code>"1d"</code>, <code>"1w"</code>, <code>"1M"</code></li>
+</ul>
+<h3 id="candle-count-validation">Candle count validation</h3>
+<ul>
+<li><code>numb_candles</code> must be numeric and within <code>1..5000</code>.</li>
+</ul>
+<h3 id="indicator-input-validation">Indicator input validation</h3>
+<ul>
+<li>There is no upfront validator for indicator IDs/versions in <code>get_candles()</code>.</li>
+<li>Validation effectively happens when metadata is fetched in <code>_add_indicators()</code>.</li>
+</ul>
+<h2 id="timeframe-behavior">Timeframe Behavior</h2>
+<p><code>_add_symbol_to_sessions()</code> maps the user timeframe to TradingView series interval:</p>
+<table>
+<thead>
+<tr>
+<th>Input timeframe</th>
+<th>Sent interval</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>"1m"</code></td>
+<td><code>"1"</code></td>
+</tr>
+<tr>
+<td><code>"5m"</code></td>
+<td><code>"5"</code></td>
+</tr>
+<tr>
+<td><code>"15m"</code></td>
+<td><code>"15"</code></td>
+</tr>
+<tr>
+<td><code>"30m"</code></td>
+<td><code>"30"</code></td>
+</tr>
+<tr>
+<td><code>"1h"</code></td>
+<td><code>"60"</code></td>
+</tr>
+<tr>
+<td><code>"2h"</code></td>
+<td><code>"120"</code></td>
+</tr>
+<tr>
+<td><code>"4h"</code></td>
+<td><code>"240"</code></td>
+</tr>
+<tr>
+<td><code>"1d"</code></td>
+<td><code>"1D"</code></td>
+</tr>
+<tr>
+<td><code>"1w"</code></td>
+<td><code>"1W"</code></td>
+</tr>
+<tr>
+<td><code>"1M"</code></td>
+<td><code>"1M"</code></td>
+</tr>
+</tbody>
+</table>
+<p>Implementation detail: mapping uses <code>TIMEFRAMES.get(timeframe, "1")</code>. Because timeframe is validated first, the fallback <code>"1"</code> should not be used in normal flow.</p>
+<h2 id="indicator-handling">Indicator Handling</h2>
+<p>When <code>indicators</code> is truthy (<code>bool(indicators)</code>):</p>
+<ol>
+<li><code>_add_indicators()</code> runs once per <code>(script_id, script_version)</code> tuple.</li>
+<li>Metadata is fetched from pine-facade using <code>fetch_indicator_metadata(...)</code>.</li>
+<li>A chart study ID is assigned as <code>st{9 + idx}</code> (for example, <code>st9</code>, <code>st10</code>, ...).</li>
+<li>Study ID is mapped back to indicator script ID in <code>self.study_id_to_name_map</code>.</li>
+<li><code>create_study</code> is sent to WebSocket for each indicator.</li>
+</ol>
+<p>Indicator extraction from stream:</p>
+<ul>
+<li>Only <code>du</code> packets are inspected.</li>
+<li>Only entries whose key starts with <code>st</code> and exists in <code>study_id_to_name_map</code> are used.</li>
+<li>Each indicator row is shaped as:</li>
+</ul>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;i&quot;</span><span class="p">],</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;v&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="s2">&quot;0&quot;</span><span class="p">:</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;v&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="s2">&quot;1&quot;</span><span class="p">:</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;v&quot;</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="c1"># ... more numeric string keys if present</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>The output indicator dictionary is keyed by script ID (for example <code>"STD;RSI"</code>), not by study ID.</p>
+<h2 id="stop-conditions-and-timeout-behavior">Stop Conditions and Timeout Behavior</h2>
+<p>The receive loop processes packets from <code>handler.receive_packets()</code> and updates:</p>
+<ul>
+<li><code>ohlcv_data</code> when a <code>timescale_update</code> packet is received</li>
+<li><code>indicator_data</code> when a <code>du</code> packet contains tracked studies</li>
+</ul>
+<p>Loop stop conditions:</p>
+<ol>
+<li>Success stop: <code>len(ohlcv_data) &gt;= numb_candles</code> and indicator requirement is met.</li>
+<li>Timeout stop: when packet index <code>i &gt; 15</code>.</li>
+</ol>
+<p>Important timeout details:</p>
+<ul>
+<li>This is packet-count based, not wall-clock based.</li>
+<li>Timeout only logs a warning and breaks the loop.</li>
+<li>Timeout does not automatically return failed status.</li>
+<li>After break, post-processing and success/failure checks still run.</li>
+</ul>
+<p>Post-processing after loop:</p>
+<ul>
+<li>OHLCV is sorted by <code>index</code> and truncated to last <code>numb_candles</code>.</li>
+<li>Each indicator series is sorted by <code>index</code> and truncated to last <code>numb_candles</code>.</li>
+</ul>
+<h2 id="output-schema">Output Schema</h2>
+<p>All public calls are wrapped by <code>@catch_errors</code>, so output is always the standardized envelope:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span> <span class="o">|</span> <span class="s2">&quot;failed&quot;</span><span class="p">,</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">payload</span> <span class="ow">or</span> <span class="kc">None</span><span class="o">&gt;</span><span class="p">,</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span><span class="o">...</span><span class="p">},</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="kc">None</span> <span class="o">|</span> <span class="s2">&quot;message&quot;</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="p">}</span>
+</span></code></pre></div>
+<h3 id="success-payload-statussuccess">Success payload (<code>status="success"</code>)</h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p">{</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>        <span class="s2">&quot;ohlcv&quot;</span><span class="p">:</span> <span class="p">[</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>            <span class="p">{</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>                <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>                <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>                <span class="s2">&quot;open&quot;</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>                <span class="s2">&quot;high&quot;</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>                <span class="s2">&quot;low&quot;</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>                <span class="s2">&quot;close&quot;</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>
+</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>                <span class="s2">&quot;volume&quot;</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span>  <span class="c1"># Present only when provided by stream</span>
+</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>            <span class="p">}</span>
+</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>        <span class="p">],</span>
+</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>        <span class="s2">&quot;indicators&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>            <span class="s2">&quot;STD;RSI&quot;</span><span class="p">:</span> <span class="p">[</span>
+</span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>                <span class="p">{</span><span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span><span class="p">}</span>
+</span><span id="__span-6-18"><a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>            <span class="p">]</span>
+</span><span id="__span-6-19"><a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>        <span class="p">},</span>
+</span><span id="__span-6-20"><a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>    <span class="p">},</span>
+</span><span id="__span-6-21"><a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>    <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="__span-6-22"><a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>        <span class="s2">&quot;exchange&quot;</span><span class="p">:</span> <span class="s2">&quot;BINANCE&quot;</span><span class="p">,</span>
+</span><span id="__span-6-23"><a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>        <span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="s2">&quot;BTCUSDT&quot;</span><span class="p">,</span>
+</span><span id="__span-6-24"><a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>        <span class="s2">&quot;timeframe&quot;</span><span class="p">:</span> <span class="s2">&quot;1h&quot;</span><span class="p">,</span>
+</span><span id="__span-6-25"><a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a>        <span class="s2">&quot;numb_candles&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+</span><span id="__span-6-26"><a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a>        <span class="c1"># &quot;indicators&quot; appears only when non-None was provided</span>
+</span><span id="__span-6-27"><a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a>    <span class="p">},</span>
+</span><span id="__span-6-28"><a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a>    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-6-29"><a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Behavior note: a successful response can contain fewer than <code>numb_candles</code> rows if the loop stops before enough candles are collected but at least one OHLCV entry exists and indicator checks pass.</p>
+<h2 id="failure-paths">Failure Paths</h2>
+<p><code>get_candles()</code> can return <code>status="failed"</code> in these cases:</p>
+<ol>
+<li>Validation failure (<code>verify_symbol_exchange</code>, <code>validate_timeframe</code>, <code>validate_range</code>).</li>
+<li>No OHLCV parsed from stream:</li>
+<li>Error: <code>"No OHLCV data received from stream."</code></li>
+<li>Indicators requested but at least one requested script ID missing in final <code>indicator_data</code>:</li>
+<li>Error: <code>"Failed to fetch indicator data for: &lt;comma-separated-script-ids&gt;"</code></li>
+<li>Any unexpected exception in method body (including connection/JWT errors, indicator metadata failures, websocket send failures):</li>
+<li>Error format from decorator: <code>"Unexpected error: &lt;exception message&gt;"</code></li>
+</ol>
+<p>Notes on failures and partial data:</p>
+<ul>
+<li>Missing-indicator failure returns <code>data=None</code> (no partial OHLCV payload attached).</li>
+<li>Timeout by itself is not an error path; it becomes failure only if one of the explicit failure checks is triggered afterward.</li>
+</ul>
+<h2 id="connect"><code>connect()</code></h2>
+<p><code>CandleStreamer</code> inherits <code>connect()</code> from <code>BaseStreamer</code>.</p>
+<ul>
+<li>Uses <code>unauthorized_user_token</code> when no cookie is set.</li>
+<li>If cookie exists, attempts JWT resolution.</li>
+<li>JWT resolution failure raises <code>RuntimeError</code>, which is converted by <code>@catch_errors</code> into a failed envelope when called from <code>get_candles()</code>.</li>
+</ul>
 
 
 
