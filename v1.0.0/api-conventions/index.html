@@ -13,10 +13,10 @@
         <link rel="canonical" href="https://smitkunpara.github.io/tv-scraper/v1.0.0/api-conventions/">
       
       
-        <link rel="prev" href="../getting-started/">
+        <link rel="prev" href="../architecture/">
       
       
-        <link rel="next" href="../streaming/">
+        <link rel="next" href="../scrapers/overview/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>API Basics - tv-scraper</title>
+        <title>API Conventions - tv-scraper v1.0.0</title>
       
     
     
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#api-basics" class="md-skip">
+        <a href="#api-conventions" class="md-skip">
           Skip to content
         </a>
       
@@ -89,10 +89,6 @@
       
     </div>
     
-      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
-        
-      </div>
-    
     
       
 
@@ -100,7 +96,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="tv-scraper" class="md-header__button md-logo" aria-label="tv-scraper" data-md-component="logo">
+    <a href=".." title="tv-scraper v1.0.0" class="md-header__button md-logo" aria-label="tv-scraper v1.0.0" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -114,13 +110,13 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            tv-scraper
+            tv-scraper v1.0.0
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              API Basics
+              API Conventions
             
           </span>
         </div>
@@ -243,13 +239,13 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="tv-scraper" class="md-nav__button md-logo" aria-label="tv-scraper" data-md-component="logo">
+    <a href=".." title="tv-scraper v1.0.0" class="md-nav__button md-logo" aria-label="tv-scraper v1.0.0" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
-    tv-scraper
+    tv-scraper v1.0.0
   </label>
   
     <div class="md-nav__source">
@@ -324,6 +320,60 @@
       
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../migration-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migration Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
     
   
   
@@ -343,7 +393,7 @@
   <span class="md-ellipsis">
     
   
-    API Basics
+    API Conventions
   
 
     
@@ -361,7 +411,7 @@
   <span class="md-ellipsis">
     
   
-    API Basics
+    API Conventions
   
 
     
@@ -387,22 +437,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#request-style" class="md-nav__link">
+  <a href="#input-parameters" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Request Style
+        Input Parameters
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Request Style">
+    <nav class="md-nav" aria-label="Input Parameters">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#separate-exchange-and-symbol" class="md-nav__link">
+  <a href="#symbol-identification" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Separate exchange and symbol
+        Symbol Identification
       
     </span>
   </a>
@@ -410,10 +460,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#use-keyword-arguments" class="md-nav__link">
+  <a href="#field-selection" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Use keyword arguments
+        Field Selection
       
     </span>
   </a>
@@ -421,10 +471,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#optional-lists-stay-as-python-lists" class="md-nav__link">
+  <a href="#sorting" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Optional lists stay as Python lists
+        Sorting
       
     </span>
   </a>
@@ -432,10 +482,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#naming-stays-snake_case" class="md-nav__link">
+  <a href="#naming-convention" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Naming stays snake_case
+        Naming Convention
       
     </span>
   </a>
@@ -448,6 +498,18 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#output-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output Format
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Output Format">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#response-envelope" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -456,14 +518,13 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Response Envelope">
-      <ul class="md-nav__list">
+</li>
         
           <li class="md-nav__item">
-  <a href="#what-changes-by-method" class="md-nav__link">
+  <a href="#success-response" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What changes by method
+        Success Response
       
     </span>
   </a>
@@ -471,10 +532,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#important-nuance" class="md-nav__link">
+  <a href="#error-response" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Important nuance
+        Error Response
       
     </span>
   </a>
@@ -495,13 +556,41 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Error Handling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scraper-methods-never-raise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scraper Methods Never Raise
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validators-raise-internally" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validators Raise Internally
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
-  <a href="#construction-time-errors" class="md-nav__link">
+  <a href="#type-hints" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Construction-Time Errors
+        Type Hints
       
     </span>
   </a>
@@ -509,10 +598,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#finding-accepted-values" class="md-nav__link">
+  <a href="#docstrings" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Finding Accepted Values
+        Docstrings
       
     </span>
   </a>
@@ -537,172 +626,6 @@
     
       
         
-          
-        
-      
-        
-      
-        
-      
-        
-      
-    
-    
-    
-      
-        
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
-      
-        
-        
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
-        
-          
-          <div class="md-nav__link md-nav__container">
-            <a href="../streaming/" class="md-nav__link ">
-              
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Streaming
-  
-
-    
-  </span>
-  
-  
-
-            </a>
-            
-              
-              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
-                <span class="md-nav__icon md-icon"></span>
-              </label>
-            
-          </div>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Streaming
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../streaming/candle_streamer/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Candles
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../streaming/forecast_streamer/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Forecast
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../streaming/streamer/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Streamer (Legacy Wrapper)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-      
-        
       
         
       
@@ -741,10 +664,10 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
             
   
   
@@ -762,8 +685,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -780,14 +703,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../scrapers/pine/" class="md-nav__link">
+      <a href="../scrapers/overview/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Pine
+    Overview
   
 
     
@@ -1133,8 +1056,6 @@
       
         
       
-        
-      
     
     
     
@@ -1150,18 +1071,18 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../reference/" class="md-nav__link ">
+            <a href="../streaming/" class="md-nav__link ">
               
   
   
   <span class="md-ellipsis">
     
   
-    Reference
+    Streaming
   
 
     
@@ -1172,18 +1093,18 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="">
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             
   
-    Reference
+    Streaming
   
 
           </label>
@@ -1198,14 +1119,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../supported_data/" class="md-nav__link">
+      <a href="../streaming/streamer/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Validation & Supported Values
+    Streamer
   
 
     
@@ -1226,14 +1147,109 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/releases/" class="md-nav__link">
+      <a href="../streaming/realtime-price/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Releases & Versioning
+    Real-time Price
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../supported_data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Supported Data
   
 
     
@@ -1336,22 +1352,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#request-style" class="md-nav__link">
+  <a href="#input-parameters" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Request Style
+        Input Parameters
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Request Style">
+    <nav class="md-nav" aria-label="Input Parameters">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#separate-exchange-and-symbol" class="md-nav__link">
+  <a href="#symbol-identification" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Separate exchange and symbol
+        Symbol Identification
       
     </span>
   </a>
@@ -1359,10 +1375,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#use-keyword-arguments" class="md-nav__link">
+  <a href="#field-selection" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Use keyword arguments
+        Field Selection
       
     </span>
   </a>
@@ -1370,10 +1386,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#optional-lists-stay-as-python-lists" class="md-nav__link">
+  <a href="#sorting" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Optional lists stay as Python lists
+        Sorting
       
     </span>
   </a>
@@ -1381,10 +1397,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#naming-stays-snake_case" class="md-nav__link">
+  <a href="#naming-convention" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Naming stays snake_case
+        Naming Convention
       
     </span>
   </a>
@@ -1397,6 +1413,18 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#output-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output Format
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Output Format">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#response-envelope" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1405,14 +1433,13 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Response Envelope">
-      <ul class="md-nav__list">
+</li>
         
           <li class="md-nav__item">
-  <a href="#what-changes-by-method" class="md-nav__link">
+  <a href="#success-response" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What changes by method
+        Success Response
       
     </span>
   </a>
@@ -1420,10 +1447,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#important-nuance" class="md-nav__link">
+  <a href="#error-response" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Important nuance
+        Error Response
       
     </span>
   </a>
@@ -1444,13 +1471,41 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Error Handling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scraper-methods-never-raise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scraper Methods Never Raise
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validators-raise-internally" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validators Raise Internally
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
-  <a href="#construction-time-errors" class="md-nav__link">
+  <a href="#type-hints" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Construction-Time Errors
+        Type Hints
       
     </span>
   </a>
@@ -1458,10 +1513,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#finding-accepted-values" class="md-nav__link">
+  <a href="#docstrings" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Finding Accepted Values
+        Docstrings
       
     </span>
   </a>
@@ -1488,117 +1543,93 @@
   
 
 
-<h1 id="api-basics">API Basics</h1>
-<p>This page covers the request and response patterns that stay consistent across <code>tv-scraper</code>.</p>
-<h2 id="request-style">Request Style</h2>
-<h3 id="separate-exchange-and-symbol">Separate <code>exchange</code> and <code>symbol</code></h3>
-<p>For symbol-based methods, pass them as two arguments:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">scraper</span><span class="o">.</span><span class="n">get_technicals</span><span class="p">(</span><span class="n">exchange</span><span class="o">=</span><span class="s2">&quot;NASDAQ&quot;</span><span class="p">,</span> <span class="n">symbol</span><span class="o">=</span><span class="s2">&quot;AAPL&quot;</span><span class="p">)</span>
+<h1 id="api-conventions">API Conventions</h1>
+<p>This document defines the standards for the <code>tv_scraper</code> public API.</p>
+<h2 id="input-parameters">Input Parameters</h2>
+<h3 id="symbol-identification">Symbol Identification</h3>
+<p>All scrapers accept <code>exchange</code> and <code>symbol</code> as <strong>separate</strong> string parameters:
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">scraper</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="n">exchange</span><span class="o">=</span><span class="s2">&quot;NASDAQ&quot;</span><span class="p">,</span> <span class="n">symbol</span><span class="o">=</span><span class="s2">&quot;AAPL&quot;</span><span class="p">)</span>
+</span></code></pre></div></p>
+<h3 id="field-selection">Field Selection</h3>
+<p>Optional field selection uses a list of strings:
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">scraper</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="n">exchange</span><span class="o">=</span><span class="s2">&quot;NASDAQ&quot;</span><span class="p">,</span> <span class="n">symbol</span><span class="o">=</span><span class="s2">&quot;AAPL&quot;</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;close&quot;</span><span class="p">,</span> <span class="s2">&quot;volume&quot;</span><span class="p">,</span> <span class="s2">&quot;change&quot;</span><span class="p">])</span>
+</span></code></pre></div></p>
+<h3 id="sorting">Sorting</h3>
+<p>Sorting follows a consistent pattern:
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">scraper</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="n">sort_by</span><span class="o">=</span><span class="s2">&quot;volume&quot;</span><span class="p">,</span> <span class="n">sort_order</span><span class="o">=</span><span class="s2">&quot;desc&quot;</span><span class="p">)</span>  <span class="c1"># or &quot;asc&quot;</span>
 </span></code></pre></div>
-<p>Output structure:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;RSI&quot;</span><span class="p">:</span> <span class="mf">54.21</span><span class="p">},</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>        <span class="s2">&quot;exchange&quot;</span><span class="p">:</span> <span class="s2">&quot;NASDAQ&quot;</span><span class="p">,</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>        <span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="s2">&quot;AAPL&quot;</span><span class="p">,</span>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>        <span class="s2">&quot;timeframe&quot;</span><span class="p">:</span> <span class="s2">&quot;1d&quot;</span><span class="p">,</span>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>        <span class="s2">&quot;technical_indicators&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;RSI&quot;</span><span class="p">],</span>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    <span class="p">},</span>
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="p">}</span>
+<code>sort_order</code> defaults to <code>"desc"</code> when not specified.</p>
+<h3 id="naming-convention">Naming Convention</h3>
+<p>All parameters use <strong>snake_case</strong>:
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Correct</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">scraper</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="n">export_result</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">export_type</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">,</span> <span class="n">sort_by</span><span class="o">=</span><span class="s2">&quot;change&quot;</span><span class="p">)</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Wrong — never use camelCase</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">scraper</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="n">exportResult</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></code></pre></div></p>
+<h2 id="output-format">Output Format</h2>
+<h3 id="response-envelope">Response Envelope</h3>
+<p>Every public scraper method returns a standardized response dict:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>        <span class="c1"># or &quot;failed&quot;</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">],</span>              <span class="c1"># payload (list, dict, or None on failure)</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>               <span class="c1"># contextual info</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>        <span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="s2">&quot;AAPL&quot;</span><span class="p">,</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>        <span class="s2">&quot;exchange&quot;</span><span class="p">:</span> <span class="s2">&quot;NASDAQ&quot;</span><span class="p">,</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>        <span class="s2">&quot;total&quot;</span><span class="p">:</span> <span class="mi">25</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    <span class="p">},</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="kc">None</span>               <span class="c1"># error message string, or None on success</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="p">}</span>
 </span></code></pre></div>
-<h3 id="use-keyword-arguments">Use keyword arguments</h3>
-<p>Keyword arguments make the calls easier to read and reduce mistakes:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">scraper</span><span class="o">.</span><span class="n">get_market_movers</span><span class="p">(</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="n">market</span><span class="o">=</span><span class="s2">&quot;stocks-usa&quot;</span><span class="p">,</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="n">category</span><span class="o">=</span><span class="s2">&quot;gainers&quot;</span><span class="p">,</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">limit</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="p">)</span>
-</span></code></pre></div>
-<h3 id="optional-lists-stay-as-python-lists">Optional lists stay as Python lists</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">scraper</span><span class="o">.</span><span class="n">get_news</span><span class="p">(</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="n">provider</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;reuters&quot;</span><span class="p">,</span> <span class="s2">&quot;tradingview&quot;</span><span class="p">],</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="n">market_country</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;US&quot;</span><span class="p">,</span> <span class="s2">&quot;IN&quot;</span><span class="p">],</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="n">market</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;stock&quot;</span><span class="p">,</span> <span class="s2">&quot;crypto&quot;</span><span class="p">],</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="p">)</span>
-</span></code></pre></div>
-<h3 id="naming-stays-snake_case">Naming stays snake_case</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">scraper</span><span class="o">.</span><span class="n">get_technicals</span><span class="p">(</span><span class="n">export_result</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">export_type</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span>
-</span></code></pre></div>
-<h2 id="response-envelope">Response Envelope</h2>
-<p>Every public scraper method returns:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span> <span class="o">|</span> <span class="s2">&quot;failed&quot;</span><span class="p">,</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="o">...</span><span class="p">,</span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span><span class="o">...</span><span class="p">},</span>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="kc">None</span> <span class="o">|</span> <span class="s2">&quot;message&quot;</span><span class="p">,</span>
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="p">}</span>
-</span></code></pre></div>
-<h3 id="what-changes-by-method">What changes by method</h3>
+<h3 id="success-response">Success Response</h3>
 <ul>
-<li><code>data</code> can be a dict, list, or <code>None</code></li>
-<li><code>metadata</code> keeps the call context and method-specific details</li>
-<li><code>error</code> is <code>None</code> on success and a message on failure</li>
+<li><code>status</code> is always <code>"success"</code></li>
+<li><code>data</code> contains the requested payload</li>
+<li><code>error</code> is always <code>None</code></li>
+<li><code>metadata</code> contains relevant context (symbol, exchange, counts, etc.)</li>
 </ul>
-<h3 id="important-nuance">Important nuance</h3>
-<p>Most failures return <code>data=None</code>, but some methods can return partial data with <code>status="failed"</code> when that is the intended behavior. The forecast streaming methods are the main example.</p>
+<h3 id="error-response">Error Response</h3>
+<ul>
+<li><code>status</code> is always <code>"failed"</code></li>
+<li><code>data</code> is always <code>None</code></li>
+<li><code>error</code> contains a descriptive error message</li>
+<li><code>metadata</code> may contain partial context</li>
+</ul>
 <h2 id="error-handling">Error Handling</h2>
-<div class="admonition warning">
-<p class="admonition-title">Error Handling</p>
-<p>Public scraper methods return failures instead of raising data-access errors.</p>
-</div>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">result</span> <span class="o">=</span> <span class="n">scraper</span><span class="o">.</span><span class="n">get_technicals</span><span class="p">(</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    <span class="n">exchange</span><span class="o">=</span><span class="s2">&quot;INVALID&quot;</span><span class="p">,</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="n">symbol</span><span class="o">=</span><span class="s2">&quot;AAPL&quot;</span><span class="p">,</span>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="n">technical_indicators</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;RSI&quot;</span><span class="p">],</span>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="p">)</span>
+<h3 id="scraper-methods-never-raise">Scraper Methods Never Raise</h3>
+<p>Public scraper methods <strong>never raise exceptions</strong>. All errors are caught internally and returned as error responses:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">result</span> <span class="o">=</span> <span class="n">scraper</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="n">exchange</span><span class="o">=</span><span class="s2">&quot;INVALID&quot;</span><span class="p">,</span> <span class="n">symbol</span><span class="o">=</span><span class="s2">&quot;AAPL&quot;</span><span class="p">)</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Returns: {&quot;status&quot;: &quot;failed&quot;, &quot;data&quot;: None, &quot;error&quot;: &quot;Invalid exchange: ...&quot;, &quot;metadata&quot;: {}}</span>
 </span></code></pre></div>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">{</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;failed&quot;</span><span class="p">,</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>        <span class="s2">&quot;exchange&quot;</span><span class="p">:</span> <span class="s2">&quot;INVALID&quot;</span><span class="p">,</span>
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>        <span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="s2">&quot;AAPL&quot;</span><span class="p">,</span>
-</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>        <span class="s2">&quot;technical_indicators&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;RSI&quot;</span><span class="p">],</span>
-</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>    <span class="p">},</span>
-</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Invalid exchange: &#39;INVALID&#39;. ...&quot;</span><span class="p">,</span>
-</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="p">}</span>
-</span></code></pre></div>
-<div class="admonition failure">
-<p class="admonition-title">wrong input</p>
-<p>This is the wrong style for public methods.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">scraper</span><span class="o">.</span><span class="n">get_market_movers</span><span class="p">(</span><span class="n">market</span><span class="o">=</span><span class="s2">&quot;stocks-usa&quot;</span><span class="p">,</span> <span class="n">sortOrder</span><span class="o">=</span><span class="s2">&quot;desc&quot;</span><span class="p">)</span>
-</span></code></pre></div>
-<p>Use snake_case:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">scraper</span><span class="o">.</span><span class="n">get_market_movers</span><span class="p">(</span><span class="n">market</span><span class="o">=</span><span class="s2">&quot;stocks-usa&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en&quot;</span><span class="p">)</span>
-</span></code></pre></div>
-</div>
-<h2 id="construction-time-errors">Construction-Time Errors</h2>
-<div class="admonition warning">
-<p class="admonition-title">Construction-Time Errors</p>
-<p>Some constructor arguments are validated immediately. The common ones are:</p>
-<ul>
-<li>invalid <code>export_type</code></li>
-<li>invalid <code>timeout</code></li>
-</ul>
-<p>That means these fail before any network call happens:</p>
-</div>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">tv_scraper</span><span class="w"> </span><span class="kn">import</span> <span class="n">Technicals</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="n">Technicals</span><span class="p">(</span><span class="n">export_type</span><span class="o">=</span><span class="s2">&quot;xml&quot;</span><span class="p">)</span>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="n">Technicals</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-</span></code></pre></div>
-<h2 id="finding-accepted-values">Finding Accepted Values</h2>
-<p>When a page says an input must be from a supported list, use the exact section links:</p>
-<ul>
-<li><a href="../supported_data/#exchanges">Exchanges</a></li>
-<li><a href="../supported_data/#technical-indicators">Technical indicators</a></li>
-<li><a href="../supported_data/#timeframes">Timeframes</a></li>
-<li><a href="../supported_data/#languages">Languages</a></li>
-<li><a href="../supported_data/#news-providers">News providers</a></li>
-<li><a href="../supported_data/#news-countries">News countries</a></li>
-</ul>
+<h3 id="validators-raise-internally">Validators Raise Internally</h3>
+<p>The <code>DataValidator</code> raises <code>ValidationError</code> for invalid input. <code>BaseScraper</code> subclasses catch these and convert them to error responses — exceptions never escape to user code.</p>
+<h2 id="type-hints">Type Hints</h2>
+<p>All functions and methods have <strong>100% type hints</strong>:
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_data</span><span class="p">(</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    <span class="bp">self</span><span class="p">,</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="n">exchange</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="n">symbol</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    <span class="n">fields</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="n">sort_by</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    <span class="n">sort_order</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;desc&quot;</span><span class="p">,</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>    <span class="o">...</span>
+</span></code></pre></div></p>
+<h2 id="docstrings">Docstrings</h2>
+<p>All public classes and methods use <strong>Google-style docstrings</strong>:
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">validate_exchange</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exchange</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate exchange exists.</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="sd">    Args:</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="sd">        exchange: Exchange name to validate.</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="sd">    Returns:</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="sd">        True if exchange is valid.</span>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="sd">    Raises:</span>
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="sd">        ValidationError: If exchange is not found.</span>
+</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span></code></pre></div></p>
 
 
 
@@ -1636,7 +1667,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../getting-started/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Getting Started">
+          <a href="../architecture/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Architecture">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -1646,14 +1677,14 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Getting Started
+                Architecture
               </div>
             </div>
           </a>
         
         
           
-          <a href="../streaming/" class="md-footer__link md-footer__link--next" aria-label="Next: Overview">
+          <a href="../scrapers/overview/" class="md-footer__link md-footer__link--next" aria-label="Next: Overview">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
@@ -1712,7 +1743,7 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.expand", "navigation.top", "navigation.tracking", "navigation.indexes", "navigation.instant", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.tabs.link", "content.code.annotation", "content.code.copy", "content.tooltips", "navigation.footer"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.expand", "navigation.top", "navigation.tracking", "navigation.indexes", "navigation.instant", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.tabs.link", "content.code.annotation", "content.code.copy", "content.tooltips", "navigation.footer"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
