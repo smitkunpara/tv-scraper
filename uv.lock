@@ -1093,7 +1093,7 @@ wheels = [
 
 [[package]]
 name = "tv-scraper"
-version = "1.4.0b1"
+version = "1.4.0b2"
 source = { editable = "." }
 dependencies = [
     { name = "pyjwt" },

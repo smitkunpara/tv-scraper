@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.0b2] - 2026-04-13
+
 ### Added
 - **Streaming**: Added `stream_realtime_price()` and `get_available_indicators()` to `CandleStreamer` for better feature isolation.
 - **Core Validation**: Added `validate_yyyymmdd_date(field_name, value)` to validate `YYYYMMDD` dates with month/day bounds and real calendar-date checks.
@@ -21,9 +23,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Options Scraper**: `expiration` now uses centralized validator checks (`0 < MM <= 12`, `0 < DD <= 31`, plus calendar validity).
 - **Documentation**: Updated options and architecture docs to reflect the unified options API, strict date validation behavior, and column literal guidance.
 - **Tests**: Updated options unit/mock/integration/live tests to use `get_options()` and added combined-filter coverage.
+- **Technicals API**: Simplified `get_technicals()` by removing `all_indicators` and `fields`; `technical_indicators=None` now fetches the full indicator set.
+- **Typing**: Added `INDICATOR_LITERAL` typing support and updated technicals tests/docs to match the new API behavior.
+- **Docs**: Standardized method sections to "code first, output immediately below" and aligned streaming examples with fixture-backed structures.
+- **Docs Versioning**: Added `mkdocs_hooks.py` and hooked it in `mkdocs.yml` to generate `versions.json` during local builds/serve for version-switcher compatibility.
+- **CI/CD**: Updated `.github/workflows/gh-pages.yml` to support tag-triggered version deploys and conditional `mike set-default` behavior.
 
 ### Deprecated
 - **Streaming**: The `Streamer` class in `tv_scraper.streaming.streamer` is now deprecated. It has been moved to a multi-streamer architecture for easier maintenance.
+
+### Removed
+- **Legacy Streaming Docs**: Removed `docs/streaming/base_streamer.md` from documentation flow.
+- **Scripts**: Removed obsolete `scripts/verify_news.py` helper script.
+- **Legacy Tests**: Removed archived `tests_backup` suite.
 
 
 ## [1.4.0b1] - 2026-04-11

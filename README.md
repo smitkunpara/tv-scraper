@@ -5,7 +5,7 @@
 
 **A powerful, real-time Python library for extracting financial data, indicators, and ideas from TradingView.com.**
 
-> 🔥 New in v1.4.0b1: Integrated TradingView **News Flow (v2)** for rich categorical news filtering and standardized all scanner-based scrapers (Fundamentals, Technicals, Screener, etc.) into a unified, high-performance architecture.
+> 🔥 New in v1.4.0b2: Follow-up beta with technicals API simplification, docs/versioning workflow improvements, and cleanup of legacy test/docs artifacts.
 
 ---
 

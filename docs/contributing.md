@@ -178,7 +178,7 @@ When reporting bugs, please include:
 5. **Environment**:
    - Python version: 3.11
    - OS: Windows 11
-   - Library version: 1.4.0b1
+   - Library version: 1.4.0b2
 
 ### Example Bug Report
 ```

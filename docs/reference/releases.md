@@ -6,7 +6,7 @@ This project is set up to use versioned MkDocs builds with `mike`, so readers ca
 
 - The deployed site should offer a version switcher in the header.
 - `latest` should point to the newest stable branch build.
-- tagged releases such as `v1.3.2` or `v1.4.0b1` should appear as their own docs versions.
+- tagged releases such as `v1.3.2` or `v1.4.0b2` should appear as their own docs versions.
 
 ## Docs Availability
 
@@ -29,10 +29,11 @@ The documentation site was introduced in **`v0.5.0`**. That means the release-aw
 | `v1.3.1` |
 | `v1.3.2` |
 | `v1.4.0b1` |
+| `v1.4.0b2` |
 
 ## Current Docs Target
 
-The current package version is **`1.4.0b1`**.
+The current package version is **`1.4.0b2`**.
 
 ## Publishing Notes
 
