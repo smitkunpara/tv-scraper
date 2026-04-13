@@ -9,6 +9,10 @@
          <lastmod>2026-04-13</lastmod>
     </url>
     <url>
+         <loc>https://smitkunpara.github.io/tv-scraper/v1.0.3/architecture/</loc>
+         <lastmod>2026-04-13</lastmod>
+    </url>
+    <url>
          <loc>https://smitkunpara.github.io/tv-scraper/v1.0.3/contributing/</loc>
          <lastmod>2026-04-13</lastmod>
     </url>
@@ -21,15 +25,11 @@
          <lastmod>2026-04-13</lastmod>
     </url>
     <url>
+         <loc>https://smitkunpara.github.io/tv-scraper/v1.0.3/migration-guide/</loc>
+         <lastmod>2026-04-13</lastmod>
+    </url>
+    <url>
          <loc>https://smitkunpara.github.io/tv-scraper/v1.0.3/supported_data/</loc>
-         <lastmod>2026-04-13</lastmod>
-    </url>
-    <url>
-         <loc>https://smitkunpara.github.io/tv-scraper/v1.0.3/reference/</loc>
-         <lastmod>2026-04-13</lastmod>
-    </url>
-    <url>
-         <loc>https://smitkunpara.github.io/tv-scraper/v1.0.3/reference/releases/</loc>
          <lastmod>2026-04-13</lastmod>
     </url>
     <url>
@@ -65,7 +65,7 @@
          <lastmod>2026-04-13</lastmod>
     </url>
     <url>
-         <loc>https://smitkunpara.github.io/tv-scraper/v1.0.3/scrapers/pine/</loc>
+         <loc>https://smitkunpara.github.io/tv-scraper/v1.0.3/scrapers/overview/</loc>
          <lastmod>2026-04-13</lastmod>
     </url>
     <url>
@@ -85,11 +85,7 @@
          <lastmod>2026-04-13</lastmod>
     </url>
     <url>
-         <loc>https://smitkunpara.github.io/tv-scraper/v1.0.3/streaming/candle_streamer/</loc>
-         <lastmod>2026-04-13</lastmod>
-    </url>
-    <url>
-         <loc>https://smitkunpara.github.io/tv-scraper/v1.0.3/streaming/forecast_streamer/</loc>
+         <loc>https://smitkunpara.github.io/tv-scraper/v1.0.3/streaming/realtime-price/</loc>
          <lastmod>2026-04-13</lastmod>
     </url>
     <url>
