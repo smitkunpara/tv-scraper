@@ -1,7 +1,5 @@
-"""News scraper for fetching headlines and article content from TradingView."""
-
 import logging
-from typing import Any, Literal
+from typing import Any, Literal, get_args
 from urllib.parse import urlencode
 
 from tv_scraper.core import validators
@@ -27,21 +25,11 @@ NEWS_STORY_URL = "https://news-mediator.tradingview.com/public/news/v1/story"
 
 # Valid sort options
 SORT_BY_LITERAL = Literal["latest", "oldest", "most_urgent", "least_urgent"]
-VALID_SORT_OPTIONS: set[SORT_BY_LITERAL] = {
-    "latest",
-    "oldest",
-    "most_urgent",
-    "least_urgent",
-}
+VALID_SORT_OPTIONS = set(get_args(SORT_BY_LITERAL))
 
 # Valid section options
 NEWS_SECTION_LITERAL = Literal["all", "esg", "press_release", "financial_statement"]
-VALID_SECTIONS: set[NEWS_SECTION_LITERAL] = {
-    "all",
-    "esg",
-    "press_release",
-    "financial_statement",
-}
+VALID_SECTIONS = set(get_args(NEWS_SECTION_LITERAL))
 
 
 class News(BaseScraper):

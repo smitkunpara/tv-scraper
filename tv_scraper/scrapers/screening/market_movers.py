@@ -1,7 +1,7 @@
 """Market Movers module for scraping top gainers, losers, and active instruments."""
 
 import logging
-from typing import Any, Literal
+from typing import Any, Literal, get_args
 
 from tv_scraper.core import validators
 from tv_scraper.core.base import catch_errors
@@ -30,6 +30,10 @@ MOVER_CATEGORY_LITERAL = Literal[
     "after-hours-losers",
 ]
 
+SUPPORTED_MARKETS = list(get_args(MOVER_MARKET_LITERAL))
+STOCK_CATEGORIES = list(get_args(MOVER_CATEGORY_LITERAL))
+
+
 logger = logging.getLogger(__name__)
 
 
@@ -54,28 +58,8 @@ class MarketMovers(ScannerScraper):
             print(f"{stock['symbol']}: {stock['change']}%")
     """
 
-    SUPPORTED_MARKETS: list[str] = [
-        "stocks-usa",
-        "stocks-uk",
-        "stocks-india",
-        "stocks-australia",
-        "stocks-canada",
-        "crypto",
-        "forex",
-        "bonds",
-        "futures",
-    ]
-
-    STOCK_CATEGORIES: list[str] = [
-        "gainers",
-        "losers",
-        "most-active",
-        "penny-stocks",
-        "pre-market-gainers",
-        "pre-market-losers",
-        "after-hours-gainers",
-        "after-hours-losers",
-    ]
+    SUPPORTED_MARKETS = SUPPORTED_MARKETS
+    STOCK_CATEGORIES = STOCK_CATEGORIES
 
     # Non-stock markets accept any of the basic categories
     NON_STOCK_CATEGORIES: list[str] = [

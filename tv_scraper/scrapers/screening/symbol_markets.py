@@ -1,6 +1,6 @@
 """Symbol Markets module for finding all exchanges where a symbol is traded."""
 
-from typing import Any, Literal
+from typing import Any, Literal, get_args
 
 from tv_scraper.core import validators
 from tv_scraper.core.base import catch_errors
@@ -31,13 +31,7 @@ class SymbolMarkets(ScannerScraper):
             print(item["symbol"], item["exchange"])
     """
 
-    SUPPORTED_SCANNERS: set[str] = {
-        "global",
-        "america",
-        "crypto",
-        "forex",
-        "cfd",
-    }
+    SUPPORTED_SCANNERS = set(get_args(SYMBOL_MARKET_SCANNER_LITERAL))
 
     DEFAULT_FIELDS: list[str] = [
         "name",

@@ -2,7 +2,7 @@
 
 import datetime
 import logging
-from typing import Any, Literal
+from typing import Any, Literal, get_args
 
 from tv_scraper.core import validators
 from tv_scraper.core.constants import SCANNER_URL
@@ -10,6 +10,9 @@ from tv_scraper.core.exceptions import ValidationError
 from tv_scraper.core.scanner import ScannerScraper
 
 logger = logging.getLogger(__name__)
+
+CALENDAR_CATEGORY_LITERAL = Literal["dividends", "earnings"]
+SUPPORTED_CATEGORIES = list(get_args(CALENDAR_CATEGORY_LITERAL))
 
 # Default fields for dividend calendar (TradingView web defaults, Jan 2025)
 DEFAULT_DIVIDEND_FIELDS: list[str] = [
@@ -174,7 +177,7 @@ class Calendar(ScannerScraper):
         timestamp_from: int | None,
         timestamp_to: int | None,
         markets: list[str] | None,
-        data_category: Literal["dividends", "earnings"],
+        data_category: CALENDAR_CATEGORY_LITERAL,
         lang: str = "en",
     ) -> dict[str, Any]:
         """Shared implementation for fetching calendar events.

@@ -30,8 +30,8 @@ For complete documentation, installation guides, API references, and examples, v
 
 ## ✨ Key Features
 
-- **🕯️ Candle + Indicators**: Stream OHLCV candles with built-in/custom indicators via [`Streamer.get_candles()`](https://smitkunpara.github.io/tv-scraper/streaming/streamer/).
-- **📈 Forecast Data**: Fetch analyst price targets and EPS/revenue estimates for stocks via [`Streamer.get_forecast()`](https://smitkunpara.github.io/tv-scraper/streaming/streamer/).
+- **🕯️ Candle + Indicators**: Stream OHLCV candles with built-in/custom indicators via [`CandleStreamer.get_candles()`](https://smitkunpara.github.io/tv-scraper/streaming/candle_streamer/).
+- **📈 Forecast Data**: Fetch analyst price targets and EPS/revenue estimates for stocks via [`ForecastStreamer.get_forecast()`](https://smitkunpara.github.io/tv-scraper/streaming/forecast_streamer/).
 - **💡 Ideas**: Scrape community trading ideas with [`Ideas`](https://smitkunpara.github.io/tv-scraper/scrapers/ideas/).
 - **🧠 Minds**: Access TradingView discussions with [`Minds`](https://smitkunpara.github.io/tv-scraper/scrapers/minds/).
 - **📰 News**: Fetch market headlines and filters with [`News`](https://smitkunpara.github.io/tv-scraper/scrapers/news/).
@@ -39,7 +39,7 @@ For complete documentation, installation guides, API references, and examples, v
 - **🔎 Screener**: Run market scans with custom fields/filters via [`Screener`](https://smitkunpara.github.io/tv-scraper/scrapers/screener/).
 - **🏁 Market Movers**: Track top gainers/losers and actives via [`Market Movers`](https://smitkunpara.github.io/tv-scraper/scrapers/market_movers/).
 - **📊 Fundamentals**: Get financial statements and ratios via [`Fundamentals`](https://smitkunpara.github.io/tv-scraper/scrapers/fundamentals/).
-- **🧩 Pine Workflow**: Manage custom scripts with [`Pine`](https://smitkunpara.github.io/tv-scraper/scrapers/pine/) and stream them through `Streamer`.
+- **🧩 Pine Workflow**: Manage custom scripts with [`Pine`](https://smitkunpara.github.io/tv-scraper/scrapers/pine/) and validate them when streaming through `CandleStreamer`.
 - **📋 API Contract**: Consistent `status/data/metadata/error` response envelope across modules ([API conventions](https://smitkunpara.github.io/tv-scraper/api-conventions/)).
 
 

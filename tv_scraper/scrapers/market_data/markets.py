@@ -4,12 +4,13 @@ Queries the TradingView scanner API to fetch ranked stock lists
 across supported markets, sorted by market cap, volume, change, etc.
 """
 
-from typing import Any, Literal
+from typing import Any, Literal, get_args
 
 from tv_scraper.core import validators
 from tv_scraper.core.base import catch_errors
 from tv_scraper.core.constants import SCANNER_URL
 from tv_scraper.core.scanner import ScannerScraper
+from tv_scraper.core.validation_data import SORT_ORDER_LITERAL
 
 MARKET_LITERAL = Literal[
     "america",
@@ -23,7 +24,6 @@ MARKET_LITERAL = Literal[
     "global",
 ]
 MARKET_SORT_LITERAL = Literal["market_cap", "volume", "change", "price", "volatility"]
-SORT_ORDER_LITERAL = Literal["asc", "desc"]
 
 
 class Markets(ScannerScraper):
@@ -47,17 +47,7 @@ class Markets(ScannerScraper):
             print(stock["symbol"], stock["close"])
     """
 
-    VALID_MARKETS: list[str] = [
-        "america",
-        "australia",
-        "canada",
-        "germany",
-        "india",
-        "uk",
-        "crypto",
-        "forex",
-        "global",
-    ]
+    VALID_MARKETS = list(get_args(MARKET_LITERAL))
 
     SORT_CRITERIA: dict[str, str] = {
         "market_cap": "market_cap_basic",

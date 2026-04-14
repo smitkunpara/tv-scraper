@@ -424,12 +424,10 @@ def get_options(
 **Method Signature:**
 ```python
 def get_technicals(
-    exchange: str,
-    symbol: str,
-    timeframe: str = "1d",
-    technical_indicators: list[str] | None = None,
-    all_indicators: bool = False,
-    fields: list[str] | None = None,
+ exchange: str,
+ symbol: str,
+ timeframe: str = "1d",
+ technical_indicators: list[str] | None = None,
 ) -> dict[str, Any]
 ```
 
@@ -439,35 +437,33 @@ def get_technicals(
 2. validate_symbol(exchange, symbol)
 3. validate_timeframe(timeframe)
 4. resolve indicators:
-    - all_indicators=True -> use full INDICATORS list
-    - technical_indicators provided -> validate_indicators(technical_indicators)
-    - otherwise -> raise ValidationError
-5. verify_symbol_exchange(exchange, symbol)  # live check
+ - technical_indicators=None -> fetch all INDICATORS
+ - technical_indicators provided -> validate_indicators(technical_indicators)
+5. verify_symbol_exchange(exchange, symbol) # live check
 ```
 
 **Data Extraction:**
 ```
 1. Build fields param from requested indicators.
-   - Daily (1D): indicator keys are unsuffixed.
-   - Non-daily: indicator keys are suffixed (e.g. RSI|60).
+ - Daily (1D): indicator keys are unsuffixed.
+ - Non-daily: indicator keys are suffixed (e.g. RSI|60).
 2. GET /symbol with no_404=true.
 3. Build result dict from response.get(indicator_key).
 4. Strip timeframe suffix from output keys for non-daily timeframes.
-5. Optional post-filter using fields (suffixes stripped before comparison).
 ```
 
 **Output Fields:**
 ```python
 {
-    "RSI": float | None,
-    "MACD.macd": float | None,
-    ...
+ "RSI": float | None,
+ "MACD.macd": float | None,
+ ...
 }
 ```
 
 **Known Behavior Nuances:**
 - Missing indicator keys are returned as `None` (not an automatic failure).
-- `fields=[]` is treated as no filtering because filtering runs only when `fields` is truthy.
+- Method signature simplified in v1.4.0b2: removed `all_indicators` and `fields` parameters.
 
 ### Screener Scraper
 
@@ -895,12 +891,12 @@ def connect(self) -> None:
 **Method Signature:**
 ```python
 def get_candles(
-    self,
-    exchange: str,
-    symbol: str,
-    timeframe: str = "1m",
-    numb_candles: int = 10,
-    indicators: list[tuple[str, str]] | None = None,
+ self,
+ exchange: str,
+ symbol: str,
+ timeframe: str = "1m",
+ numb_candles: int = 10,
+ indicators: list[tuple[str, str]] | None = None,
 ) -> dict[str, Any]
 ```
 
@@ -913,10 +909,12 @@ def get_candles(
 ```
 1. Connect and initialize quote/chart sessions.
 2. Add symbol to both sessions via quote_add_symbols, resolve_symbol, create_series, quote_fast_symbols.
-3. If indicators requested, fetch study metadata and send create_study per indicator.
+3. If indicators requested:
+ - For standard indicators: fetch study metadata and send create_study per indicator.
+ - For custom Pine scripts: validate script via Pine validator before creating studies.
 4. Consume packets:
-   - timescale_update -> OHLCV extraction
-   - du -> indicator extraction
+ - timescale_update -> OHLCV extraction
+ - du -> indicator extraction
 5. Break when OHLCV and indicators are ready, or when packet index i > 15.
 ```
 
@@ -930,50 +928,56 @@ def get_candles(
 ```python
 # OHLCV from p[1].sds_1.s
 {
-    "index": entry["i"],
-    "timestamp": entry["v"][0],
-    "open": entry["v"][1],
-    "high": entry["v"][2],
-    "low": entry["v"][3],
-    "close": entry["v"][4],
-    # "volume" included only when len(entry["v"]) > 5
+ "index": entry["i"],
+ "timestamp": entry["v"][0],
+ "open": entry["v"][1],
+ "high": entry["v"][2],
+ "low": entry["v"][3],
+ "close": entry["v"][4],
+ # "volume" included only when len(entry["v"]) > 5
 }
 
 # Indicator rows from du packet studies
 {
-    "index": item["i"],
-    "timestamp": item["v"][0],
-    "0": item["v"][1],
-    "1": item["v"][2],
-    ...
+ "index": item["i"],
+ "timestamp": item["v"][0],
+ "0": item["v"][1],
+ "1": item["v"][2],
+ ...
 }
 ```
 
 **Output Structure (Success):**
 ```python
 {
-    "status": "success",
-    "data": {
-        "ohlcv": [ ... ],
-        "indicators": {
-            "STD;RSI": [ ... ]
-        }
-    },
-    "metadata": {
-        "exchange": str,
-        "symbol": str,
-        "timeframe": str,
-        "numb_candles": int,
-        # indicators included when provided
-    },
-    "error": None
+ "status": "success",
+ "data": {
+ "ohlcv": [ ... ],
+ "indicators": {
+ "STD;RSI": [ ... ]
+ }
+ },
+ "metadata": {
+ "exchange": str,
+ "symbol": str,
+ "timeframe": str,
+ "numb_candles": int,
+ # indicators included when provided
+ },
+ "error": None
 }
 ```
 
 **Failure Nuances:**
 - Returns failed if no OHLCV data is received.
 - Returns failed if one or more requested indicator IDs are missing after capture.
+- Custom Pine indicator validation failures return clear error messages instead of continuing silently.
 - Indicator metadata or study creation failures are raised internally and wrapped by `@catch_errors` as `Unexpected error` failed envelopes.
+
+**Additional CandleStreamer Methods (v1.4.0b2+):**
+
+- `stream_realtime_price(exchange, symbol) -> Generator`: Persistent generator yielding real-time price updates from WebSocket streams.
+- `get_available_indicators() -> dict`: Static method returning available built-in TradingView indicators.
 
 ### ForecastStreamer.get_forecast()
 

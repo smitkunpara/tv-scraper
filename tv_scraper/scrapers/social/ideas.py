@@ -2,7 +2,7 @@
 
 import logging
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from typing import Any, Literal
+from typing import Any, Literal, get_args
 
 from tv_scraper.core import validators
 from tv_scraper.core.base import BaseScraper, catch_errors
@@ -13,7 +13,7 @@ from tv_scraper.core.validation_data import EXCHANGE_LITERAL
 logger = logging.getLogger(__name__)
 
 IDEAS_SORT_LITERAL = Literal["popular", "recent"]
-ALLOWED_SORT_VALUES: set[str] = {"popular", "recent"}
+ALLOWED_SORT_VALUES = set(get_args(IDEAS_SORT_LITERAL))
 DEFAULT_MAX_WORKERS = 3
 
 

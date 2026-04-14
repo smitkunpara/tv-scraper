@@ -1,11 +1,12 @@
 import logging
-from typing import Any, Literal
+from typing import Any, Literal, get_args
 
 from tv_scraper.core import validators
 from tv_scraper.core.base import catch_errors
 from tv_scraper.core.constants import SCANNER_URL
 from tv_scraper.core.exceptions import ValidationError
 from tv_scraper.core.scanner import ScannerScraper
+from tv_scraper.core.validation_data import SORT_ORDER_LITERAL
 
 SCREENER_MARKET_LITERAL = Literal[
     "america",
@@ -44,11 +45,13 @@ SCREENER_OPERATION_LITERAL = Literal[
     "has",
     "has_none_of",
 ]
-SORT_ORDER_LITERAL = Literal["asc", "desc"]
+
+SCREENER_MARKET_LIST = list(get_args(SCREENER_MARKET_LITERAL))
+SCREENER_OPERATION_LIST = list(get_args(SCREENER_OPERATION_LITERAL))
+SORT_ORDERS = frozenset(get_args(SORT_ORDER_LITERAL))
 
 logger = logging.getLogger(__name__)
 
-SORT_ORDERS: frozenset[str] = frozenset({"asc", "desc"})
 MIN_LIMIT = 1
 MAX_LIMIT = 10000
 
@@ -75,46 +78,8 @@ class Screener(ScannerScraper):
         )
     """
 
-    SUPPORTED_MARKETS: set[str] = {
-        "america",
-        "australia",
-        "canada",
-        "germany",
-        "india",
-        "israel",
-        "italy",
-        "luxembourg",
-        "mexico",
-        "spain",
-        "turkey",
-        "uk",
-        "crypto",
-        "forex",
-        "cfd",
-        "futures",
-        "bonds",
-        "global",
-    }
-
-    OPERATIONS: frozenset[str] = frozenset(
-        {
-            "greater",
-            "less",
-            "egreater",
-            "eless",
-            "equal",
-            "nequal",
-            "in_range",
-            "not_in_range",
-            "above",
-            "below",
-            "crosses",
-            "crosses_above",
-            "crosses_below",
-            "has",
-            "has_none_of",
-        }
-    )
+    SUPPORTED_MARKETS = set(SCREENER_MARKET_LIST)
+    OPERATIONS = frozenset(SCREENER_OPERATION_LIST)
 
     DEFAULT_STOCK_FIELDS: list[str] = [
         "name",
@@ -236,8 +201,8 @@ class Screener(ScannerScraper):
             ``metadata``, and ``error`` keys.
         """
         # --- Validation ---
-        validators.validate_choice("market", market, list(self.SUPPORTED_MARKETS))
-        validators.validate_choice("sort_order", sort_order, ["asc", "desc"])
+        validators.validate_choice("market", market, SCREENER_MARKET_LIST)
+        validators.validate_choice("sort_order", sort_order, SORT_ORDERS)
         validators.validate_range("limit", limit, MIN_LIMIT, MAX_LIMIT)
 
         if filters is not None:

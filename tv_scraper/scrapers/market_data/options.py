@@ -1,6 +1,6 @@
 """Options scraper for fetching option chain data from TradingView."""
 
-from typing import Any
+from typing import Any, get_args
 
 from tv_scraper.core import validators
 from tv_scraper.core.base import catch_errors
@@ -11,26 +11,7 @@ from tv_scraper.core.validation_data import EXCHANGE_LITERAL, OPTION_COLUMN_LITE
 
 OPTIONS_SCANNER_URL = f"{SCANNER_URL}/options/scan2?label-product=symbols-options"
 
-DEFAULT_OPTION_COLUMNS = [
-    "ask",
-    "bid",
-    "currency",
-    "delta",
-    "expiration",
-    "gamma",
-    "iv",
-    "option-type",
-    "pricescale",
-    "rho",
-    "root",
-    "strike",
-    "theoPrice",
-    "theta",
-    "vega",
-    "bid_iv",
-    "ask_iv",
-]
-
+DEFAULT_OPTION_COLUMNS: list[str] = list(get_args(OPTION_COLUMN_LITERAL))
 VALID_OPTION_COLUMNS = set(DEFAULT_OPTION_COLUMNS)
 
 

@@ -9,6 +9,7 @@ from tv_scraper.core.base import catch_errors
 from tv_scraper.core.constants import STATUS_SUCCESS
 from tv_scraper.core.validation_data import (
     EXCHANGE_LITERAL,
+    TIMEFRAME_LITERAL,
 )
 from tv_scraper.scrapers.scripts.pine import Pine
 from tv_scraper.streaming.base_streamer import BaseStreamer
@@ -51,7 +52,7 @@ class CandleStreamer(BaseStreamer):
         self,
         exchange: EXCHANGE_LITERAL,
         symbol: str,
-        timeframe: str = "1m",
+        timeframe: TIMEFRAME_LITERAL = "1m",
         numb_candles: int = 10,
         indicators: list[tuple[str, str]] | None = None,
     ) -> dict[str, Any]:
