@@ -120,7 +120,7 @@ class TestSymbolMarketsConstructor:
 
     def test_export_enabled(self) -> None:
         """Test export_result can be enabled."""
-        scraper = SymbolMarkets(export_result=True)
+        scraper = SymbolMarkets(export="json")
         assert scraper.export_result is True
 
     def test_custom_timeout(self) -> None:
@@ -130,8 +130,8 @@ class TestSymbolMarketsConstructor:
 
     def test_invalid_export_type(self) -> None:
         """Test invalid export_type raises ValueError."""
-        with pytest.raises(ValueError, match="Invalid export_type"):
-            SymbolMarkets(export_type="invalid")
+        with pytest.raises(ValueError, match="Invalid export"):
+            SymbolMarkets(export="invalid")
 
     def test_invalid_timeout_too_low(self) -> None:
         """Test timeout below minimum raises ValueError."""

@@ -28,7 +28,7 @@ class TestCalendarInit:
 
     def test_custom_init(self):
         """Test custom initialization."""
-        cal = Calendar(export_result=True, export_type="csv", timeout=60)
+        cal = Calendar(export="csv", timeout=60)
         assert cal.export_result is True
         assert cal.export_type == "csv"
         assert cal.timeout == 60
@@ -536,7 +536,7 @@ class TestCalendarExport:
     def test_export_called_when_enabled(self, mock_export, mock_request):
         """Test export is called when export_result is True."""
         mock_request.return_value = ({"data": []}, None)
-        cal = Calendar(export_result=True)
+        cal = Calendar(export="json")
 
         cal.get_dividends()
 
@@ -549,7 +549,7 @@ class TestCalendarExport:
     def test_export_not_called_when_disabled(self, mock_export, mock_request):
         """Test export is not called when export_result is False."""
         mock_request.return_value = ({"data": []}, None)
-        cal = Calendar(export_result=False)
+        cal = Calendar(export=None)
 
         cal.get_dividends()
 

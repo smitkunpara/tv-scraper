@@ -22,7 +22,7 @@ class TestMindsInit:
 
     def test_custom_init(self) -> None:
         """Test custom initialization."""
-        scraper = Minds(export_result=True, export_type="csv", timeout=30)
+        scraper = Minds(export="csv", timeout=30)
         assert scraper.export_result is True
         assert scraper.export_type == "csv"
         assert scraper.timeout == 30
@@ -325,7 +325,7 @@ class TestGetMindsExport:
         """Test JSON export."""
         mock_verify.return_value = ("NASDAQ", "AAPL")
 
-        scraper = Minds(export_result=True, export_type="json")
+        scraper = Minds(export="json")
 
         with patch.object(scraper, "_request") as mock_req:
             mock_req.return_value = (
@@ -355,7 +355,7 @@ class TestGetMindsExport:
         """Test CSV export."""
         mock_verify.return_value = ("NASDAQ", "AAPL")
 
-        scraper = Minds(export_result=True, export_type="csv")
+        scraper = Minds(export="csv")
 
         with patch.object(scraper, "_request") as mock_req:
             mock_req.return_value = (

@@ -367,7 +367,7 @@ class TestLiveStreamingCandlesExport:
 
     def test_export_json(self):
         """Test JSON export flag works."""
-        streamer = Streamer(export_result=True, export_type="json")
+        streamer = Streamer(export="json")
         result = streamer.get_candles(
             exchange="BINANCE", symbol="BTCUSDT", timeframe="1h", numb_candles=2
         )

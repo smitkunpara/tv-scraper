@@ -21,7 +21,7 @@ class TestOptionsInit:
 
     def test_custom_init(self) -> None:
         """Test custom initialization."""
-        options = Options(export_result=True, export_type="csv")
+        options = Options(export="csv")
         assert options.export_result is True
         assert options.export_type == "csv"
 
@@ -548,7 +548,7 @@ class TestExport:
             None,
         )
 
-        options = Options(export_result=True, export_type="json")
+        options = Options(export="json")
         options.get_options(exchange="NASDAQ", symbol="AAPL", strike=200)
 
         assert mock_save.called
@@ -568,7 +568,7 @@ class TestExport:
             None,
         )
 
-        options = Options(export_result=True, export_type="csv")
+        options = Options(export="csv")
         options.get_options(exchange="NASDAQ", symbol="AAPL", strike=200)
 
         assert mock_save.called

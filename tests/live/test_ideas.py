@@ -192,7 +192,7 @@ class TestLiveIdeasEdgeCases:
         """Verify export functionality works."""
         import tempfile
 
-        scraper = Ideas(export_result=True, export_type="json")
+        scraper = Ideas(export="json")
         with tempfile.TemporaryDirectory() as tmpdir:
             import os
 

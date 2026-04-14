@@ -69,7 +69,7 @@ pytest tests/integration/  # Cross-module integration tests
 | **Error Handling**| `@catch_errors` decorator | Automated metadata capture and standardized response envelopes |
 | **Validation** | Module-level functions | Symbolic/exchange verification via `tv_scraper.core.validators` |
 | **Data Mapping** | Hardcoded JSON mappings | Forecast key transformation, timeframe conversion |
-| **Export** | CSV/JSON writers | Optional data persistence |
+| **Export** | CSV/JSON writers | Optional data persistence via ``export`` arg |
 | **Parallelization** | `ThreadPoolExecutor` | Concurrent page scraping (ideas) |
 
 ---
@@ -1055,7 +1055,7 @@ def get_available_indicators() -> dict[str, Any]
 - `get_available_indicators()` returns `fetch_available_indicators()` directly.
 
 **Export Nuance:**
-- When `export_result=True`, delegated streamers export on success, and `Streamer` exports again in proxy methods.
+- When data is exported, delegated streamers handle the file writing on success.
 - This can result in duplicate export writes for successful `get_candles()` / `get_forecast()` calls.
 
 **Realtime Price Generator (`stream_realtime_price`)**

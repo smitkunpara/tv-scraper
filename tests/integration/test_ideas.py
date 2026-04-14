@@ -164,7 +164,7 @@ class TestIdeasExportWorkflow:
         mock_verify.return_value = ("NASDAQ", "AAPL")
         mock_scrape.return_value = ([{"title": "Test Idea"}], None)
 
-        scraper = Ideas(export_result=True, export_type="json")
+        scraper = Ideas(export="json")
         result = scraper.get_ideas(
             exchange="NASDAQ", symbol="AAPL", start_page=1, end_page=2, sort_by="recent"
         )
@@ -181,7 +181,7 @@ class TestIdeasExportWorkflow:
         mock_verify.return_value = ("NASDAQ", "AAPL")
         mock_scrape.return_value = ([{"title": "Test"}], None)
 
-        scraper = Ideas(export_result=True, export_type="csv")
+        scraper = Ideas(export="csv")
         assert scraper.export_type == "csv"
 
 

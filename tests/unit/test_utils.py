@@ -73,7 +73,7 @@ class TestGenerateExportFilepath:
 
     def test_invalid_export_type(self) -> None:
         """Verify invalid export type raises error."""
-        with pytest.raises(ExportError, match="Invalid export_type"):
+        with pytest.raises(ExportError, match="Invalid export"):
             generate_export_filepath("AAPL", "candles", "xlsx")
 
     def test_sanitize_symbol(self) -> None:

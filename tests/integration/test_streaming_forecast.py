@@ -163,7 +163,7 @@ class TestIntegrationForecastExport:
 
             mock_ws.recv.side_effect = self._make_full_packets()
 
-            streamer = Streamer(export_result=True, export_type="json")
+            streamer = Streamer(export="json")
             result = streamer.get_forecast(exchange="NYSE", symbol="A")
 
             assert result["status"] == STATUS_SUCCESS

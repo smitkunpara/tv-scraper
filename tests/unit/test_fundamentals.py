@@ -26,7 +26,7 @@ class TestFundamentalsInit:
 
     def test_custom_init(self) -> None:
         """Test custom initialization."""
-        fund = Fundamentals(export_result=True, export_type="csv", timeout=30)
+        fund = Fundamentals(export="csv", timeout=30)
         assert fund.export_result is True
         assert fund.export_type == "csv"
         assert fund.timeout == 30
@@ -46,8 +46,8 @@ class TestFundamentalsInit:
     def test_invalid_export_type(self) -> None:
         """Test invalid export type raises error."""
         with pytest.raises(ValueError) as exc_info:
-            Fundamentals(export_type="invalid")
-        assert "Invalid export_type" in str(exc_info.value)
+            Fundamentals(export="invalid")
+        assert "Invalid export" in str(exc_info.value)
 
     def test_invalid_timeout_too_low(self) -> None:
         """Test timeout too low raises error."""
@@ -489,13 +489,13 @@ class TestGetFundamentalsExport:
 
     def test_export_json_enabled(self) -> None:
         """Test export setting is stored correctly."""
-        fund = Fundamentals(export_result=True, export_type="json")
+        fund = Fundamentals(export="json")
         assert fund.export_result is True
         assert fund.export_type == "json"
 
     def test_export_csv_enabled(self) -> None:
         """Test CSV export setting is stored correctly."""
-        fund = Fundamentals(export_result=True, export_type="csv")
+        fund = Fundamentals(export="csv")
         assert fund.export_result is True
         assert fund.export_type == "csv"
 

@@ -24,8 +24,8 @@ class Minds(BaseScraper):
     trading ideas, and sentiment from TradingView's Minds feature.
 
     Args:
-        export_result: Whether to export results to file.
-        export_type: Export format, ``"json"`` or ``"csv"``.
+        export: Export format, ``"json"`` or ``"csv"``.
+            If ``None`` (default), results are not exported.
         timeout: HTTP request timeout in seconds.
         cookie: Optional TradingView session cookie. If omitted,
             uses ``TRADINGVIEW_COOKIE`` from the environment when available.

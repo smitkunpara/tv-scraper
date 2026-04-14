@@ -321,12 +321,12 @@ class TestPineInit:
 
     def test_custom_export_result(self) -> None:
         """Verify custom export_result accepted."""
-        scraper = Pine(export_result=True)
+        scraper = Pine(export="json")
         assert scraper.export_result is True
 
     def test_custom_export_type(self) -> None:
         """Verify custom export_type accepted."""
-        scraper = Pine(export_type="csv")
+        scraper = Pine(export="csv")
         assert scraper.export_type == "csv"
 
     def test_custom_timeout(self) -> None:

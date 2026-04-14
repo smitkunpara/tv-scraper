@@ -113,7 +113,7 @@ class TestMarketsIntegration:
 
     def test_markets_combined_with_export(self) -> None:
         """Test Markets with export functionality."""
-        scraper = Markets(export_result=True)
+        scraper = Markets(export="json")
         mock_data = {
             "data": [{"s": "NASDAQ:AAPL", "d": ["Apple", 150.0]}],
             "totalCount": 1,

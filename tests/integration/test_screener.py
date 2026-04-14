@@ -174,7 +174,7 @@ class TestScreenerWithExport:
         }
         mock_request.return_value = (mock_response, None)
 
-        scraper = Screener(export_result=True)
+        scraper = Screener(export="json")
         result = scraper.get_screener(market="america", limit=5)
 
         assert result["status"] == STATUS_SUCCESS

@@ -435,7 +435,7 @@ class TestMockForecastExport:
 
         mock_ws.recv.side_effect = self._make_mock_packets()
 
-        fs = ForecastStreamer(export_result=True, export_type="json")
+        fs = ForecastStreamer(export="json")
         fs.get_forecast(exchange="NYSE", symbol="A")
 
         assert mock_save.called

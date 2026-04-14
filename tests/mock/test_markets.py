@@ -336,7 +336,7 @@ class TestMockMarketsDataMapping:
         with patch.object(Markets, "_request") as mock_request:
             mock_request.return_value = _mock_request_success(fixture)
             with patch.object(Markets, "_export") as mock_export:
-                scraper = Markets(export_result=True)
+                scraper = Markets(export="json")
                 result = scraper.get_markets()
 
                 assert result["status"] == STATUS_SUCCESS
@@ -351,7 +351,7 @@ class TestMockMarketsDataMapping:
         with patch.object(Markets, "_request") as mock_request:
             mock_request.return_value = _mock_request_success(fixture)
             with patch.object(Markets, "_export") as mock_export:
-                scraper = Markets(export_result=False)
+                scraper = Markets(export=None)
                 result = scraper.get_markets()
 
                 assert result["status"] == STATUS_SUCCESS

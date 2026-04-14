@@ -53,9 +53,7 @@ class TestForecastStreamerInit:
 
     def test_custom_init(self):
         """Test custom initialization."""
-        fs = ForecastStreamer(
-            export_result=True, export_type="csv", cookie="test_cookie"
-        )
+        fs = ForecastStreamer(export="csv", cookie="test_cookie")
         assert fs.export_result is True
         assert fs.export_type == "csv"
         assert fs.cookie == "test_cookie"
@@ -577,7 +575,7 @@ class TestForecastExport:
 
             mock_ws.recv.side_effect = self._make_full_packets()
 
-            fs = ForecastStreamer(export_result=True, export_type="json")
+            fs = ForecastStreamer(export="json")
             fs.get_forecast(exchange="NYSE", symbol="A")
 
             assert mock_save.called
@@ -599,7 +597,7 @@ class TestForecastExport:
 
             mock_ws.recv.side_effect = self._make_full_packets()
 
-            fs = ForecastStreamer(export_result=True, export_type="csv")
+            fs = ForecastStreamer(export="csv")
             fs.get_forecast(exchange="NYSE", symbol="A")
 
             assert mock_save.called

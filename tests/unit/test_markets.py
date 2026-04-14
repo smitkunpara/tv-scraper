@@ -67,12 +67,12 @@ class TestMarketsInstantiation:
 
     def test_instantiation_with_export(self) -> None:
         """Test instantiation with export enabled."""
-        scraper = Markets(export_result=True)
+        scraper = Markets(export="json")
         assert scraper.export_result is True
 
     def test_instantiation_with_csv_export(self) -> None:
         """Test instantiation with CSV export type."""
-        scraper = Markets(export_result=True, export_type="csv")
+        scraper = Markets(export="csv")
         assert scraper.export_type == "csv"
 
     def test_instantiation_with_timeout(self) -> None:
@@ -82,8 +82,8 @@ class TestMarketsInstantiation:
 
     def test_instantiation_invalid_export_type(self) -> None:
         """Test instantiation with invalid export type raises error."""
-        with pytest.raises(ValueError, match="Invalid export_type"):
-            Markets(export_type="xlsx")
+        with pytest.raises(ValueError, match="Invalid export"):
+            Markets(export="xlsx")
 
     def test_instantiation_invalid_timeout_low(self) -> None:
         """Test instantiation with timeout below minimum raises error."""
@@ -474,8 +474,8 @@ class TestMarketsExport:
     """Test export functionality."""
 
     def test_export_called_when_enabled(self) -> None:
-        """Test _export is called when export_result=True."""
-        scraper = Markets(export_result=True)
+        """Test _export is called when export="json"."""
+        scraper = Markets(export="json")
         mock_data = {
             "data": [{"s": "NASDAQ:AAPL", "d": ["Apple", 150.0]}],
             "totalCount": 1,
@@ -492,8 +492,8 @@ class TestMarketsExport:
                 assert call_kwargs["data_category"] == "markets"
 
     def test_export_not_called_when_disabled(self) -> None:
-        """Test _export is not called when export_result=False."""
-        scraper = Markets(export_result=False)
+        """Test _export is not called when export=None."""
+        scraper = Markets(export=None)
         mock_data = {
             "data": [{"s": "NASDAQ:AAPL", "d": ["Apple", 150.0]}],
             "totalCount": 1,

@@ -40,10 +40,10 @@ class News(BaseScraper):
     supports scraping full article content given a story ID.
 
     Args:
-        export_result: Whether to export results to file.
-        export_type: Export format, ``"json"`` or ``"csv"``.
+        export: Export format, ``"json"`` or ``"csv"``.
+            If ``None`` (default), results are not exported.
         timeout: HTTP request timeout in seconds.
-        cookie: Optional TradingView cookie for captcha avoidance.
+        cookie: TradingView session cookies for session authentication.
 
     Example::
 
@@ -57,14 +57,12 @@ class News(BaseScraper):
 
     def __init__(
         self,
-        export_result: bool = False,
-        export_type: str = "json",
-        timeout: int = 10,
+        export: str | None = None,
+        timeout: int = 15,
         cookie: str | None = None,
     ) -> None:
         super().__init__(
-            export_result=export_result,
-            export_type=export_type,
+            export=export,
             timeout=timeout,
             cookie=cookie,
         )

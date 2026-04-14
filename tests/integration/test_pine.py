@@ -57,7 +57,7 @@ class TestPineExport:
 
     def test_export_result_can_be_enabled(self) -> None:
         """Verify export can be enabled."""
-        scraper = Pine(export_result=True)
+        scraper = Pine(export="json")
         assert scraper.export_result is True
 
     def test_export_type_json_by_default(self) -> None:
@@ -67,7 +67,7 @@ class TestPineExport:
 
     def test_export_type_csv(self) -> None:
         """Verify CSV export type."""
-        scraper = Pine(export_type="csv")
+        scraper = Pine(export="csv")
         assert scraper.export_type == "csv"
 
 

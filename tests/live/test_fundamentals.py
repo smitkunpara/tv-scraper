@@ -265,14 +265,14 @@ class TestLiveFundamentalsExport:
 
     def test_live_get_fundamentals_with_json_export(self) -> None:
         """Verify JSON export works."""
-        scraper = Fundamentals(export_result=True, export_type="json")
+        scraper = Fundamentals(export="json")
         result = scraper.get_fundamentals(exchange="NASDAQ", symbol="AAPL")
         assert result["status"] == STATUS_SUCCESS
 
     def test_live_get_fundamentals_with_csv_export(self) -> None:
         """Verify CSV export works (requires pandas)."""
         pytest.importorskip("pandas", reason="pandas required for CSV export")
-        scraper = Fundamentals(export_result=True, export_type="csv")
+        scraper = Fundamentals(export="csv")
         result = scraper.get_fundamentals(exchange="NASDAQ", symbol="AAPL")
         assert result["status"] == STATUS_SUCCESS
 

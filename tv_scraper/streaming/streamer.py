@@ -35,16 +35,15 @@ class Streamer(BaseStreamer):
         or :class:`ForecastStreamer` for forecast data.
 
     Args:
-        export_result: Whether to export data to file after retrieval.
-        export_type: Export format — ``"json"`` or ``"csv"``.
+        export: Export format — ``"json"`` or ``"csv"``.
+            If ``None`` (default), results are not exported.
         cookie: TradingView session cookies for session authentication and
             indicator access. If not provided, unauthenticated access is used.
     """
 
     def __init__(
         self,
-        export_result: bool = False,
-        export_type: str = "json",
+        export: str | None = None,
         cookie: str | None = None,
     ) -> None:
         warnings.warn(
@@ -54,18 +53,15 @@ class Streamer(BaseStreamer):
             stacklevel=2,
         )
         super().__init__(
-            export_result=export_result,
-            export_type=export_type,
+            export=export,
             cookie=cookie,
         )
         self._candle_streamer = CandleStreamer(
-            export_result=export_result,
-            export_type=export_type,
+            export=export,
             cookie=self.cookie,
         )
         self._forecast_streamer = ForecastStreamer(
-            export_result=export_result,
-            export_type=export_type,
+            export=export,
             cookie=self.cookie,
         )
 

@@ -248,7 +248,7 @@ class TestLiveMarketsEdgeCases:
 
     def test_live_markets_exports_enabled(self) -> None:
         """Test export functionality when enabled."""
-        scraper = Markets(export_result=True, export_type="json")
+        scraper = Markets(export="json")
         result = scraper.get_markets(market="america", limit=5)
 
         assert result["status"] == STATUS_SUCCESS

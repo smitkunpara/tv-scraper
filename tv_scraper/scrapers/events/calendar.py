@@ -67,8 +67,8 @@ class Calendar(ScannerScraper):
     standardized response envelopes.
 
     Args:
-        export_result: Whether to export results to file.
-        export_type: Export format, ``"json"`` or ``"csv"``.
+        export: Export format, ``"json"`` or ``"csv"``.
+            If ``None`` (default), results are not exported.
         timeout: HTTP request timeout in seconds.
         cookie: Optional TradingView session cookie. If not provided,
             the ``TRADINGVIEW_COOKIE`` environment variable is used.

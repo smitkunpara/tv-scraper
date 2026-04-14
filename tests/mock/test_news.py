@@ -417,7 +417,7 @@ class TestMockNewsExport:
 
     def test_export_enabled(self, scraper: News) -> None:
         """Verify export is called when enabled."""
-        scraper_export = News(export_result=True)
+        scraper_export = News(export="json")
         with patch.object(scraper_export, "_request") as mock_request:
             mock_request.return_value = (
                 {

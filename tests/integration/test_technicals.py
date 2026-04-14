@@ -159,7 +159,7 @@ class TestTechnicalsWithExport:
         mock_response.text = '{"RSI": 55.5, "MACD.macd": 0.12}'
         mock_request.return_value = mock_response
 
-        t = Technicals(export_result=True, export_type="json")
+        t = Technicals(export="json")
         result = t.get_technicals(
             exchange="NASDAQ",
             symbol="AAPL",
@@ -188,7 +188,7 @@ class TestTechnicalsWithExport:
         mock_response.text = '{"RSI": 55.5}'
         mock_request.return_value = mock_response
 
-        t = Technicals(export_result=True, export_type="csv")
+        t = Technicals(export="csv")
         result = t.get_technicals(
             exchange="NASDAQ",
             symbol="AAPL",

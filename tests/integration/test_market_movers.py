@@ -200,7 +200,7 @@ class TestMarketMoversWithExport:
             None,
         )
 
-        scraper = MarketMovers(export_result=True, export_type="json")
+        scraper = MarketMovers(export="json")
 
         with patch.object(scraper, "_request", mock_request):
             with patch.object(scraper, "_export") as mock_export:
@@ -222,7 +222,7 @@ class TestMarketMoversWithExport:
             None,
         )
 
-        scraper = MarketMovers(export_result=True, export_type="csv")
+        scraper = MarketMovers(export="csv")
 
         with patch.object(scraper, "_request", mock_request):
             with patch.object(scraper, "_export") as mock_export:

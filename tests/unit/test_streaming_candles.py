@@ -25,7 +25,7 @@ class TestCandleStreamerInit:
 
     def test_custom_init(self):
         """Test custom initialization."""
-        cs = CandleStreamer(export_result=True, export_type="csv", cookie="test_cookie")
+        cs = CandleStreamer(export="csv", cookie="test_cookie")
         assert cs.export_result is True
         assert cs.export_type == "csv"
         assert cs.cookie == "test_cookie"
@@ -55,7 +55,7 @@ class TestStreamerInit:
 
     def test_custom_init(self):
         """Test custom Streamer initialization."""
-        s = Streamer(export_result=True, export_type="csv", cookie="test_cookie")
+        s = Streamer(export="csv", cookie="test_cookie")
         assert s.export_result is True
         assert s.export_type == "csv"
         assert s.cookie == "test_cookie"
@@ -569,7 +569,7 @@ class TestGetCandlesExport:
         framed = f"~m~{len(ts_raw)}~m~{ts_raw}"
         mock_ws.recv.side_effect = [framed, ConnectionError("done")]
 
-        cs = CandleStreamer(export_result=True, export_type="json")
+        cs = CandleStreamer(export="json")
         cs.get_candles(exchange="BINANCE", symbol="BTCUSDT", numb_candles=1)
 
         assert mock_save.called
@@ -592,7 +592,7 @@ class TestGetCandlesExport:
         framed = f"~m~{len(ts_raw)}~m~{ts_raw}"
         mock_ws.recv.side_effect = [framed, ConnectionError("done")]
 
-        cs = CandleStreamer(export_result=True, export_type="csv")
+        cs = CandleStreamer(export="csv")
         cs.get_candles(exchange="BINANCE", symbol="BTCUSDT", numb_candles=1)
 
         assert mock_save.called
@@ -1015,5 +1015,5 @@ class TestStreamerClass:
         mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
         mock_ws.recv.side_effect = _make_mock_packets(1)
 
-        s = Streamer(export_result=True)
+        s = Streamer(export="json")
         assert s._candle_streamer.export_result is True

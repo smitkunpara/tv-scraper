@@ -39,7 +39,7 @@ class TestIdeasInstantiation:
 
     def test_export_options(self) -> None:
         """Verify export configuration."""
-        scraper = Ideas(export_result=True, export_type="csv")
+        scraper = Ideas(export="csv")
         assert scraper.export_result is True
         assert scraper.export_type == "csv"
 
@@ -50,8 +50,8 @@ class TestIdeasInstantiation:
 
     def test_invalid_export_type_raises(self) -> None:
         """Verify invalid export_type raises ValueError."""
-        with pytest.raises(ValueError, match="Invalid export_type"):
-            Ideas(export_type="invalid")
+        with pytest.raises(ValueError, match="Invalid export"):
+            Ideas(export="invalid")
 
     def test_invalid_timeout_raises(self) -> None:
         """Verify invalid timeout raises ValueError."""
@@ -400,7 +400,7 @@ class TestIdeasExport:
         mock_verify.return_value = ("NASDAQ", "AAPL")
         mock_scrape.return_value = ([{"title": "Idea"}], None)
 
-        scraper = Ideas(export_result=True)
+        scraper = Ideas(export="json")
         with patch.object(scraper, "_export") as mock_export:
             scraper.get_ideas(exchange="NASDAQ", symbol="AAPL")
             mock_export.assert_called_once()
@@ -414,7 +414,7 @@ class TestIdeasExport:
         mock_verify.return_value = ("NASDAQ", "AAPL")
         mock_scrape.return_value = ([{"title": "Idea"}], None)
 
-        scraper = Ideas(export_result=False)
+        scraper = Ideas(export=None)
         with patch.object(scraper, "_export") as mock_export:
             scraper.get_ideas(exchange="NASDAQ", symbol="AAPL")
             mock_export.assert_not_called()

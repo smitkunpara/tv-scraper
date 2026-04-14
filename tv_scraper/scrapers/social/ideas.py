@@ -25,8 +25,8 @@ class Ideas(BaseScraper):
     authentication for captcha bypass.
 
     Args:
-        export_result: Whether to export results to file.
-        export_type: Export format, ``"json"`` or ``"csv"``.
+        export: Export format, ``"json"`` or ``"csv"``.
+            If ``None`` (default), results are not exported.
         timeout: HTTP request timeout in seconds.
         cookie: TradingView session cookie string. Falls back to
             ``TRADINGVIEW_COOKIE`` environment variable if not provided.
@@ -41,15 +41,13 @@ class Ideas(BaseScraper):
 
     def __init__(
         self,
-        export_result: bool = False,
-        export_type: str = "json",
+        export: str | None = None,
         timeout: int = 10,
         cookie: str | None = None,
         max_workers: int = DEFAULT_MAX_WORKERS,
     ) -> None:
         super().__init__(
-            export_result=export_result,
-            export_type=export_type,
+            export=export,
             timeout=timeout,
             cookie=cookie,
         )

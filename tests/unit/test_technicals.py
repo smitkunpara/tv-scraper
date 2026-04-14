@@ -22,7 +22,7 @@ class TestTechnicalsInit:
 
     def test_custom_init(self):
         """Test custom initialization."""
-        t = Technicals(export_result=True, export_type="csv")
+        t = Technicals(export="csv")
         assert t.export_result is True
         assert t.export_type == "csv"
 
@@ -421,7 +421,7 @@ class TestGetTechnicalsExport:
         mock_response.text = json.dumps(mock_response.json.return_value)
         mock_request.return_value = mock_response
 
-        t = Technicals(export_result=True, export_type="json")
+        t = Technicals(export="json")
         t.get_technicals(
             exchange="NASDAQ",
             symbol="AAPL",
@@ -449,7 +449,7 @@ class TestGetTechnicalsExport:
         mock_response.text = json.dumps(mock_response.json.return_value)
         mock_request.return_value = mock_response
 
-        t = Technicals(export_result=True, export_type="csv")
+        t = Technicals(export="csv")
         t.get_technicals(
             exchange="NASDAQ",
             symbol="AAPL",

@@ -109,7 +109,7 @@ Most scrapers can export successful responses to JSON or CSV:
 ```python
 from tv_scraper import Technicals
 
-scraper = Technicals(export_result=True, export_type="json")
+scraper = Technicals(export="json")
 result = scraper.get_technicals(
     exchange="NASDAQ",
     symbol="AAPL",
@@ -125,7 +125,7 @@ Supported export formats:
 Invalid export formats are one of the few cases that fail at construction time:
 
 ```python
-Technicals(export_type="xml")
+Technicals(export="xml")
 ```
 
 ## Cookie-Based Features

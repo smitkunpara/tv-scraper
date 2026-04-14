@@ -162,7 +162,7 @@ class TestSymbolMarketsWorkflows:
             os.chdir(tmpdir)
 
             try:
-                sm = SymbolMarkets(export_result=True)
+                sm = SymbolMarkets(export="json")
                 result = sm.get_symbol_markets(
                     symbol="AAPL", scanner="america", limit=10
                 )

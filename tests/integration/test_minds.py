@@ -105,7 +105,7 @@ class TestMindsIntegrationWithExport:
 
     def test_export_enabled_calls_save_json(self) -> None:
         """Test that enabling export calls save_json_file."""
-        scraper = Minds(export_result=True, export_type="json")
+        scraper = Minds(export="json")
 
         with patch.object(scraper, "_request") as mock_req:
             mock_req.return_value = (
@@ -133,7 +133,7 @@ class TestMindsIntegrationWithExport:
 
     def test_export_disabled_does_not_call_save(self) -> None:
         """Test that disabling export doesn't call save functions."""
-        scraper = Minds(export_result=False)
+        scraper = Minds(export=None)
 
         with patch.object(scraper, "_request") as mock_req:
             mock_req.return_value = (
@@ -249,7 +249,7 @@ class TestMindsCrossModuleWorkflow:
 
     def test_validation_then_fetch_workflow(self) -> None:
         """Test complete workflow: validate -> fetch -> parse -> export."""
-        scraper = Minds(export_result=True, export_type="json")
+        scraper = Minds(export="json")
 
         with patch("tv_scraper.core.validators.verify_symbol_exchange") as mock_verify:
             mock_verify.return_value = ("NASDAQ", "AAPL")

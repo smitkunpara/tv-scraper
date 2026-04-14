@@ -30,7 +30,7 @@ class TestScreenerInit:
 
     def test_custom_init(self) -> None:
         """Test custom initialization."""
-        scraper = Screener(export_result=True, export_type="csv", timeout=30)
+        scraper = Screener(export="csv", timeout=30)
         assert scraper.export_result is True
         assert scraper.export_type == "csv"
         assert scraper.timeout == 30
@@ -584,7 +584,7 @@ class TestGetScreenerExport:
         }
         mock_request.return_value = (mock_response, None)
 
-        scraper = Screener(export_result=True)
+        scraper = Screener(export="json")
         result = scraper.get_screener(market="america", limit=5)
 
         assert result["status"] == STATUS_SUCCESS
@@ -602,7 +602,7 @@ class TestGetScreenerExport:
         }
         mock_request.return_value = (mock_response, None)
 
-        scraper = Screener(export_result=False)
+        scraper = Screener(export=None)
         result = scraper.get_screener(market="america", limit=5)
 
         assert result["status"] == STATUS_SUCCESS

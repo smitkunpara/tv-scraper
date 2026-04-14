@@ -33,8 +33,8 @@ class Markets(ScannerScraper):
     filtered by market region and sorted by a chosen criterion.
 
     Args:
-        export_result: Whether to export results to file.
-        export_type: Export format, ``"json"`` or ``"csv"``.
+        export: Export format, ``"json"`` or ``"csv"``.
+            If ``None`` (default), results are not exported.
         timeout: HTTP request timeout in seconds.
         cookie: Optional TradingView session cookie. If omitted,
             ``TRADINGVIEW_COOKIE`` from the environment is used when available.

@@ -199,7 +199,7 @@ class TestLiveForecastStreamerInit:
 
     def test_custom_init(self) -> None:
         """Test custom initialization."""
-        fs = ForecastStreamer(export_result=True, export_type="csv", cookie="test")
+        fs = ForecastStreamer(export="csv", cookie="test")
         assert fs.export_result is True
         assert fs.export_type == "csv"
         assert fs.cookie == "test"

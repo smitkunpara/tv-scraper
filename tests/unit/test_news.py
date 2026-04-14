@@ -429,7 +429,7 @@ class TestNewsExport:
 
     def test_export_called_when_enabled(self) -> None:
         """Verify export is called when export_result is True."""
-        scraper = News(export_result=True)
+        scraper = News(export="json")
         with patch.object(scraper, "_request") as mock_request:
             mock_request.return_value = (
                 {
@@ -451,7 +451,7 @@ class TestNewsExport:
 
     def test_export_not_called_when_disabled(self) -> None:
         """Verify export is not called when export_result is False."""
-        scraper = News(export_result=False)
+        scraper = News(export=None)
         with patch.object(scraper, "_request") as mock_request:
             mock_request.return_value = ({"items": []}, None)
             with patch.object(scraper, "_export") as mock_export:

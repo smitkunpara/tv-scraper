@@ -309,7 +309,7 @@ class TestIdeasConfiguration:
 
     def test_export_result_enabled(self) -> None:
         """Verify export_result option."""
-        scraper = Ideas(export_result=True, export_type="json")
+        scraper = Ideas(export="json")
         assert scraper.export_result is True
         assert scraper.export_type == "json"
 

@@ -88,7 +88,7 @@ class TestIntegrationStreamingCandlesWithExport:
                 mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
 
                 with patch("tv_scraper.core.base.save_json_file") as mock_save:
-                    cs = CandleStreamer(export_result=True, export_type="json")
+                    cs = CandleStreamer(export="json")
                     result = cs.get_candles(
                         exchange="BINANCE", symbol="BTCUSDT", numb_candles=1
                     )
@@ -104,7 +104,7 @@ class TestIntegrationStreamingCandlesWithExport:
             mock_validate.side_effect = Exception("Invalid")
 
             with patch("tv_scraper.core.base.save_json_file") as mock_save:
-                cs = CandleStreamer(export_result=True, export_type="json")
+                cs = CandleStreamer(export="json")
                 cs.get_candles(exchange="INVALID", symbol="INVALID", numb_candles=5)
 
                 mock_save.assert_not_called()
@@ -212,7 +212,7 @@ class TestIntegrationCandleStreamerAndStreamer:
 
     def test_streamer_passes_export_to_candle_streamer(self):
         """Test that Streamer passes export settings to CandleStreamer."""
-        s = Streamer(export_result=True, export_type="csv")
+        s = Streamer(export="csv")
 
         assert s._candle_streamer.export_result is True
         assert s._candle_streamer.export_type == "csv"

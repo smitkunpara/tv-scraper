@@ -359,7 +359,7 @@ class TestFundamentalsWorkflows:
             "error": None,
         }
 
-        fund = Fundamentals(export_result=True, export_type="json")
+        fund = Fundamentals(export="json")
         result = fund.get_fundamentals(
             exchange="NASDAQ",
             symbol="AAPL",

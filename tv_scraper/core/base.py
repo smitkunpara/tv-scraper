@@ -71,22 +71,21 @@ class BaseScraper:
     data export, and access to the shared DataValidator.
 
     Args:
-        export_result: Whether to export results to file.
-        export_type: Export format, ``"json"`` or ``"csv"``.
+        export: Export format, ``"json"`` or ``"csv"``.
+            If ``None`` (default), results are not exported.
         timeout: HTTP request timeout in seconds.
     """
 
     def __init__(
         self,
-        export_result: bool = False,
-        export_type: str = "json",
+        export: str | None = None,
         timeout: int = REQUEST_TIMEOUT,
         cookie: str | None = None,
     ) -> None:
-        if export_type not in EXPORT_TYPES:
+        if export is not None and export not in EXPORT_TYPES:
             raise ValueError(
-                f"Invalid export_type: '{export_type}'. "
-                f"Supported types: {', '.join(sorted(EXPORT_TYPES))}"
+                f"Invalid export: '{export}'. "
+                f"Supported types: {', '.join(sorted(EXPORT_TYPES))} or None"
             )
         if (
             not isinstance(timeout, int)
@@ -96,8 +95,8 @@ class BaseScraper:
             raise ValueError(
                 f"Timeout must be an integer between {_MIN_TIMEOUT} and {_MAX_TIMEOUT}, got {timeout}."
             )
-        self.export_result = export_result
-        self.export_type = export_type
+        self.export_result = bool(export)
+        self.export_type = export or "json"
         self.timeout = timeout
 
         self.cookie = cookie or os.environ.get("TRADINGVIEW_COOKIE")

@@ -511,7 +511,7 @@ class TestNewsExportIntegration:
 
     def test_export_on_success(self, news_scraper: News) -> None:
         """Verify export is triggered on successful fetch."""
-        scraper = News(export_result=True)
+        scraper = News(export="json")
         mock_request = MagicMock()
         mock_request.return_value = (
             {
@@ -536,7 +536,7 @@ class TestNewsExportIntegration:
 
     def test_no_export_on_failure(self, news_scraper: News) -> None:
         """Verify export is not triggered on failure."""
-        scraper = News(export_result=True)
+        scraper = News(export="json")
 
         with patch.object(scraper, "_request") as mock_request:
             mock_request.return_value = (None, "Network error")
@@ -547,7 +547,7 @@ class TestNewsExportIntegration:
 
     def test_export_with_custom_params(self, news_scraper: News) -> None:
         """Verify export includes correct parameters."""
-        scraper = News(export_result=True)
+        scraper = News(export="json")
         mock_request = MagicMock()
         mock_request.return_value = (
             {

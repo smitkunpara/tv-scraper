@@ -53,7 +53,7 @@ scraper.get_news(
 ### Naming stays snake_case
 
 ```python
-scraper.get_technicals(export_result=True, export_type="json")
+scraper.get_technicals(export="json")
 ```
 
 ## Response Envelope
@@ -123,7 +123,7 @@ result = scraper.get_technicals(
 !!! warning "Construction-Time Errors"
     Some constructor arguments are validated immediately. The common ones are:
 
-    - invalid `export_type`
+    - invalid `export`
     - invalid `timeout`
 
     That means these fail before any network call happens:
@@ -131,7 +131,7 @@ result = scraper.get_technicals(
 ```python
 from tv_scraper import Technicals
 
-Technicals(export_type="xml")
+Technicals(export="xml")
 Technicals(timeout=0)
 ```
 

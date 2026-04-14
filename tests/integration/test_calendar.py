@@ -133,7 +133,7 @@ class TestCalendarMultipleInstances:
         mock_request.return_value = ({"data": []}, None)
 
         cal1 = Calendar()
-        cal2 = Calendar(export_result=True)
+        cal2 = Calendar(export="json")
 
         result1 = cal1.get_dividends(markets=["america"])
         result2 = cal2.get_earnings(markets=["uk"])
@@ -235,7 +235,7 @@ class TestCalendarExportWorkflows:
     def test_export_dividends_to_json(self, mock_export, mock_request):
         """Test exporting dividends to JSON."""
         mock_request.return_value = ({"data": []}, None)
-        cal = Calendar(export_result=True, export_type="json")
+        cal = Calendar(export="json")
 
         cal.get_dividends(markets=["america"])
 
@@ -249,7 +249,7 @@ class TestCalendarExportWorkflows:
     def test_export_earnings_to_json(self, mock_export, mock_request):
         """Test exporting earnings to JSON."""
         mock_request.return_value = ({"data": []}, None)
-        cal = Calendar(export_result=True, export_type="json")
+        cal = Calendar(export="json")
 
         cal.get_earnings(markets=["america"])
 
@@ -263,7 +263,7 @@ class TestCalendarExportWorkflows:
     def test_export_multiple_calendar_calls(self, mock_export, mock_request):
         """Test multiple calendar calls with export enabled."""
         mock_request.return_value = ({"data": []}, None)
-        cal = Calendar(export_result=True)
+        cal = Calendar(export="json")
 
         cal.get_dividends(markets=["america"])
         cal.get_earnings(markets=["america"])

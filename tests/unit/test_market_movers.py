@@ -24,7 +24,7 @@ class TestMarketMoversInit:
 
     def test_initialization_with_export(self) -> None:
         """Test initialization with export enabled."""
-        scraper = MarketMovers(export_result=True, export_type="csv")
+        scraper = MarketMovers(export="csv")
         assert scraper.export_result is True
         assert scraper.export_type == "csv"
 
