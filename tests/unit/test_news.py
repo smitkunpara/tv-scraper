@@ -7,10 +7,22 @@ from pathlib import Path
 from typing import Any
 from unittest.mock import patch
 
+import pytest
+
 from tv_scraper.core.constants import STATUS_FAILED, STATUS_SUCCESS
 from tv_scraper.scrapers.social.news import News
 
 FIXTURES_DIR = Path(__file__).parent.parent / "fixtures" / "news"
+
+
+@pytest.fixture(autouse=True)
+def mock_verify_symbol_exchange():
+    """Mock live network call for all tests in this module."""
+    with patch(
+        "tv_scraper.scrapers.social.news.validators.verify_symbol_exchange"
+    ) as mock:
+        mock.return_value = ("NASDAQ", "AAPL")
+        yield mock
 
 
 class TestNewsHeadlinesResponse:
@@ -50,12 +62,13 @@ class TestNewsHeadlinesResponse:
                 exchange="NASDAQ",
                 symbol="AAPL",
                 provider="reuters",
-                area="us",
+                area="americas",
                 sort_by="latest",
                 section="all",
                 language="en",
             )
 
+        assert result["status"] == STATUS_SUCCESS
         metadata = result["metadata"]
         assert metadata["exchange"] == "NASDAQ"
         assert metadata["symbol"] == "AAPL"
@@ -63,7 +76,7 @@ class TestNewsHeadlinesResponse:
         assert metadata["section"] == "all"
         assert metadata["language"] == "en"
         assert metadata["provider"] == "reuters"
-        assert metadata["area"] == "us"
+        assert metadata["area"] == "americas"
 
     def test_success_response_status(self) -> None:
         """Verify success response has correct status."""

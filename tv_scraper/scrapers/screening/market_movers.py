@@ -232,21 +232,28 @@ class MarketMovers(ScannerScraper):
             ``metadata``, and ``error`` keys.
         """
         # --- Validation ---
-        validators.validate_range("limit", limit, 1, 1000)
-        validators.validate_choice("market", market, self.SUPPORTED_MARKETS)
+        validators.validate_range(limit, 1, 1000)
+        validators.validate_choice(market, self.SUPPORTED_MARKETS)
 
         allowed_categories = (
             self.STOCK_CATEGORIES
             if market.startswith("stocks")
             else self.NON_STOCK_CATEGORIES
         )
-        validators.validate_choice("category", category, allowed_categories)
-        validators.validate_language(language)
+        validators.validate_choice(category, allowed_categories)
+        validators.validate_choice(language, validators.LANGUAGES_SET)
 
         resolved_fields = (
             fields if fields is not None else self._get_default_fields(market)
         )
-        validators.validate_fields(resolved_fields, resolved_fields, "fields")
+        if not isinstance(resolved_fields, list) or not all(
+            isinstance(f, str) for f in resolved_fields
+        ):
+            from tv_scraper.core.exceptions import ValidationError
+
+            raise ValidationError(
+                "Invalid fields parameter: must be a list of strings."
+            )
 
         payload = {
             "columns": resolved_fields,

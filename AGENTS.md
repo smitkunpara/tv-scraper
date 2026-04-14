@@ -562,6 +562,7 @@ def get_market_movers(
 **Method Signature:**
 ```python
 def get_symbol_markets(
+    exchange: str,
     symbol: str,
     fields: list[str] | None = None,
     scanner: str = "global",
@@ -570,8 +571,8 @@ def get_symbol_markets(
 ```
 
 **Validation:**
-- If symbol is `EXCHANGE:SYMBOL`, only the part after `:` is used for matching.
-- `validate_symbol("global", search_symbol)`.
+- `validate_exchange(exchange)`.
+- `validate_symbol(exchange, symbol)`.
 - `scanner` choice validation.
 - `limit` in `[1, 1000]`.
 - `fields` are not field-name validated here.
@@ -751,6 +752,7 @@ def get_minds(
 **Method Signatures:**
 ```python
 def get_news(
+    exchange: str | None = None,
     symbol: str | None = None,
     corp_activity: list[str] | None = None,
     economic_category: list[str] | None = None,
@@ -1126,6 +1128,7 @@ Validation logic is centralized in `tv_scraper/core/validators.py`. Developers s
 | `validate_timeframe(tf)` | Validates TradingView-compatible timeframe strings. |
 | `validate_yyyymmdd_date(name, val)` | Validates integer dates in `YYYYMMDD` format and real calendar validity. |
 | `validate_choice(name, val, choices)`| Generic validator for string literal choices. |
+| `validate_list(name, vals, choices)` | Batch counterpart to `validate_choice` for validating lists of strings. |
 | `validate_range(name, val, min, max)` | Generic numeric range validator. |
 | `validate_fields(fields, allowed)` | Validates a list of requested data fields. |
 

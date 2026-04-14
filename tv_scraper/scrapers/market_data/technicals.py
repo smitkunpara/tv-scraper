@@ -65,10 +65,6 @@ class Technicals(ScannerScraper):
         """
 
         # --- Validation ---
-        # Validate base inputs first so parameter errors surface before indicator checks.
-        validators.validate_exchange(exchange)
-        validators.validate_symbol(exchange, symbol)
-
         # All local validations first (before any network calls)
         validators.validate_timeframe(timeframe)
         if technical_indicators is None:
@@ -76,8 +72,9 @@ class Technicals(ScannerScraper):
         else:
             indicators = [str(ind) for ind in technical_indicators]
             validators.validate_indicators(indicators)
-        # Symbol/exchange verification requires network - do last
-        validators.verify_symbol_exchange(exchange, symbol)
+
+        # Symbol/exchange verification (includes static and live checks)
+        v_exchange, v_symbol = validators.verify_symbol_exchange(exchange, symbol)
 
         # --- Build API request ---
         timeframe_value: str = TIMEFRAMES.get(timeframe, "")
@@ -92,7 +89,7 @@ class Technicals(ScannerScraper):
         fields_param = ",".join(api_indicators)
 
         params: dict[str, str] = {
-            "symbol": f"{exchange}:{symbol}",
+            "symbol": f"{v_exchange}:{v_symbol}",
             "fields": fields_param,
             "no_404": "true",
         }
@@ -130,7 +127,7 @@ class Technicals(ScannerScraper):
         if self.export_result:
             self._export(
                 data=result,
-                symbol=symbol,
+                symbol=f"{v_exchange}_{v_symbol}",
                 data_category="technicals",
                 timeframe=timeframe,
             )

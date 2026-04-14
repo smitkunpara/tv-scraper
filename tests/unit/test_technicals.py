@@ -52,7 +52,7 @@ class TestGetTechnicalsInvalidInputs:
 
         result = t.get_technicals(exchange=None, symbol="AAPL")  # type: ignore
         assert result["status"] == STATUS_FAILED
-        assert "Exchange must be a non-empty string" in result["error"]
+        assert "Both exchange and symbol" in result["error"]
 
     def test_null_symbol(self):
         """Test null symbol returns error."""
@@ -60,7 +60,7 @@ class TestGetTechnicalsInvalidInputs:
         result = t.get_technicals(exchange="NASDAQ", symbol=None)  # type: ignore
 
         assert result["status"] == STATUS_FAILED
-        assert "Symbol must be a non-empty string" in result["error"]
+        assert "Both exchange and symbol" in result["error"]
 
     def test_whitespace_only_exchange(self):
         """Test whitespace-only exchange returns error."""

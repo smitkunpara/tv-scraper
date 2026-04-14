@@ -59,9 +59,9 @@ class Minds(BaseScraper):
             ``status``, ``data``, ``metadata``, ``error``.
         """
         # --- Validation ---
-        validators.verify_symbol_exchange(exchange, symbol)
+        v_exchange, v_symbol = validators.verify_symbol_exchange(exchange, symbol)
 
-        combined_symbol = f"{exchange}:{symbol}"
+        combined_symbol = f"{v_exchange}:{v_symbol}"
 
         parsed_data: list[dict[str, Any]] = []
         next_cursor: str | None = None
@@ -71,7 +71,7 @@ class Minds(BaseScraper):
         while True:
             if pages >= MAX_PAGES:
                 logger.warning(
-                    "Max pages (%d) reached for %s:%s", MAX_PAGES, exchange, symbol
+                    "Max pages (%d) reached for %s:%s", MAX_PAGES, v_exchange, v_symbol
                 )
                 break
 
@@ -84,7 +84,7 @@ class Minds(BaseScraper):
             )
 
             if error_msg:
-                logger.error("Error for %s:%s - %s", exchange, symbol, error_msg)
+                logger.error("Error for %s:%s - %s", v_exchange, v_symbol, error_msg)
                 return self._error_response(error_msg)
 
             assert json_response is not None
@@ -125,7 +125,7 @@ class Minds(BaseScraper):
         if self.export_result and parsed_data:
             self._export(
                 data=parsed_data,
-                symbol=f"{exchange}_{symbol}",
+                symbol=f"{v_exchange}_{v_symbol}",
                 data_category="minds",
             )
 

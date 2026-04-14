@@ -84,10 +84,10 @@ class Ideas(BaseScraper):
                 f"end_page ({end_page}) must be >= start_page ({start_page})"
             )
 
-        validators.verify_symbol_exchange(exchange, symbol)
-        validators.validate_choice("sort_by", sort_by, ALLOWED_SORT_VALUES)
+        v_exchange, v_symbol = validators.verify_symbol_exchange(exchange, symbol)
+        validators.validate_choice(sort_by, ALLOWED_SORT_VALUES)
 
-        url_slug = f"{exchange}-{symbol}"
+        url_slug = f"{v_exchange}-{v_symbol}"
 
         page_list = range(start_page, end_page + 1)
         articles: list[dict[str, Any]] = []
@@ -129,7 +129,7 @@ class Ideas(BaseScraper):
         if self.export_result:
             self._export(
                 data=articles,
-                symbol=f"{exchange}_{symbol}",
+                symbol=f"{v_exchange}_{v_symbol}",
                 data_category="ideas",
             )
 

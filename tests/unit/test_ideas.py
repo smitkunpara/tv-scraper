@@ -266,7 +266,7 @@ class TestIdeasGetIdeas:
         """Verify invalid exchange is rejected."""
         from tv_scraper.core.exceptions import ValidationError
 
-        mock_verify.side_effect = ValidationError("Invalid exchange")
+        mock_verify.side_effect = ValidationError("Invalid value")
 
         scraper = Ideas()
         result = scraper.get_ideas(exchange="INVALID", symbol="AAPL")
@@ -299,7 +299,7 @@ class TestIdeasGetIdeas:
         scraper = Ideas()
         result = scraper.get_ideas(exchange="NASDAQ", symbol="AAPL", sort_by="bad")
         assert result["status"] == STATUS_FAILED
-        assert "sort_by" in result["error"]
+        assert "Invalid value" in result["error"]
 
     @patch("tv_scraper.core.validators.verify_symbol_exchange")
     @patch.object(Ideas, "_scrape_page")

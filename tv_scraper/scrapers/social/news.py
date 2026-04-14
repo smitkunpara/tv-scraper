@@ -8,12 +8,18 @@ from tv_scraper.core.validation_data import (
     AREA_LITERAL,
     AREAS,
     EXCHANGE_LITERAL,
+    NEWS_CORP_ACTIVITIES,
     NEWS_CORP_ACTIVITY_LITERAL,
+    NEWS_COUNTRIES,
     NEWS_COUNTRY_LITERAL,
+    NEWS_ECONOMIC_CATEGORIES,
     NEWS_ECONOMIC_CATEGORY_LITERAL,
     NEWS_MARKET_LITERAL,
+    NEWS_MARKETS,
     NEWS_PROVIDER_LITERAL,
+    NEWS_PROVIDERS,
     NEWS_SECTOR_LITERAL,
+    NEWS_SECTORS,
 )
 
 logger = logging.getLogger(__name__)
@@ -70,6 +76,7 @@ class News(BaseScraper):
     @catch_errors
     def get_news(
         self,
+        exchange: EXCHANGE_LITERAL | None = None,
         symbol: str | None = None,
         corp_activity: list[NEWS_CORP_ACTIVITY_LITERAL] | None = None,
         economic_category: list[NEWS_ECONOMIC_CATEGORY_LITERAL] | None = None,
@@ -83,7 +90,8 @@ class News(BaseScraper):
         """Scrape news flow using the Mediator API with advanced filtering.
 
         Args:
-            symbol: Optional symbol filter (e.g. ``"OANDA:XAUUSD"``).
+            exchange: Optional exchange name (e.g. ``"OANDA"``).
+            symbol: Optional symbol filter (e.g. ``"XAUUSD"``).
             corp_activity: Optional list of corporate activities.
             economic_category: Optional list of economic categories.
             market: Optional list of market types.
@@ -97,47 +105,48 @@ class News(BaseScraper):
             Standardized response dict with keys
             ``status``, ``data``, ``metadata``, ``error``.
         """
-        validators.validate_language(language)
+        validators.validate_choice(language, validators.LANGUAGES_SET)
 
         filters = [f"lang:{language}"]
-        if symbol:
-            filters.append(f"symbol:{symbol}")
+
+        v_exchange, v_symbol = None, None
+        if exchange is not None or symbol is not None:
+            if not exchange or not symbol:
+                return self._error_response(
+                    "Both exchange and symbol must be provided together."
+                )
+
+            v_exchange, v_symbol = validators.verify_symbol_exchange(exchange, symbol)
+            filters.append(f"symbol:{v_exchange}:{v_symbol}")
+
         if corp_activity:
-            for val in corp_activity:
-                validators.validate_news_corp_activity(val)
+            validators.validate_list(corp_activity, NEWS_CORP_ACTIVITIES)
             filters.append(f"corp_activity:{','.join(corp_activity)}")
         if economic_category:
-            for val in economic_category:
-                validators.validate_news_economic_category(val)
+            validators.validate_list(economic_category, NEWS_ECONOMIC_CATEGORIES)
             filters.append(f"economic_category:{','.join(economic_category)}")
         if market:
-            for val in market:
-                validators.validate_news_market(val)
+            validators.validate_list(market, NEWS_MARKETS)
             filters.append(f"market:{','.join(market)}")
         if market_country:
-            for val in market_country:
-                validators.validate_news_country(val)
+            validators.validate_list(market_country, NEWS_COUNTRIES)
             filters.append(f"market_country:{','.join(market_country)}")
         if provider:
-            for val in provider:
-                validators.validate_news_provider(val)
+            validators.validate_list(provider, NEWS_PROVIDERS)
             filters.append(f"provider:{','.join(provider)}")
         if sector:
-            for val in sector:
-                validators.validate_news_sector(val)
+            validators.validate_list(sector, NEWS_SECTORS)
             filters.append(f"sector:{','.join(sector)}")
 
-        params = [("filter", f) for f in filters]
-        params.extend(
-            [
-                ("client", "screener"),
-                ("streaming", "true"),
-                ("user_prostatus", "non_pro"),
-            ]
-        )
+        params: dict[str, Any] = {
+            "filter": filters,
+            "client": "screener",
+            "streaming": "true",
+            "user_prostatus": "non_pro",
+        }
 
         # Pre-flight URL length check
-        full_url = f"{NEWS_FLOW_URL}?{urlencode(params)}"
+        full_url = f"{NEWS_FLOW_URL}?{urlencode(params, doseq=True)}"
         if len(full_url) > 4096:
             return self._error_response(
                 f"URL length ({len(full_url)}) exceeds the maximum allowed limit of 4096 characters. "
@@ -159,9 +168,13 @@ class News(BaseScraper):
         cleaned_items = [self._clean_headline(item) for item in items]
 
         if self.export_result:
+            export_symbol = (
+                f"{v_exchange}_{v_symbol}" if v_exchange and v_symbol else "news_flow"
+            )
+
             self._export(
                 data=cleaned_items,
-                symbol=symbol or "news_flow",
+                symbol=export_symbol,
                 data_category="news",
             )
 
@@ -195,20 +208,12 @@ class News(BaseScraper):
             Standardized response dict with keys
             ``status``, ``data``, ``metadata``, ``error``.
         """
-        validators.verify_symbol_exchange(exchange, symbol)
-        validators.validate_language(language)
-        if provider:
-            validators.validate_news_provider(provider)
-        if area:
-            validators.validate_area(area)
-        validators.validate_choice(
-            "sort_by", sort_by, ["latest", "oldest", "most_urgent", "least_urgent"]
-        )
-        validators.validate_choice(
-            "section",
-            section,
-            ["all", "esg", "press_release", "financial_statement"],
-        )
+        v_exchange, v_symbol = validators.verify_symbol_exchange(exchange, symbol)
+        validators.validate_choice(language, validators.LANGUAGES_SET)
+        validators.validate_choice(provider, validators.NEWS_PROVIDERS_SET)
+        validators.validate_choice(area, validators.AREAS_SET)
+        validators.validate_choice(sort_by, VALID_SORT_OPTIONS)
+        validators.validate_choice(section, VALID_SECTIONS)
 
         params: dict[str, Any] = {
             "client": "web",
@@ -217,7 +222,7 @@ class News(BaseScraper):
             "provider": provider.replace(".", "_") if provider else "",
             "section": "" if section == "all" else section,
             "streaming": "",
-            "symbol": f"{exchange}:{symbol}",
+            "symbol": f"{v_exchange}:{v_symbol}",
         }
 
         response_json, error_msg = self._request(
@@ -242,7 +247,7 @@ class News(BaseScraper):
         if self.export_result:
             self._export(
                 data=cleaned_items,
-                symbol=f"{exchange}_{symbol}",
+                symbol=f"{v_exchange}_{v_symbol}",
                 data_category="news",
             )
 
@@ -268,7 +273,7 @@ class News(BaseScraper):
         if not story_id or not story_id.strip():
             return self._error_response("story_id cannot be empty")
 
-        validators.validate_language(language)
+        validators.validate_choice(language, validators.LANGUAGES_SET)
 
         params: dict[str, str] = {
             "id": story_id,

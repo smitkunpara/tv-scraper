@@ -100,10 +100,10 @@ class Markets(ScannerScraper):
             Standardized response dict with ``status``, ``data``,
             ``metadata``, and ``error`` keys.
         """
-        validators.validate_choice("market", market, self.VALID_MARKETS)
-        validators.validate_choice("sort_by", sort_by, list(self.SORT_CRITERIA.keys()))
-        validators.validate_choice("sort_order", sort_order, ["asc", "desc"])
-        validators.validate_range("limit", limit, 1, 1000)
+        validators.validate_choice(market, self.VALID_MARKETS)
+        validators.validate_choice(sort_by, list(self.SORT_CRITERIA.keys()))
+        validators.validate_choice(sort_order, ["asc", "desc"])
+        validators.validate_range(limit, 1, 1000)
 
         # --- build payload ---------------------------------------------
         used_fields = fields if fields is not None else self.DEFAULT_FIELDS

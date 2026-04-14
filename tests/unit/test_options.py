@@ -68,7 +68,7 @@ class TestPublicValidation:
         """Verify invalid exchange returns failed envelope."""
         from tv_scraper.core.exceptions import ValidationError
 
-        mock_verify.side_effect = ValidationError("Invalid exchange")
+        mock_verify.side_effect = ValidationError("Invalid value")
 
         options = Options()
         result = options.get_options(
@@ -78,7 +78,7 @@ class TestPublicValidation:
         )
 
         assert result["status"] == STATUS_FAILED
-        assert "Invalid exchange" in result["error"]
+        assert "Invalid value" in result["error"]
 
     @patch("tv_scraper.core.validators.verify_options_symbol")
     def test_get_options_invalid_columns(self, mock_verify) -> None:
@@ -94,7 +94,7 @@ class TestPublicValidation:
         )
 
         assert result["status"] == STATUS_FAILED
-        assert "Invalid columns" in result["error"]
+        assert "Invalid values" in result["error"]
 
     @patch("tv_scraper.core.validators.verify_options_symbol")
     def test_get_options_requires_at_least_one_filter(self, mock_verify) -> None:
@@ -137,7 +137,7 @@ class TestPublicValidation:
 
         assert result["status"] == STATUS_FAILED
         assert result["data"] is None
-        assert "Invalid expiration value" in result["error"]
+        assert "Invalid date value" in result["error"]
 
     @patch("tv_scraper.core.validators.verify_options_symbol")
     def test_get_options_invalid_expiration_month(self, mock_verify) -> None:
@@ -450,7 +450,7 @@ class TestResponseEnvelope:
         """Verify error response has all required keys."""
         from tv_scraper.core.exceptions import ValidationError
 
-        mock_verify.side_effect = ValidationError("Invalid exchange")
+        mock_verify.side_effect = ValidationError("Invalid value")
 
         options = Options()
         result = options.get_options(

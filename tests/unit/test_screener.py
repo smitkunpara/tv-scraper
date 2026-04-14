@@ -228,7 +228,7 @@ class TestGetScreenerValidation:
 
         assert result["status"] == STATUS_FAILED
         assert result["data"] is None
-        assert "Invalid market" in result["error"]
+        assert "Invalid value" in result["error"]
         assert result["metadata"]["market"] == "invalid_market"
 
     def test_invalid_sort_order(self) -> None:
@@ -241,7 +241,7 @@ class TestGetScreenerValidation:
         )
 
         assert result["status"] == STATUS_FAILED
-        assert "sort_order" in result["error"].lower()
+        assert "Invalid value" in result["error"]
 
     @pytest.mark.parametrize("invalid_limit", [0, -1, -100])
     def test_invalid_limit_too_small(self, invalid_limit: int) -> None:
@@ -250,7 +250,7 @@ class TestGetScreenerValidation:
         result = scraper.get_screener(market="america", limit=invalid_limit)
 
         assert result["status"] == STATUS_FAILED
-        assert "limit" in result["error"].lower()
+        assert "Invalid value" in result["error"]
 
     def test_invalid_limit_too_large(self) -> None:
         """Test limit above maximum returns error response."""
@@ -258,7 +258,7 @@ class TestGetScreenerValidation:
         result = scraper.get_screener(market="america", limit=MAX_LIMIT + 1)
 
         assert result["status"] == STATUS_FAILED
-        assert "limit" in result["error"].lower()
+        assert "Invalid value" in result["error"]
 
     def test_invalid_filter_operation(self) -> None:
         """Test invalid filter operation returns error response."""

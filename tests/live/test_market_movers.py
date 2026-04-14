@@ -260,7 +260,7 @@ class TestLiveMarketMoversValidation:
         )
         assert result["status"] == "failed"
         assert result["error"] is not None
-        assert "Unsupported market" in result["error"]
+        assert "Invalid value" in result["error"]
 
     def test_live_invalid_category_for_stocks(self) -> None:
         """Test invalid category for stocks market."""
@@ -270,7 +270,7 @@ class TestLiveMarketMoversValidation:
         )
         assert result["status"] == "failed"
         assert result["error"] is not None
-        assert "Unsupported category" in result["error"]
+        assert "Invalid value" in result["error"]
 
     def test_live_invalid_category_for_crypto(self) -> None:
         """Test stock-only category rejected for crypto market."""
@@ -280,7 +280,7 @@ class TestLiveMarketMoversValidation:
         )
         assert result["status"] == "failed"
         assert result["error"] is not None
-        assert "Unsupported category" in result["error"]
+        assert "Invalid value" in result["error"]
 
     def test_live_invalid_limit_zero(self) -> None:
         """Test limit of 0 returns error."""
@@ -290,7 +290,7 @@ class TestLiveMarketMoversValidation:
         )
         assert result["status"] == "failed"
         assert result["error"] is not None
-        assert "Invalid limit" in result["error"]
+        assert "Invalid value" in result["error"]
 
     def test_live_invalid_limit_negative(self) -> None:
         """Test negative limit returns error."""
@@ -300,7 +300,7 @@ class TestLiveMarketMoversValidation:
         )
         assert result["status"] == "failed"
         assert result["error"] is not None
-        assert "Invalid limit" in result["error"]
+        assert "Invalid value" in result["error"]
 
     def test_live_invalid_limit_exceeds_max(self) -> None:
         """Test limit exceeding 1000 returns error."""
@@ -310,7 +310,7 @@ class TestLiveMarketMoversValidation:
         )
         assert result["status"] == "failed"
         assert result["error"] is not None
-        assert "Invalid limit" in result["error"]
+        assert "Invalid value" in result["error"]
 
     def test_live_invalid_language(self) -> None:
         """Test invalid language returns error."""
@@ -320,7 +320,7 @@ class TestLiveMarketMoversValidation:
         )
         assert result["status"] == "failed"
         assert result["error"] is not None
-        assert "Invalid language" in result["error"]
+        assert "Invalid value" in result["error"]
 
     def test_live_invalid_fields_type(self) -> None:
         """Test invalid fields type returns error."""

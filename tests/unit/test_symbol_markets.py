@@ -5,7 +5,7 @@ Tests isolated functionality without network calls.
 
 import pytest
 
-from tv_scraper.core.constants import STATUS_FAILED, STATUS_SUCCESS
+from tv_scraper.core.constants import STATUS_FAILED
 from tv_scraper.scrapers.screening.symbol_markets import SymbolMarkets
 
 
@@ -15,30 +15,35 @@ class TestSymbolMarketsGetSymbolMarkets:
     def test_empty_symbol_error(self) -> None:
         """Test empty symbol returns error response."""
         scraper = SymbolMarkets()
-        result = scraper.get_symbol_markets(symbol="")
+        # verify_symbol_exchange will raise ValidationError on empty symbol
+        result = scraper.get_symbol_markets(exchange="NASDAQ", symbol="")
         assert result["status"] == STATUS_FAILED
         assert result["data"] is None
-        assert "non-empty" in result["error"].lower()
+        assert "symbol" in result["error"].lower()
 
     def test_whitespace_symbol_error(self) -> None:
         """Test whitespace-only symbol returns error."""
         scraper = SymbolMarkets()
-        result = scraper.get_symbol_markets(symbol="   ")
+        result = scraper.get_symbol_markets(exchange="NASDAQ", symbol="   ")
         assert result["status"] == STATUS_FAILED
         assert result["data"] is None
 
     def test_invalid_scanner_error(self) -> None:
         """Test invalid scanner returns error."""
         scraper = SymbolMarkets()
-        result = scraper.get_symbol_markets(symbol="AAPL", scanner="invalid_scanner")
+        result = scraper.get_symbol_markets(
+            exchange="NASDAQ", symbol="AAPL", scanner="invalid_scanner"
+        )
         assert result["status"] == STATUS_FAILED
         assert result["data"] is None
-        assert "Invalid scanner" in result["error"]
+        assert "Invalid value" in result["error"]
 
     def test_unsupported_scanner_list(self) -> None:
         """Test error message lists supported scanners."""
         scraper = SymbolMarkets()
-        result = scraper.get_symbol_markets(symbol="AAPL", scanner="bad_scanner")
+        result = scraper.get_symbol_markets(
+            exchange="NASDAQ", symbol="AAPL", scanner="bad_scanner"
+        )
         assert "global" in result["error"]
         assert "america" in result["error"]
         assert "crypto" in result["error"]
@@ -46,23 +51,17 @@ class TestSymbolMarketsGetSymbolMarkets:
         assert "cfd" in result["error"]
 
 
-class TestSymbolMarketsSymbolParsing:
-    """Test symbol parsing from EXCHANGE:SYMBOL format."""
+class TestSymbolMarketsValidation:
+    """Test validation of exchange and symbol."""
 
-    def test_symbol_without_exchange(self) -> None:
-        """Test simple symbol is used as-is."""
+    def test_valid_input(self) -> None:
+        """Test valid exchange and symbol."""
         scraper = SymbolMarkets()
-        assert scraper.get_symbol_markets(symbol="AAPL", scanner="global")[
-            "status"
-        ] in [
-            STATUS_SUCCESS,
-            STATUS_FAILED,
-        ]
-
-    def test_symbol_with_exchange_prefix(self) -> None:
-        """Test EXCHANGE:SYMBOL format extracts symbol."""
-        scraper = SymbolMarkets()
-        result = scraper.get_symbol_markets(symbol="NASDAQ:AAPL", scanner="america")
+        # Should reach mocking/request phase or fail due to network (in live/mock tests)
+        # Here we just check it doesn't raise TypeError or early ValidationError before reaching _request
+        result = scraper.get_symbol_markets(
+            exchange="NASDAQ", symbol="AAPL", scanner="global"
+        )
         assert "status" in result
         assert "metadata" in result
 
@@ -150,7 +149,9 @@ class TestSymbolMarketsResponseStructure:
     def test_success_response_has_all_keys(self) -> None:
         """Test success response contains all required keys."""
         scraper = SymbolMarkets()
-        result = scraper.get_symbol_markets(symbol="", scanner="global")
+        result = scraper.get_symbol_markets(
+            exchange="NASDAQ", symbol="AAPL", scanner="global"
+        )
         assert "status" in result
         assert "data" in result
         assert "metadata" in result
@@ -159,7 +160,9 @@ class TestSymbolMarketsResponseStructure:
     def test_error_response_has_all_keys(self) -> None:
         """Test error response contains all required keys."""
         scraper = SymbolMarkets()
-        result = scraper.get_symbol_markets(symbol="", scanner="global")
+        result = scraper.get_symbol_markets(
+            exchange="NASDAQ", symbol="", scanner="global"
+        )
         assert result["status"] == "failed"
         assert result["data"] is None
         assert result["error"] is not None
@@ -168,9 +171,12 @@ class TestSymbolMarketsResponseStructure:
     def test_metadata_contains_inputs(self) -> None:
         """Test metadata contains input parameters."""
         scraper = SymbolMarkets()
-        result = scraper.get_symbol_markets(symbol="AAPL", scanner="america", limit=100)
+        result = scraper.get_symbol_markets(
+            exchange="NASDAQ", symbol="AAPL", scanner="america", limit=100
+        )
         if result["status"] == STATUS_FAILED:
             metadata = result["metadata"]
+            assert metadata["exchange"] == "NASDAQ"
             assert metadata["symbol"] == "AAPL"
             assert metadata["scanner"] == "america"
             assert metadata["limit"] == 100

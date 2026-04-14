@@ -23,7 +23,7 @@ class TestNewsV2(unittest.TestCase):
         params = kwargs.get("params", [])
 
         # Verify multiple filter parameters
-        filter_params = [v for k, v in params if k == "filter"]
+        filter_params = params.get("filter", [])
         self.assertIn("lang:en", filter_params)
         self.assertIn("market_country:US,IN", filter_params)
         self.assertIn("market:crypto", filter_params)
@@ -32,12 +32,36 @@ class TestNewsV2(unittest.TestCase):
         # Invalid country code
         result = self.scraper.get_news(market_country=["INVALID"])
         self.assertEqual(result["status"], "failed")
-        self.assertIn("Invalid country", result["error"])
+        self.assertIn("Invalid values", result["error"])
 
         # Invalid sector
         result = self.scraper.get_news(sector=["Space Mining"])
         self.assertEqual(result["status"], "failed")
-        self.assertIn("Invalid sector", result["error"])
+        self.assertIn("Invalid values", result["error"])
+
+    def test_symbol_without_exchange_returns_error(self):
+        """Test that providing symbol without exchange returns error."""
+        # Symbol only
+        result = self.scraper.get_news(symbol="AAPL")
+        self.assertEqual(result["status"], "failed")
+        self.assertIn(
+            "Both exchange and symbol must be provided together", result["error"]
+        )
+
+        # Exchange only
+        result = self.scraper.get_news(exchange="NASDAQ")
+        self.assertEqual(result["status"], "failed")
+        self.assertIn("Both exchange and symbol", result["error"])
+
+        # Both - should succeed (with mock)
+        with patch("tv_scraper.core.base.requests.request") as mock_request:
+            mock_response = MagicMock()
+            mock_response.json.return_value = {"items": []}
+            mock_response.status_code = 200
+            mock_request.return_value = mock_response
+
+            result = self.scraper.get_news(exchange="NASDAQ", symbol="AAPL")
+            self.assertEqual(result["status"], "success")
 
     @patch("tv_scraper.core.base.requests.request")
     def test_url_length_limit(self, mock_request):

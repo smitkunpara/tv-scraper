@@ -162,7 +162,7 @@ class Fundamentals(ScannerScraper):
             raise ValidationError("Fields must be a list of strings or None.")
 
         field_list = fields if fields else self.ALL_FIELDS
-        validators.validate_fields(field_list, self.ALL_FIELDS, "field")
+        validators.validate_list(field_list, self.ALL_FIELDS)
 
         return self._fetch_symbol_fields(
             exchange=exchange,

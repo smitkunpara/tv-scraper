@@ -310,7 +310,7 @@ class TestLiveScreenerValidation:
         result = scraper.get_screener(market="invalid_market_xyz", limit=5)
         assert result["status"] == "failed"
         assert result["error"] is not None
-        assert "Unsupported market" in result["error"]
+        assert "Invalid value" in result["error"]
 
     def test_invalid_sort_order(self) -> None:
         """Test invalid sort order returns error."""
@@ -322,7 +322,7 @@ class TestLiveScreenerValidation:
         )
         assert result["status"] == "failed"
         assert result["error"] is not None
-        assert "sort_order" in result["error"]
+        assert "Invalid value" in result["error"]
 
     def test_invalid_limit_zero(self) -> None:
         """Test limit of zero returns error."""
@@ -330,7 +330,7 @@ class TestLiveScreenerValidation:
         result = scraper.get_screener(market="america", limit=0)
         assert result["status"] == "failed"
         assert result["error"] is not None
-        assert "limit" in result["error"].lower()
+        assert "Invalid value" in result["error"]
 
     def test_invalid_limit_negative(self) -> None:
         """Test negative limit returns error."""

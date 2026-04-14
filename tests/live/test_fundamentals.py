@@ -203,7 +203,7 @@ class TestLiveFundamentalsEdgeCases:
         result = scraper.get_fundamentals(exchange="INVALID_EXCHANGE", symbol="AAPL")
         assert result["status"] == "failed"
         assert result["error"] is not None
-        assert "Invalid exchange" in result["error"]
+        assert "Invalid value" in result["error"]
 
     def test_live_get_fundamentals_nonexistent_symbol(self) -> None:
         """Verify nonexistent symbol returns error."""
@@ -222,7 +222,7 @@ class TestLiveFundamentalsEdgeCases:
         )
         assert result["status"] == "failed"
         assert result["error"] is not None
-        assert "Invalid field" in result["error"]
+        assert "Invalid values" in result["error"]
 
     def test_live_get_fundamentals_empty_fields_list(self) -> None:
         """Verify empty fields list returns success with default fields."""

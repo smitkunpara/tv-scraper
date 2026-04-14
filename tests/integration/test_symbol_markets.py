@@ -19,7 +19,9 @@ class TestSymbolMarketsIntegration:
     def test_integration_symbol_markets_then_technicals(self) -> None:
         """Test fetching symbol markets then getting technicals for found exchange."""
         sm = SymbolMarkets()
-        markets = sm.get_symbol_markets(symbol="AAPL", scanner="global", limit=10)
+        markets = sm.get_symbol_markets(
+            exchange="NASDAQ", symbol="AAPL", scanner="global", limit=10
+        )
 
         if markets["status"] == STATUS_SUCCESS and markets["data"]:
             tech = Technicals()
@@ -34,7 +36,9 @@ class TestSymbolMarketsIntegration:
     def test_integration_symbol_markets_then_fundamentals(self) -> None:
         """Test fetching symbol markets then getting fundamentals."""
         sm = SymbolMarkets()
-        markets = sm.get_symbol_markets(symbol="AAPL", scanner="america", limit=5)
+        markets = sm.get_symbol_markets(
+            exchange="NASDAQ", symbol="AAPL", scanner="america", limit=5
+        )
 
         if markets["status"] == STATUS_SUCCESS and markets["data"]:
             fund = Fundamentals()
@@ -48,8 +52,17 @@ class TestSymbolMarketsIntegration:
         results = {}
 
         for scanner in scanners:
-            symbol = "AAPL" if scanner != "forex" else "EURUSD"
-            result = sm.get_symbol_markets(symbol=symbol, scanner=scanner, limit=10)
+            if scanner == "forex":
+                e_v, s_v = "FX_IDC", "EURUSD"
+            elif scanner == "crypto":
+                e_v, s_v = "BINANCE", "BTCUSD"
+            elif scanner == "cfd":
+                e_v, s_v = "TVC", "GOLD"
+            else:
+                e_v, s_v = "NASDAQ", "AAPL"
+            result = sm.get_symbol_markets(
+                exchange=e_v, symbol=s_v, scanner=scanner, limit=10
+            )
             results[scanner] = result
             assert "status" in result
 
@@ -62,7 +75,9 @@ class TestSymbolMarketsIntegration:
         results = {}
 
         for symbol in symbols:
-            result = sm.get_symbol_markets(symbol=symbol, scanner="america", limit=10)
+            result = sm.get_symbol_markets(
+                exchange="NASDAQ", symbol=symbol, scanner="america", limit=10
+            )
             results[symbol] = result
             assert "status" in result
 
@@ -73,7 +88,9 @@ class TestSymbolMarketsIntegration:
         sm = SymbolMarkets()
         screener = Screener()
 
-        sm.get_symbol_markets(symbol="AAPL", scanner="america", limit=20)
+        sm.get_symbol_markets(
+            exchange="NASDAQ", symbol="AAPL", scanner="america", limit=20
+        )
 
         screener_result = screener.get_screener(
             market="america",
@@ -90,7 +107,9 @@ class TestSymbolMarketsWorkflows:
     def test_workflow_find_all_exchanges_for_symbol(self) -> None:
         """Test finding all exchanges where a symbol trades."""
         sm = SymbolMarkets()
-        result = sm.get_symbol_markets(symbol="AAPL", scanner="global", limit=150)
+        result = sm.get_symbol_markets(
+            exchange="NASDAQ", symbol="AAPL", scanner="global", limit=150
+        )
 
         assert "status" in result
         if result["status"] == STATUS_SUCCESS:
@@ -103,7 +122,9 @@ class TestSymbolMarketsWorkflows:
     def test_workflow_compare_crypto_across_exchanges(self) -> None:
         """Test comparing crypto symbol across crypto scanner."""
         sm = SymbolMarkets()
-        result = sm.get_symbol_markets(symbol="BTCUSD", scanner="crypto", limit=50)
+        result = sm.get_symbol_markets(
+            exchange="BINANCE", symbol="BTCUSD", scanner="crypto", limit=50
+        )
 
         assert "status" in result
         if result["status"] == STATUS_SUCCESS:
@@ -116,7 +137,9 @@ class TestSymbolMarketsWorkflows:
         results = []
 
         for pair in pairs:
-            result = sm.get_symbol_markets(symbol=pair, scanner="forex", limit=20)
+            result = sm.get_symbol_markets(
+                exchange="FX_IDC", symbol=pair, scanner="forex", limit=20
+            )
             results.append(result)
 
         assert len(results) == 3
@@ -124,9 +147,15 @@ class TestSymbolMarketsWorkflows:
     def test_workflow_limit_and_pagination(self) -> None:
         """Test limit parameter effect on results."""
         sm = SymbolMarkets()
-        results_50 = sm.get_symbol_markets(symbol="AAPL", scanner="global", limit=50)
-        results_100 = sm.get_symbol_markets(symbol="AAPL", scanner="global", limit=100)
-        results_150 = sm.get_symbol_markets(symbol="AAPL", scanner="global", limit=150)
+        results_50 = sm.get_symbol_markets(
+            exchange="NASDAQ", symbol="AAPL", scanner="global", limit=50
+        )
+        results_100 = sm.get_symbol_markets(
+            exchange="NASDAQ", symbol="AAPL", scanner="global", limit=100
+        )
+        results_150 = sm.get_symbol_markets(
+            exchange="NASDAQ", symbol="AAPL", scanner="global", limit=150
+        )
 
         for result in [results_50, results_100, results_150]:
             assert "status" in result
@@ -143,7 +172,11 @@ class TestSymbolMarketsWorkflows:
         custom_fields = ["name", "close", "volume", "market_cap_basic"]
 
         result = sm.get_symbol_markets(
-            symbol="AAPL", scanner="america", fields=custom_fields, limit=50
+            exchange="NASDAQ",
+            symbol="AAPL",
+            scanner="america",
+            fields=custom_fields,
+            limit=50,
         )
 
         assert "status" in result
@@ -164,7 +197,7 @@ class TestSymbolMarketsWorkflows:
             try:
                 sm = SymbolMarkets(export="json")
                 result = sm.get_symbol_markets(
-                    symbol="AAPL", scanner="america", limit=10
+                    exchange="NASDAQ", symbol="AAPL", scanner="america", limit=10
                 )
 
                 assert "status" in result
@@ -178,7 +211,9 @@ class TestSymbolMarketsDataQuality:
     def test_data_quality_has_required_fields(self) -> None:
         """Test response data has required fields."""
         sm = SymbolMarkets()
-        result = sm.get_symbol_markets(symbol="AAPL", scanner="global", limit=10)
+        result = sm.get_symbol_markets(
+            exchange="NASDAQ", symbol="AAPL", scanner="global", limit=10
+        )
 
         if result["status"] == STATUS_SUCCESS:
             for item in result["data"]:
@@ -188,7 +223,9 @@ class TestSymbolMarketsDataQuality:
     def test_data_quality_metadata_counts(self) -> None:
         """Test metadata contains accurate counts."""
         sm = SymbolMarkets()
-        result = sm.get_symbol_markets(symbol="AAPL", scanner="global", limit=50)
+        result = sm.get_symbol_markets(
+            exchange="NASDAQ", symbol="AAPL", scanner="global", limit=50
+        )
 
         if result["status"] == STATUS_SUCCESS:
             metadata = result["metadata"]
@@ -200,7 +237,9 @@ class TestSymbolMarketsDataQuality:
     def test_data_quality_symbol_format(self) -> None:
         """Test symbol format in results."""
         sm = SymbolMarkets()
-        result = sm.get_symbol_markets(symbol="AAPL", scanner="global", limit=10)
+        result = sm.get_symbol_markets(
+            exchange="NASDAQ", symbol="AAPL", scanner="global", limit=10
+        )
 
         if result["status"] == STATUS_SUCCESS:
             for item in result["data"]:
@@ -221,7 +260,9 @@ class TestSymbolMarketsPerformance:
         start = time.time()
 
         for _i in range(3):
-            result = sm.get_symbol_markets(symbol="AAPL", scanner="global", limit=20)
+            result = sm.get_symbol_markets(
+                exchange="NASDAQ", symbol="AAPL", scanner="global", limit=20
+            )
             assert "status" in result
 
         elapsed = time.time() - start
@@ -230,7 +271,9 @@ class TestSymbolMarketsPerformance:
     def test_performance_large_limit(self) -> None:
         """Test large limit request completes."""
         sm = SymbolMarkets()
-        result = sm.get_symbol_markets(symbol="AAPL", scanner="global", limit=150)
+        result = sm.get_symbol_markets(
+            exchange="NASDAQ", symbol="AAPL", scanner="global", limit=150
+        )
         assert "status" in result
         if result["status"] == STATUS_SUCCESS:
             assert len(result["data"]) <= 150

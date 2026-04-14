@@ -75,30 +75,25 @@ class Options(ScannerScraper):
             Standardized response dict with keys
             ``status``, ``data``, ``metadata``, ``error``.
         """
-        validators.verify_options_symbol(exchange, symbol)
-        selected_columns: list[str] = list(DEFAULT_OPTION_COLUMNS)
-        if columns is not None:
-            selected_columns = list(columns)
-            validators.validate_fields(
-                selected_columns,
-                list(VALID_OPTION_COLUMNS),
-                "columns",
-            )
+        v_exchange, v_symbol = validators.verify_options_symbol(exchange, symbol)
+        selected_columns: list[str] = (
+            list(columns) if columns is not None else list(DEFAULT_OPTION_COLUMNS)
+        )
+        validators.validate_list(columns, list(VALID_OPTION_COLUMNS))
 
         if expiration is None and strike is None:
             raise ValidationError(
                 "At least one filter must be provided: expiration, strike, or both."
             )
 
-        if expiration is not None:
-            validators.validate_yyyymmdd_date("expiration", expiration)
+        validators.validate_yyyymmdd_date(expiration)
 
         if strike is not None and not isinstance(strike, (int, float)):
             raise ValidationError(
                 f"Invalid strike value: {strike!r}. Must be int or float."
             )
 
-        underlying = f"{exchange}:{symbol}"
+        underlying = f"{v_exchange}:{v_symbol}"
 
         payload = {
             "columns": selected_columns,
@@ -117,7 +112,7 @@ class Options(ScannerScraper):
             )
 
         filter_value = self._build_filter_value(expiration, strike)
-        return self._execute_request(payload, exchange, symbol, filter_value)
+        return self._execute_request(payload, v_exchange, v_symbol, filter_value)
 
     @staticmethod
     def _build_filter_value(

@@ -200,7 +200,7 @@ class Calendar(ScannerScraper):
         use_fields = default_fields
         if fields:
             try:
-                validators.validate_fields(fields, default_fields, field_name="fields")
+                validators.validate_list(fields, default_fields)
             except ValidationError as exc:
                 return self._error_response(
                     str(exc),

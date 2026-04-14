@@ -7,9 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Breaking Changes
+- **Scraper API**: Strictly enforced the use of separate `exchange` and `symbol` parameters across all symbol-specific scrapers.
+- **Scraper API**: Removed legacy support for combined `EXCHANGE:SYMBOL` strings in `News.get_news()` and `SymbolMarkets.get_symbol_markets()`. These methods now require both arguments explicitly.
+
 ### Fixed
 - **Streaming**: `CandleStreamer` now validates custom Pine indicators before creating studies by using Pine tools (`get_script` + `validate_script`). When a custom script has compile/validation errors, `get_candles()` now returns a clear failed response instead of continuing with missing indicator diagnostics.
 - **Tests**: Added unit coverage for custom indicator script-validation failures and custom-script fetch failures in `tests/unit/test_candle_streamer.py`.
+- **Tests**: Systematically updated all unit, mock, and live tests for `SymbolMarkets` and `News` to comply with the new mandatory `(exchange, symbol)` API.
 
 ### Changed
 - **Scraper API**: Merged `export_result` and `export_type` constructor arguments into a single `export` parameter across all scrapers and streamers. Providing `"json"` or `"csv"` now automatically enables export in that format, while `None` (default) keeps it disabled.

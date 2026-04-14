@@ -180,7 +180,7 @@ class TestGetFundamentalsInvalidInputs:
         )
 
         assert result["status"] == STATUS_FAILED
-        assert "Invalid field" in result["error"]
+        assert "Invalid values" in result["error"]
 
     def test_empty_fields_list(self) -> None:
         """Test empty fields list is handled gracefully by validator."""
@@ -201,7 +201,7 @@ class TestGetFundamentalsInvalidInputs:
         )
 
         assert result["status"] == STATUS_FAILED
-        assert "Invalid field" in result["error"]
+        assert "Invalid values" in result["error"]
 
 
 class TestGetFundamentalsNetworkErrors:
@@ -336,7 +336,7 @@ class TestGetFundamentalsValidation:
         result = fund.get_fundamentals(exchange="INVALID_EXCHANGE", symbol="AAPL")
 
         assert result["status"] == STATUS_FAILED
-        assert "Invalid exchange" in result["error"]
+        assert "Invalid value" in result["error"]
 
 
 class TestGetFundamentalsSuccess:
@@ -543,4 +543,4 @@ class TestFundamentalsEdgeCases:
         )
 
         assert result["status"] == STATUS_FAILED
-        assert "Invalid field" in result["error"]
+        assert "Invalid values" in result["error"]

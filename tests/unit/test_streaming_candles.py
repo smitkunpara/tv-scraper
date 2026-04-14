@@ -122,7 +122,7 @@ class TestGetCandlesInvalidInputs:
         result = cs.get_candles(exchange=None, symbol="BTCUSDT")  # type: ignore
 
         assert result["status"] == STATUS_FAILED
-        assert "Exchange must be a non-empty string" in result["error"]
+        assert "Both exchange and symbol must be provided together." in result["error"]
 
     @patch("tv_scraper.streaming.base_streamer.create_connection")
     def test_null_symbol(self, mock_cc):
@@ -134,7 +134,7 @@ class TestGetCandlesInvalidInputs:
         result = cs.get_candles(exchange="BINANCE", symbol=None)  # type: ignore
 
         assert result["status"] == STATUS_FAILED
-        assert "Symbol must be a non-empty string" in result["error"]
+        assert "Both exchange and symbol must be provided together." in result["error"]
 
     @patch("tv_scraper.streaming.base_streamer.create_connection")
     def test_whitespace_only_exchange(self, mock_cc):

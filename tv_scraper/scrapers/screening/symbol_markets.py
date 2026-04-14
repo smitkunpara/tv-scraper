@@ -6,6 +6,7 @@ from tv_scraper.core import validators
 from tv_scraper.core.base import catch_errors
 from tv_scraper.core.constants import SCANNER_URL
 from tv_scraper.core.scanner import ScannerScraper
+from tv_scraper.core.validation_data import EXCHANGE_LITERAL
 
 SYMBOL_MARKET_SCANNER_LITERAL = Literal["global", "america", "crypto", "forex", "cfd"]
 
@@ -49,6 +50,7 @@ class SymbolMarkets(ScannerScraper):
     @catch_errors
     def get_symbol_markets(
         self,
+        exchange: EXCHANGE_LITERAL,
         symbol: str,
         fields: list[str] | None = None,
         scanner: SYMBOL_MARKET_SCANNER_LITERAL = "global",
@@ -57,6 +59,7 @@ class SymbolMarkets(ScannerScraper):
         """Scrape all markets/exchanges where a symbol is traded.
 
         Args:
+            exchange: Exchange name (e.g. ``"NASDAQ"``).
             symbol: The symbol to search for (e.g. ``"AAPL"``, ``"BTCUSD"``).
             fields: Columns to retrieve. Defaults to :attr:`DEFAULT_FIELDS`.
             scanner: Scanner region (``"global"``, ``"america"``, ``"crypto"``,
@@ -67,20 +70,20 @@ class SymbolMarkets(ScannerScraper):
             Standardized response envelope with ``status``, ``data``,
             ``metadata``, and ``error`` keys.
         """
-        # Support combined EXCHANGE:SYMBOL by extracting the symbol name
-        search_symbol = symbol.split(":", 1)[1] if ":" in symbol else symbol
-
         # --- Validation ---
-        validators.validate_symbol("global", search_symbol)
-        validators.validate_choice("scanner", scanner, self.SUPPORTED_SCANNERS)
-        validators.validate_range("limit", limit, 1, 1000)
+        v_exchange, v_symbol = validators.verify_symbol_exchange(exchange, symbol)
+        validators.validate_choice(scanner, self.SUPPORTED_SCANNERS)
+        validators.validate_range(limit, 1, 1000)
 
         resolved_fields = fields if fields is not None else list(self.DEFAULT_FIELDS)
 
+        filters = [
+            {"left": "name", "operation": "match", "right": v_symbol},
+            {"left": "exchange", "operation": "equal", "right": v_exchange},
+        ]
+
         payload = {
-            "filter": [
-                {"left": "name", "operation": "match", "right": search_symbol},
-            ],
+            "filter": filters,
             "columns": resolved_fields,
             "options": {"lang": "en"},
             "range": [0, limit],
@@ -103,14 +106,20 @@ class SymbolMarkets(ScannerScraper):
         formatted_data = self._map_scanner_rows(raw_items, resolved_fields)
 
         if not formatted_data:
-            return self._error_response(f"No markets found for symbol: {symbol}")
+            error_msg = (
+                f"No markets found for symbol: {v_symbol}"
+                if v_symbol
+                else f"No markets found for exchange: {v_exchange}"
+            )
+            return self._error_response(error_msg)
 
         total_count = json_response.get("totalCount", len(formatted_data))
 
         if self.export_result:
+            export_symbol = symbol or exchange or "symbol_markets"
             self._export(
                 data=formatted_data,
-                symbol=symbol,
+                symbol=export_symbol,
                 data_category="symbol_markets",
             )
 

@@ -84,7 +84,7 @@ class TestNewsV2Unit:
         ]
 
         # Find filter entries in params
-        actual_filters = [v for k, v in params if k == "filter"]
+        actual_filters = params.get("filter", [])
         for expected in expected_filters:
             assert expected in actual_filters
 

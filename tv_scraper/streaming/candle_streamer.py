@@ -70,7 +70,7 @@ class CandleStreamer(BaseStreamer):
         # --- Validation ---
         exchange, _symbol = validators.verify_symbol_exchange(exchange, symbol)
         validators.validate_timeframe(timeframe)
-        validators.validate_range("numb_candles", numb_candles, 1, 5000)
+        validators.validate_range(numb_candles, 1, 5000)
         exchange_symbol = format_symbol(exchange, _symbol)
         self.study_id_to_name_map = {}
 

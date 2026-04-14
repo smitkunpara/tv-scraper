@@ -406,7 +406,7 @@ class TestGetMindsResponseEnvelope:
     @patch("tv_scraper.core.validators.verify_symbol_exchange")
     def test_error_has_all_keys(self, mock_verify) -> None:
         """Test error response has required keys."""
-        mock_verify.side_effect = ValidationError("Invalid exchange")
+        mock_verify.side_effect = ValidationError("Invalid value")
 
         scraper = Minds()
         result = scraper.get_minds(exchange="INVALID", symbol="AAPL")
