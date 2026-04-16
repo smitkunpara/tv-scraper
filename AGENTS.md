@@ -67,10 +67,10 @@ pytest tests/integration/  # Cross-module integration tests
 | **HTTP** | `requests` | Unified HTTP requests via `BaseScraper._request()` |
 | **Object Model**| `ScannerScraper` / `BaseScraper` | Centralized network/error handling & inheritance hierarchy |
 | **Error Handling**| `@catch_errors` decorator | Automated metadata capture and standardized response envelopes |
-| **Validation** | Module-level functions | Symbolic/exchange verification via `tv_scraper.core.validators` |
+| **Validation** | Class-level methods | Internal verification via `self._verify_symbol_exchange` and `_validate_*` |
 | **Data Mapping** | Hardcoded JSON mappings | Forecast key transformation, timeframe conversion |
-| **Export** | CSV/JSON writers | Optional data persistence via ``export`` arg |
-| **Parallelization** | `ThreadPoolExecutor` | Concurrent page scraping (ideas) |
+| **Export** | Standardized `export` arg | Support for ``"json"`` and ``"csv"`` across all scrapers |
+| **Parallelization** | `ThreadPoolExecutor` | Concurrent page scraping (Ideas) |
 
 ---
 
@@ -131,7 +131,8 @@ To standardize network requests and error handling, all scrapers extend from cen
 The root class for all HTTP operations. Provides:
 - **`self._request()`**: A unified wrapper around `requests.request()` that handles timeout usage, Captcha detection, HTTP errors, and JSON parsing.
 - **`self._success_response()` / `self._error_response()`**: Factory methods for generating the standardized response envelope.
-- **`self._export()`**: Handles auto-saving results to JSON / CSV.
+- **`self._export()`**: Handles auto-saving results based on the unified `export` parameter.
+- **`self._verify_symbol_exchange()`**: Internal helper for symbol/exchange format validation and existence checks.
 
 Related decorator behavior:
 - **`@catch_errors`** captures bound function arguments into metadata.
@@ -140,7 +141,7 @@ Related decorator behavior:
 ### ScannerScraper
 Extends `BaseScraper` for scanner-driven scrapers (e.g., `Fundamentals`, `Markets`, `Technicals`, `Screener`, `MarketMovers`, `SymbolMarkets`, `Calendar`, `Options`). Provides:
 - **`_fetch_symbol_fields()`**: Shared `GET /symbol` helper for flat field retrieval.
-- **`_map_scanner_rows()`**: Maps scanner rows (`{"s": ..., "d": [...]}`) into field-named dictionaries.
+- **`_map_scanner_rows()`**: Maps scanner rows into field-named dictionaries.
 
 ### BaseStreamer
 Extends `BaseScraper` for real-time WebSocket interactions. Provides:
@@ -271,8 +272,8 @@ def get_earnings(
 
 **Known Behavior Nuances:**
 - Returns success with empty list when no events are found.
-- Adds metadata: `event_type`, `total`, `timestamp_from`, `timestamp_to`, and optional `markets`.
-- These methods are not decorated with `@catch_errors`; handled failures are normalized, but unexpected runtime exceptions are not auto-wrapped.
+- Adds metadata: `event_type`, `total`, `total_available` (previously `totalCount`), `timestamp_from`, `timestamp_to`, and optional `markets`.
+- Methods incorporate internal scanner mapping and standardized response envelopes via `ScannerScraper`.
 
 ### Fundamentals Scraper
 
@@ -297,7 +298,7 @@ def get_fundamentals(
 
 **Data Extraction:**
 ```
-1. Verify exchange:symbol via verify_symbol_exchange().
+1. Verify exchange:symbol via self._verify_symbol_exchange().
 2. GET /symbol with fields=<comma-separated requested fields> and no_404=true.
 3. Build output dict: {"symbol": "EXCHANGE:SYMBOL", field: response.get(field), ...}.
 4. Missing fields are kept with value None.
@@ -339,6 +340,7 @@ def get_markets(
 - `sort_order` in `{"asc", "desc"}`.
 - `limit` in `[1, 1000]`.
 - `fields` are not validated by this method.
+- Validation performed via class methods `_validate_choice` and `_validate_range`.
 
 **Data Extraction:**
 ```
@@ -379,7 +381,7 @@ def get_options(
 ```
 
 **Validation:**
-- The method calls `verify_options_symbol(exchange, symbol)`.
+- The method calls `self._verify_options_symbol(exchange, symbol)`.
 - `columns` are validated against `DEFAULT_OPTION_COLUMNS` when provided.
 - At least one filter must be provided: `expiration`, `strike`, or both.
 - `expiration` is validated by `validate_yyyymmdd_date("expiration", expiration)` when provided.
@@ -412,7 +414,7 @@ def get_options(
 **Known Behavior Nuances:**
 - Error messages with `"404"` are rewritten to "options chain not found" wording.
 - Empty `symbols` list returns failed response.
-- Success metadata includes `total` and `filter_value`.
+- Success metadata includes unified `total` key and `filter_value`.
 - Combined filtering (`expiration` + `strike`) returns metadata `filter_value` as a dict.
 
 ### Technicals Scraper
@@ -433,13 +435,13 @@ def get_technicals(
 
 **Validation Flow:**
 ```
-1. validate_exchange(exchange)
-2. validate_symbol(exchange, symbol)
-3. validate_timeframe(timeframe)
+1. self._validate_choice(exchange.upper(), EXCHANGES_SET)
+2. symbol must be non-empty string
+3. self._validate_choice(timeframe, TIMEFRAMES_SET)
 4. resolve indicators:
  - technical_indicators=None -> fetch all INDICATORS
- - technical_indicators provided -> validate_indicators(technical_indicators)
-5. verify_symbol_exchange(exchange, symbol) # live check
+ - technical_indicators provided -> self._validate_indicators(technical_indicators)
+5. self._verify_symbol_exchange(exchange, symbol) # live check
 ```
 
 **Data Extraction:**
@@ -463,7 +465,7 @@ def get_technicals(
 
 **Known Behavior Nuances:**
 - Missing indicator keys are returned as `None` (not an automatic failure).
-- Method signature simplified in v1.4.0b2: removed `all_indicators` and `fields` parameters.
+- Method signature simplified in v1.4.0: removed `all_indicators` and `fields` parameters.
 
 ### Screener Scraper
 
@@ -492,6 +494,7 @@ def get_screener(
 - `filters` entries must be dicts with `left` and valid `operation`.
 - `filter2` must be dict with `operator` key.
 - `fields`, `sort_by`, and `symbols` are not schema-validated here.
+- Validation performed via `_validate_choice`, `_validate_range`, and internal helper methods.
 
 **Data Extraction:**
 ```
@@ -499,7 +502,7 @@ def get_screener(
 2. Add filter/sort/symbols/filter2 only when inputs are truthy.
 3. POST scanner endpoint.
 4. Map rows via _map_scanner_rows().
-5. Return total + total_available metadata.
+5. Return unified `total` and `total_available` metadata.
 ```
 
 **Known Behavior Nuances:**
@@ -536,15 +539,15 @@ def get_market_movers(
 - `limit` in `[1, 1000]`.
 - `market` in supported list.
 - `category` allowed set depends on stock vs non-stock market.
-- `language` validated via `validate_language()`.
-- Field validation checks list-of-strings shape, but not against a fixed global allowlist.
+- `language` validated via `self._validate_choice`.
+- Field validation checks list-of-strings shape.
 
 **Data Extraction:**
 ```
 1. Resolve market-specific default fields.
 2. Build category sort config and filter conditions.
 3. POST scanner endpoint.
-4. Map scanner rows and return total + totalCount metadata.
+4. Map scanner rows and return unified `total` and `total_available` metadata.
 ```
 
 **Category Filter Nuances:**
@@ -571,9 +574,9 @@ def get_symbol_markets(
 ```
 
 **Validation:**
-- `validate_exchange(exchange)`.
-- `validate_symbol(exchange, symbol)`.
-- `scanner` choice validation.
+- `self._validate_choice(exchange.upper(), EXCHANGES_SET)`.
+- `symbol` non-empty validation.
+- `scanner` choice validation via `self._validate_choice`.
 - `limit` in `[1, 1000]`.
 - `fields` are not field-name validated here.
 
@@ -606,8 +609,8 @@ delete_script(pine_id: str) -> dict[str, Any]
 ```
 
 **Authentication & Validation:**
-- All methods require cookie authentication (`_validate_cookie_required()`).
-- Empty input validation is handled for `source`, `pine_id`, `version`, and `name` where applicable.
+- All methods require cookie authentication (`self._validate_cookie_required()`).
+- Empty input validation is handled via `self._validate_non_empty()`.
 - `create_script()` and `edit_script()` run `validate_script()` before save calls.
 
 **Endpoint Coverage:**
@@ -651,7 +654,7 @@ def get_ideas(
 **Data Extraction:**
 ```
 1. Validate: start_page >= 1 and end_page >= start_page
-2. Validate symbol/exchange via verify_symbol_exchange() and sort_by via validate_choice()
+2. Validate symbol/exchange via self._verify_symbol_exchange() and sort_by via self._validate_choice()
 3. Build page range [start_page, end_page] and scrape concurrently via ThreadPoolExecutor(max_workers=self._max_workers)
 4. For each page: GET endpoint with `component-data-only=1` (+ `sort=recent` when needed)
 5. Parse JSON defensively: data -> ideas -> data -> items (fallback to empty containers on type mismatch)
@@ -732,9 +735,8 @@ def get_minds(
 ```
 
 **Validation & Pagination:**
-- Symbol/exchange verified via `verify_symbol_exchange()`
-- Cursor-based pagination (`next` URL) with `MAX_PAGES=100` guard
-- No explicit validation for `limit` in current implementation
+- Symbol/exchange verified via `self._verify_symbol_exchange()`
+- Cursor-based pagination (`next` URL) with `MAX_PAGES=100` guard.
 
 **Known Behavior Nuances:**
 - `limit` truncation runs after pagination completes.
@@ -846,8 +848,8 @@ def get_news_content(
 ```
 
 **Validation:**
-- `get_news`: strict Literal validation for Country/Provider/Sector/Activity/Market/Category
-- `get_news_headlines`: verify symbol/exchange + validate language/provider/area/sort_by/section
+- `get_news`: strict Literal validation for Country/Provider/Sector/Activity/Market/Category via `self._validate_list`
+- `get_news_headlines`: verify symbol/exchange + validate language/provider/area/sort_by/section via class methods
 - `get_news_content`: `story_id` must be non-empty + validate language
 - **URL Limit:** Pre-flight check enforces **4096 character** maximum for `get_news()` filter strings.
 - sort_by: Must be in `{"latest", "oldest", "most_urgent", "least_urgent"}`
@@ -903,9 +905,9 @@ def get_candles(
 ```
 
 **Validation:**
-- `verify_symbol_exchange(exchange, symbol)`
-- `validate_timeframe(timeframe)`
-- `validate_range("numb_candles", numb_candles, 1, 5000)`
+- `self._verify_symbol_exchange(exchange, symbol)`
+- `self._validate_choice(timeframe, TIMEFRAMES_SET)`
+- `self._validate_range(numb_candles, 1, 5000)`
 
 **WebSocket Flow:**
 ```
@@ -976,7 +978,7 @@ def get_candles(
 - Custom Pine indicator validation failures return clear error messages instead of continuing silently.
 - Indicator metadata or study creation failures are raised internally and wrapped by `@catch_errors` as `Unexpected error` failed envelopes.
 
-**Additional CandleStreamer Methods (v1.4.0b2+):**
+**Additional CandleStreamer Methods (v1.4.0+):**
 
 - `stream_realtime_price(exchange, symbol) -> Generator`: Persistent generator yielding real-time price updates from WebSocket streams.
 - `get_available_indicators() -> dict`: Static method returning available built-in TradingView indicators.
@@ -990,12 +992,9 @@ def get_candles(
 def get_forecast(self, exchange: str, symbol: str) -> dict[str, Any]
 ```
 
-**Validation Flow:**
-```
-1. verify_symbol_exchange(exchange, symbol)
-2. Resolve symbol type via direct requests.get to /symbol with fields=type.
+1. self._verify_symbol_exchange(exchange, symbol)
+2. Resolve symbol type via internal request to `/symbol`.
 3. If type != "stock", raise ValidationError.
-```
 
 **WebSocket Subscription:**
 ```
@@ -1123,13 +1122,13 @@ Validation logic is decentralized and integrated directly into the scraper class
 | Method | Source | Purpose |
 |--------|--------|---------|
 | `self._verify_symbol_exchange(exc, sym)` | `BaseScraper` | Live check against TradingView for symbol existence. |
-| `self._validate_choice(name, val, choices)`| `BaseScraper` | Generic validator for string literal choices. |
-| `self._validate_list(name, vals, choices)` | `BaseScraper` | Batch counterpart to `_validate_choice`. |
-| `self._validate_range(name, val, min, max)` | `BaseScraper` | Generic numeric range validator. |
+| `self._validate_choice(val, choices)`| `BaseScraper` | Generic validator for string literal choices. |
+| `self._validate_list(vals, choices)` | `BaseScraper` | Batch counterpart to `_validate_choice`. |
+| `self._validate_range(val, min, max)` | `BaseScraper` | Generic numeric range validator. |
 | `self._validate_timeframe(tf)` | `BaseScraper` | Validates TradingView-compatible timeframe strings. |
 | `self._validate_indicators(indicators)` | `Technicals` | Validates a list of requested technical indicators. |
 | `self._verify_options_symbol(exc, sym)` | `Options` | Specifically verifies if a symbol has an options market. |
-| `self._validate_yyyymmdd_date(name, val)` | `Options` | Validates integer dates in `YYYYMMDD` format. |
+| `self._validate_yyyymmdd_date(val)` | `Options` | Validates integer dates in `YYYYMMDD` format. |
 
 **Design Rule:** Public methods should perform validation at the very beginning by calling these internal methods. Any `ValidationError` raised will be automatically caught by `@catch_errors` and formatted into a standardized error response.
 

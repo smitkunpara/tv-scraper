@@ -36,8 +36,7 @@ Output structure:
         "market": "stocks-usa",
         "category": "gainers",
         "total": 20,
-        "totalCount": 7342,
-        ...
+        "total_available": 7342,
     },
     "error": None,
 }

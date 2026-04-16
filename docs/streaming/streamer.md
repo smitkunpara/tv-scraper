@@ -4,7 +4,7 @@
     `Streamer` is deprecated. New code should use [CandleStreamer](candle_streamer.md) and [ForecastStreamer](forecast_streamer.md) directly.
 
 !!! info "Version Note"
-    The deprecation is documented in the current changelog for the post-`1.4.0b1` line of development.
+    The deprecation is documented in the current changelog for the `1.4.0` line of development.
 
 ## What It Still Does
 

@@ -62,8 +62,8 @@ Output structure (failure):
 {
     "status": "failed",
     "data": None,
-    "metadata": {"exchange": "INVALID", "symbol": "AAPL"},
-    "error": "Invalid exchange: 'INVALID'. ...",
+    "metadata": {"exchange": "INVALID", "symbol": "AAPL", "technical_indicators": ["RSI"]},
+    "error": "Invalid value: 'INVALID'. ...",
 }
 ```
 

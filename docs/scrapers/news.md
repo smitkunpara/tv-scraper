@@ -1,7 +1,7 @@
 # News
 
 !!! info "Version Note"
-    `get_news()` uses the News Flow v2 API and was added in `1.4.0b1`.
+    `get_news()` uses the News Flow v2 API and was added in `1.4.0`.
 
 `News` gives you three separate entry points:
 

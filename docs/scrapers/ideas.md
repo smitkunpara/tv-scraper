@@ -36,7 +36,15 @@ result = scraper.get_ideas(
         },
         ...,
     ],
-    "metadata": {"exchange": "NASDAQ", "symbol": "AAPL"},
+    "metadata": {
+        "exchange": "NASDAQ",
+        "symbol": "AAPL",
+        "start_page": 1,
+        "end_page": 2,
+        "sort_by": "popular",
+        "total": 40,
+        "pages": 2,
+    },
     "error": None,
 }
 ```

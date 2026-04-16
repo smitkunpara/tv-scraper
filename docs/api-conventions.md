@@ -112,28 +112,38 @@ result = scraper.get_technicals(
     scraper.get_market_movers(market="stocks-usa", sortOrder="desc")
     ```
 
-    Use snake_case:
+    Use snake_case and correct parameters:
 
     ```python
-    scraper.get_market_movers(market="stocks-usa", language="en")
+    scraper.get_market_movers(market="stocks-usa", limit=20)
     ```
 
 ## Construction-Time Errors
 
 !!! warning "Construction-Time Errors"
-    Some constructor arguments are validated immediately. The common ones are:
+    Some constructor arguments are validated immediately and raise `ValueError` before any network activity:
 
-    - invalid `export`
-    - invalid `timeout`
-
-    That means these fail before any network call happens:
+    - invalid `export` (must be `"json"`, `"csv"`, or `None`)
+    - invalid `timeout` (must be integer between 1 and 300)
 
 ```python
 from tv_scraper import Technicals
 
-Technicals(export="xml")
-Technicals(timeout=0)
+Technicals(export="xml")  # Raises ValueError
+Technicals(timeout=0)    # Raises ValueError
 ```
+
+## Internal Validation Helpers
+
+If you are contributing to `tv-scraper`, use these `BaseScraper` methods for consistent validation:
+
+| Method | Purpose |
+|--------|---------|
+| `self._validate_choice(val, choices)` | Check if a value is in an allowed set. |
+| `self._validate_list(vals, choices)` | Batch check a list of values. |
+| `self._validate_range(val, min, max)` | Check if a number is within bounds. |
+| `self._validate_timeframe(tf)` | Standardized TradingView timeframe check. |
+| `self._verify_symbol_exchange(exc, sym)` | Live existence check via Scanner API. |
 
 ## Finding Accepted Values
 

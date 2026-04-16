@@ -36,7 +36,7 @@ result = scraper.get_markets(
         "sort_order": "desc",
         "limit": 25,
         "total": 25,
-        "total_count": 12345,
+        "total_available": 12345,
     },
     "error": None,
 }

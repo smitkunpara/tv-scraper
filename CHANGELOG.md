@@ -5,36 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.4.0] - 2026-04-16
 
-### Refactored
-- **Core Validation**: Decentralized the validation architecture. Validation methods are now integrated directly into the `BaseScraper` class and specific scraper subclasses, removing the centralized `tv_scraper.core.validators.py` module.
+### Breaking Changes
+- **Core Validation**: Decentralized the validation architecture. Removed `tv_scraper.core.validators.py`. Validation is now integrated directly into the `BaseScraper` class and specific scraper subclasses.
+- **Scraper API**: Strictly enforced the use of separate `exchange` and `symbol` parameters across all symbol-specific scrapers.
+- **Scraper API**: Removed legacy support for combined `EXCHANGE:SYMBOL` strings in `News.get_news()` and `SymbolMarkets.get_symbol_markets()`. These methods now require both arguments explicitly.
+
+### Added
+- **Development Standards**: Updated `AGENTS.md` and contributing guidelines to mandate comprehensive edge-case testing for all new features and scraper methods.
+
+### Changed
+- **Scraper API**: Merged `export_result` and `export_type` constructor arguments into a single `export` parameter across all scrapers and streamers. Providing `"json"` or `"csv"` now automatically enables export in that format, while `None` (default) keeps it disabled.
 - **Improved Encapsulation**: Scraper-specific validation logic (e.g., technical indicator and options verification) is now encapsulated within their respective classes (`Technicals`, `Options`).
 
 ### Fixed
 - **Test Suite Stability**: Systematically refactored the entire test suite (1000+ tests) to align with decentralized validation and generic error message formatting (`Invalid value: '...'`).
 - **Standardized Error Messages**: Unified validation error reporting across all scrapers, ensuring consistent error envelopes via the `@catch_errors` decorator.
+- **Streaming**: `CandleStreamer` now validates custom Pine indicators before creating studies by using Pine tools (`get_script` + `validate_script`).
+- **Tests**: Systematically updated all unit, mock, and live tests for `SymbolMarkets` and `News` to comply with the new mandatory `(exchange, symbol)` API.
 - **Cleanup**: Removed obsolete migration and refactor scripts from the repository root.
 
-### Added
-- **Development Standards**: Updated `AGENTS.md` and contributing guidelines to mandate comprehensive edge-case testing for all new features and scraper methods.
-
-## [1.4.0b3] - 2026-04-16
-
-### Breaking Changes
-- **Validators**: Removed `tv_scraper.core.validators.py`. Validation is now performed via internal instance methods on scraper classes.
-
-### Breaking Changes
-- **Scraper API**: Strictly enforced the use of separate `exchange` and `symbol` parameters across all symbol-specific scrapers.
-- **Scraper API**: Removed legacy support for combined `EXCHANGE:SYMBOL` strings in `News.get_news()` and `SymbolMarkets.get_symbol_markets()`. These methods now require both arguments explicitly.
-
-### Fixed
-- **Streaming**: `CandleStreamer` now validates custom Pine indicators before creating studies by using Pine tools (`get_script` + `validate_script`). When a custom script has compile/validation errors, `get_candles()` now returns a clear failed response instead of continuing with missing indicator diagnostics.
-- **Tests**: Added unit coverage for custom indicator script-validation failures and custom-script fetch failures in `tests/unit/test_candle_streamer.py`.
-- **Tests**: Systematically updated all unit, mock, and live tests for `SymbolMarkets` and `News` to comply with the new mandatory `(exchange, symbol)` API.
-
-### Changed
-- **Scraper API**: Merged `export_result` and `export_type` constructor arguments into a single `export` parameter across all scrapers and streamers. Providing `"json"` or `"csv"` now automatically enables export in that format, while `None` (default) keeps it disabled.
 ## [1.4.0b2] - 2026-04-13
 
 ### Added

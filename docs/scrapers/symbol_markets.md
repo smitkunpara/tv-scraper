@@ -8,7 +8,8 @@
 from tv_scraper import SymbolMarkets
 
 scraper = SymbolMarkets()
-result = scraper.get_symbol_markets(symbol="AAPL")
+scraper = SymbolMarkets()
+result = scraper.get_symbol_markets(exchange="NASDAQ", symbol="AAPL")
 ```
 
 Output structure:
@@ -28,11 +29,11 @@ Output structure:
         ...
     ],
     "metadata": {
+        "exchange": "NASDAQ",
         "symbol": "AAPL",
         "scanner": "global",
         "total": 14,
         "total_available": 14,
-        ...
     },
     "error": None,
 }
@@ -41,7 +42,7 @@ Output structure:
 You can also pass an exchange-prefixed symbol:
 
 ```python
-result = scraper.get_symbol_markets(symbol="NASDAQ:AAPL")
+result = scraper.get_symbol_markets(exchange="NASDAQ", symbol="AAPL")
 ```
 
 Output structure:
@@ -59,11 +60,11 @@ Output structure:
         ...
     ],
     "metadata": {
-        "symbol": "NASDAQ:AAPL",
+        "exchange": "NASDAQ",
+        "symbol": "AAPL",
         "scanner": "global",
         "total": 14,
         "total_available": 14,
-        ...
     },
     "error": None,
 }
@@ -90,9 +91,9 @@ The scraper uses only the part after `:` for matching.
     Use:
 
     ```python
-    scraper.get_symbol_markets(symbol="AAPL")
+    scraper.get_symbol_markets(exchange="NASDAQ", symbol="AAPL")
     ```
 
 !!! note "Notes"
     - If no rows are found, the method returns `status="failed"`.
-    - Metadata keeps your original `symbol` input, even when the search uses the part after `:`.
+    - Metadata keeps your original `exchange` and `symbol` inputs.

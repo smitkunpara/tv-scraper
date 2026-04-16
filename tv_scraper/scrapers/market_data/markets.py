@@ -152,5 +152,5 @@ class Markets(ScannerScraper):
         return self._success_response(
             mapped,
             total=len(mapped),
-            total_count=total_count,
+            total_available=total_count,
         )

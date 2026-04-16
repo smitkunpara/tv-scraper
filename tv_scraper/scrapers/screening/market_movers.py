@@ -292,5 +292,5 @@ class MarketMovers(ScannerScraper):
         return self._success_response(
             formatted_data,
             total=len(formatted_data),
-            totalCount=total_count,
+            total_available=total_count,
         )
