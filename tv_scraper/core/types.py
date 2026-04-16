@@ -10,7 +10,7 @@ class ResponseMetadata(TypedDict, total=False):
     exchange: str
     timestamp: int
     total: int
-    total_count: int
+    total_available: int
 
 
 class ScraperResponseSuccess(TypedDict):

@@ -381,7 +381,7 @@ class TestMockMarketsMetadata:
             assert "sort_order" in metadata
             assert "limit" in metadata
             assert "total" in metadata
-            assert "total_count" in metadata
+            assert "total_available" in metadata
 
     def test_mock_metadata_values(self) -> None:
         """Test metadata values match parameters."""

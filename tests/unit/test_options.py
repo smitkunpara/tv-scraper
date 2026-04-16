@@ -527,7 +527,8 @@ class TestMetadata:
         options = Options()
         result = options.get_options(exchange="NASDAQ", symbol="AAPL", strike=200)
 
-        assert result["metadata"]["total"] == 10
+        assert result["metadata"]["total"] == 2
+        assert result["metadata"]["total_available"] == 10
 
 
 class TestExport:

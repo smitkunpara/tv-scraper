@@ -239,8 +239,8 @@ class TestLiveOptionsData:
             assert "symbol" in first
             assert "strike" in first
 
-    def test_live_options_data_total_count(self) -> None:
-        """Verify metadata contains total count."""
+    def test_live_options_data_total_available(self) -> None:
+        """Verify metadata contains total available count."""
         exchange, symbol, strike, _expiration = _get_live_options_snapshot()
 
         scraper = Options()
@@ -248,7 +248,9 @@ class TestLiveOptionsData:
 
         if result["status"] == STATUS_SUCCESS:
             assert "total" in result["metadata"]
+            assert "total_available" in result["metadata"]
             assert isinstance(result["metadata"]["total"], int)
+            assert isinstance(result["metadata"]["total_available"], int)
 
 
 @pytest.mark.live

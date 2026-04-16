@@ -307,8 +307,8 @@ class TestMarketsDataIntegrity:
                 assert "symbol" in item
                 assert ":" in item["symbol"] or "/" in item["symbol"]
 
-    def test_total_count_accuracy(self) -> None:
-        """Test that total_count reflects actual data."""
+    def test_total_available_accuracy(self) -> None:
+        """Test that total_available reflects actual data."""
         scraper = Markets()
         mock_data = {
             "data": [
@@ -324,7 +324,7 @@ class TestMarketsDataIntegrity:
 
             assert result["status"] == STATUS_SUCCESS
             assert len(result["data"]) == 2
-            assert result["metadata"]["total_count"] == 100
+            assert result["metadata"]["total_available"] == 100
             assert result["metadata"]["total"] == 2
 
     def test_metadata_traceability(self) -> None:
@@ -351,4 +351,4 @@ class TestMarketsDataIntegrity:
             assert metadata["sort_order"] == "asc"
             assert metadata["limit"] == 25
             assert "total" in metadata
-            assert "total_count" in metadata
+            assert "total_available" in metadata

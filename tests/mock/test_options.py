@@ -39,15 +39,15 @@ def mock_response_factory():
     def _create_response(
         fields: list[str],
         symbols: list[dict[str, Any]],
-        total_count: int | None = None,
+        total_available: int | None = None,
     ) -> tuple[dict[str, Any], None]:
         """Create a mock API response tuple."""
         data = {
             "fields": fields,
             "symbols": symbols,
         }
-        if total_count is not None:
-            data["totalCount"] = total_count
+        if total_available is not None:
+            data["totalCount"] = total_available
         elif symbols:
             data["totalCount"] = len(symbols)
         return (data, None)

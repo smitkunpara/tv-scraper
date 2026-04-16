@@ -533,7 +533,7 @@ class TestMarketsMetadata:
             assert metadata["sort_order"] == "asc"
             assert metadata["limit"] == 25
             assert metadata["total"] == 1
-            assert metadata["total_count"] == 1
+            assert metadata["total_available"] == 1
 
     def test_metadata_on_error(self) -> None:
         """Test metadata is present on error (for debugging)."""

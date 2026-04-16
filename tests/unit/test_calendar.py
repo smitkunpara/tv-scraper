@@ -467,6 +467,7 @@ class TestCalendarResponseEnvelope:
 
         result = cal.get_dividends()
         assert result["metadata"]["total"] == 3
+        assert result["metadata"]["total_available"] == 3
 
 
 class TestCalendarScannerRowMapping:

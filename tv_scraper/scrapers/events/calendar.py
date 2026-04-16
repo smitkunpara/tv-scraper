@@ -263,10 +263,12 @@ class Calendar(ScannerScraper):
                 data_category="calendar",
             )
 
+        total_count = json_response.get("totalCount", len(events))
         return self._success_response(
             events,
             event_type=data_category,
             total=len(events),
+            total_available=total_count,
             timestamp_from=timestamp_from,
             timestamp_to=timestamp_to,
             **{"markets": markets} if markets else {},

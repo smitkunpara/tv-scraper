@@ -290,6 +290,7 @@ class Options(ScannerScraper):
 
         return self._success_response(
             formatted_data,
-            total=json_response.get("totalCount", len(formatted_data)),
+            total=len(formatted_data),
+            total_available=json_response.get("totalCount", len(formatted_data)),
             filter_value=filter_value,
         )

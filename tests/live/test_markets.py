@@ -213,7 +213,7 @@ class TestLiveMarketsEdgeCases:
         assert "sort_order" in metadata
         assert "limit" in metadata
         assert "total" in metadata
-        assert "total_count" in metadata
+        assert "total_available" in metadata
 
     def test_live_markets_data_fields(self) -> None:
         """Verify data items have expected structure."""
