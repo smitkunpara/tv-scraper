@@ -4,7 +4,8 @@ import functools
 import inspect
 import logging
 import os
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
+from difflib import get_close_matches
 from typing import Any, TypeVar
 
 import requests
@@ -18,7 +19,14 @@ from tv_scraper.core.constants import (
     STATUS_SUCCESS,
 )
 from tv_scraper.core.exceptions import CaptchaError, ValidationError
+from tv_scraper.core.validation_data import EXCHANGES, TIMEFRAMES
 from tv_scraper.utils.io import generate_export_filepath, save_csv_file, save_json_file
+
+_EXCHANGES_SET = {e.upper() for e in EXCHANGES}
+_SCANNER_SYMBOL_URL = (
+    "https://scanner.tradingview.com/symbol"
+    "?symbol={exchange}%3A{symbol}&fields=market&no_404=false"
+)
 
 logger = logging.getLogger(__name__)
 
@@ -202,6 +210,96 @@ class BaseScraper:
             return None, f"Network error: {exc}"
         except ValueError as exc:
             return None, f"Failed to parse API response: {exc}"
+
+    def _validate_choice(
+        self, value: str | None, allowed: set[str] | list[str] | frozenset[str]
+    ) -> bool:
+        if value is None:
+            return True
+
+        if value in allowed:
+            return True
+
+        allowed_list = sorted(list(allowed))
+        suggestions = get_close_matches(str(value), allowed_list, n=3, cutoff=0.6)
+        suggestion_str = (
+            f" Did you mean: {', '.join(suggestions)}?" if suggestions else ""
+        )
+        sample = ", ".join(map(str, allowed_list[:5]))
+        raise ValidationError(
+            f"Invalid value: '{value}'.{suggestion_str} "
+            f"Allowed values include: {sample}, ..."
+        )
+
+    def _validate_list(
+        self,
+        values: Sequence[str] | None,
+        allowed: set[str] | frozenset[str] | list[str],
+    ) -> bool:
+        if values is None:
+            return True
+        allowed_set = allowed if isinstance(allowed, (set, frozenset)) else set(allowed)
+        invalid = [v for v in values if v not in allowed_set]
+        if not invalid:
+            return True
+        valid = ", ".join(sorted(str(a) for a in list(allowed_set)[:5]))
+        raise ValidationError(
+            f"Invalid values: {', '.join(repr(v) for v in invalid)}. "
+            f"Allowed values include: {valid}, ..."
+        )
+
+    def _validate_range(
+        self, value: int | float | None, min_val: int, max_val: int
+    ) -> bool:
+        if value is None:
+            return True
+        if not isinstance(value, (int, float)):
+            raise ValidationError(f"Invalid value: {value}. Must be a number.")
+        if min_val <= value <= max_val:
+            return True
+        raise ValidationError(
+            f"Invalid value: {value}. Must be between {min_val} and {max_val}."
+        )
+
+    def _validate_timeframe(self, timeframe: str) -> bool:
+        if timeframe in TIMEFRAMES:
+            return True
+        valid = ", ".join(TIMEFRAMES.keys())
+        raise ValidationError(
+            f"Invalid timeframe: '{timeframe}'. Valid timeframes: {valid}"
+        )
+
+    def _verify_symbol_exchange(
+        self, exchange: str | None, symbol: str | None
+    ) -> tuple[str, str]:
+        if (
+            not exchange
+            or not symbol
+            or not isinstance(exchange, str)
+            or not isinstance(symbol, str)
+        ):
+            raise ValidationError("Both exchange and symbol must be provided together.")
+
+        exchange_up, symbol_up = exchange.strip().upper(), symbol.strip().upper()
+        if not exchange_up or not symbol_up:
+            raise ValidationError("Both exchange and symbol must be provided together.")
+
+        self._validate_choice(exchange_up, _EXCHANGES_SET)
+
+        url = _SCANNER_SYMBOL_URL.format(exchange=exchange_up, symbol=symbol_up)
+        try:
+            resp = requests.get(url, timeout=5)
+            if resp.status_code == 404:
+                raise ValidationError(
+                    f"Symbol '{symbol_up}' not found on exchange '{exchange_up}'."
+                )
+            resp.raise_for_status()
+        except (requests.RequestException, ValidationError) as exc:
+            if isinstance(exc, ValidationError):
+                raise
+            pass
+
+        return exchange_up, symbol_up
 
     def _export(
         self,

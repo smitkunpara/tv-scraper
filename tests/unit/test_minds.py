@@ -146,7 +146,7 @@ class TestGetMindsSuccess:
         return response
 
     @patch.object(Minds, "_request")
-    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.scrapers.social.minds.Minds._verify_symbol_exchange")
     def test_single_page_success(self, mock_verify, mock_request) -> None:
         """Test single page success."""
         mock_verify.return_value = ("NASDAQ", "AAPL")
@@ -172,7 +172,7 @@ class TestGetMindsSuccess:
         assert result["metadata"]["pages"] == 1
 
     @patch.object(Minds, "_request")
-    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.scrapers.social.minds.Minds._verify_symbol_exchange")
     def test_multi_page_pagination(self, mock_verify, mock_request) -> None:
         """Test multi-page pagination."""
         mock_verify.return_value = ("NASDAQ", "AAPL")
@@ -213,7 +213,7 @@ class TestGetMindsSuccess:
         assert result["metadata"]["pages"] == 2
 
     @patch.object(Minds, "_request")
-    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.scrapers.social.minds.Minds._verify_symbol_exchange")
     def test_limit_applied(self, mock_verify, mock_request) -> None:
         """Test limit parameter applied correctly."""
         mock_verify.return_value = ("NASDAQ", "AAPL")
@@ -239,7 +239,7 @@ class TestGetMindsSuccess:
         assert result["metadata"]["limit"] == 5
 
     @patch.object(Minds, "_request")
-    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.scrapers.social.minds.Minds._verify_symbol_exchange")
     def test_symbol_info_extracted(self, mock_verify, mock_request) -> None:
         """Test symbol info extracted from first page."""
         mock_verify.return_value = ("NASDAQ", "AAPL")
@@ -264,7 +264,7 @@ class TestGetMindsErrorHandling:
     """Test error handling in get_minds."""
 
     @patch.object(Minds, "_request")
-    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.scrapers.social.minds.Minds._verify_symbol_exchange")
     def test_network_error(self, mock_verify, mock_request) -> None:
         """Test network error handling."""
         mock_verify.return_value = ("NASDAQ", "AAPL")
@@ -278,7 +278,7 @@ class TestGetMindsErrorHandling:
         assert "Network error" in result["error"]
 
     @patch.object(Minds, "_request")
-    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.scrapers.social.minds.Minds._verify_symbol_exchange")
     def test_empty_results_break_loop(self, mock_verify, mock_request) -> None:
         """Test that empty results break the pagination loop."""
         mock_verify.return_value = ("NASDAQ", "AAPL")
@@ -291,7 +291,7 @@ class TestGetMindsErrorHandling:
         assert len(result["data"]) == 0
 
     @patch.object(Minds, "_request")
-    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.scrapers.social.minds.Minds._verify_symbol_exchange")
     def test_max_pages_limit(self, mock_verify, mock_request) -> None:
         """Test max pages limit is enforced."""
         mock_verify.return_value = ("NASDAQ", "AAPL")
@@ -319,7 +319,7 @@ class TestGetMindsErrorHandling:
 class TestGetMindsExport:
     """Test export functionality."""
 
-    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.scrapers.social.minds.Minds._verify_symbol_exchange")
     @patch("tv_scraper.core.base.save_json_file")
     def test_export_json(self, mock_save, mock_verify) -> None:
         """Test JSON export."""
@@ -349,7 +349,7 @@ class TestGetMindsExport:
 
         assert mock_save.called
 
-    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.scrapers.social.minds.Minds._verify_symbol_exchange")
     @patch("tv_scraper.core.base.save_csv_file")
     def test_export_csv(self, mock_save, mock_verify) -> None:
         """Test CSV export."""
@@ -384,7 +384,7 @@ class TestGetMindsResponseEnvelope:
     """Test standardized response envelope."""
 
     @patch.object(Minds, "_request")
-    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.scrapers.social.minds.Minds._verify_symbol_exchange")
     def test_success_has_all_keys(self, mock_verify, mock_request) -> None:
         """Test success response has required keys."""
         mock_verify.return_value = ("NASDAQ", "AAPL")
@@ -403,7 +403,7 @@ class TestGetMindsResponseEnvelope:
         assert result["status"] == STATUS_SUCCESS
         assert result["error"] is None
 
-    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.scrapers.social.minds.Minds._verify_symbol_exchange")
     def test_error_has_all_keys(self, mock_verify) -> None:
         """Test error response has required keys."""
         mock_verify.side_effect = ValidationError("Invalid value")
@@ -420,7 +420,7 @@ class TestGetMindsResponseEnvelope:
         assert result["error"] is not None
 
     @patch.object(Minds, "_request")
-    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.scrapers.social.minds.Minds._verify_symbol_exchange")
     def test_metadata_fields(self, mock_verify, mock_request) -> None:
         """Test metadata contains expected fields."""
         mock_verify.return_value = ("NASDAQ", "AAPL")
@@ -458,7 +458,7 @@ class TestGetMindsEdgeCases:
     """Test edge cases."""
 
     @patch.object(Minds, "_request")
-    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.scrapers.social.minds.Minds._verify_symbol_exchange")
     def test_cursor_without_c_ignored(self, mock_verify, mock_request) -> None:
         """Test that next URL without '?c=' is treated as no more pages."""
         mock_verify.return_value = ("NASDAQ", "AAPL")
@@ -487,7 +487,7 @@ class TestGetMindsEdgeCases:
         assert result["metadata"]["pages"] == 1
 
     @patch.object(Minds, "_request")
-    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.scrapers.social.minds.Minds._verify_symbol_exchange")
     def test_empty_cursor_ignored(self, mock_verify, mock_request) -> None:
         """Test that empty cursor is treated as no more pages."""
         mock_verify.return_value = ("NASDAQ", "AAPL")
@@ -516,7 +516,7 @@ class TestGetMindsEdgeCases:
         assert result["metadata"]["pages"] == 1
 
     @patch.object(Minds, "_request")
-    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.scrapers.social.minds.Minds._verify_symbol_exchange")
     def test_limit_none_metadata(self, mock_verify, mock_request) -> None:
         """Test that limit=None doesn't add limit to metadata."""
         mock_verify.return_value = ("NASDAQ", "AAPL")

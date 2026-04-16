@@ -2,12 +2,12 @@ import logging
 from typing import Any, Literal, get_args
 from urllib.parse import urlencode
 
-from tv_scraper.core import validators
 from tv_scraper.core.base import BaseScraper, catch_errors
 from tv_scraper.core.validation_data import (
     AREA_LITERAL,
     AREAS,
     EXCHANGE_LITERAL,
+    LANGUAGES,
     NEWS_CORP_ACTIVITIES,
     NEWS_CORP_ACTIVITY_LITERAL,
     NEWS_COUNTRIES,
@@ -105,7 +105,7 @@ class News(BaseScraper):
             Standardized response dict with keys
             ``status``, ``data``, ``metadata``, ``error``.
         """
-        validators.validate_choice(language, validators.LANGUAGES_SET)
+        self._validate_choice(language, set(LANGUAGES.values()))
 
         filters = [f"lang:{language}"]
 
@@ -116,26 +116,26 @@ class News(BaseScraper):
                     "Both exchange and symbol must be provided together."
                 )
 
-            v_exchange, v_symbol = validators.verify_symbol_exchange(exchange, symbol)
+            v_exchange, v_symbol = self._verify_symbol_exchange(exchange, symbol)
             filters.append(f"symbol:{v_exchange}:{v_symbol}")
 
         if corp_activity:
-            validators.validate_list(corp_activity, NEWS_CORP_ACTIVITIES)
+            self._validate_list(corp_activity, NEWS_CORP_ACTIVITIES)
             filters.append(f"corp_activity:{','.join(corp_activity)}")
         if economic_category:
-            validators.validate_list(economic_category, NEWS_ECONOMIC_CATEGORIES)
+            self._validate_list(economic_category, NEWS_ECONOMIC_CATEGORIES)
             filters.append(f"economic_category:{','.join(economic_category)}")
         if market:
-            validators.validate_list(market, NEWS_MARKETS)
+            self._validate_list(market, NEWS_MARKETS)
             filters.append(f"market:{','.join(market)}")
         if market_country:
-            validators.validate_list(market_country, NEWS_COUNTRIES)
+            self._validate_list(market_country, NEWS_COUNTRIES)
             filters.append(f"market_country:{','.join(market_country)}")
         if provider:
-            validators.validate_list(provider, NEWS_PROVIDERS)
+            self._validate_list(provider, NEWS_PROVIDERS)
             filters.append(f"provider:{','.join(provider)}")
         if sector:
-            validators.validate_list(sector, NEWS_SECTORS)
+            self._validate_list(sector, NEWS_SECTORS)
             filters.append(f"sector:{','.join(sector)}")
 
         params: dict[str, Any] = {
@@ -208,12 +208,12 @@ class News(BaseScraper):
             Standardized response dict with keys
             ``status``, ``data``, ``metadata``, ``error``.
         """
-        v_exchange, v_symbol = validators.verify_symbol_exchange(exchange, symbol)
-        validators.validate_choice(language, validators.LANGUAGES_SET)
-        validators.validate_choice(provider, validators.NEWS_PROVIDERS_SET)
-        validators.validate_choice(area, validators.AREAS_SET)
-        validators.validate_choice(sort_by, VALID_SORT_OPTIONS)
-        validators.validate_choice(section, VALID_SECTIONS)
+        v_exchange, v_symbol = self._verify_symbol_exchange(exchange, symbol)
+        self._validate_choice(language, set(LANGUAGES.values()))
+        self._validate_choice(provider, set(NEWS_PROVIDERS))
+        self._validate_choice(area, set(AREAS.keys()))
+        self._validate_choice(sort_by, VALID_SORT_OPTIONS)
+        self._validate_choice(section, VALID_SECTIONS)
 
         params: dict[str, Any] = {
             "client": "web",
@@ -273,7 +273,7 @@ class News(BaseScraper):
         if not story_id or not story_id.strip():
             return self._error_response("story_id cannot be empty")
 
-        validators.validate_choice(language, validators.LANGUAGES_SET)
+        self._validate_choice(language, set(LANGUAGES.values()))
 
         params: dict[str, str] = {
             "id": story_id,

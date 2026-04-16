@@ -217,7 +217,7 @@ class TestMockMarketsValidation:
         assert result["status"] == STATUS_FAILED
         assert result["data"] is None
         assert result["error"] is not None
-        assert "Invalid market" in result["error"]
+        assert "Invalid value" in result["error"]
         assert "invalid_market" in result["error"]
 
     def test_mock_invalid_sort_by(self) -> None:
@@ -228,7 +228,7 @@ class TestMockMarketsValidation:
         assert result["status"] == STATUS_FAILED
         assert result["data"] is None
         assert result["error"] is not None
-        assert "Invalid sort_by" in result["error"]
+        assert "Invalid value" in result["error"]
 
     def test_mock_invalid_sort_order(self) -> None:
         """Test invalid sort_order returns error."""
@@ -238,7 +238,7 @@ class TestMockMarketsValidation:
         assert result["status"] == STATUS_FAILED
         assert result["data"] is None
         assert result["error"] is not None
-        assert "Invalid sort_order" in result["error"]
+        assert "Invalid value" in result["error"]
 
     def test_mock_invalid_limit_zero(self) -> None:
         """Test limit=0 returns error."""
@@ -248,7 +248,7 @@ class TestMockMarketsValidation:
         assert result["status"] == STATUS_FAILED
         assert result["data"] is None
         assert result["error"] is not None
-        assert "Invalid limit" in result["error"]
+        assert "Invalid value" in result["error"]
 
     def test_mock_invalid_limit_negative(self) -> None:
         """Test negative limit returns error."""

@@ -63,7 +63,7 @@ class TestDefaultColumns:
 class TestPublicValidation:
     """Tests for validation in public method."""
 
-    @patch("tv_scraper.core.validators.verify_options_symbol")
+    @patch("tv_scraper.scrapers.market_data.options.Options._verify_options_symbol")
     def test_get_options_invalid_exchange(self, mock_verify) -> None:
         """Verify invalid exchange returns failed envelope."""
         from tv_scraper.core.exceptions import ValidationError
@@ -78,9 +78,9 @@ class TestPublicValidation:
         )
 
         assert result["status"] == STATUS_FAILED
-        assert "Invalid value" in result["error"]
+        assert "Invalid" in result["error"]
 
-    @patch("tv_scraper.core.validators.verify_options_symbol")
+    @patch("tv_scraper.scrapers.market_data.options.Options._verify_options_symbol")
     def test_get_options_invalid_columns(self, mock_verify) -> None:
         """Verify invalid columns return failed envelope."""
         mock_verify.return_value = ("NASDAQ", "AAPL")
@@ -96,7 +96,7 @@ class TestPublicValidation:
         assert result["status"] == STATUS_FAILED
         assert "Invalid values" in result["error"]
 
-    @patch("tv_scraper.core.validators.verify_options_symbol")
+    @patch("tv_scraper.scrapers.market_data.options.Options._verify_options_symbol")
     def test_get_options_requires_at_least_one_filter(self, mock_verify) -> None:
         """Verify request fails if both expiration and strike are missing."""
         mock_verify.return_value = ("NASDAQ", "AAPL")
@@ -107,7 +107,7 @@ class TestPublicValidation:
         assert result["status"] == STATUS_FAILED
         assert "At least one filter" in result["error"]
 
-    @patch("tv_scraper.core.validators.verify_options_symbol")
+    @patch("tv_scraper.scrapers.market_data.options.Options._verify_options_symbol")
     def test_get_options_invalid_strike_type(self, mock_verify) -> None:
         """Verify invalid strike type returns failed envelope."""
         mock_verify.return_value = ("NASDAQ", "AAPL")
@@ -123,7 +123,7 @@ class TestPublicValidation:
         assert result["data"] is None
         assert "Invalid strike value" in result["error"]
 
-    @patch("tv_scraper.core.validators.verify_options_symbol")
+    @patch("tv_scraper.scrapers.market_data.options.Options._verify_options_symbol")
     def test_get_options_invalid_expiration_type(self, mock_verify) -> None:
         """Verify invalid expiration type returns failed envelope."""
         mock_verify.return_value = ("BSE", "SENSEX")
@@ -139,7 +139,7 @@ class TestPublicValidation:
         assert result["data"] is None
         assert "Invalid date value" in result["error"]
 
-    @patch("tv_scraper.core.validators.verify_options_symbol")
+    @patch("tv_scraper.scrapers.market_data.options.Options._verify_options_symbol")
     def test_get_options_invalid_expiration_month(self, mock_verify) -> None:
         """Verify invalid expiration month returns failed envelope."""
         mock_verify.return_value = ("BSE", "SENSEX")
@@ -155,7 +155,7 @@ class TestPublicValidation:
         assert result["data"] is None
         assert "0 < MM <= 12" in result["error"]
 
-    @patch("tv_scraper.core.validators.verify_options_symbol")
+    @patch("tv_scraper.scrapers.market_data.options.Options._verify_options_symbol")
     def test_get_options_invalid_expiration_day(self, mock_verify) -> None:
         """Verify invalid expiration day returns failed envelope."""
         mock_verify.return_value = ("BSE", "SENSEX")
@@ -171,7 +171,7 @@ class TestPublicValidation:
         assert result["data"] is None
         assert "0 < DD <= 31" in result["error"]
 
-    @patch("tv_scraper.core.validators.verify_options_symbol")
+    @patch("tv_scraper.scrapers.market_data.options.Options._verify_options_symbol")
     def test_get_options_invalid_calendar_date(self, mock_verify) -> None:
         """Verify invalid calendar date returns failed envelope."""
         mock_verify.return_value = ("BSE", "SENSEX")
@@ -191,7 +191,7 @@ class TestPublicValidation:
 class TestGetOptions:
     """Tests for get_options method."""
 
-    @patch("tv_scraper.core.validators.verify_options_symbol")
+    @patch("tv_scraper.scrapers.market_data.options.Options._verify_options_symbol")
     @patch.object(Options, "_request")
     def test_get_options_with_strike_success(self, mock_request, mock_verify) -> None:
         """Verify successful options fetching by strike filter."""
@@ -216,7 +216,7 @@ class TestGetOptions:
         assert result["data"][0]["strike"] == 200
         assert result["metadata"]["filter_value"] == 200
 
-    @patch("tv_scraper.core.validators.verify_options_symbol")
+    @patch("tv_scraper.scrapers.market_data.options.Options._verify_options_symbol")
     @patch.object(Options, "_request")
     def test_get_options_with_expiration_success(
         self, mock_request, mock_verify
@@ -246,7 +246,7 @@ class TestGetOptions:
         assert result["metadata"]["filter_value"] == 20260419
         assert result["data"][0]["expiration"] == 20260419
 
-    @patch("tv_scraper.core.validators.verify_options_symbol")
+    @patch("tv_scraper.scrapers.market_data.options.Options._verify_options_symbol")
     @patch.object(Options, "_request")
     def test_get_options_by_expiration_and_strike(
         self, mock_request, mock_verify
@@ -278,7 +278,7 @@ class TestGetOptions:
             "strike": 83000,
         }
 
-    @patch("tv_scraper.core.validators.verify_options_symbol")
+    @patch("tv_scraper.scrapers.market_data.options.Options._verify_options_symbol")
     @patch.object(Options, "_request")
     def test_get_options_with_custom_columns(self, mock_request, mock_verify) -> None:
         """Verify options fetching with custom columns."""
@@ -421,7 +421,7 @@ class TestExecuteRequest:
 class TestResponseEnvelope:
     """Tests for standardized response envelope."""
 
-    @patch("tv_scraper.core.validators.verify_options_symbol")
+    @patch("tv_scraper.scrapers.market_data.options.Options._verify_options_symbol")
     @patch.object(Options, "_request")
     def test_success_response_has_all_keys(self, mock_request, mock_verify) -> None:
         """Verify success response has all required keys."""
@@ -445,7 +445,7 @@ class TestResponseEnvelope:
         assert result["status"] == STATUS_SUCCESS
         assert result["error"] is None
 
-    @patch("tv_scraper.core.validators.verify_options_symbol")
+    @patch("tv_scraper.scrapers.market_data.options.Options._verify_options_symbol")
     def test_error_response_has_all_keys(self, mock_verify) -> None:
         """Verify error response has all required keys."""
         from tv_scraper.core.exceptions import ValidationError
@@ -471,7 +471,7 @@ class TestResponseEnvelope:
 class TestMetadata:
     """Tests for metadata in responses."""
 
-    @patch("tv_scraper.core.validators.verify_options_symbol")
+    @patch("tv_scraper.scrapers.market_data.options.Options._verify_options_symbol")
     @patch.object(Options, "_request")
     def test_metadata_contains_exchange_symbol(self, mock_request, mock_verify) -> None:
         """Verify metadata contains exchange and symbol."""
@@ -491,7 +491,7 @@ class TestMetadata:
         assert result["metadata"]["exchange"] == "BSE"
         assert result["metadata"]["symbol"] == "SENSEX"
 
-    @patch("tv_scraper.core.validators.verify_options_symbol")
+    @patch("tv_scraper.scrapers.market_data.options.Options._verify_options_symbol")
     @patch.object(Options, "_request")
     def test_metadata_contains_filter_value(self, mock_request, mock_verify) -> None:
         """Verify metadata contains filter value."""
@@ -510,7 +510,7 @@ class TestMetadata:
 
         assert result["metadata"]["filter_value"] == 200.5
 
-    @patch("tv_scraper.core.validators.verify_options_symbol")
+    @patch("tv_scraper.scrapers.market_data.options.Options._verify_options_symbol")
     @patch.object(Options, "_request")
     def test_metadata_contains_total(self, mock_request, mock_verify) -> None:
         """Verify metadata contains total count."""
@@ -533,7 +533,7 @@ class TestMetadata:
 class TestExport:
     """Tests for export functionality."""
 
-    @patch("tv_scraper.core.validators.verify_options_symbol")
+    @patch("tv_scraper.scrapers.market_data.options.Options._verify_options_symbol")
     @patch.object(Options, "_request")
     @patch("tv_scraper.core.base.save_json_file")
     def test_export_json_enabled(self, mock_save, mock_request, mock_verify) -> None:
@@ -553,7 +553,7 @@ class TestExport:
 
         assert mock_save.called
 
-    @patch("tv_scraper.core.validators.verify_options_symbol")
+    @patch("tv_scraper.scrapers.market_data.options.Options._verify_options_symbol")
     @patch.object(Options, "_request")
     @patch("tv_scraper.core.base.save_csv_file")
     def test_export_csv_enabled(self, mock_save, mock_request, mock_verify) -> None:
@@ -573,7 +573,7 @@ class TestExport:
 
         assert mock_save.called
 
-    @patch("tv_scraper.core.validators.verify_options_symbol")
+    @patch("tv_scraper.scrapers.market_data.options.Options._verify_options_symbol")
     @patch.object(Options, "_request")
     def test_export_disabled_by_default(self, mock_request, mock_verify) -> None:
         """Verify export is disabled by default."""

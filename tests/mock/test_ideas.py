@@ -242,7 +242,7 @@ class TestIdeasValidation:
         scraper = Ideas()
         result = scraper.get_ideas(exchange="NASDAQ", symbol="AAPL", sort_by="invalid")
         assert result["status"] == STATUS_FAILED
-        assert "sort_by" in result["error"]
+        assert "Invalid value" in result["error"]
 
 
 class TestIdeasResponseEnvelope:

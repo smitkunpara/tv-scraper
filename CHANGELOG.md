@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Refactored
+- **Core Validation**: Decentralized the validation architecture. Validation methods are now integrated directly into the `BaseScraper` class and specific scraper subclasses, removing the centralized `tv_scraper.core.validators.py` module.
+- **Improved Encapsulation**: Scraper-specific validation logic (e.g., technical indicator and options verification) is now encapsulated within their respective classes (`Technicals`, `Options`).
+
+### Fixed
+- **Test Suite Stability**: Systematically refactored the entire test suite (1000+ tests) to align with decentralized validation and generic error message formatting (`Invalid value: '...'`).
+- **Standardized Error Messages**: Unified validation error reporting across all scrapers, ensuring consistent error envelopes via the `@catch_errors` decorator.
+- **Cleanup**: Removed obsolete migration and refactor scripts from the repository root.
+
+### Added
+- **Development Standards**: Updated `AGENTS.md` and contributing guidelines to mandate comprehensive edge-case testing for all new features and scraper methods.
+
+## [1.4.0b3] - 2026-04-16
+
+### Breaking Changes
+- **Validators**: Removed `tv_scraper.core.validators.py`. Validation is now performed via internal instance methods on scraper classes.
+
 ### Breaking Changes
 - **Scraper API**: Strictly enforced the use of separate `exchange` and `symbol` parameters across all symbol-specific scrapers.
 - **Scraper API**: Removed legacy support for combined `EXCHANGE:SYMBOL` strings in `News.get_news()` and `SymbolMarkets.get_symbol_markets()`. These methods now require both arguments explicitly.

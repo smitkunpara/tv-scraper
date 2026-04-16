@@ -114,7 +114,7 @@ class TestMockGetOptionsByStrikeFilter:
         )
 
         with patch(
-            "tv_scraper.core.validators.verify_options_symbol",
+            "tv_scraper.scrapers.market_data.options.Options._verify_options_symbol",
             return_value=("NASDAQ", "AAPL"),
         ):
             result = options_scraper.get_options(
@@ -142,7 +142,7 @@ class TestMockGetOptionsByStrikeFilter:
         )
 
         with patch(
-            "tv_scraper.core.validators.verify_options_symbol",
+            "tv_scraper.scrapers.market_data.options.Options._verify_options_symbol",
             return_value=("NASDAQ", "AAPL"),
         ):
             result = options_scraper.get_options(
@@ -204,7 +204,7 @@ class TestMockGetOptionsByExpirationFilter:
         )
 
         with patch(
-            "tv_scraper.core.validators.verify_options_symbol",
+            "tv_scraper.scrapers.market_data.options.Options._verify_options_symbol",
             return_value=("BSE", "SENSEX"),
         ):
             result = options_scraper.get_options(
@@ -237,7 +237,7 @@ class TestMockGetOptionsByExpirationFilter:
         )
 
         with patch(
-            "tv_scraper.core.validators.verify_options_symbol",
+            "tv_scraper.scrapers.market_data.options.Options._verify_options_symbol",
             return_value=("BSE", "SENSEX"),
         ):
             result = options_scraper.get_options(
@@ -266,7 +266,7 @@ class TestMockGetOptionsByExpirationFilter:
         )
 
         with patch(
-            "tv_scraper.core.validators.verify_options_symbol",
+            "tv_scraper.scrapers.market_data.options.Options._verify_options_symbol",
             return_value=("BSE", "SENSEX"),
         ):
             result = options_scraper.get_options(
@@ -286,7 +286,7 @@ class TestMockGetOptionsByExpirationFilter:
 class TestMockValidation:
     """Tests for validation using mocks."""
 
-    @patch("tv_scraper.core.validators.verify_options_symbol")
+    @patch("tv_scraper.scrapers.market_data.options.Options._verify_options_symbol")
     def test_mock_invalid_exchange(self, mock_verify, options_scraper: Options) -> None:
         """Verify invalid exchange returns error."""
         from tv_scraper.core.exceptions import ValidationError
@@ -305,7 +305,7 @@ class TestMockValidation:
         assert result["data"] is None
         assert result["error"] is not None
 
-    @patch("tv_scraper.core.validators.verify_options_symbol")
+    @patch("tv_scraper.scrapers.market_data.options.Options._verify_options_symbol")
     def test_mock_invalid_columns(self, mock_verify, options_scraper: Options) -> None:
         """Verify invalid columns return error."""
         mock_verify.return_value = ("NASDAQ", "AAPL")
@@ -318,9 +318,9 @@ class TestMockValidation:
         )
 
         assert result["status"] == STATUS_FAILED
-        assert "Invalid columns" in result["error"]
+        assert "Invalid values" in result["error"]
 
-    @patch("tv_scraper.core.validators.verify_options_symbol")
+    @patch("tv_scraper.scrapers.market_data.options.Options._verify_options_symbol")
     def test_mock_invalid_strike_type(
         self, mock_verify, options_scraper: Options
     ) -> None:
@@ -334,7 +334,7 @@ class TestMockValidation:
         )
 
         assert result["status"] == STATUS_FAILED
-        assert "Invalid strike value" in result["error"]
+        assert "Invalid" in result["error"]
 
 
 class TestMockMetadata:
@@ -381,7 +381,7 @@ class TestMockMetadata:
         )
 
         with patch(
-            "tv_scraper.core.validators.verify_options_symbol",
+            "tv_scraper.scrapers.market_data.options.Options._verify_options_symbol",
             return_value=("BSE", "SENSEX"),
         ):
             result = options_scraper.get_options(
@@ -404,7 +404,7 @@ class TestMockErrorHandling:
         mock_request.return_value = (None, "Connection timeout after 10s")
 
         with patch(
-            "tv_scraper.core.validators.verify_options_symbol",
+            "tv_scraper.scrapers.market_data.options.Options._verify_options_symbol",
             return_value=("NASDAQ", "AAPL"),
         ):
             result = options_scraper.get_options(
@@ -424,7 +424,7 @@ class TestMockErrorHandling:
         mock_request.return_value = (None, "HTTP 404 Not Found")
 
         with patch(
-            "tv_scraper.core.validators.verify_options_symbol",
+            "tv_scraper.scrapers.market_data.options.Options._verify_options_symbol",
             return_value=("INVALID", "INVALID"),
         ):
             result = options_scraper.get_options(
@@ -444,7 +444,7 @@ class TestMockErrorHandling:
         mock_request.return_value = ("not a dict", None)
 
         with patch(
-            "tv_scraper.core.validators.verify_options_symbol",
+            "tv_scraper.scrapers.market_data.options.Options._verify_options_symbol",
             return_value=("NASDAQ", "AAPL"),
         ):
             result = options_scraper.get_options(
@@ -477,7 +477,7 @@ class TestMockDataMapping:
         )
 
         with patch(
-            "tv_scraper.core.validators.verify_options_symbol",
+            "tv_scraper.scrapers.market_data.options.Options._verify_options_symbol",
             return_value=("NASDAQ", "AAPL"),
         ):
             result = options_scraper.get_options(
@@ -511,7 +511,7 @@ class TestMockDataMapping:
         )
 
         with patch(
-            "tv_scraper.core.validators.verify_options_symbol",
+            "tv_scraper.scrapers.market_data.options.Options._verify_options_symbol",
             return_value=("NASDAQ", "AAPL"),
         ):
             result = options_scraper.get_options(
@@ -551,7 +551,7 @@ class TestMockResponseEnvelope:
         mock_request.return_value = (None, "Network error")
 
         with patch(
-            "tv_scraper.core.validators.verify_options_symbol",
+            "tv_scraper.scrapers.market_data.options.Options._verify_options_symbol",
             side_effect=ValidationError("Invalid exchange"),
         ):
             result = options_scraper.get_options(
@@ -587,7 +587,7 @@ class TestMockExport:
         )
 
         with patch(
-            "tv_scraper.core.validators.verify_options_symbol",
+            "tv_scraper.scrapers.market_data.options.Options._verify_options_symbol",
             return_value=("NASDAQ", "AAPL"),
         ):
             options_scraper.export_result = True
@@ -616,7 +616,7 @@ class TestMockExport:
         )
 
         with patch(
-            "tv_scraper.core.validators.verify_options_symbol",
+            "tv_scraper.scrapers.market_data.options.Options._verify_options_symbol",
             return_value=("NASDAQ", "AAPL"),
         ):
             options_scraper.export_result = True

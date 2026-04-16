@@ -49,7 +49,7 @@ class TestOptionsWithOtherScrapers:
         )
 
         with patch(
-            "tv_scraper.core.validators.verify_options_symbol",
+            "tv_scraper.scrapers.market_data.options.Options._verify_options_symbol",
             return_value=("NASDAQ", "AAPL"),
         ):
             result = options_scraper.get_options(
@@ -98,7 +98,7 @@ class TestOptionsWithOtherScrapers:
         mock_request.side_effect = mock_request_side_effect
 
         with patch(
-            "tv_scraper.core.validators.verify_options_symbol",
+            "tv_scraper.scrapers.market_data.options.Options._verify_options_symbol",
             side_effect=lambda e, s: (e.upper(), s.upper()),
         ):
             result_aapl = options_scraper.get_options(
@@ -175,7 +175,7 @@ class TestOptionsWorkflowScenarios:
         mock_request.side_effect = mock_side_effect
 
         with patch(
-            "tv_scraper.core.validators.verify_options_symbol",
+            "tv_scraper.scrapers.market_data.options.Options._verify_options_symbol",
             return_value=("BSE", "SENSEX"),
         ):
             expiry_result = options_scraper.get_options(
@@ -211,7 +211,7 @@ class TestOptionsWorkflowScenarios:
         )
 
         with patch(
-            "tv_scraper.core.validators.verify_options_symbol",
+            "tv_scraper.scrapers.market_data.options.Options._verify_options_symbol",
             return_value=("NASDAQ", "AAPL"),
         ):
             result = options_scraper.get_options(
@@ -241,7 +241,7 @@ class TestOptionsWorkflowScenarios:
         )
 
         with patch(
-            "tv_scraper.core.validators.verify_options_symbol",
+            "tv_scraper.scrapers.market_data.options.Options._verify_options_symbol",
             return_value=("BSE", "SENSEX"),
         ):
             result = options_scraper.get_options(
@@ -262,7 +262,7 @@ class TestOptionsWorkflowScenarios:
 class TestOptionsWithValidationIntegration:
     """Test Options with DataValidator integration."""
 
-    @patch("tv_scraper.core.validators.verify_options_symbol")
+    @patch("tv_scraper.scrapers.market_data.options.Options._verify_options_symbol")
     def test_validation_called_before_request(
         self, mock_verify, options_scraper: Options
     ) -> None:
@@ -288,7 +288,7 @@ class TestOptionsWithValidationIntegration:
             mock_verify.assert_called_once_with("BSE", "SENSEX")
             mock_request.assert_called_once()
 
-    @patch("tv_scraper.core.validators.verify_options_symbol")
+    @patch("tv_scraper.scrapers.market_data.options.Options._verify_options_symbol")
     def test_request_skipped_on_validation_failure(
         self, mock_verify, options_scraper: Options
     ) -> None:
@@ -335,7 +335,7 @@ class TestOptionsErrorRecovery:
         mock_request.side_effect = mock_side_effect
 
         with patch(
-            "tv_scraper.core.validators.verify_options_symbol",
+            "tv_scraper.scrapers.market_data.options.Options._verify_options_symbol",
             return_value=("NASDAQ", "AAPL"),
         ):
             result = options_scraper.get_options(
@@ -374,7 +374,7 @@ class TestOptionsDataIntegrity:
         ]
 
         with patch(
-            "tv_scraper.core.validators.verify_options_symbol",
+            "tv_scraper.scrapers.market_data.options.Options._verify_options_symbol",
             side_effect=lambda e, s: (e.upper(), s.upper()),
         ):
             result1 = options_scraper.get_options(
@@ -410,7 +410,7 @@ class TestOptionsExportIntegration:
         )
 
         with patch(
-            "tv_scraper.core.validators.verify_options_symbol",
+            "tv_scraper.scrapers.market_data.options.Options._verify_options_symbol",
             return_value=("NASDAQ", "AAPL"),
         ):
             options_scraper.export_result = True
@@ -449,7 +449,7 @@ class TestOptionsConcurrency:
         mock_request.side_effect = responses
 
         with patch(
-            "tv_scraper.core.validators.verify_options_symbol",
+            "tv_scraper.scrapers.market_data.options.Options._verify_options_symbol",
             side_effect=lambda e, s: (e.upper(), s.upper()),
         ):
             results = []
@@ -504,7 +504,7 @@ class TestOptionsBSEIntegration:
         )
 
         with patch(
-            "tv_scraper.core.validators.verify_options_symbol",
+            "tv_scraper.scrapers.market_data.options.Options._verify_options_symbol",
             return_value=("BSE", "SENSEX"),
         ):
             result = options_scraper.get_options(

@@ -2,7 +2,6 @@
 
 from typing import Any, Literal, get_args
 
-from tv_scraper.core import validators
 from tv_scraper.core.base import catch_errors
 from tv_scraper.core.constants import SCANNER_URL
 from tv_scraper.core.scanner import ScannerScraper
@@ -71,9 +70,9 @@ class SymbolMarkets(ScannerScraper):
             ``metadata``, and ``error`` keys.
         """
         # --- Validation ---
-        v_exchange, v_symbol = validators.verify_symbol_exchange(exchange, symbol)
-        validators.validate_choice(scanner, self.SUPPORTED_SCANNERS)
-        validators.validate_range(limit, 1, 1000)
+        v_exchange, v_symbol = self._verify_symbol_exchange(exchange, symbol)
+        self._validate_choice(scanner, self.SUPPORTED_SCANNERS)
+        self._validate_range(limit, 1, 1000)
 
         resolved_fields = fields if fields is not None else list(self.DEFAULT_FIELDS)
 

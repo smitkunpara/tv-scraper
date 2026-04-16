@@ -61,7 +61,7 @@ class TestIdeasWithMinds:
 class TestIdeasConcurrency:
     """Test concurrent Ideas scraper operations."""
 
-    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.scrapers.social.ideas.Ideas._verify_symbol_exchange")
     @patch.object(Ideas, "_scrape_page")
     def test_parallel_ideas_instances(
         self, mock_scrape: MagicMock, mock_verify: MagicMock
@@ -89,7 +89,7 @@ class TestIdeasConcurrency:
 class TestIdeasWithValidators:
     """Test Ideas scraper with DataValidator integration."""
 
-    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.scrapers.social.ideas.Ideas._verify_symbol_exchange")
     @patch.object(Ideas, "_scrape_page")
     def test_case_insensitive_exchange(
         self, mock_scrape: MagicMock, mock_verify: MagicMock
@@ -108,7 +108,7 @@ class TestIdeasWithValidators:
         assert result_upper["status"] == STATUS_SUCCESS
         assert result_mixed["status"] == STATUS_SUCCESS
 
-    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.scrapers.social.ideas.Ideas._verify_symbol_exchange")
     @patch.object(Ideas, "_scrape_page")
     def test_symbol_verification(
         self, mock_scrape: MagicMock, mock_verify: MagicMock
@@ -155,7 +155,7 @@ class TestIdeasWithCookieAuth:
 class TestIdeasExportWorkflow:
     """Test Ideas scraper export workflow."""
 
-    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.scrapers.social.ideas.Ideas._verify_symbol_exchange")
     @patch.object(Ideas, "_scrape_page")
     def test_export_with_metadata(
         self, mock_scrape: MagicMock, mock_verify: MagicMock
@@ -174,7 +174,7 @@ class TestIdeasExportWorkflow:
         assert result["metadata"]["symbol"] == "AAPL"
         assert result["metadata"]["sort_by"] == "recent"
 
-    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.scrapers.social.ideas.Ideas._verify_symbol_exchange")
     @patch.object(Ideas, "_scrape_page")
     def test_csv_export(self, mock_scrape: MagicMock, mock_verify: MagicMock) -> None:
         """Verify CSV export configuration."""
@@ -188,7 +188,7 @@ class TestIdeasExportWorkflow:
 class TestIdeasErrorPropagation:
     """Test error handling and propagation."""
 
-    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.scrapers.social.ideas.Ideas._verify_symbol_exchange")
     @patch.object(Ideas, "_scrape_page")
     def test_page_failure_metadata(
         self, mock_scrape: MagicMock, mock_verify: MagicMock
@@ -210,7 +210,7 @@ class TestIdeasErrorPropagation:
         assert "error" in result
         assert result["metadata"]["pages"] == 2
 
-    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.scrapers.social.ideas.Ideas._verify_symbol_exchange")
     @patch.object(Ideas, "_scrape_page")
     def test_partial_success_still_fails(
         self, mock_scrape: MagicMock, mock_verify: MagicMock
@@ -236,7 +236,7 @@ class TestIdeasErrorPropagation:
 class TestIdeasResponseEnvelope:
     """Test standardized response envelope compliance."""
 
-    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.scrapers.social.ideas.Ideas._verify_symbol_exchange")
     @patch.object(Ideas, "_scrape_page")
     def test_success_envelope_structure(
         self, mock_scrape: MagicMock, mock_verify: MagicMock
@@ -254,7 +254,7 @@ class TestIdeasResponseEnvelope:
         assert result["error"] is None
         assert isinstance(result["data"], list)
 
-    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.scrapers.social.ideas.Ideas._verify_symbol_exchange")
     @patch.object(Ideas, "_scrape_page")
     def test_error_envelope_structure(
         self, mock_scrape: MagicMock, mock_verify: MagicMock
@@ -271,7 +271,7 @@ class TestIdeasResponseEnvelope:
         assert result["status"] == STATUS_FAILED
         assert result["error"] is not None
 
-    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.scrapers.social.ideas.Ideas._verify_symbol_exchange")
     @patch.object(Ideas, "_scrape_page")
     def test_metadata_persists_on_error(
         self, mock_scrape: MagicMock, mock_verify: MagicMock

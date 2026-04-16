@@ -3,10 +3,10 @@
 import logging
 from typing import Any, Literal, get_args
 
-from tv_scraper.core import validators
 from tv_scraper.core.base import catch_errors
 from tv_scraper.core.constants import SCANNER_URL
 from tv_scraper.core.scanner import ScannerScraper
+from tv_scraper.core.validation_data import LANGUAGES
 
 MOVER_MARKET_LITERAL = Literal[
     "stocks-usa",
@@ -232,16 +232,16 @@ class MarketMovers(ScannerScraper):
             ``metadata``, and ``error`` keys.
         """
         # --- Validation ---
-        validators.validate_range(limit, 1, 1000)
-        validators.validate_choice(market, self.SUPPORTED_MARKETS)
+        self._validate_range(limit, 1, 1000)
+        self._validate_choice(market, self.SUPPORTED_MARKETS)
 
         allowed_categories = (
             self.STOCK_CATEGORIES
             if market.startswith("stocks")
             else self.NON_STOCK_CATEGORIES
         )
-        validators.validate_choice(category, allowed_categories)
-        validators.validate_choice(language, validators.LANGUAGES_SET)
+        self._validate_choice(category, allowed_categories)
+        self._validate_choice(language, set(LANGUAGES.values()))
 
         resolved_fields = (
             fields if fields is not None else self._get_default_fields(market)

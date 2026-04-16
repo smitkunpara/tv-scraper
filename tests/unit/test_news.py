@@ -18,9 +18,7 @@ FIXTURES_DIR = Path(__file__).parent.parent / "fixtures" / "news"
 @pytest.fixture(autouse=True)
 def mock_verify_symbol_exchange():
     """Mock live network call for all tests in this module."""
-    with patch(
-        "tv_scraper.scrapers.social.news.validators.verify_symbol_exchange"
-    ) as mock:
+    with patch("tv_scraper.scrapers.social.news.News._verify_symbol_exchange") as mock:
         mock.return_value = ("NASDAQ", "AAPL")
         yield mock
 

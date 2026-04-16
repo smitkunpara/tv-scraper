@@ -2,11 +2,12 @@
 
 import logging
 import re
+from difflib import get_close_matches
 from typing import Any
 
-from tv_scraper.core import validators
 from tv_scraper.core.base import catch_errors
 from tv_scraper.core.constants import SCANNER_URL
+from tv_scraper.core.exceptions import ValidationError
 from tv_scraper.core.scanner import ScannerScraper
 from tv_scraper.core.validation_data import (
     EXCHANGE_LITERAL,
@@ -42,6 +43,23 @@ class Technicals(ScannerScraper):
         )
     """
 
+    def _validate_indicators(self, indicators: list[str]) -> bool:
+        if not indicators:
+            raise ValidationError(
+                "No indicators provided. Provide at least one indicator."
+            )
+        indicators_set = set(INDICATORS)
+        for indicator in indicators:
+            if indicator not in indicators_set:
+                suggestions = get_close_matches(indicator, INDICATORS, n=3, cutoff=0.5)
+                suggestion_str = (
+                    f" Did you mean: {', '.join(suggestions)}?" if suggestions else ""
+                )
+                raise ValidationError(
+                    f"Invalid indicator: '{indicator}'.{suggestion_str}"
+                )
+        return True
+
     @catch_errors
     def get_technicals(
         self,
@@ -66,15 +84,15 @@ class Technicals(ScannerScraper):
 
         # --- Validation ---
         # All local validations first (before any network calls)
-        validators.validate_timeframe(timeframe)
+        self._validate_timeframe(timeframe)
         if technical_indicators is None:
             indicators = list(INDICATORS)
         else:
             indicators = [str(ind) for ind in technical_indicators]
-            validators.validate_indicators(indicators)
+            self._validate_indicators(indicators)
 
         # Symbol/exchange verification (includes static and live checks)
-        v_exchange, v_symbol = validators.verify_symbol_exchange(exchange, symbol)
+        v_exchange, v_symbol = self._verify_symbol_exchange(exchange, symbol)
 
         # --- Build API request ---
         timeframe_value: str = TIMEFRAMES.get(timeframe, "")

@@ -104,7 +104,7 @@ class TestMockMindsDataValidation:
         mock_response.json.return_value = response_data
         return mock_response
 
-    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.scrapers.social.minds.Minds._verify_symbol_exchange")
     def test_success_response_structure(self, mock_verify) -> None:
         """Test successful response has correct structure."""
         mock_verify.return_value = ("NASDAQ", "AAPL")
@@ -137,7 +137,7 @@ class TestMockMindsDataValidation:
         assert "error" in result
         assert result["error"] is None
 
-    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.scrapers.social.minds.Minds._verify_symbol_exchange")
     def test_empty_results(self, mock_verify) -> None:
         """Test handling of empty results."""
         mock_verify.return_value = ("NASDAQ", "AAPL")
@@ -151,7 +151,7 @@ class TestMockMindsDataValidation:
         assert result["status"] == STATUS_SUCCESS
         assert len(result["data"]) == 0
 
-    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.scrapers.social.minds.Minds._verify_symbol_exchange")
     def test_limit_truncation(self, mock_verify) -> None:
         """Test that limit properly truncates results."""
         mock_verify.return_value = ("NASDAQ", "AAPL")
@@ -177,7 +177,7 @@ class TestMockMindsDataValidation:
         assert result["status"] == STATUS_SUCCESS
         assert len(result["data"]) == 5
 
-    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.scrapers.social.minds.Minds._verify_symbol_exchange")
     def test_pagination_cursor_extraction(self, mock_verify) -> None:
         """Test cursor extraction from next URL."""
         mock_verify.return_value = ("NASDAQ", "AAPL")
@@ -229,7 +229,7 @@ class TestMockMindsDataValidation:
         assert len(result["data"]) == 2
         assert result["metadata"]["pages"] == 2
 
-    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.scrapers.social.minds.Minds._verify_symbol_exchange")
     def test_error_response(self, mock_verify) -> None:
         """Test error response structure."""
         mock_verify.return_value = ("NASDAQ", "AAPL")

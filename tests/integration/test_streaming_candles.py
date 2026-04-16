@@ -18,7 +18,7 @@ class TestIntegrationStreamingCandlesWithValidation:
     def test_validation_before_streaming(self):
         """Test that validation is called before streaming."""
         with patch(
-            "tv_scraper.core.validators.verify_symbol_exchange"
+            "tv_scraper.streaming.candle_streamer.CandleStreamer._verify_symbol_exchange"
         ) as mock_validate:
             mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
 
@@ -50,7 +50,7 @@ class TestIntegrationStreamingCandlesWithValidation:
     def test_validation_error_propagates(self):
         """Test that validation errors propagate correctly."""
         with patch(
-            "tv_scraper.core.validators.verify_symbol_exchange"
+            "tv_scraper.streaming.candle_streamer.CandleStreamer._verify_symbol_exchange"
         ) as mock_validate:
             mock_validate.side_effect = Exception("Symbol not found")
 
@@ -83,7 +83,7 @@ class TestIntegrationStreamingCandlesWithExport:
             mock_cc.return_value = mock_ws
 
             with patch(
-                "tv_scraper.core.validators.verify_symbol_exchange"
+                "tv_scraper.streaming.candle_streamer.CandleStreamer._verify_symbol_exchange"
             ) as mock_validate:
                 mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
 
@@ -99,7 +99,7 @@ class TestIntegrationStreamingCandlesWithExport:
     def test_no_export_on_failure(self):
         """Test that export is not called on failure."""
         with patch(
-            "tv_scraper.core.validators.verify_symbol_exchange"
+            "tv_scraper.streaming.candle_streamer.CandleStreamer._verify_symbol_exchange"
         ) as mock_validate:
             mock_validate.side_effect = Exception("Invalid")
 
@@ -150,7 +150,7 @@ class TestIntegrationStreamingCandlesWithIndicators:
                 mock_cc.return_value = mock_ws
 
                 with patch(
-                    "tv_scraper.core.validators.verify_symbol_exchange"
+                    "tv_scraper.streaming.candle_streamer.CandleStreamer._verify_symbol_exchange"
                 ) as mock_validate:
                     mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
 
@@ -198,7 +198,7 @@ class TestIntegrationCandleStreamerAndStreamer:
             mock_cc.return_value = mock_ws
 
             with patch(
-                "tv_scraper.core.validators.verify_symbol_exchange"
+                "tv_scraper.streaming.candle_streamer.CandleStreamer._verify_symbol_exchange"
             ) as mock_validate:
                 mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
 
@@ -252,7 +252,7 @@ class TestIntegrationCandleDataProcessing:
             mock_cc.return_value = mock_ws
 
             with patch(
-                "tv_scraper.core.validators.verify_symbol_exchange"
+                "tv_scraper.streaming.candle_streamer.CandleStreamer._verify_symbol_exchange"
             ) as mock_validate:
                 mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
 
@@ -295,7 +295,7 @@ class TestIntegrationCandleDataProcessing:
             mock_cc.return_value = mock_ws
 
             with patch(
-                "tv_scraper.core.validators.verify_symbol_exchange"
+                "tv_scraper.streaming.candle_streamer.CandleStreamer._verify_symbol_exchange"
             ) as mock_validate:
                 mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
 
@@ -361,7 +361,7 @@ class TestIntegrationCandleDataWithMultipleIndicators:
                 mock_cc.return_value = mock_ws
 
                 with patch(
-                    "tv_scraper.core.validators.verify_symbol_exchange"
+                    "tv_scraper.streaming.candle_streamer.CandleStreamer._verify_symbol_exchange"
                 ) as mock_validate:
                     mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
 
@@ -388,7 +388,7 @@ class TestIntegrationCandleWithConnectionHandling:
             mock_cc.return_value = mock_ws
 
             with patch(
-                "tv_scraper.core.validators.verify_symbol_exchange"
+                "tv_scraper.streaming.candle_streamer.CandleStreamer._verify_symbol_exchange"
             ) as mock_validate:
                 mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
 
@@ -418,7 +418,7 @@ class TestIntegrationCandleWithConnectionHandling:
             mock_cc.return_value = mock_ws
 
             with patch(
-                "tv_scraper.core.validators.verify_symbol_exchange"
+                "tv_scraper.streaming.candle_streamer.CandleStreamer._verify_symbol_exchange"
             ) as mock_validate:
                 mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
 
@@ -451,7 +451,7 @@ class TestIntegrationCandleWithHeartbeat:
             mock_cc.return_value = mock_ws
 
             with patch(
-                "tv_scraper.core.validators.verify_symbol_exchange"
+                "tv_scraper.streaming.candle_streamer.CandleStreamer._verify_symbol_exchange"
             ) as mock_validate:
                 mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
 
@@ -501,7 +501,7 @@ class TestIntegrationCandleEndToEnd:
             mock_cc.return_value = mock_ws
 
             with patch(
-                "tv_scraper.core.validators.verify_symbol_exchange"
+                "tv_scraper.streaming.candle_streamer.CandleStreamer._verify_symbol_exchange"
             ) as mock_validate:
                 mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
 
@@ -561,7 +561,7 @@ class TestIntegrationCandleEndToEnd:
                 mock_cc.return_value = mock_ws
 
                 with patch(
-                    "tv_scraper.core.validators.verify_symbol_exchange"
+                    "tv_scraper.streaming.candle_streamer.CandleStreamer._verify_symbol_exchange"
                 ) as mock_validate:
                     mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
 

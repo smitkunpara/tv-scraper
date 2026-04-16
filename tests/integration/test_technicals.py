@@ -16,9 +16,11 @@ from tv_scraper.scrapers.market_data.technicals import Technicals
 class TestTechnicalsWorkflows:
     """Test complete workflows combining multiple operations."""
 
-    @patch("tv_scraper.core.validators.verify_symbol_exchange")
-    @patch("tv_scraper.core.validators.validate_timeframe")
-    @patch("tv_scraper.core.validators.validate_indicators")
+    @patch(
+        "tv_scraper.scrapers.market_data.technicals.Technicals._verify_symbol_exchange"
+    )
+    @patch("tv_scraper.scrapers.market_data.technicals.Technicals._validate_timeframe")
+    @patch("tv_scraper.scrapers.market_data.technicals.Technicals._validate_indicators")
     @patch("tv_scraper.core.base.requests.request")
     def test_symbol_analysis_workflow(
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
@@ -67,9 +69,11 @@ class TestTechnicalsWorkflows:
             assert isinstance(stoch, (int, float))
             assert 0 <= stoch <= 100
 
-    @patch("tv_scraper.core.validators.verify_symbol_exchange")
-    @patch("tv_scraper.core.validators.validate_timeframe")
-    @patch("tv_scraper.core.validators.validate_indicators")
+    @patch(
+        "tv_scraper.scrapers.market_data.technicals.Technicals._verify_symbol_exchange"
+    )
+    @patch("tv_scraper.scrapers.market_data.technicals.Technicals._validate_timeframe")
+    @patch("tv_scraper.scrapers.market_data.technicals.Technicals._validate_indicators")
     @patch("tv_scraper.core.base.requests.request")
     def test_multi_timeframe_analysis(
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
@@ -140,9 +144,11 @@ class TestTechnicalsErrorPropagation:
 class TestTechnicalsWithExport:
     """Test Technicals with export functionality."""
 
-    @patch("tv_scraper.core.validators.verify_symbol_exchange")
-    @patch("tv_scraper.core.validators.validate_timeframe")
-    @patch("tv_scraper.core.validators.validate_indicators")
+    @patch(
+        "tv_scraper.scrapers.market_data.technicals.Technicals._verify_symbol_exchange"
+    )
+    @patch("tv_scraper.scrapers.market_data.technicals.Technicals._validate_timeframe")
+    @patch("tv_scraper.scrapers.market_data.technicals.Technicals._validate_indicators")
     @patch("tv_scraper.core.base.requests.request")
     @patch("tv_scraper.core.base.save_json_file")
     def test_export_json_integration(
@@ -169,9 +175,11 @@ class TestTechnicalsWithExport:
         assert result["status"] == STATUS_SUCCESS
         assert mock_save.called
 
-    @patch("tv_scraper.core.validators.verify_symbol_exchange")
-    @patch("tv_scraper.core.validators.validate_timeframe")
-    @patch("tv_scraper.core.validators.validate_indicators")
+    @patch(
+        "tv_scraper.scrapers.market_data.technicals.Technicals._verify_symbol_exchange"
+    )
+    @patch("tv_scraper.scrapers.market_data.technicals.Technicals._validate_timeframe")
+    @patch("tv_scraper.scrapers.market_data.technicals.Technicals._validate_indicators")
     @patch("tv_scraper.core.base.requests.request")
     @patch("tv_scraper.core.base.save_csv_file")
     def test_export_csv_integration(
@@ -203,9 +211,11 @@ class TestTechnicalsWithExport:
 class TestTechnicalsScenarios:
     """Test complete real-world scenarios."""
 
-    @patch("tv_scraper.core.validators.verify_symbol_exchange")
-    @patch("tv_scraper.core.validators.validate_timeframe")
-    @patch("tv_scraper.core.validators.validate_indicators")
+    @patch(
+        "tv_scraper.scrapers.market_data.technicals.Technicals._verify_symbol_exchange"
+    )
+    @patch("tv_scraper.scrapers.market_data.technicals.Technicals._validate_timeframe")
+    @patch("tv_scraper.scrapers.market_data.technicals.Technicals._validate_indicators")
     @patch("tv_scraper.core.base.requests.request")
     def test_crypto_screening_workflow(
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
@@ -242,9 +252,11 @@ class TestTechnicalsScenarios:
         data = result["data"]
         assert isinstance(data, dict)
 
-    @patch("tv_scraper.core.validators.verify_symbol_exchange")
-    @patch("tv_scraper.core.validators.validate_timeframe")
-    @patch("tv_scraper.core.validators.validate_indicators")
+    @patch(
+        "tv_scraper.scrapers.market_data.technicals.Technicals._verify_symbol_exchange"
+    )
+    @patch("tv_scraper.scrapers.market_data.technicals.Technicals._validate_timeframe")
+    @patch("tv_scraper.scrapers.market_data.technicals.Technicals._validate_indicators")
     @patch("tv_scraper.core.base.requests.request")
     def test_stock_screening_workflow(
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
@@ -285,9 +297,11 @@ class TestTechnicalsScenarios:
                 trend = "bearish"
             assert trend == "bullish"
 
-    @patch("tv_scraper.core.validators.verify_symbol_exchange")
-    @patch("tv_scraper.core.validators.validate_timeframe")
-    @patch("tv_scraper.core.validators.validate_indicators")
+    @patch(
+        "tv_scraper.scrapers.market_data.technicals.Technicals._verify_symbol_exchange"
+    )
+    @patch("tv_scraper.scrapers.market_data.technicals.Technicals._validate_timeframe")
+    @patch("tv_scraper.scrapers.market_data.technicals.Technicals._validate_indicators")
     @patch("tv_scraper.core.base.requests.request")
     def test_momentum_analysis_workflow(
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
@@ -337,9 +351,11 @@ class TestTechnicalsScenarios:
 class TestTechnicalsConcurrentOperations:
     """Test concurrent operations with Technicals."""
 
-    @patch("tv_scraper.core.validators.verify_symbol_exchange")
-    @patch("tv_scraper.core.validators.validate_timeframe")
-    @patch("tv_scraper.core.validators.validate_indicators")
+    @patch(
+        "tv_scraper.scrapers.market_data.technicals.Technicals._verify_symbol_exchange"
+    )
+    @patch("tv_scraper.scrapers.market_data.technicals.Technicals._validate_timeframe")
+    @patch("tv_scraper.scrapers.market_data.technicals.Technicals._validate_indicators")
     @patch("tv_scraper.core.base.requests.request")
     def test_sequential_symbol_fetching(
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
@@ -389,9 +405,11 @@ class TestTechnicalsConcurrentOperations:
 class TestTechnicalsPerformance:
     """Test performance characteristics."""
 
-    @patch("tv_scraper.core.validators.verify_symbol_exchange")
-    @patch("tv_scraper.core.validators.validate_timeframe")
-    @patch("tv_scraper.core.validators.validate_indicators")
+    @patch(
+        "tv_scraper.scrapers.market_data.technicals.Technicals._verify_symbol_exchange"
+    )
+    @patch("tv_scraper.scrapers.market_data.technicals.Technicals._validate_timeframe")
+    @patch("tv_scraper.scrapers.market_data.technicals.Technicals._validate_indicators")
     @patch("tv_scraper.core.base.requests.request")
     def test_response_time_structure(
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify

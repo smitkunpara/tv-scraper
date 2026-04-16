@@ -269,7 +269,7 @@ class TestMarketsErrorRecovery:
             result = scraper.get_markets(market="invalid_market")
 
             assert result["status"] == "failed"
-            assert "Invalid market" in result["error"]
+            assert "Invalid value" in result["error"]
             mock_request.assert_not_called()
 
     def test_all_markets_fail_validation_independently(self) -> None:

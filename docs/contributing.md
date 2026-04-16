@@ -90,9 +90,9 @@ Keep the docs flow aligned with release tags, and update `AGENTS.md` if it still
 ## 🧪 Testing
 
 ### Writing Tests
-- Write tests for all new features
-- Include both positive and negative test cases
-- Use descriptive test names
+- **Edge Case Verification**: For each new feature or scraper method, comprehensive test cases MUST be created to verify edge cases and failure modes.
+- Write tests for all new features using descriptive test names
+- Include both positive and negative (error handling) test cases
 - Mock external API calls when possible
 
 ### Test Structure

@@ -4,7 +4,6 @@ import logging
 from datetime import datetime
 from typing import Any
 
-from tv_scraper.core import validators
 from tv_scraper.core.base import BaseScraper, catch_errors
 from tv_scraper.core.validation_data import EXCHANGE_LITERAL
 
@@ -59,7 +58,7 @@ class Minds(BaseScraper):
             ``status``, ``data``, ``metadata``, ``error``.
         """
         # --- Validation ---
-        v_exchange, v_symbol = validators.verify_symbol_exchange(exchange, symbol)
+        v_exchange, v_symbol = self._verify_symbol_exchange(exchange, symbol)
 
         combined_symbol = f"{v_exchange}:{v_symbol}"
 

@@ -101,7 +101,7 @@ result = scraper.get_technicals(
         "symbol": "AAPL",
         "technical_indicators": ["RSI"],
     },
-    "error": "Invalid exchange: 'INVALID'. ...",
+    "error": "Invalid value: 'INVALID'. ...",
 }
 ```
 

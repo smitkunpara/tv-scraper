@@ -1,8 +1,11 @@
 """Options scraper for fetching option chain data from TradingView."""
 
+import re
+from datetime import date
 from typing import Any, get_args
 
-from tv_scraper.core import validators
+import requests
+
 from tv_scraper.core.base import catch_errors
 from tv_scraper.core.constants import SCANNER_URL
 from tv_scraper.core.exceptions import ValidationError
@@ -13,6 +16,24 @@ OPTIONS_SCANNER_URL = f"{SCANNER_URL}/options/scan2?label-product=symbols-option
 
 DEFAULT_OPTION_COLUMNS: list[str] = list(get_args(OPTION_COLUMN_LITERAL))
 VALID_OPTION_COLUMNS = set(DEFAULT_OPTION_COLUMNS)
+
+
+_STRIP_HTML_TAGS = re.compile(r"<[^>]+>")
+_OPTIONS_SEARCH_URL = (
+    "https://symbol-search.tradingview.com/symbol_search/v3/"
+    "?text={symbol}&exchange={exchange}&lang=en"
+    "&search_type=undefined&only_has_options=true&domain=production"
+)
+_OPTIONS_SEARCH_HEADERS = {
+    "User-Agent": (
+        "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
+        "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+    ),
+    "Referer": "https://www.tradingview.com/",
+    "Origin": "https://www.tradingview.com",
+    "Accept": "application/json",
+}
+_YYYYMMDD_DATE_PATTERN = re.compile(r"^\d{8}$")
 
 
 class Options(ScannerScraper):
@@ -52,6 +73,61 @@ class Options(ScannerScraper):
         )
     """
 
+    def _validate_yyyymmdd_date(self, value: int | None) -> bool:
+        if value is None:
+            return True
+        if not isinstance(value, int):
+            raise ValidationError(
+                f"Invalid date value: {value!r}. Must be int in YYYYMMDD format."
+            )
+        value_str = str(value)
+        if not _YYYYMMDD_DATE_PATTERN.fullmatch(value_str):
+            raise ValidationError(
+                f"Invalid date value: {value!r}. Must be in YYYYMMDD format."
+            )
+        year = int(value_str[:4])
+        month = int(value_str[4:6])
+        day = int(value_str[6:8])
+        if not 1 <= month <= 12:
+            raise ValidationError(
+                f"Invalid date value: {value!r}. Month must satisfy 0 < MM <= 12."
+            )
+        if not 1 <= day <= 31:
+            raise ValidationError(
+                f"Invalid date value: {value!r}. Day must satisfy 0 < DD <= 31."
+            )
+        try:
+            date(year, month, day)
+        except ValueError as exc:
+            raise ValidationError(f"Invalid date value: {value!r}. {exc}.") from exc
+        return True
+
+    def _verify_options_symbol(self, exchange: str, symbol: str) -> tuple[str, str]:
+        exchange_up, symbol_up = self._verify_symbol_exchange(exchange, symbol)
+        url = _OPTIONS_SEARCH_URL.format(symbol=symbol_up, exchange=exchange_up)
+        try:
+            resp = requests.get(url, headers=_OPTIONS_SEARCH_HEADERS, timeout=5)
+            if resp.status_code == 403:
+                raise ValidationError(
+                    f"Symbol '{symbol}' has no options available on exchange '{exchange}'. "
+                    "Check the symbol name or try a different exchange."
+                )
+            resp.raise_for_status()
+            data = resp.json()
+            items = data.get("symbols", [])
+            for item in items:
+                clean_sym = _STRIP_HTML_TAGS.sub("", item.get("symbol", ""))
+                if clean_sym.upper() == symbol_up:
+                    return exchange_up, symbol_up
+            raise ValidationError(
+                f"Symbol '{symbol}' has no options available on exchange '{exchange}'. "
+                "Check the symbol name or try a different exchange."
+            )
+        except requests.RequestException as exc:
+            raise ValidationError(
+                f"Network error while checking options for '{exchange}:{symbol}': {exc}"
+            ) from exc
+
     @catch_errors
     def get_options(
         self,
@@ -75,18 +151,18 @@ class Options(ScannerScraper):
             Standardized response dict with keys
             ``status``, ``data``, ``metadata``, ``error``.
         """
-        v_exchange, v_symbol = validators.verify_options_symbol(exchange, symbol)
+        v_exchange, v_symbol = self._verify_options_symbol(exchange, symbol)
         selected_columns: list[str] = (
             list(columns) if columns is not None else list(DEFAULT_OPTION_COLUMNS)
         )
-        validators.validate_list(columns, list(VALID_OPTION_COLUMNS))
+        self._validate_list(columns, list(VALID_OPTION_COLUMNS))
 
         if expiration is None and strike is None:
             raise ValidationError(
                 "At least one filter must be provided: expiration, strike, or both."
             )
 
-        validators.validate_yyyymmdd_date(expiration)
+        self._validate_yyyymmdd_date(expiration)
 
         if strike is not None and not isinstance(strike, (int, float)):
             raise ValidationError(

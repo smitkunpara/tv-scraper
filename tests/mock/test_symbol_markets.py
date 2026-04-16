@@ -49,7 +49,7 @@ class TestMockSymbolMarketsBasic:
     """Test basic functionality with mock responses."""
 
     @patch(
-        "tv_scraper.scrapers.screening.symbol_markets.validators.verify_symbol_exchange"
+        "tv_scraper.scrapers.screening.symbol_markets.SymbolMarkets._verify_symbol_exchange"
     )
     def test_mock_aapl_global_success(
         self, mock_verify, scraper: SymbolMarkets
@@ -77,7 +77,7 @@ class TestMockSymbolMarketsBasic:
             assert isinstance(result["data"], list)
 
     @patch(
-        "tv_scraper.scrapers.screening.symbol_markets.validators.verify_symbol_exchange"
+        "tv_scraper.scrapers.screening.symbol_markets.SymbolMarkets._verify_symbol_exchange"
     )
     def test_mock_btcusd_crypto_success(
         self, mock_verify, scraper: SymbolMarkets
@@ -96,7 +96,7 @@ class TestMockSymbolMarketsBasic:
             assert "status" in result
 
     @patch(
-        "tv_scraper.scrapers.screening.symbol_markets.validators.verify_symbol_exchange"
+        "tv_scraper.scrapers.screening.symbol_markets.SymbolMarkets._verify_symbol_exchange"
     )
     def test_mock_eurusd_forex_success(
         self, mock_verify, scraper: SymbolMarkets
@@ -118,7 +118,7 @@ class TestMockSymbolMarketsFields:
     """Test field selection functionality."""
 
     @patch(
-        "tv_scraper.scrapers.screening.symbol_markets.validators.verify_symbol_exchange"
+        "tv_scraper.scrapers.screening.symbol_markets.SymbolMarkets._verify_symbol_exchange"
     )
     def test_mock_default_fields(self, mock_verify, scraper: SymbolMarkets) -> None:
         """Test default fields are used when none specified."""
@@ -138,7 +138,7 @@ class TestMockSymbolMarketsFields:
                 assert isinstance(result["data"], list)
 
     @patch(
-        "tv_scraper.scrapers.screening.symbol_markets.validators.verify_symbol_exchange"
+        "tv_scraper.scrapers.screening.symbol_markets.SymbolMarkets._verify_symbol_exchange"
     )
     def test_mock_custom_fields(self, mock_verify, scraper: SymbolMarkets) -> None:
         """Test custom field selection."""
@@ -158,7 +158,7 @@ class TestMockSymbolMarketsFields:
             assert "status" in result
 
     @patch(
-        "tv_scraper.scrapers.screening.symbol_markets.validators.verify_symbol_exchange"
+        "tv_scraper.scrapers.screening.symbol_markets.SymbolMarkets._verify_symbol_exchange"
     )
     def test_mock_empty_fields(self, mock_verify, scraper: SymbolMarkets) -> None:
         """Test with empty fields list."""
@@ -176,7 +176,7 @@ class TestMockSymbolMarketsLimits:
     """Test limit parameter functionality."""
 
     @patch(
-        "tv_scraper.scrapers.screening.symbol_markets.validators.verify_symbol_exchange"
+        "tv_scraper.scrapers.screening.symbol_markets.SymbolMarkets._verify_symbol_exchange"
     )
     def test_mock_limit_50(self, mock_verify, scraper: SymbolMarkets) -> None:
         """Test limit of 50."""
@@ -193,7 +193,7 @@ class TestMockSymbolMarketsLimits:
                 assert len(result["data"]) <= 50
 
     @patch(
-        "tv_scraper.scrapers.screening.symbol_markets.validators.verify_symbol_exchange"
+        "tv_scraper.scrapers.screening.symbol_markets.SymbolMarkets._verify_symbol_exchange"
     )
     def test_mock_limit_100(self, mock_verify, scraper: SymbolMarkets) -> None:
         """Test limit of 100."""
@@ -210,7 +210,7 @@ class TestMockSymbolMarketsLimits:
                 assert len(result["data"]) <= 100
 
     @patch(
-        "tv_scraper.scrapers.screening.symbol_markets.validators.verify_symbol_exchange"
+        "tv_scraper.scrapers.screening.symbol_markets.SymbolMarkets._verify_symbol_exchange"
     )
     def test_mock_limit_150(self, mock_verify, scraper: SymbolMarkets) -> None:
         """Test limit of 150."""
@@ -238,14 +238,17 @@ class TestMockSymbolMarketsValidation:
         assert result["status"] == "failed"
         assert result["data"] is None
         assert result["error"] is not None
-        assert "Invalid scanner" in result["error"]
+        assert "Invalid value" in result["error"]
 
     def test_mock_blank_symbol(self, scraper: SymbolMarkets) -> None:
         """Test blank symbol returns error."""
         result = scraper.get_symbol_markets(exchange="NASDAQ", symbol="   ")
         assert result["status"] == "failed"
         assert result["data"] is None
-        assert "symbol must be a non-empty string" in result["error"].lower()
+        assert (
+            "both exchange and symbol must be provided together"
+            in result["error"].lower()
+        )
 
     def test_mock_empty_symbol(self, scraper: SymbolMarkets) -> None:
         """Test empty symbol returns error."""
@@ -254,7 +257,7 @@ class TestMockSymbolMarketsValidation:
         assert result["data"] is None
 
     @patch(
-        "tv_scraper.scrapers.screening.symbol_markets.validators.verify_symbol_exchange"
+        "tv_scraper.scrapers.screening.symbol_markets.SymbolMarkets._verify_symbol_exchange"
     )
     def test_mock_exchange_symbol_separation(
         self, mock_verify, scraper: SymbolMarkets
@@ -279,7 +282,7 @@ class TestMockSymbolMarketsErrors:
     """Test error handling."""
 
     @patch(
-        "tv_scraper.scrapers.screening.symbol_markets.validators.verify_symbol_exchange"
+        "tv_scraper.scrapers.screening.symbol_markets.SymbolMarkets._verify_symbol_exchange"
     )
     def test_mock_network_error(self, mock_verify, scraper: SymbolMarkets) -> None:
         """Test network error returns failed status."""
@@ -294,7 +297,7 @@ class TestMockSymbolMarketsErrors:
             assert "Network error" in result["error"]
 
     @patch(
-        "tv_scraper.scrapers.screening.symbol_markets.validators.verify_symbol_exchange"
+        "tv_scraper.scrapers.screening.symbol_markets.SymbolMarkets._verify_symbol_exchange"
     )
     def test_mock_empty_response(self, mock_verify, scraper: SymbolMarkets) -> None:
         """Test empty response returns error."""
@@ -308,7 +311,7 @@ class TestMockSymbolMarketsErrors:
             assert "No markets found" in result["error"]
 
     @patch(
-        "tv_scraper.scrapers.screening.symbol_markets.validators.verify_symbol_exchange"
+        "tv_scraper.scrapers.screening.symbol_markets.SymbolMarkets._verify_symbol_exchange"
     )
     def test_mock_timeout_error(self, mock_verify, scraper: SymbolMarkets) -> None:
         """Test timeout error handling."""
@@ -326,7 +329,7 @@ class TestMockSymbolMarketsScanners:
     """Test all supported scanners."""
 
     @patch(
-        "tv_scraper.scrapers.screening.symbol_markets.validators.verify_symbol_exchange"
+        "tv_scraper.scrapers.screening.symbol_markets.SymbolMarkets._verify_symbol_exchange"
     )
     @pytest.mark.parametrize("scanner", ["global", "america", "crypto", "forex", "cfd"])
     def test_mock_all_scanners(
@@ -364,7 +367,7 @@ class TestMockSymbolMarketsExport:
     """Test export functionality."""
 
     @patch(
-        "tv_scraper.scrapers.screening.symbol_markets.validators.verify_symbol_exchange"
+        "tv_scraper.scrapers.screening.symbol_markets.SymbolMarkets._verify_symbol_exchange"
     )
     def test_mock_export_enabled(self, mock_verify, scraper: SymbolMarkets) -> None:
         """Test export is called when enabled."""
@@ -383,7 +386,7 @@ class TestMockSymbolMarketsExport:
                     mock_export.assert_called_once()
 
     @patch(
-        "tv_scraper.scrapers.screening.symbol_markets.validators.verify_symbol_exchange"
+        "tv_scraper.scrapers.screening.symbol_markets.SymbolMarkets._verify_symbol_exchange"
     )
     def test_mock_export_disabled(self, mock_verify, scraper: SymbolMarkets) -> None:
         """Test export is not called when disabled."""
@@ -405,7 +408,7 @@ class TestMockSymbolMarketsResponseEnvelope:
     """Test standardized response envelope structure."""
 
     @patch(
-        "tv_scraper.scrapers.screening.symbol_markets.validators.verify_symbol_exchange"
+        "tv_scraper.scrapers.screening.symbol_markets.SymbolMarkets._verify_symbol_exchange"
     )
     def test_mock_success_envelope(self, mock_verify, scraper: SymbolMarkets) -> None:
         """Test success response has correct envelope structure."""
@@ -440,7 +443,7 @@ class TestMockSymbolMarketsResponseEnvelope:
             assert result["error"] is not None
 
     @patch(
-        "tv_scraper.scrapers.screening.symbol_markets.validators.verify_symbol_exchange"
+        "tv_scraper.scrapers.screening.symbol_markets.SymbolMarkets._verify_symbol_exchange"
     )
     def test_mock_metadata_fields(self, mock_verify, scraper: SymbolMarkets) -> None:
         """Test metadata contains expected fields."""

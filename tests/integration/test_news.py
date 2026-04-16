@@ -336,7 +336,7 @@ class TestNewsEndToEnd:
         )
 
         with patch(
-            "tv_scraper.core.validators.verify_symbol_exchange",
+            "tv_scraper.scrapers.social.news.News._verify_symbol_exchange",
             return_value=("NASDAQ", "AAPL"),
         ):
             with patch.object(
@@ -565,7 +565,7 @@ class TestNewsExportIntegration:
         )
 
         with patch(
-            "tv_scraper.core.validators.verify_symbol_exchange",
+            "tv_scraper.scrapers.social.news.News._verify_symbol_exchange",
             return_value=("NASDAQ", "AAPL"),
         ):
             with patch.object(

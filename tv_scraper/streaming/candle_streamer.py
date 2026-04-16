@@ -4,7 +4,6 @@ import logging
 from collections.abc import Generator
 from typing import Any
 
-from tv_scraper.core import validators
 from tv_scraper.core.base import catch_errors
 from tv_scraper.core.constants import STATUS_SUCCESS
 from tv_scraper.core.validation_data import (
@@ -68,9 +67,9 @@ class CandleStreamer(BaseStreamer):
             ``{"status", "data": {"ohlcv": [...], "indicators": {...}}, "metadata", "error"}``.
         """
         # --- Validation ---
-        exchange, _symbol = validators.verify_symbol_exchange(exchange, symbol)
-        validators.validate_timeframe(timeframe)
-        validators.validate_range(numb_candles, 1, 5000)
+        exchange, _symbol = self._verify_symbol_exchange(exchange, symbol)
+        self._validate_timeframe(timeframe)
+        self._validate_range(numb_candles, 1, 5000)
         exchange_symbol = format_symbol(exchange, _symbol)
         self.study_id_to_name_map = {}
 
@@ -145,7 +144,7 @@ class CandleStreamer(BaseStreamer):
     ) -> Generator[dict[str, Any], None, None]:
         """Persistent generator yielding normalized realtime price updates."""
         # --- Validation ---
-        exchange, _symbol = validators.verify_symbol_exchange(exchange, symbol)
+        exchange, _symbol = self._verify_symbol_exchange(exchange, symbol)
         exchange_symbol = format_symbol(exchange, _symbol)
 
         self.connect()

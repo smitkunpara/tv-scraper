@@ -258,7 +258,7 @@ class TestIdeasGetIdeas:
         assert "end_page" in result["error"]
         mock_scrape.assert_not_called()
 
-    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.scrapers.social.ideas.Ideas._verify_symbol_exchange")
     @patch.object(Ideas, "_scrape_page")
     def test_validation_invalid_exchange(
         self, mock_scrape: MagicMock, mock_verify: MagicMock
@@ -273,7 +273,7 @@ class TestIdeasGetIdeas:
         assert result["status"] == STATUS_FAILED
         mock_scrape.assert_not_called()
 
-    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.scrapers.social.ideas.Ideas._verify_symbol_exchange")
     @patch.object(Ideas, "_scrape_page")
     def test_validation_invalid_symbol(
         self, mock_scrape: MagicMock, mock_verify: MagicMock
@@ -288,7 +288,7 @@ class TestIdeasGetIdeas:
         assert result["status"] == STATUS_FAILED
         mock_scrape.assert_not_called()
 
-    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.scrapers.social.ideas.Ideas._verify_symbol_exchange")
     @patch.object(Ideas, "_scrape_page")
     def test_validation_invalid_sort_by(
         self, mock_scrape: MagicMock, mock_verify: MagicMock
@@ -301,7 +301,7 @@ class TestIdeasGetIdeas:
         assert result["status"] == STATUS_FAILED
         assert "Invalid value" in result["error"]
 
-    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.scrapers.social.ideas.Ideas._verify_symbol_exchange")
     @patch.object(Ideas, "_scrape_page")
     def test_successful_single_page(
         self, mock_scrape: MagicMock, mock_verify: MagicMock
@@ -324,7 +324,7 @@ class TestIdeasGetIdeas:
         assert result["metadata"]["total"] == 2
         assert result["metadata"]["pages"] == 1
 
-    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.scrapers.social.ideas.Ideas._verify_symbol_exchange")
     @patch.object(Ideas, "_scrape_page")
     def test_multi_page_fetching(
         self, mock_scrape: MagicMock, mock_verify: MagicMock
@@ -348,7 +348,7 @@ class TestIdeasGetIdeas:
         assert result["metadata"]["total"] == 2
         assert result["metadata"]["pages"] == 2
 
-    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.scrapers.social.ideas.Ideas._verify_symbol_exchange")
     @patch.object(Ideas, "_scrape_page")
     def test_partial_page_failure(
         self, mock_scrape: MagicMock, mock_verify: MagicMock
@@ -372,7 +372,7 @@ class TestIdeasGetIdeas:
         assert "Failed pages" in result["error"]
         assert "Network error on page 2" in result["error"]
 
-    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.scrapers.social.ideas.Ideas._verify_symbol_exchange")
     @patch.object(Ideas, "_scrape_page")
     def test_all_pages_fail(
         self, mock_scrape: MagicMock, mock_verify: MagicMock
@@ -391,7 +391,7 @@ class TestIdeasGetIdeas:
 class TestIdeasExport:
     """Test export functionality."""
 
-    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.scrapers.social.ideas.Ideas._verify_symbol_exchange")
     @patch.object(Ideas, "_scrape_page")
     def test_export_enabled(
         self, mock_scrape: MagicMock, mock_verify: MagicMock
@@ -405,7 +405,7 @@ class TestIdeasExport:
             scraper.get_ideas(exchange="NASDAQ", symbol="AAPL")
             mock_export.assert_called_once()
 
-    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.scrapers.social.ideas.Ideas._verify_symbol_exchange")
     @patch.object(Ideas, "_scrape_page")
     def test_export_disabled(
         self, mock_scrape: MagicMock, mock_verify: MagicMock

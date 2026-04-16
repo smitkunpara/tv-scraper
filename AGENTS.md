@@ -1117,28 +1117,27 @@ The primary mechanism for standardizing responses. Most public scraper methods a
 
 Notable exceptions in this codebase include methods such as `Calendar.get_dividends/get_earnings`, `BaseStreamer.connect()`, and `Streamer.stream_realtime_price()`.
 
-### Validation Module Functions
-Validation logic is centralized in `tv_scraper/core/validators.py`. Developers should use the exposed **module-level functions** for direct validation:
+### Validation Architecture
+Validation logic is decentralized and integrated directly into the scraper classes. High-frequency validation utilities are provided by `BaseScraper`, while specialized validation is encapsulated within individual scrapers.
 
-| Function | Purpose |
-|----------|---------|
-| `verify_symbol_exchange(exc, sym)` | Live check against TradingView for symbol existence. |
-| `verify_options_symbol(exc, sym)` | Specifically verifies if a symbol has an options market. |
-| `validate_exchange(exc)` | Offline check against known exchange list. |
-| `validate_timeframe(tf)` | Validates TradingView-compatible timeframe strings. |
-| `validate_yyyymmdd_date(name, val)` | Validates integer dates in `YYYYMMDD` format and real calendar validity. |
-| `validate_choice(name, val, choices)`| Generic validator for string literal choices. |
-| `validate_list(name, vals, choices)` | Batch counterpart to `validate_choice` for validating lists of strings. |
-| `validate_range(name, val, min, max)` | Generic numeric range validator. |
-| `validate_fields(fields, allowed)` | Validates a list of requested data fields. |
+| Method | Source | Purpose |
+|--------|--------|---------|
+| `self._verify_symbol_exchange(exc, sym)` | `BaseScraper` | Live check against TradingView for symbol existence. |
+| `self._validate_choice(name, val, choices)`| `BaseScraper` | Generic validator for string literal choices. |
+| `self._validate_list(name, vals, choices)` | `BaseScraper` | Batch counterpart to `_validate_choice`. |
+| `self._validate_range(name, val, min, max)` | `BaseScraper` | Generic numeric range validator. |
+| `self._validate_timeframe(tf)` | `BaseScraper` | Validates TradingView-compatible timeframe strings. |
+| `self._validate_indicators(indicators)` | `Technicals` | Validates a list of requested technical indicators. |
+| `self._verify_options_symbol(exc, sym)` | `Options` | Specifically verifies if a symbol has an options market. |
+| `self._validate_yyyymmdd_date(name, val)` | `Options` | Validates integer dates in `YYYYMMDD` format. |
 
-**Design Rule:** Public methods should perform validation at the very beginning by calling these functions. Any `ValidationError` raised will be automatically caught by `@catch_errors` and formatted into a standardized error response.
+**Design Rule:** Public methods should perform validation at the very beginning by calling these internal methods. Any `ValidationError` raised will be automatically caught by `@catch_errors` and formatted into a standardized error response.
 
 ---
 
 ### Validation Methods
 
-#### Exchange Validation: `validate_exchange(exchange: str) -> bool`
+#### Exchange Validation: `_validate_choice(exchange.upper(), EXCHANGES_SET)`
 
 **Type:** Offline check
 
@@ -1149,39 +1148,37 @@ Validation logic is centralized in `tv_scraper/core/validators.py`. Developers s
 
 **Example:**
 ```python
-try:
-    validators.validate_exchange("NASDQ")  # Typo
-except ValidationError as e:
-    # "Invalid exchange: 'NASDQ'. Did you mean: 'NASDAQ'? Valid exchanges: NYSE, NASDAQ, ..."
+# Internal call
+self._validate_choice(exchange_up, _EXCHANGES_SET)
+# On failure, raises ValidationError: "Invalid value: 'NASDQ'. Did you mean: 'NASDAQ'? Allowed values include: NYSE, NASDAQ, ..."
 ```
 
-#### Symbol Validation: `validate_symbol(exchange: str, symbol: str) -> bool`
+#### Symbol Validation
 
-**Type:** Offline check
+**Type:** Offline check (Integrated in `_verify_symbol_exchange`)
 
 **Logic:**
 1. `isinstance(symbol, str)`
 2. `symbol.strip()` is not empty
-3. No special character validation
+3. No special character validation internally, relying on HTTP check for validity.
 
-#### Symbol-Exchange Verification: `verify_symbol_exchange(exchange: str, symbol: str, retries: int = 2) -> tuple[str, str]`
+#### Symbol-Exchange Verification: `_verify_symbol_exchange(exchange: str, symbol: str) -> tuple[str, str]`
 
 **Type:** Two-stage (offline + online)
 
 **Stage 1 - Offline:**
-1. Call `validate_exchange()`
-2. Call `validate_symbol()`
-3. Return if offline checks fail
+1. Verify `exchange` and `symbol` are provided and are non-empty strings.
+2. Call `_validate_choice(exchange_up, _EXCHANGES_SET)`
 
 **Stage 2 - Online (HTTP):**
 - HTTP GET to TradingView scanner API: `https://scanner.tradingview.com/symbol?symbol={EXCHANGE}%3A{SYMBOL}&fields=market&no_404=false`
 - On 404: Raise `ValidationError("Symbol '{symbol}' not found on exchange '{exchange}'")`
-- On network error: Retry up to `retries` times, timeout 5s per request
+- On network error: Fails silently or raises depending on context (usually wrapped by `@catch_errors`).
 - On other HTTP error: Raise `ValidationError` with status code in message
 
-#### Indicator Validation: `validate_indicators(indicators: list[str]) -> bool`
+#### Indicator Validation: `_validate_indicators(indicators: list[str])`
 
-**Type:** Offline check
+**Type:** Offline check (Class-specific to `Technicals`)
 
 **Logic:**
 1. List is non-empty
@@ -1221,6 +1218,7 @@ EXCHANGES, INDICATORS, TIMEFRAMES, NEWS_PROVIDERS, LANGUAGES, AREAS
 - Unit tests for isolated components (no network calls)
 - Live API tests for integration with TradingView
 - Keep validator/network state isolated across tests (mock external calls in unit tests)
+- **Edge Case Verification:** For each new feature or scraper method, comprehensive test cases MUST be created to verify edge cases and failure modes.
 
 ---
 
@@ -1259,6 +1257,6 @@ See [docs/contributing.md](docs/contributing.md) for:
 **Key Requirements:**
 - Type hints on all public methods
 - Google-style docstrings
-- Unit test coverage for new features
+- Unit test coverage for new features, including edge case verification
 - No breaking changes to response envelope
 - Live API tests pass (TradingView connection required)

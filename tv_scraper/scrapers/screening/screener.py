@@ -1,7 +1,6 @@
 import logging
 from typing import Any, Literal, get_args
 
-from tv_scraper.core import validators
 from tv_scraper.core.base import catch_errors
 from tv_scraper.core.constants import SCANNER_URL
 from tv_scraper.core.exceptions import ValidationError
@@ -201,9 +200,9 @@ class Screener(ScannerScraper):
             ``metadata``, and ``error`` keys.
         """
         # --- Validation ---
-        validators.validate_choice(market, SCREENER_MARKET_LIST)
-        validators.validate_choice(sort_order, SORT_ORDERS)
-        validators.validate_range(limit, MIN_LIMIT, MAX_LIMIT)
+        self._validate_choice(market, SCREENER_MARKET_LIST)
+        self._validate_choice(sort_order, SORT_ORDERS)
+        self._validate_range(limit, MIN_LIMIT, MAX_LIMIT)
 
         if filters is not None:
             self._validate_filter(filters)

@@ -6,7 +6,6 @@ from typing import Any
 from tv_scraper.core.base import BaseScraper, catch_errors
 from tv_scraper.core.constants import SCANNER_URL
 from tv_scraper.core.validation_data import EXCHANGE_LITERAL
-from tv_scraper.core.validators import verify_symbol_exchange
 
 logger = logging.getLogger(__name__)
 
@@ -37,7 +36,9 @@ class ScannerScraper(BaseScraper):
         Returns:
             Standardized response dict.
         """
-        validated_exchange, validated_symbol = verify_symbol_exchange(exchange, symbol)
+        validated_exchange, validated_symbol = self._verify_symbol_exchange(
+            exchange, symbol
+        )
 
         url = f"{SCANNER_URL}/symbol"
         params: dict[str, str] = {

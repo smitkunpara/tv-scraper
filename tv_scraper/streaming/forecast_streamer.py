@@ -5,7 +5,6 @@ from typing import Any
 
 import requests
 
-from tv_scraper.core import validators
 from tv_scraper.core.base import catch_errors
 from tv_scraper.core.constants import DEFAULT_USER_AGENT, SCANNER_URL
 from tv_scraper.core.exceptions import ValidationError
@@ -70,7 +69,7 @@ class ForecastStreamer(BaseStreamer):
             ``{"status", "data", "metadata", "error"}``.
         """
         # --- Validation ---
-        exchange, _symbol = validators.verify_symbol_exchange(exchange, symbol)
+        exchange, _symbol = self._verify_symbol_exchange(exchange, symbol)
         exchange_symbol = format_symbol(exchange, _symbol)
 
         symbol_type = self._get_symbol_type(exchange_symbol)

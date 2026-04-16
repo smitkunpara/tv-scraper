@@ -126,7 +126,7 @@ class TestScreenerForecastStreamerWorkflow:
 
     @patch.object(Screener, "_request")
     @patch("tv_scraper.streaming.base_streamer.create_connection")
-    @patch("tv_scraper.core.validators.verify_symbol_exchange")
+    @patch("tv_scraper.scrapers.screening.screener.Screener._verify_symbol_exchange")
     def test_screener_then_forecast_workflow(
         self,
         mock_validate: MagicMock,
@@ -360,13 +360,13 @@ class TestScreenerErrorPropagation:
     @patch.object(Screener, "_request")
     def test_validation_error_preserved(self, mock_request: MagicMock) -> None:
         """Test validation errors are preserved in response envelope."""
-        mock_request.return_value = (None, "Invalid market")
+        mock_request.return_value = (None, "Invalid value")
 
         scraper = Screener()
         result = scraper.get_screener(market="invalid", limit=5)
 
         assert result["status"] == STATUS_FAILED
-        assert "Invalid market" in result["error"]
+        assert "Invalid value" in result["error"]
 
 
 class TestScreenerMetadataCompleteness:
