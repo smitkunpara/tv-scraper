@@ -38,6 +38,7 @@ result = scraper.get_markets(
         "total": 25,
         "total_available": 12345,
     },
+    "warnings": [],
     "error": None,
 }
 ```

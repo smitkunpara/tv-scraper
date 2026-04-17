@@ -94,6 +94,10 @@ class Streamer(BaseStreamer):
             numb_candles=numb_candles,
             indicators=indicators,
         )
+        result.setdefault("warnings", []).append(
+            "The 'Streamer' class is deprecated and will be removed in a future version. "
+            "Use 'CandleStreamer' or 'ForecastStreamer' instead."
+        )
         if self.export_result and result.get("status") == STATUS_SUCCESS:
             self._export(result["data"], symbol, "get_candles")
         return result
@@ -120,6 +124,10 @@ class Streamer(BaseStreamer):
             ``data`` contains ``raw_packets`` and merged ``snapshot``.
         """
         result = self._forecast_streamer.get_forecast(exchange=exchange, symbol=symbol)
+        result.setdefault("warnings", []).append(
+            "The 'Streamer' class is deprecated and will be removed in a future version. "
+            "Use 'CandleStreamer' or 'ForecastStreamer' instead."
+        )
         if self.export_result and result.get("status") == STATUS_SUCCESS:
             self._export(result["data"], symbol, "forecast")
         return result
@@ -160,4 +168,9 @@ class Streamer(BaseStreamer):
             ``{"status", "data", "metadata", "error"}``.
         """
 
-        return fetch_available_indicators()
+        result = fetch_available_indicators()
+        result.setdefault("warnings", []).append(
+            "The 'Streamer' class is deprecated and will be removed in a future version. "
+            "Use 'CandleStreamer' or 'ForecastStreamer' instead."
+        )
+        return result

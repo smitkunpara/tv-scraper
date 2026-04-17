@@ -29,6 +29,7 @@ result = scraper.get_fundamentals(exchange="NASDAQ", symbol="AAPL")
         "fields": [...],
         "data_category": "fundamentals",
     },
+    "warnings": [],
     "error": None,
 }
 ```
@@ -60,6 +61,7 @@ result = scraper.get_fundamentals(
         "fields": ["total_revenue", "net_income", "price_earnings_ttm"],
         "data_category": "fundamentals",
     },
+    "warnings": [],
     "error": None,
 }
 ```

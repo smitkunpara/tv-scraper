@@ -14,7 +14,6 @@ scraper.get_technicals(exchange="NASDAQ", symbol="AAPL")
 
 Output structure:
 
-```python
 {
     "status": "success",
     "data": {"RSI": 54.21},
@@ -24,9 +23,9 @@ Output structure:
         "timeframe": "1d",
         "technical_indicators": ["RSI"],
     },
+    "warnings": [],
     "error": None,
 }
-```
 
 ### Use keyword arguments
 
@@ -60,19 +59,19 @@ scraper.get_technicals(export="json")
 
 Every public scraper method returns:
 
-```python
 {
     "status": "success" | "failed",
     "data": ...,
     "metadata": {...},
+    "warnings": [str, ...],
     "error": None | "message",
 }
-```
 
 ### What changes by method
 
 - `data` can be a dict, list, or `None`
 - `metadata` keeps the call context and method-specific details
+- `warnings` is a list of non-blocking messages (e.g. deprecations, indicator validation warnings)
 - `error` is `None` on success and a message on failure
 
 ### Important nuance
@@ -92,7 +91,6 @@ result = scraper.get_technicals(
 )
 ```
 
-```python
 {
     "status": "failed",
     "data": None,
@@ -101,9 +99,9 @@ result = scraper.get_technicals(
         "symbol": "AAPL",
         "technical_indicators": ["RSI"],
     },
+    "warnings": [],
     "error": "Invalid value: 'INVALID'. ...",
 }
-```
 
 !!! failure "wrong input"
     This is the wrong style for public methods.

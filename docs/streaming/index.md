@@ -52,6 +52,7 @@ Output structure:
         "timeframe": "1h",
         "numb_candles": 25,
     },
+    "warnings": [],
     "error": None,
 }
 ```
@@ -134,6 +135,7 @@ Output structure:
             "yearly_revenue_data",
         ],
     },
+    "warnings": [],
     "error": None,
 }
 ```
@@ -153,6 +155,7 @@ Streaming methods still use the standard response envelope:
     "status": "success" | "failed",
     "data": ...,
     "metadata": {...},
+    "warnings": [str, ...],
     "error": None | "message",
 }
 ```

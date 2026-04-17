@@ -87,6 +87,7 @@ Every public scraper method returns an identical envelope structure, regardless 
         "symbol": str,
         ...additional scraper-specific fields
     },
+    "warnings": [str, ...],
     "error": None | "error message"
 }
 ```
@@ -106,6 +107,7 @@ Every public scraper method returns an identical envelope structure, regardless 
     "status": "success",
     "data": [...],
     "metadata": {"exchange": "NASDAQ", "symbol": "AAPL", ...},
+    "warnings": [],
     "error": None
 }
 ```
@@ -117,6 +119,7 @@ Every public scraper method returns an identical envelope structure, regardless 
     "status": "failed",
     "data": None,
     "metadata": {"exchange": "NASDAQ", "symbol": "AAPL"},
+    "warnings": [],
     "error": "Symbol 'AAPL' not found on exchange 'NASDAQ'"
 }
 ```

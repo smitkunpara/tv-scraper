@@ -35,6 +35,7 @@ Output structure:
         "total": 14,
         "total_available": 14,
     },
+    "warnings": [],
     "error": None,
 }
 ```
@@ -66,6 +67,7 @@ Output structure:
         "total": 14,
         "total_available": 14,
     },
+    "warnings": [],
     "error": None,
 }
 ```

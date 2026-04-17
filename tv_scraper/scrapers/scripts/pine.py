@@ -129,13 +129,11 @@ class Pine(BaseScraper):
         if errors:
             return self._error_response(
                 "Pine script validation failed.",
-                errors=errors,
+                data={"errors": errors},
                 warnings=warnings,
             )
 
-        if warnings:
-            return self._success_response(None, warnings=warnings)
-        return self._success_response(None)
+        return self._success_response(None, warnings=warnings)
 
     @catch_errors
     def get_script(self, pine_id: str, version: str) -> dict[str, Any]:
@@ -217,11 +215,10 @@ class Pine(BaseScraper):
         validation = self.validate_script(source)
         self._last_metadata = original_metadata
         if validation["status"] != "success":
-            validation_meta = validation.get("metadata", {})
             return self._error_response(
                 validation["error"] or "Pine script validation failed.",
-                warnings=validation_meta.get("warnings"),
-                errors=validation_meta.get("errors"),
+                data=validation.get("data"),
+                warnings=validation.get("warnings"),
             )
 
         headers = self._build_pine_headers()
@@ -254,9 +251,8 @@ class Pine(BaseScraper):
             "name": script_result.get("shortDescription")
             or script_result.get("description")
             or name,
-            "warnings": validation.get("metadata", {}).get("warnings", []),
         }
-        return self._success_response(data)
+        return self._success_response(data, warnings=validation.get("warnings", []))
 
     @catch_errors
     def edit_script(self, pine_id: str, name: str, source: str) -> dict[str, Any]:
@@ -288,11 +284,10 @@ class Pine(BaseScraper):
         validation = self.validate_script(source)
         self._last_metadata = original_metadata
         if validation["status"] != "success":
-            validation_meta = validation.get("metadata", {})
             return self._error_response(
                 validation["error"] or "Pine script validation failed.",
-                warnings=validation_meta.get("warnings"),
-                errors=validation_meta.get("errors"),
+                data=validation.get("data"),
+                warnings=validation.get("warnings"),
             )
 
         headers = self._build_pine_headers()
@@ -326,9 +321,8 @@ class Pine(BaseScraper):
             "name": script_result.get("shortDescription")
             or script_result.get("description")
             or name,
-            "warnings": validation.get("metadata", {}).get("warnings", []),
         }
-        return self._success_response(data)
+        return self._success_response(data, warnings=validation.get("warnings", []))
 
     @catch_errors
     def delete_script(self, pine_id: str) -> dict[str, Any]:

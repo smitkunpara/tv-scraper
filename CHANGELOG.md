@@ -5,7 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Breaking Changes
+- **Standardized Response Envelope**: Refactored `BaseScraper._success_response` and `_error_response` to include a top-level `warnings` field (dictionary key: `"warnings"`). This field is now always present in both success and error responses, defaulting to an empty list `[]`.
+
+### Added
+- **Standardized Warnings**: Added a top-level `warnings` field to the response envelope to communicate non-blocking issues, deprecations, or partial data status across all scrapers.
+
+### Changed
+- **Pine Scraper**: Refactored `validate_script`, `create_script`, and `edit_script` to utilize the new top-level `warnings` field for validation compiler warnings.
+- **Streamer**: Added runtime deprecation warnings to the response envelopes of `get_candles()`, `get_forecast()`, and `get_available_indicators()`.
+- **News Scraper**: Added a deprecation warning to the legacy `get_news_headlines()` method in the response envelope.
+- **Documentation**: Standardized all project documentation (20+ files) across `docs/` to reflect the new response envelope structure, including updated JSON snapshots and field descriptions.
+
+
 ## [1.4.0] - 2026-04-16
+
 
 ### Breaking Changes
 - **Core Validation**: Decentralized the validation architecture. Removed `tv_scraper.core.validators.py`. Validation is now integrated directly into the `BaseScraper` class and specific scraper subclasses.

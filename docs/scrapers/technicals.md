@@ -33,6 +33,7 @@ result = scraper.get_technicals(
         "timeframe": "1d",
         "technical_indicators": ["RSI", "MACD.macd"],
     },
+    "warnings": [],
     "error": None,
 }
 ```
@@ -65,6 +66,7 @@ result = scraper.get_technicals(
         "symbol": "AAPL",
         "timeframe": "1d",
     },
+    "warnings": [],
     "error": None,
 }
 ```

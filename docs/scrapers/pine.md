@@ -40,6 +40,7 @@ result = pine.list_saved_scripts()
         ...
     ],
     "metadata": {},
+    "warnings": [],
     "error": None,
 }
 ```
@@ -58,17 +59,15 @@ result = pine.validate_script(source="//@version=6\nindicator('Demo')\nplot(clos
     "data": None,
     "metadata": {
         "source": "//@version=6\nvar x = na",
-        "warnings": [{"text": "Unused variable"}],
     },
+    "warnings": [{"text": "Unused variable"}],
     "error": None,
 }
 ```
 
-!!! warning "Warning Behavior"
-    This is the most important response nuance on this page:
-
-    - `validate_script()` returns warnings in `metadata["warnings"]`
-    - `create_script()` and `edit_script()` return warnings in `data["warnings"]`
+!!! info "Warning Behavior"
+    All Pine methods now use a standardized top-level `warnings` field:
+    - `validate_script()`, `create_script()`, and `edit_script()` return compiler warnings in the top-level `warnings` field.
 
 ### Create a script
 
@@ -87,12 +86,12 @@ result = pine.create_script(
     "data": {
         "id": "USER;abc123",
         "name": "My Script",
-        "warnings": [],
     },
     "metadata": {
         "name": "My Script",
         "source": "//@version=6\nindicator('Demo')\nplot(close)",
     },
+    "warnings": [],
     "error": None,
 }
 ```
@@ -115,13 +114,13 @@ result = pine.edit_script(
     "data": {
         "id": "USER;abc123",
         "name": "My Script",
-        "warnings": [],
     },
     "metadata": {
         "pine_id": "USER;abc123",
         "name": "My Script",
         "source": "//@version=6\nindicator('Demo 2')\nplot(close)",
     },
+    "warnings": [],
     "error": None,
 }
 ```
@@ -152,6 +151,7 @@ result = pine.get_script(pine_id="USER;abc123", version="5.0")
         "pine_id": "USER;abc123",
         "version": "5.0",
     },
+    "warnings": [],
     "error": None,
 }
 ```
@@ -169,6 +169,7 @@ result = pine.delete_script(pine_id="USER;abc123")
     "status": "success",
     "data": {"id": "USER;abc123"},
     "metadata": {"pine_id": "USER;abc123"},
+    "warnings": [],
     "error": None,
 }
 ```

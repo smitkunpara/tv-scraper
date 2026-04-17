@@ -68,6 +68,10 @@ Internally:
             "timeframe": "1h",
             "numb_candles": 10,
         },
+        "warnings": [
+            "The 'Streamer' class is deprecated and will be removed in a future version. "
+            "Use 'CandleStreamer' or 'ForecastStreamer' instead."
+        ],
         "error": None,
     }
     ```

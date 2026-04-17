@@ -45,6 +45,7 @@ result = scraper.get_ideas(
         "total": 40,
         "pages": 2,
     },
+    "warnings": [],
     "error": None,
 }
 ```

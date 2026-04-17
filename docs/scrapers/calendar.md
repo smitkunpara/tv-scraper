@@ -34,6 +34,7 @@ result = scraper.get_dividends(markets=["america"])
         "timestamp_to": 1763251199,
         "markets": ["america"],
     },
+    "warnings": [],
     "error": None,
 }
 ```
@@ -68,6 +69,7 @@ result = scraper.get_earnings(
         "timestamp_to": 1763251199,
         "markets": ["america", "uk"],
     },
+    "warnings": [],
     "error": None,
 }
 ```

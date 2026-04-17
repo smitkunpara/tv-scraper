@@ -113,18 +113,21 @@ class BaseScraper:
         if self.cookie:
             self._headers["cookie"] = self.cookie
 
-    def _success_response(self, data: Any, **metadata: Any) -> dict[str, Any]:
+    def _success_response(
+        self, data: Any, warnings: list[str] | None = None, **metadata: Any
+    ) -> dict[str, Any]:
         """Build a standardized success response.
 
         Args:
             data: The response payload.
+            warnings: List of warning messages.
             **metadata: Arbitrary metadata key-value pairs.
                 The key is the argument name passed to the function and
                 the value is the data provided by the user.
 
         Returns:
             Response dict with status, data, metadata (``dict[str, Any]``),
-            and error fields.
+            warnings (``list[str]``), and error fields.
         """
         combined_meta = self._last_metadata.copy()
         combined_meta.update(metadata)
@@ -132,23 +135,30 @@ class BaseScraper:
             "status": STATUS_SUCCESS,
             "data": data,
             "metadata": combined_meta,
+            "warnings": warnings or [],
             "error": None,
         }
 
     def _error_response(
-        self, error: str, data: Any = None, **metadata: Any
+        self,
+        error: str,
+        data: Any = None,
+        warnings: list[str] | None = None,
+        **metadata: Any,
     ) -> dict[str, Any]:
         """Build a standardized error response.
 
         Args:
             error: Error message string.
+            data: Optional partial data payload.
+            warnings: List of warning messages.
             **metadata: Arbitrary metadata key-value pairs.
                 The key is the argument name passed to the function and
                 the value is the data provided by the user.
 
         Returns:
-            Response dict with status="failed", data=None,
-            metadata (``dict[str, Any]``), and error message.
+            Response dict with status="failed", data, metadata (``dict[str, Any]``),
+            warnings (``list[str]``), and error message.
         """
         combined_meta = self._last_metadata.copy()
         combined_meta.update(metadata)
@@ -156,6 +166,7 @@ class BaseScraper:
             "status": STATUS_FAILED,
             "data": data,
             "metadata": combined_meta,
+            "warnings": warnings or [],
             "error": error,
         }
 

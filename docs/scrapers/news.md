@@ -47,6 +47,7 @@ result = scraper.get_news(
         ...,
     ],
     "metadata": {...},
+    "warnings": [],
     "error": None,
 }
 ```
@@ -79,8 +80,8 @@ result = scraper.get_news_headlines(
             "storyPath": "/news/path",
         },
         ...,
-    ],
     "metadata": {...},
+    "warnings": ["get_news_headlines() is legacy. New code should prefer get_news()."],
     "error": None,
 }
 ```
@@ -107,6 +108,7 @@ content = scraper.get_news_content(
         "storyPath": "/news/path",
     },
     "metadata": {...},
+    "warnings": [],
     "error": None,
 }
 ```

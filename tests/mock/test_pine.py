@@ -186,6 +186,7 @@ class TestValidateScriptMock:
 
         assert result["status"] == STATUS_SUCCESS
         assert result["data"] is None
+        assert result["warnings"] == []
 
     @patch("requests.request")
     def test_validate_with_warnings(self, mock_request: MagicMock) -> None:
@@ -197,7 +198,7 @@ class TestValidateScriptMock:
         result = scraper.validate_script("//@version=6\nvar x = na")
 
         assert result["status"] == STATUS_SUCCESS
-        assert len(result["metadata"]["warnings"]) == 1
+        assert len(result["warnings"]) == 1
 
     @patch("requests.request")
     def test_validate_with_errors(self, mock_request: MagicMock) -> None:
@@ -210,7 +211,8 @@ class TestValidateScriptMock:
 
         assert result["status"] == STATUS_FAILED
         assert result["error"] is not None
-        assert len(result["metadata"]["errors"]) == 1
+        assert len(result["data"]["errors"]) == 1
+        assert result["warnings"] == []
 
     def test_validate_empty_source(self) -> None:
         """Verify empty source returns error."""
@@ -342,6 +344,7 @@ class TestCreateScriptMock:
         assert result["status"] == STATUS_SUCCESS
         assert result["metadata"]["name"] == "TestScript"
         assert result["metadata"]["source"] == self.VALID_SOURCE
+        assert "warnings" in result
 
 
 class TestEditScriptMock:

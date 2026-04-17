@@ -38,6 +38,7 @@ result = scraper.get_minds(exchange="NASDAQ", symbol="AAPL", limit=20)
         "total": 20,
         "symbol_info": {...},
     },
+    "warnings": [],
     "error": None,
 }
 ```

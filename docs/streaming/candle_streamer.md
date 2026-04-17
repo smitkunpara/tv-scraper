@@ -44,6 +44,7 @@ Output structure:
         "timeframe": "1h",
         "numb_candles": 25,
     },
+    "warnings": [],
     "error": None,
 }
 ```
@@ -92,6 +93,7 @@ Output structure:
         "numb_candles": 20,
         "indicators": [("STD;RSI", "37.0")],
     },
+    "warnings": [],
     "error": None,
 }
 ```

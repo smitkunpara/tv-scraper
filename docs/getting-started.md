@@ -52,6 +52,7 @@ Output structure (success):
         "timeframe": "1d",
         "technical_indicators": ["RSI", "MACD.macd"],
     },
+    "warnings": [],
     "error": None,
 }
 ```
@@ -63,6 +64,7 @@ Output structure (failure):
     "status": "failed",
     "data": None,
     "metadata": {"exchange": "INVALID", "symbol": "AAPL", "technical_indicators": ["RSI"]},
+    "warnings": [],
     "error": "Invalid value: 'INVALID'. ...",
 }
 ```
@@ -98,6 +100,7 @@ All public methods return the same outer envelope:
     "status": "success" | "failed",
     "data": ...,
     "metadata": {...},
+    "warnings": [str, ...],
     "error": None | "message",
 }
 ```

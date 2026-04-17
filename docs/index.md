@@ -40,6 +40,7 @@ Every public method returns the same outer shape:
     "status": "success" | "failed",
     "data": ...,
     "metadata": {...},
+    "warnings": [str, ...],
     "error": None | "message",
 }
 ```

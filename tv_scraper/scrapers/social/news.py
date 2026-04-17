@@ -251,7 +251,13 @@ class News(BaseScraper):
                 data_category="news",
             )
 
-        return self._success_response(cleaned_items, total=len(cleaned_items))
+        warnings = [
+            "The 'get_news_headlines' method uses a legacy TradingView API and may be removed in a future version. "
+            "Consider using 'get_news()' for a more robust News Flow API."
+        ]
+        return self._success_response(
+            cleaned_items, warnings=warnings, total=len(cleaned_items)
+        )
 
     @catch_errors
     def get_news_content(

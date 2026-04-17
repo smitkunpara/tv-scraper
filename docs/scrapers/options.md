@@ -42,6 +42,7 @@ result = scraper.get_options(
         "total": 84,
         "filter_value": 20260219,
     },
+    "warnings": [],
     "error": None,
 }
 ```
@@ -77,6 +78,7 @@ result = scraper.get_options(
         "total": 12,
         "filter_value": 83300,
     },
+    "warnings": [],
     "error": None,
 }
 ```
@@ -116,6 +118,7 @@ result = scraper.get_options(
         "total": 1,
         "filter_value": {"expiration": 20260219, "strike": 83300},
     },
+    "warnings": [],
     "error": None,
 }
 ```

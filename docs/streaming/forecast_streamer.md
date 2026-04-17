@@ -80,6 +80,7 @@ Output structure:
             "yearly_revenue_data",
         ],
     },
+    "warnings": [],
     "error": None,
 }
 ```

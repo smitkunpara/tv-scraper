@@ -38,6 +38,7 @@ Output structure:
         "total": 20,
         "total_available": 7342,
     },
+    "warnings": [],
     "error": None,
 }
 ```

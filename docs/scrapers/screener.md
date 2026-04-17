@@ -41,6 +41,7 @@ Output structure:
         "total_available": 10342,
         ...
     },
+    "warnings": [],
     "error": None,
 }
 ```
@@ -76,6 +77,7 @@ Output structure:
         "total_available": 2,
         ...
     },
+    "warnings": [],
     "error": None,
 }
 ```
