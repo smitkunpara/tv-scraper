@@ -94,11 +94,12 @@ Every public scraper method returns an identical envelope structure, regardless 
 
 ### Design Principles
 
-- **Most public scraper methods return envelopes** with `status/data/metadata/error`
+- **Most public scraper methods return envelopes** with `status/data/metadata/warnings/error`
 - **`@catch_errors` methods capture exceptions** into failed envelopes
 - **Status field** reflects operation outcome
 - **Data field** is scraper-specific on failure (`None` or partial data)
 - **Metadata** preserved even on failure (for context)
+- **Warnings** contain non-blocking notifications or deprecation messages
 
 ### Example: Success Response
 

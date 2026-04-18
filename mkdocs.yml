@@ -54,7 +54,6 @@ nav:
   - Getting Started: getting-started.md
   - API Basics: api-conventions.md
   - Streaming:
-    - Overview: streaming/index.md
     - Candles: streaming/candle_streamer.md
     - Forecast: streaming/forecast_streamer.md
     - Streamer (Legacy Wrapper): streaming/streamer.md

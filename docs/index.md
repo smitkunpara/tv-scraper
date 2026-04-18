@@ -78,7 +78,6 @@ Every public method returns the same outer shape:
 
 | Page | Use it for |
 |------|------------|
-| [Streaming Overview](streaming/index.md) | Which streamer to use |
 | [CandleStreamer](streaming/candle_streamer.md) | OHLCV candles and indicator studies |
 | [ForecastStreamer](streaming/forecast_streamer.md) | Analyst forecast data for stocks |
 | [Streamer (Legacy)](streaming/streamer.md) | Backward-compatible wrapper |

@@ -106,8 +106,8 @@ def _merge_versions(
         if "latest" not in aliases:
             aliases.append("latest")
         newest["aliases"] = aliases
-        # Add a visual tag to the title
-        newest["title"] = f"{newest.get('version')} (latest)"
+        # Use pure version string for the title to keep the list clean
+        newest["title"] = newest.get("version")
 
     return merged
 

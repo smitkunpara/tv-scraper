@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.1] - 2026-04-17
+
 ### Breaking Changes
 - **Standardized Response Envelope**: Refactored `BaseScraper._success_response` and `_error_response` to include a top-level `warnings` field (dictionary key: `"warnings"`). This field is now always present in both success and error responses, defaulting to an empty list `[]`.
 

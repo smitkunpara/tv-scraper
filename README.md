@@ -5,7 +5,7 @@
 
 **A powerful, real-time Python library for extracting financial data, indicators, and ideas from TradingView.com.**
 
-> 🔥 New in v1.4.0: Stable release with decentralized validation architecture, unified scraper export API, and enhanced Pine indicator validation in streaming.
+> 🔥 New in v1.4.1: Standardized response envelope with top-level `warnings` support across all scrapers and streamers.
 
 ---
 
