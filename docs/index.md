@@ -17,18 +17,19 @@ Use these pages when you want the fastest path to a working call:
 ## Quick Example
 
 ```python
-from tv_scraper import Technicals
+from tv_scraper.streaming import CandleStreamer
 
-scraper = Technicals()
-result = scraper.get_technicals(
-    exchange="NASDAQ",
-    symbol="AAPL",
-    timeframe="1d",
-    technical_indicators=["RSI", "MACD.macd"],
+streamer = CandleStreamer()
+result = streamer.get_candles(
+    exchange="BINANCE",
+    symbol="BTCUSDT",
+    timeframe="1m",
+    numb_candles=5,
+    indicators=[("STD;RSI", "1.0")]
 )
 
 if result["status"] == "success":
-    print(result["data"])
+    print(result["data"]["ohlcv"])
 else:
     print(result["error"])
 ```

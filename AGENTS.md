@@ -1080,6 +1080,7 @@ def get_available_indicators() -> dict[str, Any]
 **Known Behavior Nuances:**
 - Generator runs until stream ends; no internal max packet stop condition.
 - This method is not envelope-wrapped and may raise during iteration (validation/connect/network/runtime errors).
+- Accessible via `CandleStreamer.stream_realtime_price()`.
 
 ### BaseStreamer WebSocket Implementation
 
@@ -1200,6 +1201,10 @@ EXCHANGES, INDICATORS, TIMEFRAMES, NEWS_PROVIDERS, LANGUAGES, AREAS
 
 ## Development Standards
 
+### Workspace Cleanup
+- **Temporary Scripts:** Any execution scripts created for testing functions during development must be created inside a `temp/` folder. Do not create them in the repository root to avoid clutter.
+
+
 ### Code Style
 - **Type Hints:** All functions typed (params and return values)
 - **Docstrings:** Google-style docstrings required
@@ -1245,7 +1250,7 @@ EXCHANGES, INDICATORS, TIMEFRAMES, NEWS_PROVIDERS, LANGUAGES, AREAS
 | News Content | `scrapers.social.news.get_news_content()` | HTTP | Single request | ✅ Active |
 | Candle Streaming | `streaming.candle_streamer.CandleStreamer.get_candles()` | WebSocket | Packet loop with `i > 15` timeout break | ✅ Active |
 | Forecast Streaming | `streaming.forecast_streamer.ForecastStreamer.get_forecast()` | WebSocket + HTTP type check | Packet loop with `packet_count > 15` timeout break | ✅ Active |
-| Realtime Price Stream | `streaming.streamer.Streamer.stream_realtime_price()` | WebSocket Generator | Continuous until stream closes | ✅ Active |
+| Realtime Price Stream | `streaming.candle_streamer.CandleStreamer.stream_realtime_price()` | WebSocket Generator | Continuous until stream closes | ✅ Active |
 
 ---
 

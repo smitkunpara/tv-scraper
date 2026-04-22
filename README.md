@@ -3,57 +3,75 @@
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![MIT License](https://img.shields.io/github/license/smitkunpara/tv-scraper.svg?color=brightgreen)](https://opensource.org/licenses/MIT)
 
-**A powerful, real-time Python library for extracting financial data, indicators, and ideas from TradingView.com.**
+**A high-performance Python library for extracting real-time financial data, technical indicators, and social insights from TradingView.**
 
-> 🔥 New in v1.4.1: Standardized response envelope with top-level `warnings` support across all scrapers and streamers.
+> 🚀 **v1.4.1 Highlights**: Standardized response envelope, separate high-performance streamers for Candles and Forecasts, and full `warnings` support.
 
 ---
 
-## Attribution
+## ✨ Features
 
-This project is based on [mnwato/tradingview-scraper](https://github.com/mnwato/tradingview-scraper). Thanks to the original author for the foundational work.
+### 📡 Real-Time Streaming
+- **🕯️ Candle + Indicators**: Stream live OHLCV candles with built-in or custom Pine indicators via [`CandleStreamer`](https://smitkunpara.github.io/tv-scraper/streaming/candle_streamer/).
+- **⚡ Real-time Pricing**: Persistent WebSocket connection for millisecond-accurate price updates.
+- **📊 Analyst Forecasts**: Capture analyst price targets, EPS, and revenue estimates for stocks via [`ForecastStreamer`](https://smitkunpara.github.io/tv-scraper/streaming/forecast_streamer/).
+
+### 📉 Financial & Technical Data
+- **🧩 Technical Analysis**: Access RSI, MACD, EMAs, and 100+ other indicators via [`Technicals`](https://smitkunpara.github.io/tv-scraper/scrapers/technicals/).
+- **🏛️ Fundamentals**: Comprehensive financial statements, ratios, and balance sheets via [`Fundamentals`](https://smitkunpara.github.io/tv-scraper/scrapers/fundamentals/).
+- **⛓️ Options Data**: Retrieve full option chains, Greeks, IV, and theoretical prices via [`Options`](https://smitkunpara.github.io/tv-scraper/scrapers/options/).
+- **📅 Events Calendar**: Track Earnings, Dividends, IPOs, and Economic events via [`Calendar`](https://smitkunpara.github.io/tv-scraper/scrapers/calendar/).
+
+### 🔍 Discovery & Screening
+- **🔎 Screener**: Run advanced market scans with custom filters across 50+ countries via [`Screener`](https://smitkunpara.github.io/tv-scraper/scrapers/screener/).
+- **🏁 Market Movers**: Track top gainers, losers, and most active stocks via [`Market Movers`](https://smitkunpara.github.io/tv-scraper/scrapers/market_movers/).
+- **🌍 Global Markets**: Discover symbols across exchanges and asset classes via [`Markets`](https://smitkunpara.github.io/tv-scraper/scrapers/markets/).
+
+### 🤝 Social & Community
+- **💡 Trading Ideas**: Scrape community-driven trading setups and technical ideas via [`Ideas`](https://smitkunpara.github.io/tv-scraper/scrapers/ideas/).
+- **🧠 Heads-up (Minds)**: Access real-time discussions and community posts via [`Minds`](https://smitkunpara.github.io/tv-scraper/scrapers/minds/).
+- **📰 News Feed**: Integrated news stream with granular filters by symbol or region via [`News`](https://smitkunpara.github.io/tv-scraper/scrapers/news/).
+
+---
+
+## 🚀 Quick Start
+
+```python
+from tv_scraper.streaming import CandleStreamer
+
+# Initialize the streamer
+streamer = CandleStreamer()
+
+# Fetch real-time candles and indicators
+result = streamer.get_candles(
+    exchange="BINANCE",
+    symbol="BTCUSDT",
+    timeframe="1m",
+    numb_candles=5,
+    indicators=[("STD;RSI", "1.0")]
+)
+
+if result["status"] == "success":
+    print(result["data"]["ohlcv"])
+```
+
+---
 
 ## 📚 Documentation
 
-For complete documentation, installation guides, API references, and examples, visit:
+For complete documentation, installation guides, and API references, visit:
 
 **[📖 Full Documentation](https://smitkunpara.github.io/tv-scraper/)**
 
-### Quick Links
-- [🚀 Quick Start Guide](https://smitkunpara.github.io/tv-scraper/quick_start/)
-- [📦 Installation](https://smitkunpara.github.io/tv-scraper/installation/)
-- [📊 Supported Data](https://smitkunpara.github.io/tv-scraper/supported_data/)
-- [🔧 API Reference](https://smitkunpara.github.io/tv-scraper/)
+### Key Resource Links
+- [🚀 Quick Start Guide](https://smitkunpara.github.io/tv-scraper/getting-started/)
+- [📦 Installation](https://smitkunpara.github.io/tv-scraper/getting-started/#install)
+- [📊 Supported Exchanges & Metrics](https://smitkunpara.github.io/tv-scraper/supported_data/)
+- [📋 API Conventions](https://smitkunpara.github.io/tv-scraper/api-conventions/)
 
 ---
 
-
-## ✨ Key Features
-
-- **🕯️ Candle + Indicators**: Stream OHLCV candles with built-in/custom indicators via [`CandleStreamer.get_candles()`](https://smitkunpara.github.io/tv-scraper/streaming/candle_streamer/).
-- **📈 Forecast Data**: Fetch analyst price targets and EPS/revenue estimates for stocks via [`ForecastStreamer.get_forecast()`](https://smitkunpara.github.io/tv-scraper/streaming/forecast_streamer/).
-- **💡 Ideas**: Scrape community trading ideas with [`Ideas`](https://smitkunpara.github.io/tv-scraper/scrapers/ideas/).
-- **🧠 Minds**: Access TradingView discussions with [`Minds`](https://smitkunpara.github.io/tv-scraper/scrapers/minds/).
-- **📰 News**: Fetch market headlines and filters with [`News`](https://smitkunpara.github.io/tv-scraper/scrapers/news/).
-- **📉 Options Data**: Retrieve option chains, Greeks, implied volatility, and theoretical prices via [`Options`](https://smitkunpara.github.io/tv-scraper/scrapers/options/).
-- **🔎 Screener**: Run market scans with custom fields/filters via [`Screener`](https://smitkunpara.github.io/tv-scraper/scrapers/screener/).
-- **🏁 Market Movers**: Track top gainers/losers and actives via [`Market Movers`](https://smitkunpara.github.io/tv-scraper/scrapers/market_movers/).
-- **📊 Fundamentals**: Get financial statements and ratios via [`Fundamentals`](https://smitkunpara.github.io/tv-scraper/scrapers/fundamentals/).
-- **🧩 Pine Workflow**: Manage custom scripts with [`Pine`](https://smitkunpara.github.io/tv-scraper/scrapers/pine/) and validate them when streaming through `CandleStreamer`.
-- **📋 API Contract**: Consistent `status/data/metadata/error` response envelope across modules ([API conventions](https://smitkunpara.github.io/tv-scraper/api-conventions/)).
-
-
----
-
-## 🛠️ Development & Testing
-
-For contributors and developers, use the Development Guide:
-
-- [🛠️ Development Guide](https://smitkunpara.github.io/tv-scraper/contributing/)
-
----
-
-## 🤝 Contributing
+## 🛠️ Development & Contributing
 
 We welcome contributions! Please see our [Contributing Guide](https://smitkunpara.github.io/tv-scraper/contributing/) for details.
 
@@ -64,4 +82,4 @@ We welcome contributions! Please see our [Contributing Guide](https://smitkunpar
 
 ## 📄 License
 
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+Licensed under the **MIT License**.

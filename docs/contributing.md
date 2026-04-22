@@ -98,29 +98,31 @@ Keep the docs flow aligned with release tags, and update `AGENTS.md` if it still
 ### Test Structure
 ```python
 import pytest
-from tv_scraper import Technicals
+from tv_scraper.streaming import CandleStreamer
 
-class TestTechnicals:
-    def test_scrape_valid_indicators(self):
-        """Test scraping with valid indicators."""
-        scraper = Technicals()
-        result = scraper.get_technicals(
+class TestCandleStreamer:
+    def test_get_candles_success(self):
+        """Test fetching candles successfully."""
+        streamer = CandleStreamer()
+        result = streamer.get_candles(
             exchange="BINANCE",
-            symbol="BTCUSD",
-            technical_indicators=["RSI"]
+            symbol="BTCUSDT",
+            timeframe="1m",
+            numb_candles=5
         )
         assert result["status"] == "success"
-        assert "RSI" in result["data"]
+        assert "ohlcv" in result["data"]
+        assert len(result["data"]["ohlcv"]) == 5
 
-    def test_scrape_invalid_exchange(self):
+    def test_invalid_exchange(self):
         """Test error handling for invalid exchange."""
-        scraper = Technicals()
-        result = scraper.get_technicals(
+        streamer = CandleStreamer()
+        result = streamer.get_candles(
             exchange="INVALID",
-            symbol="BTCUSD",
-            technical_indicators=["RSI"]
+            symbol="BTCUSDT"
         )
         assert result["status"] == "failed"
+        assert result["error"] is not None
 ```
 
 ## 📋 Pull Request Process
@@ -178,7 +180,7 @@ When reporting bugs, please include:
 5. **Environment**:
    - Python version: 3.11
    - OS: Windows 11
-   - Library version: 1.4.0
+    - Library version: 1.4.1
 
 ### Example Bug Report
 ```
