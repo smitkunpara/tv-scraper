@@ -5,8 +5,6 @@
 
 **A high-performance Python library for extracting real-time financial data, technical indicators, and social insights from TradingView.**
 
-> 🚀 **v1.4.1 Highlights**: Standardized response envelope, separate high-performance streamers for Candles and Forecasts, and full `warnings` support.
-
 ---
 
 ## ✨ Features

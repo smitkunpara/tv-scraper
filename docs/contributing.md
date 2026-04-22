@@ -180,7 +180,7 @@ When reporting bugs, please include:
 5. **Environment**:
    - Python version: 3.11
    - OS: Windows 11
-    - Library version: 1.4.1
+   - Library version: 1.4.2
 
 ### Example Bug Report
 ```

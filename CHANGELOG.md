@@ -6,6 +6,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+## [1.4.2] - 2026-04-22
+
+### Fixed
+- **Screener**: Fixed a validation bug where the `in_day_range` operation was incorrectly blocked. This allows filtering by earnings dates (e.g., today, yesterday, tomorrow).
+- **Version Consistency**: Synchronized `tv_scraper.__version__` with package metadata.
+
+### Added
+- **Screener Operations**: Added support for a comprehensive list of TradingView scanner operations:
+    - Day/Week/Month/Year ranges: `in_day_range`, `not_in_day_range`, `in_week_range`, `in_month_range`, `in_year_range`.
+    - Text Matching: `match`, `nmatch`, `smatch`.
+    - Empty Checks: `empty`, `nempty`.
+    - Percentage Comparisons: `above%`, `below%`, `in_range%`.
 
 ## [1.4.1] - 2026-04-17
 
