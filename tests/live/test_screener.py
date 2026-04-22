@@ -544,3 +544,85 @@ class TestLiveScreenerCryptoMarkets:
         else:
             pytest.skip(f"Market '{market}' not available: {result.get('error')}")
         time.sleep(0.3)
+
+
+@pytest.mark.live
+class TestLiveScreenerOperations:
+    """Test all screener operations against the live API with data verification."""
+
+    def test_match_operation(self) -> None:
+        """Verify 'match' filter returns only matching symbols."""
+        scraper = Screener()
+        symbol = "AAPL"
+        result = scraper.get_screener(
+            market="america",
+            filters=[{"left": "name", "operation": "match", "right": symbol}],
+            limit=1,
+        )
+        assert result["status"] == STATUS_SUCCESS
+        if result["data"]:
+            # Logic check: The returned symbol must contain or be equal to our match
+            assert symbol in result["data"][0]["symbol"]
+
+    def test_nmatch_operation(self) -> None:
+        """Verify 'nmatch' filter excludes specific symbols."""
+        scraper = Screener()
+        symbol = "AAPL"
+        result = scraper.get_screener(
+            market="america",
+            filters=[{"left": "name", "operation": "nmatch", "right": symbol}],
+            limit=5,
+        )
+        assert result["status"] == STATUS_SUCCESS
+        for item in result["data"]:
+            # Logic check: None of the returned symbols should be AAPL
+            assert symbol not in item["symbol"]
+
+    def test_in_day_range_logic(self) -> None:
+        """Verify 'in_day_range' is accepted by the API (logic verified by status)."""
+        scraper = Screener()
+        result = scraper.get_screener(
+            market="america",
+            filters=[
+                {
+                    "left": "earnings_release_next_trading_date_fq",
+                    "operation": "in_day_range",
+                    "right": [0, 0],
+                }
+            ],
+            limit=5,
+        )
+        assert result["status"] == STATUS_SUCCESS
+        assert isinstance(result["data"], list)
+
+    def test_empty_logic(self) -> None:
+        """Verify 'nempty' filter returns items with non-empty descriptions."""
+        scraper = Screener()
+        result = scraper.get_screener(
+            market="america",
+            filters=[{"left": "description", "operation": "nempty"}],
+            fields=["description"],
+            limit=5,
+        )
+        assert result["status"] == STATUS_SUCCESS
+        for item in result["data"]:
+            # Logic check: Description should not be None or empty
+            assert item.get("description") not in (None, "")
+
+    def test_extended_range_operations(self) -> None:
+        """Verify week/month/year range operations are accepted."""
+        scraper = Screener()
+        for op in ["in_week_range", "in_month_range", "in_year_range"]:
+            result = scraper.get_screener(
+                market="america",
+                filters=[
+                    {
+                        "left": "earnings_release_next_trading_date_fq",
+                        "operation": op,
+                        "right": [0, 0],
+                    }
+                ],
+                limit=1,
+            )
+            assert result["status"] == STATUS_SUCCESS
+            time.sleep(0.4)

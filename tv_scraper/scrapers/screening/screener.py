@@ -43,6 +43,19 @@ SCREENER_OPERATION_LITERAL = Literal[
     "crosses_below",
     "has",
     "has_none_of",
+    "in_day_range",
+    "not_in_day_range",
+    "match",
+    "nmatch",
+    "empty",
+    "nempty",
+    "smatch",
+    "above%",
+    "below%",
+    "in_range%",
+    "in_week_range",
+    "in_month_range",
+    "in_year_range",
 ]
 
 SCREENER_MARKET_LIST = list(get_args(SCREENER_MARKET_LITERAL))

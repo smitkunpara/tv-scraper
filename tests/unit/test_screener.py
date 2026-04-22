@@ -78,6 +78,19 @@ class TestScreenerInit:
                 "crosses_below",
                 "has",
                 "has_none_of",
+                "in_day_range",
+                "not_in_day_range",
+                "match",
+                "nmatch",
+                "empty",
+                "nempty",
+                "smatch",
+                "above%",
+                "below%",
+                "in_range%",
+                "in_week_range",
+                "in_month_range",
+                "in_year_range",
             }
         )
         assert Screener.OPERATIONS == expected_operations
