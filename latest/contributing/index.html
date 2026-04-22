@@ -1865,29 +1865,31 @@
 </ul>
 <h3 id="test-structure">Test Structure</h3>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">tv_scraper</span><span class="w"> </span><span class="kn">import</span> <span class="n">Technicals</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">tv_scraper.streaming</span><span class="w"> </span><span class="kn">import</span> <span class="n">CandleStreamer</span>
 </span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="k">class</span><span class="w"> </span><span class="nc">TestTechnicals</span><span class="p">:</span>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">test_scrape_valid_indicators</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Test scraping with valid indicators.&quot;&quot;&quot;</span>
-</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>        <span class="n">scraper</span> <span class="o">=</span> <span class="n">Technicals</span><span class="p">()</span>
-</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>        <span class="n">result</span> <span class="o">=</span> <span class="n">scraper</span><span class="o">.</span><span class="n">get_technicals</span><span class="p">(</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="k">class</span><span class="w"> </span><span class="nc">TestCandleStreamer</span><span class="p">:</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">test_get_candles_success</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Test fetching candles successfully.&quot;&quot;&quot;</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>        <span class="n">streamer</span> <span class="o">=</span> <span class="n">CandleStreamer</span><span class="p">()</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>        <span class="n">result</span> <span class="o">=</span> <span class="n">streamer</span><span class="o">.</span><span class="n">get_candles</span><span class="p">(</span>
 </span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>            <span class="n">exchange</span><span class="o">=</span><span class="s2">&quot;BINANCE&quot;</span><span class="p">,</span>
-</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>            <span class="n">symbol</span><span class="o">=</span><span class="s2">&quot;BTCUSD&quot;</span><span class="p">,</span>
-</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>            <span class="n">technical_indicators</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;RSI&quot;</span><span class="p">]</span>
-</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>        <span class="p">)</span>
-</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>        <span class="k">assert</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;success&quot;</span>
-</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>        <span class="k">assert</span> <span class="s2">&quot;RSI&quot;</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span>
-</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>
-</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">test_scrape_invalid_exchange</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Test error handling for invalid exchange.&quot;&quot;&quot;</span>
-</span><span id="__span-6-18"><a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>        <span class="n">scraper</span> <span class="o">=</span> <span class="n">Technicals</span><span class="p">()</span>
-</span><span id="__span-6-19"><a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>        <span class="n">result</span> <span class="o">=</span> <span class="n">scraper</span><span class="o">.</span><span class="n">get_technicals</span><span class="p">(</span>
-</span><span id="__span-6-20"><a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>            <span class="n">exchange</span><span class="o">=</span><span class="s2">&quot;INVALID&quot;</span><span class="p">,</span>
-</span><span id="__span-6-21"><a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>            <span class="n">symbol</span><span class="o">=</span><span class="s2">&quot;BTCUSD&quot;</span><span class="p">,</span>
-</span><span id="__span-6-22"><a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>            <span class="n">technical_indicators</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;RSI&quot;</span><span class="p">]</span>
-</span><span id="__span-6-23"><a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>        <span class="p">)</span>
-</span><span id="__span-6-24"><a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>        <span class="k">assert</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;failed&quot;</span>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>            <span class="n">symbol</span><span class="o">=</span><span class="s2">&quot;BTCUSDT&quot;</span><span class="p">,</span>
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>            <span class="n">timeframe</span><span class="o">=</span><span class="s2">&quot;1m&quot;</span><span class="p">,</span>
+</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>            <span class="n">numb_candles</span><span class="o">=</span><span class="mi">5</span>
+</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>        <span class="p">)</span>
+</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>        <span class="k">assert</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;success&quot;</span>
+</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>        <span class="k">assert</span> <span class="s2">&quot;ohlcv&quot;</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span>
+</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s2">&quot;ohlcv&quot;</span><span class="p">])</span> <span class="o">==</span> <span class="mi">5</span>
+</span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>
+</span><span id="__span-6-18"><a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">test_invalid_exchange</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-6-19"><a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Test error handling for invalid exchange.&quot;&quot;&quot;</span>
+</span><span id="__span-6-20"><a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>        <span class="n">streamer</span> <span class="o">=</span> <span class="n">CandleStreamer</span><span class="p">()</span>
+</span><span id="__span-6-21"><a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>        <span class="n">result</span> <span class="o">=</span> <span class="n">streamer</span><span class="o">.</span><span class="n">get_candles</span><span class="p">(</span>
+</span><span id="__span-6-22"><a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>            <span class="n">exchange</span><span class="o">=</span><span class="s2">&quot;INVALID&quot;</span><span class="p">,</span>
+</span><span id="__span-6-23"><a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>            <span class="n">symbol</span><span class="o">=</span><span class="s2">&quot;BTCUSDT&quot;</span>
+</span><span id="__span-6-24"><a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>        <span class="p">)</span>
+</span><span id="__span-6-25"><a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a>        <span class="k">assert</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;failed&quot;</span>
+</span><span id="__span-6-26"><a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a>        <span class="k">assert</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;error&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 </span></code></pre></div>
 <h2 id="pull-request-process">📋 Pull Request Process</h2>
 <ol>
@@ -1946,8 +1948,10 @@
 <li><strong>Actual Behavior</strong>: What actually happens</li>
 <li><strong>Environment</strong>:</li>
 <li>Python version: 3.11</li>
-<li>OS: Windows 11</li>
-<li>Library version: 1.4.0</li>
+<li>OS: Windows 11<ul>
+<li>Library version: 1.4.1</li>
+</ul>
+</li>
 </ol>
 <h3 id="example-bug-report">Example Bug Report</h3>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>**Bug: Technicals scraper fails with timeout**
