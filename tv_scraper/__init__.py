@@ -22,10 +22,14 @@ from tv_scraper.scrapers.social.minds import Minds
 from tv_scraper.scrapers.social.news import News
 
 # Streaming
+from tv_scraper.streaming.candle_streamer import CandleStreamer
+from tv_scraper.streaming.forecast_streamer import ForecastStreamer
 from tv_scraper.streaming.streamer import Streamer
 
 __all__ = [
     "Calendar",
+    "CandleStreamer",
+    "ForecastStreamer",
     "Fundamentals",
     "Ideas",
     "MarketMovers",

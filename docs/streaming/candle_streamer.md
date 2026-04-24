@@ -7,7 +7,7 @@
 ### Candles only
 
 ```python
-from tv_scraper.streaming import CandleStreamer
+from tv_scraper import CandleStreamer
 
 streamer = CandleStreamer()
 result = streamer.get_candles(

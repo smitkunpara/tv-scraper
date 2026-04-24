@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+### Added
+- **Tests**: Added a unit test to verify `CandleStreamer`, `ForecastStreamer`, and `Streamer` are importable from the top-level package (`from tv_scraper import ...`).
+
+### Changed
+- **Documentation**: Standardized streaming examples to use top-level imports from `tv_scraper` instead of subpackage imports.
+
+### Fixed
+- **Streaming Imports**: Exported `CandleStreamer` and `ForecastStreamer` in `tv_scraper.__init__` so users no longer need deep module paths for streamer imports.
+
 ## [1.4.2] - 2026-04-22
 
 ### Fixed

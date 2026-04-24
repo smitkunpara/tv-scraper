@@ -5,7 +5,7 @@
 ## Quick Use
 
 ```python
-from tv_scraper.streaming import ForecastStreamer
+from tv_scraper import ForecastStreamer
 
 streamer = ForecastStreamer()
 result = streamer.get_forecast(exchange="NASDAQ", symbol="AAPL")

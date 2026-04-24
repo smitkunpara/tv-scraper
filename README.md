@@ -35,7 +35,7 @@
 ## 🚀 Quick Start
 
 ```python
-from tv_scraper.streaming import CandleStreamer
+from tv_scraper import CandleStreamer
 
 # Initialize the streamer
 streamer = CandleStreamer()

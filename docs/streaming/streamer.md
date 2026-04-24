@@ -31,7 +31,7 @@ Internally:
 
 !!! tip "Legacy Example"
     ```python
-    from tv_scraper.streaming import Streamer
+    from tv_scraper import Streamer
 
     streamer = Streamer()
     result = streamer.get_candles(

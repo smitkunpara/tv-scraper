@@ -48,7 +48,7 @@ result = pine.list_saved_scripts()
 ### CandleStreamer With Indicators
 
 ```python
-from tv_scraper.streaming import CandleStreamer
+from tv_scraper import CandleStreamer
 
 streamer = CandleStreamer(cookie=TRADINGVIEW_COOKIE)
 result = streamer.get_candles(

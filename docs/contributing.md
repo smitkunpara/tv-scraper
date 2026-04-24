@@ -98,7 +98,7 @@ Keep the docs flow aligned with release tags, and update `AGENTS.md` if it still
 ### Test Structure
 ```python
 import pytest
-from tv_scraper.streaming import CandleStreamer
+from tv_scraper import CandleStreamer
 
 class TestCandleStreamer:
     def test_get_candles_success(self):
