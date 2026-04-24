@@ -1,9 +1,7 @@
 """Unit tests for top-level public imports."""
 
 import tv_scraper
-from tv_scraper import CandleStreamer
-from tv_scraper import ForecastStreamer
-from tv_scraper import Streamer
+from tv_scraper import CandleStreamer, ForecastStreamer, Streamer
 
 
 def test_streamers_are_importable_from_package_root() -> None:
