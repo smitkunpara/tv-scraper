@@ -31,10 +31,11 @@ The documentation site was introduced in **`v0.5.0`**. That means the release-aw
 | `v1.4.0` |
 | `v1.4.1` |
 | `v1.4.2` |
+| `v1.4.3` |
 
 ## Current Docs Target
 
-The current package version is **`1.4.2`**.
+The current package version is **`1.4.3`**.
 
 ## Publishing Notes
 

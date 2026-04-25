@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.3] - 2026-04-25
+
 ### Added
 - **Tests**: Added a unit test to verify `CandleStreamer`, `ForecastStreamer`, and `Streamer` are importable from the top-level package (`from tv_scraper import ...`).
 
