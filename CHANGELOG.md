@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- **Streaming**: Added support for standard and custom indicators in `CandleStreamer.stream_realtime_price()`. Real-time data ticks now include an `indicators` field populated with up-to-date indicator values during stream updates.
 
 ## [1.4.3] - 2026-04-25
 

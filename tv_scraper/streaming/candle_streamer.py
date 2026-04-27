@@ -141,20 +141,32 @@ class CandleStreamer(BaseStreamer):
         self,
         exchange: EXCHANGE_LITERAL,
         symbol: str,
+        indicators: list[tuple[str, str]] | None = None,
     ) -> Generator[dict[str, Any], None, None]:
         """Persistent generator yielding normalized realtime price updates."""
         # --- Validation ---
         exchange, _symbol = self._verify_symbol_exchange(exchange, symbol)
         exchange_symbol = format_symbol(exchange, _symbol)
+        self.study_id_to_name_map = {}
+        ind_flag = bool(indicators)
 
         self.connect()
         self._subscribe_quote(exchange_symbol)
-        self._subscribe_chart(exchange_symbol, "1m", 1)
+        self._subscribe_chart(exchange_symbol, "1m", 300)
+
+        if ind_flag and indicators:
+            self._add_indicators(indicators)
 
         last_price = None
+        latest_indicators: dict[str, Any] = {}
 
         for pkt in self.receive_packets():
-            if pkt.get("m") == "qsd":
+            if pkt.get("m") == "timescale_update":
+                current_indicators = self._extract_indicator_from_stream(pkt)
+                for ind_name, ind_values in current_indicators.items():
+                    if ind_values:
+                        latest_indicators[ind_name] = ind_values[-1]
+            elif pkt.get("m") == "qsd":
                 p_data = pkt.get("p", [])
                 if len(p_data) > 1 and isinstance(p_data[1], dict):
                     v = p_data[1].get("v", {})
@@ -179,6 +191,14 @@ class CandleStreamer(BaseStreamer):
             elif pkt.get("m") == "du":
                 p_data = pkt.get("p", [])
                 if len(p_data) > 1 and isinstance(p_data[1], dict):
+                    # Extract indicators if any
+                    current_indicators = self._extract_indicator_from_stream(pkt)
+                    
+                    # Update latest indicators with the most recent values
+                    for ind_name, ind_values in current_indicators.items():
+                        if ind_values:
+                            latest_indicators[ind_name] = ind_values[-1]
+
                     sds_data = p_data[1].get("sds_1", {})
                     series = sds_data.get("s", [])
 
@@ -212,7 +232,26 @@ class CandleStreamer(BaseStreamer):
                                 "prev_close": None,
                                 "bid": None,
                                 "ask": None,
+                                "indicators": latest_indicators.copy(),
                             }
+                    
+                    if current_indicators and not series:
+                        # Yield just the indicator update if there is no price update in this du packet
+                        yield {
+                            "exchange": exchange,
+                            "symbol": symbol,
+                            "price": last_price,
+                            "volume": None,
+                            "change": None,
+                            "change_percent": None,
+                            "high": None,
+                            "low": None,
+                            "open": None,
+                            "prev_close": None,
+                            "bid": None,
+                            "ask": None,
+                            "indicators": latest_indicators.copy(),
+                        }
 
     @staticmethod
     def get_available_indicators() -> dict[str, Any]:
@@ -366,9 +405,9 @@ class CandleStreamer(BaseStreamer):
         return []
 
     def _extract_indicator_from_stream(self, pkt: dict[str, Any]) -> dict[str, Any]:
-        """Extract indicator data from a ``du`` packet."""
+        """Extract indicator data from ``du`` or ``timescale_update`` packets."""
         indicator_data: dict[str, Any] = {}
-        if pkt.get("m") != "du":
+        if pkt.get("m") not in ("du", "timescale_update"):
             return indicator_data
 
         p_data = pkt.get("p", [])
