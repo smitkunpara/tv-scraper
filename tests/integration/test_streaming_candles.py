@@ -154,13 +154,14 @@ class TestIntegrationStreamingCandlesWithIndicators:
                 ) as mock_validate:
                     mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
 
-                    cs = CandleStreamer()
-                    cs.get_candles(
-                        exchange="NASDAQ",
-                        symbol="AAPL",
-                        numb_candles=1,
-                        indicators=[("STD;RSI", "37.0")],
-                    )
+                    cs = CandleStreamer(cookie="valid_cookie")
+                    with patch("tv_scraper.streaming.auth.get_valid_jwt_token", return_value="mock_jwt"):
+                        cs.get_candles(
+                            exchange="NASDAQ",
+                            symbol="AAPL",
+                            numb_candles=1,
+                            indicators=[("STD;RSI", "37.0")],
+                        )
 
                     mock_fetch.assert_called()
 
@@ -365,13 +366,14 @@ class TestIntegrationCandleDataWithMultipleIndicators:
                 ) as mock_validate:
                     mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
 
-                    cs = CandleStreamer()
-                    cs.get_candles(
-                        exchange="NASDAQ",
-                        symbol="AAPL",
-                        numb_candles=1,
-                        indicators=[("STD;RSI", "37.0"), ("STD;MACD", "12.0")],
-                    )
+                    cs = CandleStreamer(cookie="valid_cookie")
+                    with patch("tv_scraper.streaming.auth.get_valid_jwt_token", return_value="mock_jwt"):
+                        cs.get_candles(
+                            exchange="NASDAQ",
+                            symbol="AAPL",
+                            numb_candles=1,
+                            indicators=[("STD;RSI", "37.0"), ("STD;MACD", "12.0")],
+                        )
 
                     assert mock_fetch.call_count == 2
                     assert len(cs.study_id_to_name_map) == 2
@@ -565,14 +567,15 @@ class TestIntegrationCandleEndToEnd:
                 ) as mock_validate:
                     mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
 
-                    streamer = Streamer()
-                    result = streamer.get_candles(
-                        exchange="NASDAQ",
-                        symbol="AAPL",
-                        timeframe="1h",
-                        numb_candles=1,
-                        indicators=[("STD;RSI", "37.0")],
-                    )
+                    streamer = Streamer(cookie="valid_cookie")
+                    with patch("tv_scraper.streaming.auth.get_valid_jwt_token", return_value="mock_jwt"):
+                        result = streamer.get_candles(
+                            exchange="NASDAQ",
+                            symbol="AAPL",
+                            timeframe="1h",
+                            numb_candles=1,
+                            indicators=[("STD;RSI", "37.0")],
+                        )
 
                     assert result["status"] == STATUS_SUCCESS
                     assert "indicators" in result["data"]

@@ -475,13 +475,14 @@ class TestGetCandlesWithIndicators:
 
         mock_ws.recv.side_effect = [ts_framed, du_framed, ConnectionError("done")]
 
-        cs = CandleStreamer()
-        result = cs.get_candles(
-            exchange="NASDAQ",
-            symbol="AAPL",
-            numb_candles=1,
-            indicators=[("STD;RSI", "37.0")],
-        )
+        cs = CandleStreamer(cookie="valid_cookie")
+        with patch("tv_scraper.streaming.auth.get_valid_jwt_token", return_value="mock_jwt"):
+            result = cs.get_candles(
+                exchange="NASDAQ",
+                symbol="AAPL",
+                numb_candles=1,
+                indicators=[("STD;RSI", "37.0")],
+            )
 
         assert result["status"] == STATUS_SUCCESS
         assert "indicators" in result["data"]
@@ -520,13 +521,14 @@ class TestGetCandlesWithIndicators:
 
         mock_ws.recv.side_effect = [ts_framed, du_framed, ConnectionError("done")]
 
-        cs = CandleStreamer()
-        result = cs.get_candles(
-            exchange="NYSE",
-            symbol="JPM",
-            numb_candles=1,
-            indicators=[("STD;MACD", "12.0")],
-        )
+        cs = CandleStreamer(cookie="valid_cookie")
+        with patch("tv_scraper.streaming.auth.get_valid_jwt_token", return_value="mock_jwt"):
+            result = cs.get_candles(
+                exchange="NYSE",
+                symbol="JPM",
+                numb_candles=1,
+                indicators=[("STD;MACD", "12.0")],
+            )
 
         assert result["status"] == STATUS_SUCCESS
         assert "indicators" in result["data"]
@@ -565,13 +567,14 @@ class TestGetCandlesWithIndicators:
 
         mock_ws.recv.side_effect = [ts_framed, ConnectionError("done")]
 
-        cs = CandleStreamer()
-        result = cs.get_candles(
-            exchange="NASDAQ",
-            symbol="AAPL",
-            numb_candles=1,
-            indicators=[("STD;RSI", "37.0"), ("STD;MACD", "12.0"), ("STD;ATR", "12.0")],
-        )
+        cs = CandleStreamer(cookie="valid_cookie")
+        with patch("tv_scraper.streaming.auth.get_valid_jwt_token", return_value="mock_jwt"):
+            result = cs.get_candles(
+                exchange="NASDAQ",
+                symbol="AAPL",
+                numb_candles=1,
+                indicators=[("STD;RSI", "37.0"), ("STD;MACD", "12.0"), ("STD;ATR", "12.0")],
+            )
 
         assert result["status"] == STATUS_FAILED
         assert result["error"] is not None
@@ -882,18 +885,18 @@ class TestStudyIdMap:
         framed = f"~m~{len(ts_raw)}~m~{ts_raw}"
         mock_ws.recv.side_effect = [framed, ConnectionError("done")]
 
-        cs = CandleStreamer()
+        cs = CandleStreamer(cookie="valid_cookie")
+        with patch("tv_scraper.streaming.auth.get_valid_jwt_token", return_value="mock_jwt"):
+            cs.get_candles(
+                exchange="BINANCE", symbol="BTCUSDT", indicators=[("STD;RSI", "37.0")]
+            )
+            assert "st9" in cs.study_id_to_name_map
 
-        cs.get_candles(
-            exchange="BINANCE", symbol="BTCUSDT", indicators=[("STD;RSI", "37.0")]
-        )
-        assert "st9" in cs.study_id_to_name_map
-
-        mock_ws.recv.side_effect = [framed, ConnectionError("done")]
-        cs.get_candles(
-            exchange="BINANCE", symbol="ETHUSDT", indicators=[("STD;RSI", "37.0")]
-        )
-        assert "st9" in cs.study_id_to_name_map
+            mock_ws.recv.side_effect = [framed, ConnectionError("done")]
+            cs.get_candles(
+                exchange="BINANCE", symbol="ETHUSDT", indicators=[("STD;RSI", "37.0")]
+            )
+            assert "st9" in cs.study_id_to_name_map
 
 
 class TestOHLCVSerialization:
