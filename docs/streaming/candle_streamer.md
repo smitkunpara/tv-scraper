@@ -102,14 +102,21 @@ Output structure:
     Both `ohlcv` and indicator arrays contain **one row per candle index**. If you request 5 candles with an indicator, you'll get 5 rows in both arrays. The indicator rows are keyed by study name (for example, `"STD;RSI"`) and contain an array of values for each candle.
 
 ### Realtime prices
-
+ 
 ```python
-for tick in streamer.stream_realtime_price(exchange="BINANCE", symbol="BTCUSDT"):
-    print(tick["price"], tick["change_percent"])
+indicators = [("STD;RSI", "37.0")]
+for tick in streamer.stream_realtime_price(
+    exchange="BINANCE", 
+    symbol="BTCUSDT",
+    indicators=indicators
+):
+    price = tick["price"]
+    rsi = tick["indicators"].get("STD;RSI", {}).get("0")
+    print(f"Price: {price}, RSI: {rsi}")
 ```
-
+ 
 Output structure (yielded per update):
-
+ 
 ```python
 {
     "exchange": "BINANCE",
@@ -124,6 +131,14 @@ Output structure (yielded per update):
     "prev_close": 60080.0,
     "bid": 60124.5,
     "ask": 60125.5,
+    "indicators": {
+        "STD;RSI": {
+            "index": 299, 
+            "timestamp": 1700000000, 
+            "0": 55.5,
+            # ... other fields
+        }
+    },
 }
 ```
 
