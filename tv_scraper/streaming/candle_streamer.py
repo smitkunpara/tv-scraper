@@ -161,12 +161,7 @@ class CandleStreamer(BaseStreamer):
         latest_indicators: dict[str, Any] = {}
 
         for pkt in self.receive_packets():
-            if pkt.get("m") == "timescale_update":
-                current_indicators = self._extract_indicator_from_stream(pkt)
-                for ind_name, ind_values in current_indicators.items():
-                    if ind_values:
-                        latest_indicators[ind_name] = ind_values[-1]
-            elif pkt.get("m") == "qsd":
+            if pkt.get("m") == "qsd":
                 p_data = pkt.get("p", [])
                 if len(p_data) > 1 and isinstance(p_data[1], dict):
                     v = p_data[1].get("v", {})
@@ -186,6 +181,7 @@ class CandleStreamer(BaseStreamer):
                             "prev_close": v.get("prev_close_price"),
                             "bid": v.get("bid"),
                             "ask": v.get("ask"),
+                            "indicators": latest_indicators.copy(),
                         }
 
             elif pkt.get("m") == "du":
@@ -405,9 +401,9 @@ class CandleStreamer(BaseStreamer):
         return []
 
     def _extract_indicator_from_stream(self, pkt: dict[str, Any]) -> dict[str, Any]:
-        """Extract indicator data from ``du`` or ``timescale_update`` packets."""
+        """Extract indicator data from a ``du`` packet."""
         indicator_data: dict[str, Any] = {}
-        if pkt.get("m") not in ("du", "timescale_update"):
+        if pkt.get("m") != "du":
             return indicator_data
 
         p_data = pkt.get("p", [])
