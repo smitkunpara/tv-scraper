@@ -207,6 +207,15 @@ class TestLiveStreamingCandlesWithIndicators:
 class TestLiveStreamingCandlesVolume:
     """Test volume data in candles."""
 
+    def test_live_get_candles_unauthorized_token(self):
+        """Verify get_candles uses unauthorized_user_token when no cookie provided."""
+        # This is implicitly tested by other tests, but good to have explicit.
+        streamer = Streamer(cookie=None)
+        result = streamer.get_candles(
+            exchange="BINANCE", symbol="BTCUSDT", timeframe="1m", numb_candles=1
+        )
+        assert result["status"] == STATUS_SUCCESS
+
     def test_live_get_candles_with_volume(self):
         """Verify volume data is included in candles."""
         streamer = Streamer()
@@ -411,3 +420,62 @@ class TestLiveCandleDataQuality:
 
         timestamps = [c["timestamp"] for c in result["data"]["ohlcv"]]
         assert timestamps == sorted(timestamps), "Timestamps should be ascending"
+
+
+class TestLiveStreamingCandlesRealtime:
+    """Live tests for real-time price streaming."""
+
+    def test_live_stream_realtime_price_basic(self):
+        """Verify basic real-time price streaming for BINANCE:BTCUSDT."""
+        streamer = CandleStreamer()
+        gen = streamer.stream_realtime_price(exchange="BINANCE", symbol="BTCUSDT")
+        
+        # Capture first 3 ticks
+        ticks = []
+        for tick in gen:
+            ticks.append(tick)
+            if len(ticks) >= 3:
+                break
+        
+        assert len(ticks) == 3
+        for tick in ticks:
+            # Note: short_name (BTCUSDT) is returned by default for BINANCE:BTCUSDT
+            assert "BTCUSDT" in tick["symbol"]
+            assert "price" in tick
+            assert "volume" in tick
+            assert "indicators" in tick
+            assert tick["indicators"] == {}
+
+    def test_live_stream_realtime_price_with_indicators(self):
+        """Verify real-time price streaming with indicators (requires cookie)."""
+        cookie = os.environ.get("TRADINGVIEW_COOKIE") or os.environ.get("TV_COOKIE")
+        if not cookie:
+            pytest.skip("Indicator live test requires TRADINGVIEW_COOKIE.")
+
+        streamer = CandleStreamer(cookie=cookie)
+        # Using a standard indicator (RSI)
+        indicators = [("STD;RSI", "37.0")]
+        gen = streamer.stream_realtime_price(
+            exchange="BINANCE", 
+            symbol="BTCUSDT", 
+            indicators=indicators
+        )
+        
+        # Wait for a tick that contains indicator data
+        indicator_found = False
+        tick_count = 0
+        for tick in gen:
+            tick_count += 1
+            if tick["indicators"].get("STD;RSI"):
+                indicator_found = True
+                # Verify indicator structure - in realtime stream it returns the LATEST dict
+                rsi_data = tick["indicators"]["STD;RSI"]
+                assert isinstance(rsi_data, dict)
+                assert "0" in rsi_data # RSI value
+                break
+            
+            # Timeout after some ticks if no indicator data
+            if tick_count > 50: 
+                break
+                
+        assert indicator_found, "Did not receive RSI data in real-time stream"

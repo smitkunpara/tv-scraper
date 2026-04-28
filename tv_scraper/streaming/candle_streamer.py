@@ -11,6 +11,7 @@ from tv_scraper.core.validation_data import (
     TIMEFRAME_LITERAL,
 )
 from tv_scraper.scrapers.scripts.pine import Pine
+from tv_scraper.core.exceptions import ValidationError
 from tv_scraper.streaming.base_streamer import BaseStreamer
 from tv_scraper.streaming.utils import (
     fetch_available_indicators,
@@ -327,7 +328,7 @@ class CandleStreamer(BaseStreamer):
     def _add_indicators(self, indicators: list[tuple[str, str]]) -> None:
         """Add one or more indicator studies to the chart session."""
         if not self.cookie:
-            raise ValueError(
+            raise ValidationError(
                 "TradingView cookie is required to stream indicators. "
                 "Provide it via the cookie argument or TRADINGVIEW_COOKIE environment variable."
             )
