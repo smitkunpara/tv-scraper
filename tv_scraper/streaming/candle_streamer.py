@@ -326,6 +326,12 @@ class CandleStreamer(BaseStreamer):
 
     def _add_indicators(self, indicators: list[tuple[str, str]]) -> None:
         """Add one or more indicator studies to the chart session."""
+        if not self.cookie:
+            raise ValueError(
+                "TradingView cookie is required to stream indicators. "
+                "Provide it via the cookie argument or TRADINGVIEW_COOKIE environment variable."
+            )
+
         for idx, (script_id, script_version) in enumerate(indicators):
             logger.info(
                 "Processing indicator %d/%d: %s v%s",
