@@ -1443,8 +1443,17 @@
 <p>Both <code>ohlcv</code> and indicator arrays contain <strong>one row per candle index</strong>. If you request 5 candles with an indicator, you'll get 5 rows in both arrays. The indicator rows are keyed by study name (for example, <code>"STD;RSI"</code>) and contain an array of values for each candle.</p>
 </div>
 <h3 id="realtime-prices">Realtime prices</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">for</span> <span class="n">tick</span> <span class="ow">in</span> <span class="n">streamer</span><span class="o">.</span><span class="n">stream_realtime_price</span><span class="p">(</span><span class="n">exchange</span><span class="o">=</span><span class="s2">&quot;BINANCE&quot;</span><span class="p">,</span> <span class="n">symbol</span><span class="o">=</span><span class="s2">&quot;BTCUSDT&quot;</span><span class="p">):</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">tick</span><span class="p">[</span><span class="s2">&quot;price&quot;</span><span class="p">],</span> <span class="n">tick</span><span class="p">[</span><span class="s2">&quot;change_percent&quot;</span><span class="p">])</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">indicators</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;STD;RSI&quot;</span><span class="p">,</span> <span class="s2">&quot;37.0&quot;</span><span class="p">)]</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">price_stream</span> <span class="o">=</span> <span class="n">streamer</span><span class="o">.</span><span class="n">stream_realtime_price</span><span class="p">(</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="n">exchange</span><span class="o">=</span><span class="s2">&quot;BINANCE&quot;</span><span class="p">,</span> 
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="n">symbol</span><span class="o">=</span><span class="s2">&quot;BTCUSDT&quot;</span><span class="p">,</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="n">indicators</span><span class="o">=</span><span class="n">indicators</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="p">)</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="k">for</span> <span class="n">tick</span> <span class="ow">in</span> <span class="n">price_stream</span><span class="p">:</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    <span class="n">price</span> <span class="o">=</span> <span class="n">tick</span><span class="p">[</span><span class="s2">&quot;price&quot;</span><span class="p">]</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    <span class="n">rsi</span> <span class="o">=</span> <span class="n">tick</span><span class="p">[</span><span class="s2">&quot;indicators&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;STD;RSI&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;0&quot;</span><span class="p">)</span>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Price: </span><span class="si">{</span><span class="n">price</span><span class="si">}</span><span class="s2">, RSI: </span><span class="si">{</span><span class="n">rsi</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </span></code></pre></div>
 <p>Output structure (yielded per update):</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span>
@@ -1460,8 +1469,20 @@
 </span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>    <span class="s2">&quot;prev_close&quot;</span><span class="p">:</span> <span class="mf">60080.0</span><span class="p">,</span>
 </span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>    <span class="s2">&quot;bid&quot;</span><span class="p">:</span> <span class="mf">60124.5</span><span class="p">,</span>
 </span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>    <span class="s2">&quot;ask&quot;</span><span class="p">:</span> <span class="mf">60125.5</span><span class="p">,</span>
-</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="p">}</span>
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>    <span class="s2">&quot;indicators&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>        <span class="s2">&quot;STD;RSI&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>            <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="mi">299</span><span class="p">,</span> 
+</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>            <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="mi">1700000000</span><span class="p">,</span> 
+</span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>            <span class="s2">&quot;0&quot;</span><span class="p">:</span> <span class="mf">55.5</span><span class="p">,</span>
+</span><span id="__span-5-19"><a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>            <span class="c1"># ... other fields</span>
+</span><span id="__span-5-20"><a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>        <span class="p">}</span>
+</span><span id="__span-5-21"><a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>    <span class="p">},</span>
+</span><span id="__span-5-22"><a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="p">}</span>
 </span></code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Generator Behavior</p>
+<p>Unlike <code>get_candles()</code>, <code>stream_realtime_price()</code> returns a raw generator and is <strong>not wrapped with error envelopes</strong>. It raises exceptions directly during iteration (e.g., <code>ValidationError</code> on invalid inputs or <code>RuntimeError</code> on connection failures). Wrap your iteration in a <code>try/except</code> block to handle exceptions gracefully.</p>
+</div>
 <h2 id="inputs">Inputs</h2>
 <table>
 <thead>
