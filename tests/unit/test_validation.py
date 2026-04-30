@@ -38,7 +38,7 @@ class TestValidateYyyymmddDate:
             options_scraper._validate_yyyymmdd_date(20260400)
 
     def test_invalid_calendar_date_raises(self, options_scraper) -> None:
-        with pytest.raises(ValidationError, match="(?i)invalid date value"):
+        with pytest.raises(ValidationError, match=r"(?i)invalid date value"):
             options_scraper._validate_yyyymmdd_date(20260231)
 
     def test_none_passes(self, options_scraper) -> None:

@@ -155,7 +155,10 @@ class TestIntegrationStreamingCandlesWithIndicators:
                     mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
 
                     cs = CandleStreamer(cookie="valid_cookie")
-                    with patch("tv_scraper.streaming.auth.get_valid_jwt_token", return_value="mock_jwt"):
+                    with patch(
+                        "tv_scraper.streaming.auth.get_valid_jwt_token",
+                        return_value="mock_jwt",
+                    ):
                         cs.get_candles(
                             exchange="NASDAQ",
                             symbol="AAPL",
@@ -367,7 +370,10 @@ class TestIntegrationCandleDataWithMultipleIndicators:
                     mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
 
                     cs = CandleStreamer(cookie="valid_cookie")
-                    with patch("tv_scraper.streaming.auth.get_valid_jwt_token", return_value="mock_jwt"):
+                    with patch(
+                        "tv_scraper.streaming.auth.get_valid_jwt_token",
+                        return_value="mock_jwt",
+                    ):
                         cs.get_candles(
                             exchange="NASDAQ",
                             symbol="AAPL",
@@ -568,7 +574,10 @@ class TestIntegrationCandleEndToEnd:
                     mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
 
                     streamer = Streamer(cookie="valid_cookie")
-                    with patch("tv_scraper.streaming.auth.get_valid_jwt_token", return_value="mock_jwt"):
+                    with patch(
+                        "tv_scraper.streaming.auth.get_valid_jwt_token",
+                        return_value="mock_jwt",
+                    ):
                         result = streamer.get_candles(
                             exchange="NASDAQ",
                             symbol="AAPL",

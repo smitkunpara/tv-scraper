@@ -429,14 +429,14 @@ class TestLiveStreamingCandlesRealtime:
         """Verify basic real-time price streaming for BINANCE:BTCUSDT."""
         streamer = CandleStreamer()
         gen = streamer.stream_realtime_price(exchange="BINANCE", symbol="BTCUSDT")
-        
+
         # Capture first 3 ticks
         ticks = []
         for tick in gen:
             ticks.append(tick)
             if len(ticks) >= 3:
                 break
-        
+
         assert len(ticks) == 3
         for tick in ticks:
             # Note: short_name (BTCUSDT) is returned by default for BINANCE:BTCUSDT
@@ -456,11 +456,9 @@ class TestLiveStreamingCandlesRealtime:
         # Using a standard indicator (RSI)
         indicators = [("STD;RSI", "37.0")]
         gen = streamer.stream_realtime_price(
-            exchange="BINANCE", 
-            symbol="BTCUSDT", 
-            indicators=indicators
+            exchange="BINANCE", symbol="BTCUSDT", indicators=indicators
         )
-        
+
         # Wait for a tick that contains indicator data
         indicator_found = False
         tick_count = 0
@@ -471,11 +469,11 @@ class TestLiveStreamingCandlesRealtime:
                 # Verify indicator structure - in realtime stream it returns the LATEST dict
                 rsi_data = tick["indicators"]["STD;RSI"]
                 assert isinstance(rsi_data, dict)
-                assert "0" in rsi_data # RSI value
+                assert "0" in rsi_data  # RSI value
                 break
-            
+
             # Timeout after some ticks if no indicator data
-            if tick_count > 50: 
+            if tick_count > 50:
                 break
-                
+
         assert indicator_found, "Did not receive RSI data in real-time stream"

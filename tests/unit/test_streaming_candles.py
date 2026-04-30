@@ -476,7 +476,9 @@ class TestGetCandlesWithIndicators:
         mock_ws.recv.side_effect = [ts_framed, du_framed, ConnectionError("done")]
 
         cs = CandleStreamer(cookie="valid_cookie")
-        with patch("tv_scraper.streaming.auth.get_valid_jwt_token", return_value="mock_jwt"):
+        with patch(
+            "tv_scraper.streaming.auth.get_valid_jwt_token", return_value="mock_jwt"
+        ):
             result = cs.get_candles(
                 exchange="NASDAQ",
                 symbol="AAPL",
@@ -522,7 +524,9 @@ class TestGetCandlesWithIndicators:
         mock_ws.recv.side_effect = [ts_framed, du_framed, ConnectionError("done")]
 
         cs = CandleStreamer(cookie="valid_cookie")
-        with patch("tv_scraper.streaming.auth.get_valid_jwt_token", return_value="mock_jwt"):
+        with patch(
+            "tv_scraper.streaming.auth.get_valid_jwt_token", return_value="mock_jwt"
+        ):
             result = cs.get_candles(
                 exchange="NYSE",
                 symbol="JPM",
@@ -568,12 +572,18 @@ class TestGetCandlesWithIndicators:
         mock_ws.recv.side_effect = [ts_framed, ConnectionError("done")]
 
         cs = CandleStreamer(cookie="valid_cookie")
-        with patch("tv_scraper.streaming.auth.get_valid_jwt_token", return_value="mock_jwt"):
+        with patch(
+            "tv_scraper.streaming.auth.get_valid_jwt_token", return_value="mock_jwt"
+        ):
             result = cs.get_candles(
                 exchange="NASDAQ",
                 symbol="AAPL",
                 numb_candles=1,
-                indicators=[("STD;RSI", "37.0"), ("STD;MACD", "12.0"), ("STD;ATR", "12.0")],
+                indicators=[
+                    ("STD;RSI", "37.0"),
+                    ("STD;MACD", "12.0"),
+                    ("STD;ATR", "12.0"),
+                ],
             )
 
         assert result["status"] == STATUS_FAILED
@@ -886,7 +896,9 @@ class TestStudyIdMap:
         mock_ws.recv.side_effect = [framed, ConnectionError("done")]
 
         cs = CandleStreamer(cookie="valid_cookie")
-        with patch("tv_scraper.streaming.auth.get_valid_jwt_token", return_value="mock_jwt"):
+        with patch(
+            "tv_scraper.streaming.auth.get_valid_jwt_token", return_value="mock_jwt"
+        ):
             cs.get_candles(
                 exchange="BINANCE", symbol="BTCUSDT", indicators=[("STD;RSI", "37.0")]
             )

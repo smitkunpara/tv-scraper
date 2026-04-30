@@ -434,7 +434,9 @@ class TestGetCandlesWithIndicators:
         mock_ws.recv.side_effect = [ts_framed, du_framed, ConnectionError("done")]
 
         cs = CandleStreamer(cookie="valid_cookie")
-        with patch("tv_scraper.streaming.auth.get_valid_jwt_token", return_value="mock_jwt"):
+        with patch(
+            "tv_scraper.streaming.auth.get_valid_jwt_token", return_value="mock_jwt"
+        ):
             result = cs.get_candles(
                 exchange="NASDAQ",
                 symbol="AAPL",
@@ -492,12 +494,18 @@ class TestGetCandlesWithIndicators:
         mock_ws.recv.side_effect = [ts_framed, ConnectionError("done")]
 
         cs = CandleStreamer(cookie="valid_cookie")
-        with patch("tv_scraper.streaming.auth.get_valid_jwt_token", return_value="mock_jwt"):
+        with patch(
+            "tv_scraper.streaming.auth.get_valid_jwt_token", return_value="mock_jwt"
+        ):
             result = cs.get_candles(
                 exchange="NASDAQ",
                 symbol="AAPL",
                 numb_candles=1,
-                indicators=[("STD;RSI", "37.0"), ("STD;MACD", "12.0"), ("STD;ATR", "12.0")],
+                indicators=[
+                    ("STD;RSI", "37.0"),
+                    ("STD;MACD", "12.0"),
+                    ("STD;ATR", "12.0"),
+                ],
             )
 
         # Without indicator data packets, returns failed with missing indicator info
@@ -539,7 +547,9 @@ class TestGetCandlesWithIndicators:
         mock_pine.return_value = pine_instance
 
         cs = CandleStreamer(cookie="valid_cookie")
-        with patch("tv_scraper.streaming.auth.get_valid_jwt_token", return_value="mock_jwt"):
+        with patch(
+            "tv_scraper.streaming.auth.get_valid_jwt_token", return_value="mock_jwt"
+        ):
             result = cs.get_candles(
                 exchange="NASDAQ",
                 symbol="AAPL",
@@ -548,7 +558,9 @@ class TestGetCandlesWithIndicators:
             )
         # Provide a mandatory cookie for indicator tests
         cs = CandleStreamer(cookie="valid_cookie")
-        with patch("tv_scraper.streaming.auth.get_valid_jwt_token", return_value="mock_jwt"):
+        with patch(
+            "tv_scraper.streaming.auth.get_valid_jwt_token", return_value="mock_jwt"
+        ):
             result = cs.get_candles(
                 exchange="NASDAQ",
                 symbol="AAPL",
@@ -588,7 +600,9 @@ class TestGetCandlesWithIndicators:
 
         # Must provide a cookie now or it fails at upfront validation instead of Pine.get_script
         cs = CandleStreamer(cookie="valid_cookie")
-        with patch("tv_scraper.streaming.auth.get_valid_jwt_token", return_value="mock_jwt"):
+        with patch(
+            "tv_scraper.streaming.auth.get_valid_jwt_token", return_value="mock_jwt"
+        ):
             result = cs.get_candles(
                 exchange="NASDAQ",
                 symbol="AAPL",
@@ -839,7 +853,9 @@ class TestStudyIdMap:
         mock_ws.recv.side_effect = [framed, ConnectionError("done")]
 
         cs = CandleStreamer(cookie="valid_cookie")
-        with patch("tv_scraper.streaming.auth.get_valid_jwt_token", return_value="mock_jwt"):
+        with patch(
+            "tv_scraper.streaming.auth.get_valid_jwt_token", return_value="mock_jwt"
+        ):
             # First call
             cs.get_candles(
                 exchange="BINANCE", symbol="BTCUSDT", indicators=[("STD;RSI", "37.0")]
@@ -928,7 +944,7 @@ class TestStreamRealtimePrice:
 
         cs = CandleStreamer()
         gen = cs.stream_realtime_price(exchange="BINANCE", symbol="BTCUSDT")
-        
+
         tick = next(gen)
         # Note: stream_realtime_price uses v.get("short_name", symbol).
         # In our mock, short_name is missing, so it returns "BTCUSDT".
@@ -946,13 +962,13 @@ class TestStreamRealtimePrice:
 
         cs = CandleStreamer(cookie=None)
         gen = cs.stream_realtime_price(
-            exchange="BINANCE", 
-            symbol="BTCUSDT", 
-            indicators=[("STD;RSI", "37.0")]
+            exchange="BINANCE", symbol="BTCUSDT", indicators=[("STD;RSI", "37.0")]
         )
-        
+
         import pytest
+
         from tv_scraper.core.exceptions import ValidationError
+
         with pytest.raises(ValidationError) as exc:
             next(gen)
         assert "TradingView cookie is required to stream indicators" in str(exc.value)
@@ -961,7 +977,9 @@ class TestStreamRealtimePrice:
     @patch("tv_scraper.streaming.candle_streamer.fetch_indicator_metadata")
     @patch("tv_scraper.streaming.auth.get_valid_jwt_token")
     @patch("tv_scraper.core.base.BaseScraper._verify_symbol_exchange")
-    def test_realtime_price_with_indicators(self, mock_validate, mock_jwt, mock_fetch_meta, mock_cc):
+    def test_realtime_price_with_indicators(
+        self, mock_validate, mock_jwt, mock_fetch_meta, mock_cc
+    ):
         """Test realtime price streaming with indicators."""
         mock_ws = MagicMock()
         mock_cc.return_value = mock_ws
@@ -976,24 +994,28 @@ class TestStreamRealtimePrice:
         }
 
         # Packets: 1. Indicator Update (du), 2. Price Update (qsd)
-        du_pkt = {"m": "du", "p": ["cs_test", {"st9": {"st": [{"i": 0, "v": [1700000000, 55.5]}]}}]}
-        qsd_pkt = {"m": "qsd", "p": ["qs_test", {"n": "BINANCE:BTCUSDT", "v": {"lp": 50000.0}}]}
-        
+        du_pkt = {
+            "m": "du",
+            "p": ["cs_test", {"st9": {"st": [{"i": 0, "v": [1700000000, 55.5]}]}}],
+        }
+        qsd_pkt = {
+            "m": "qsd",
+            "p": ["qs_test", {"n": "BINANCE:BTCUSDT", "v": {"lp": 50000.0}}],
+        }
+
         pkts = [f"~m~{len(json.dumps(p))}~m~{json.dumps(p)}" for p in [du_pkt, qsd_pkt]]
-        mock_ws.recv.side_effect = pkts + [ConnectionError("done")]
+        mock_ws.recv.side_effect = [*pkts, ConnectionError("done")]
 
         cs = CandleStreamer(cookie="valid_cookie")
         gen = cs.stream_realtime_price(
-            exchange="BINANCE", 
-            symbol="BTCUSDT", 
-            indicators=[("STD;RSI", "37.0")]
+            exchange="BINANCE", symbol="BTCUSDT", indicators=[("STD;RSI", "37.0")]
         )
-        
+
         # First yield from du packet
         tick1 = next(gen)
         assert tick1["price"] is None
         assert tick1["indicators"]["STD;RSI"]["0"] == 55.5
-        
+
         # Second yield from qsd packet
         tick2 = next(gen)
         assert tick2["price"] == 50000.0

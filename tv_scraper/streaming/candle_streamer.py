@@ -6,12 +6,12 @@ from typing import Any
 
 from tv_scraper.core.base import catch_errors
 from tv_scraper.core.constants import STATUS_SUCCESS
+from tv_scraper.core.exceptions import ValidationError
 from tv_scraper.core.validation_data import (
     EXCHANGE_LITERAL,
     TIMEFRAME_LITERAL,
 )
 from tv_scraper.scrapers.scripts.pine import Pine
-from tv_scraper.core.exceptions import ValidationError
 from tv_scraper.streaming.base_streamer import BaseStreamer
 from tv_scraper.streaming.utils import (
     fetch_available_indicators,
@@ -190,7 +190,7 @@ class CandleStreamer(BaseStreamer):
                 if len(p_data) > 1 and isinstance(p_data[1], dict):
                     # Extract indicators if any
                     current_indicators = self._extract_indicator_from_stream(pkt)
-                    
+
                     # Update latest indicators with the most recent values
                     for ind_name, ind_values in current_indicators.items():
                         if ind_values:
@@ -231,7 +231,7 @@ class CandleStreamer(BaseStreamer):
                                 "ask": None,
                                 "indicators": latest_indicators.copy(),
                             }
-                    
+
                     if current_indicators and not series:
                         # Yield just the indicator update if there is no price update in this du packet
                         yield {
