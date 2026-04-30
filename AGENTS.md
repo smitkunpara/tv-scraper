@@ -912,6 +912,7 @@ def get_candles(
 - `self._verify_symbol_exchange(exchange, symbol)`
 - `self._validate_choice(timeframe, TIMEFRAMES_SET)`
 - `self._validate_range(numb_candles, 1, 5000)`
+- Cookie validation: raises `ValidationError` if `indicators` are passed but no `cookie` is provided.
 
 **WebSocket Flow:**
 ```
@@ -984,7 +985,7 @@ def get_candles(
 
 **Additional CandleStreamer Methods (v1.4.0+):**
 
-- `stream_realtime_price(exchange, symbol) -> Generator`: Persistent generator yielding real-time price updates from WebSocket streams.
+- `stream_realtime_price(exchange: str, symbol: str, indicators: list[tuple[str, str]] | None = None) -> Generator`: Persistent generator yielding real-time price updates and optional indicators from WebSocket streams.
 - `get_available_indicators() -> dict`: Static method returning available built-in TradingView indicators.
 
 ### ForecastStreamer.get_forecast()
@@ -1071,11 +1072,12 @@ def get_available_indicators() -> dict[str, Any]
 2. connect()
 3. subscribe quote session (quote_add_symbols, quote_fast_symbols)
 4. subscribe chart session with 1m series (resolve_symbol, create_series(..., "1", 1, ""))
+5. (Optional) add indicators (adds cookie validation, metadata fetch, create_study, quote_hibernate_all)
 ```
 
 **Yielded Packet Mapping:**
-- `qsd` packets yield quote-centric dictionaries (price, volume, bid/ask, OHLC day values, etc.).
-- `du` packets yield close-based updates from the 1m chart series.
+- `qsd` packets yield quote-centric dictionaries (price, volume, bid/ask, OHLC day values, etc.) including current indicator snapshot.
+- `du` packets update indicator values from chart series.
 
 **Known Behavior Nuances:**
 - Generator runs until stream ends; no internal max packet stop condition.

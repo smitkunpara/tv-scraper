@@ -105,11 +105,13 @@ Output structure:
  
 ```python
 indicators = [("STD;RSI", "37.0")]
-for tick in streamer.stream_realtime_price(
+price_stream = streamer.stream_realtime_price(
     exchange="BINANCE", 
     symbol="BTCUSDT",
     indicators=indicators
-):
+)
+
+for tick in price_stream:
     price = tick["price"]
     rsi = tick["indicators"].get("STD;RSI", {}).get("0")
     print(f"Price: {price}, RSI: {rsi}")
@@ -141,6 +143,9 @@ Output structure (yielded per update):
     },
 }
 ```
+
+!!! warning "Generator Behavior"
+    Unlike `get_candles()`, `stream_realtime_price()` returns a raw generator and is **not wrapped with error envelopes**. It raises exceptions directly during iteration (e.g., `ValidationError` on invalid inputs or `RuntimeError` on connection failures). Wrap your iteration in a `try/except` block to handle exceptions gracefully.
 
 ## Inputs
 
