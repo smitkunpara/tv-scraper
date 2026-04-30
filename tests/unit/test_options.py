@@ -185,7 +185,7 @@ class TestPublicValidation:
 
         assert result["status"] == STATUS_FAILED
         assert result["data"] is None
-        assert "day is out of range" in result["error"].lower()
+        assert "invalid date value" in result["error"].lower()
 
 
 class TestGetOptions:
