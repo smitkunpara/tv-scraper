@@ -11,6 +11,7 @@ from typing import Any, TypeVar
 import requests
 
 from tv_scraper.core.constants import (
+    BASE_URL,
     CAPTCHA_MARKER,
     DEFAULT_USER_AGENT,
     EXPORT_TYPES,
@@ -23,10 +24,6 @@ from tv_scraper.core.validation_data import EXCHANGES, TIMEFRAMES
 from tv_scraper.utils.io import generate_export_filepath, save_csv_file, save_json_file
 
 _EXCHANGES_SET = {e.upper() for e in EXCHANGES}
-_SCANNER_SYMBOL_URL = (
-    "https://scanner.tradingview.com/symbol"
-    "?symbol={exchange}%3A{symbol}&fields=market&no_404=false"
-)
 
 logger = logging.getLogger(__name__)
 
@@ -297,9 +294,9 @@ class BaseScraper:
 
         self._validate_choice(exchange_up, _EXCHANGES_SET)
 
-        url = _SCANNER_SYMBOL_URL.format(exchange=exchange_up, symbol=symbol_up)
+        url = f"{BASE_URL}/symbols/{exchange_up}-{symbol_up}/?component-data-only=1"
         try:
-            resp = requests.get(url, timeout=5)
+            resp = requests.get(url, timeout=5, headers=self._headers)
             if resp.status_code == 404:
                 raise ValidationError(
                     f"Symbol '{symbol_up}' not found on exchange '{exchange_up}'."
