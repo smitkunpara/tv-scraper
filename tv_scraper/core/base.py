@@ -272,17 +272,16 @@ class BaseScraper:
     def _validate_timeframe(self, timeframe: str, is_pro: bool = False) -> bool:
         if timeframe in TIMEFRAMES:
             return True
-        if is_pro:
-            import re
-            if re.match(r"^(\d+)[smhdwM]$", timeframe):
+        import re
+        if re.match(r"^(\d+)[smhdwM]$", timeframe):
+            if is_pro:
                 return True
             raise ValidationError(
-                f"Invalid custom timeframe format: '{timeframe}'. "
-                f"Examples of valid formats: '15s', '10m', '2h', '3d', '1w', '2M'."
+                f"Custom timeframe '{timeframe}' is only available for Pro/Premium subscribers."
             )
         valid = ", ".join(TIMEFRAMES.keys())
         raise ValidationError(
-            f"Invalid timeframe: '{timeframe}'. Valid timeframes: {valid}"
+            f"Invalid timeframe: '{timeframe}'. Valid standard timeframes: {valid}"
         )
 
     def _verify_symbol_exchange(

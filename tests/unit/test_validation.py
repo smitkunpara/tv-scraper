@@ -109,9 +109,9 @@ class TestValidateTimeframe:
         assert base_scraper._validate_timeframe("1d") is True
 
     def test_custom_timeframes_fail_for_non_pro(self, base_scraper) -> None:
-        with pytest.raises(ValidationError, match="Invalid timeframe"):
+        with pytest.raises(ValidationError, match="only available for Pro/Premium subscribers"):
             base_scraper._validate_timeframe("15s", is_pro=False)
-        with pytest.raises(ValidationError, match="Invalid timeframe"):
+        with pytest.raises(ValidationError, match="only available for Pro/Premium subscribers"):
             base_scraper._validate_timeframe("2m", is_pro=False)
 
     def test_custom_timeframes_success_for_pro(self, base_scraper) -> None:
@@ -123,9 +123,9 @@ class TestValidateTimeframe:
         assert base_scraper._validate_timeframe("3M", is_pro=True) is True
 
     def test_invalid_custom_timeframes_fail_for_pro(self, base_scraper) -> None:
-        with pytest.raises(ValidationError, match="Invalid custom timeframe format"):
+        with pytest.raises(ValidationError, match="Invalid timeframe"):
             base_scraper._validate_timeframe("15x", is_pro=True)
-        with pytest.raises(ValidationError, match="Invalid custom timeframe format"):
+        with pytest.raises(ValidationError, match="Invalid timeframe"):
             base_scraper._validate_timeframe("m", is_pro=True)
 
 
