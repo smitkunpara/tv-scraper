@@ -68,10 +68,10 @@ class CandleStreamer(BaseStreamer):
             ``{"status", "data": {"ohlcv": [...], "indicators": {...}}, "metadata", "error"}``.
         """
         # --- Validation ---
-        exchange, _symbol, is_pro = self._verify_symbol_exchange(exchange, symbol)
+        exchange_up, symbol_up, is_pro = self._verify_symbol_exchange(exchange, symbol)
         self._validate_timeframe(timeframe, is_pro=is_pro)
         self._validate_range(numb_candles, 1, 5000)
-        exchange_symbol = format_symbol(exchange, _symbol)
+        exchange_symbol = format_symbol(exchange_up, symbol_up)
         self.study_id_to_name_map = {}
 
         ind_flag = bool(indicators)
@@ -147,9 +147,9 @@ class CandleStreamer(BaseStreamer):
     ) -> Generator[dict[str, Any], None, None]:
         """Persistent generator yielding normalized realtime price updates."""
         # --- Validation ---
-        exchange, _symbol, is_pro = self._verify_symbol_exchange(exchange, symbol)
+        exchange_up, symbol_up, is_pro = self._verify_symbol_exchange(exchange, symbol)
         self._validate_timeframe(timeframe, is_pro=is_pro)
-        exchange_symbol = format_symbol(exchange, _symbol)
+        exchange_symbol = format_symbol(exchange_up, symbol_up)
         self.study_id_to_name_map = {}
         ind_flag = bool(indicators)
 
@@ -172,8 +172,8 @@ class CandleStreamer(BaseStreamer):
                     if price is not None:
                         last_price = price
                         yield {
-                            "exchange": v.get("exchange", exchange),
-                            "symbol": v.get("short_name", symbol),
+                            "exchange": v.get("exchange", exchange_up),
+                            "symbol": v.get("short_name", symbol_up),
                             "price": price,
                             "volume": v.get("volume"),
                             "change": v.get("ch"),

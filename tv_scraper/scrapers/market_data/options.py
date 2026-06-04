@@ -171,7 +171,7 @@ class Options(ScannerScraper):
 
         underlying = f"{v_exchange}:{v_symbol}"
 
-        payload = {
+        payload: dict[str, Any] = {
             "columns": selected_columns,
             "filter": [{"left": "type", "operation": "equal", "right": "option"}],
             "index_filters": [{"name": "underlying_symbol", "values": [underlying]}],

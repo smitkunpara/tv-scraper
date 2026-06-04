@@ -69,8 +69,8 @@ class ForecastStreamer(BaseStreamer):
             ``{"status", "data", "metadata", "error"}``.
         """
         # --- Validation ---
-        exchange, _symbol, _ = self._verify_symbol_exchange(exchange, symbol)
-        exchange_symbol = format_symbol(exchange, _symbol)
+        exchange_up, symbol_up, _ = self._verify_symbol_exchange(exchange, symbol)
+        exchange_symbol = format_symbol(exchange_up, symbol_up)
 
         symbol_type = self._get_symbol_type(exchange_symbol)
         if symbol_type != "stock":
@@ -140,7 +140,7 @@ class ForecastStreamer(BaseStreamer):
             )
 
         if self.export_result:
-            self._export(cleaned_data, symbol, "forecast")
+            self._export(cleaned_data, symbol_up, "forecast")
 
         return self._success_response(
             cleaned_data,
