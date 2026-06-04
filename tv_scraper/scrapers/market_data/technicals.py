@@ -92,7 +92,7 @@ class Technicals(ScannerScraper):
             self._validate_indicators(indicators)
 
         # Symbol/exchange verification (includes static and live checks)
-        v_exchange, v_symbol = self._verify_symbol_exchange(exchange, symbol)
+        v_exchange, v_symbol, _ = self._verify_symbol_exchange(exchange, symbol)
 
         # --- Build API request ---
         timeframe_value: str = TIMEFRAMES.get(timeframe, "")

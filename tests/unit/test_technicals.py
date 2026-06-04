@@ -85,7 +85,7 @@ class TestGetTechnicalsInvalidTimeframe:
     )
     def test_invalid_timeframe(self, mock_verify):
         """Test invalid timeframe returns error."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
 
         t = Technicals()
         result = t.get_technicals(
@@ -108,7 +108,7 @@ class TestGetTechnicalsInvalidIndicators:
     )
     def test_invalid_indicator(self, mock_verify):
         """Test invalid indicator returns error."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
 
         t = Technicals()
         result = t.get_technicals(
@@ -126,7 +126,7 @@ class TestGetTechnicalsInvalidIndicators:
     )
     def test_empty_indicators_list(self, mock_verify):
         """Test empty indicators list returns error."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
 
         t = Technicals()
         result = t.get_technicals(
@@ -152,7 +152,7 @@ class TestGetTechnicalsValidInputs:
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
     ):
         """Test single indicator returns success."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_validate_tf.return_value = True
         mock_validate_ind.return_value = True
 
@@ -183,7 +183,7 @@ class TestGetTechnicalsValidInputs:
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
     ):
         """Test multiple indicators returns success."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_validate_tf.return_value = True
         mock_validate_ind.return_value = True
 
@@ -220,7 +220,7 @@ class TestGetTechnicalsValidInputs:
         self, mock_request, mock_validate_tf, mock_verify
     ):
         """Test technical_indicators=None fetches all indicators."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_validate_tf.return_value = True
 
         mock_response = MagicMock()
@@ -254,7 +254,7 @@ class TestGetTechnicalsTimeframes:
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
     ):
         """Test with all supported timeframes."""
-        mock_verify.return_value = ("BINANCE", "BTCUSDT")
+        mock_verify.return_value = ("BINANCE", "BTCUSDT", False)
         mock_validate_ind.return_value = True
 
         timeframes = ["1m", "5m", "15m", "30m", "1h", "2h", "4h", "1d", "1w", "1M"]
@@ -295,7 +295,7 @@ class TestGetTechnicalsExchanges:
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
     ):
         """Test NASDAQ exchange."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_validate_tf.return_value = True
         mock_validate_ind.return_value = True
 
@@ -325,7 +325,7 @@ class TestGetTechnicalsExchanges:
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
     ):
         """Test BINANCE exchange."""
-        mock_verify.return_value = ("BINANCE", "BTCUSDT")
+        mock_verify.return_value = ("BINANCE", "BTCUSDT", False)
         mock_validate_tf.return_value = True
         mock_validate_ind.return_value = True
 
@@ -359,7 +359,7 @@ class TestGetTechnicalsRequestPayload:
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
     ):
         """Test request only includes selected technical indicators."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_validate_tf.return_value = True
         mock_validate_ind.return_value = True
 
@@ -397,7 +397,7 @@ class TestGetTechnicalsRequestPayload:
         self, mock_request, mock_validate_tf, mock_verify
     ):
         """Test None indicators expands request fields to full indicator list."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_validate_tf.return_value = True
 
         mock_response = MagicMock()
@@ -435,7 +435,7 @@ class TestGetTechnicalsExport:
         self, mock_save, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
     ):
         """Test JSON export."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_validate_tf.return_value = True
         mock_validate_ind.return_value = True
 
@@ -465,7 +465,7 @@ class TestGetTechnicalsExport:
         self, mock_save, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
     ):
         """Test CSV export."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_validate_tf.return_value = True
         mock_validate_ind.return_value = True
 
@@ -495,7 +495,7 @@ class TestGetTechnicalsErrorHandling:
     @patch("tv_scraper.core.base.requests.request")
     def test_network_error(self, mock_request, mock_validate_tf, mock_verify):
         """Test network error returns error response."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_validate_tf.return_value = True
 
         import requests
@@ -523,7 +523,7 @@ class TestGetTechnicalsErrorHandling:
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
     ):
         """Test empty response returns error."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_validate_tf.return_value = True
         mock_validate_ind.return_value = True
 
@@ -557,7 +557,7 @@ class TestGetTechnicalsMetadata:
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
     ):
         """Test success metadata contains all parameters."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_validate_tf.return_value = True
         mock_validate_ind.return_value = True
 
@@ -593,7 +593,7 @@ class TestGetTechnicalsMetadata:
         self, mock_request, mock_validate_tf, mock_verify
     ):
         """Test metadata when technical_indicators is None."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_validate_tf.return_value = True
 
         mock_response = MagicMock()
@@ -629,7 +629,7 @@ class TestGetTechnicalsResponseEnvelope:
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
     ):
         """Test success response has required keys."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_validate_tf.return_value = True
         mock_validate_ind.return_value = True
 
@@ -728,7 +728,7 @@ class TestEdgeCases:
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
     ):
         """Test exchange is case insensitive."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_validate_tf.return_value = True
         mock_validate_ind.return_value = True
 
@@ -760,7 +760,7 @@ class TestEdgeCases:
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
     ):
         """Test indicator with dot notation."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_validate_tf.return_value = True
         mock_validate_ind.return_value = True
 

@@ -107,7 +107,7 @@ class TestMockMindsDataValidation:
     @patch("tv_scraper.scrapers.social.minds.Minds._verify_symbol_exchange")
     def test_success_response_structure(self, mock_verify) -> None:
         """Test successful response has correct structure."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
 
         scraper = Minds()
 
@@ -140,7 +140,7 @@ class TestMockMindsDataValidation:
     @patch("tv_scraper.scrapers.social.minds.Minds._verify_symbol_exchange")
     def test_empty_results(self, mock_verify) -> None:
         """Test handling of empty results."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
 
         scraper = Minds()
 
@@ -154,7 +154,7 @@ class TestMockMindsDataValidation:
     @patch("tv_scraper.scrapers.social.minds.Minds._verify_symbol_exchange")
     def test_limit_truncation(self, mock_verify) -> None:
         """Test that limit properly truncates results."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
 
         scraper = Minds()
 
@@ -180,7 +180,7 @@ class TestMockMindsDataValidation:
     @patch("tv_scraper.scrapers.social.minds.Minds._verify_symbol_exchange")
     def test_pagination_cursor_extraction(self, mock_verify) -> None:
         """Test cursor extraction from next URL."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
 
         scraper = Minds()
 
@@ -232,7 +232,7 @@ class TestMockMindsDataValidation:
     @patch("tv_scraper.scrapers.social.minds.Minds._verify_symbol_exchange")
     def test_error_response(self, mock_verify) -> None:
         """Test error response structure."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
 
         scraper = Minds()
 

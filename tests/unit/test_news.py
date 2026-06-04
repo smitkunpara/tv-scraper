@@ -19,7 +19,7 @@ FIXTURES_DIR = Path(__file__).parent.parent / "fixtures" / "news"
 def mock_verify_symbol_exchange():
     """Mock live network call for all tests in this module."""
     with patch("tv_scraper.scrapers.social.news.News._verify_symbol_exchange") as mock:
-        mock.return_value = ("NASDAQ", "AAPL")
+        mock.return_value = ("NASDAQ", "AAPL", False)
         yield mock
 
 

@@ -36,7 +36,7 @@ class ScannerScraper(BaseScraper):
         Returns:
             Standardized response dict.
         """
-        validated_exchange, validated_symbol = self._verify_symbol_exchange(
+        validated_exchange, validated_symbol, _ = self._verify_symbol_exchange(
             exchange, symbol
         )
 

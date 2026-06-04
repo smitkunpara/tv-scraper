@@ -59,7 +59,7 @@ class TestMockStreamingCandles:
         """Test basic candle fetch with mock data."""
         mock_ws = create_mock_from_fixture("basic_candles")
         mock_cc.return_value = mock_ws
-        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
 
         cs = CandleStreamer()
         result = cs.get_candles(exchange="NASDAQ", symbol="AAPL", numb_candles=5)
@@ -76,7 +76,7 @@ class TestMockStreamingCandles:
         """Test OHLCV candle structure matches expected format."""
         mock_ws = create_mock_from_fixture("basic_candles")
         mock_cc.return_value = mock_ws
-        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
 
         cs = CandleStreamer()
         result = cs.get_candles(exchange="NASDAQ", symbol="AAPL", numb_candles=5)
@@ -95,7 +95,7 @@ class TestMockStreamingCandles:
         """Test multiple timeframes using fixtures."""
         mock_ws = create_mock_from_fixture("multi_timeframe")
         mock_cc.return_value = mock_ws
-        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
 
         cs = CandleStreamer()
         result = cs.get_candles(
@@ -115,7 +115,7 @@ class TestMockStreamingCandles:
         """Test candles with indicators using fixtures."""
         mock_ws = create_mock_from_fixture("with_indicators")
         mock_cc.return_value = mock_ws
-        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
 
         cs = CandleStreamer()
         result = cs.get_candles(
@@ -135,7 +135,7 @@ class TestMockStreamingCandles:
         """Test different exchanges using fixtures."""
         mock_ws = create_mock_from_fixture("basic_candles")
         mock_cc.return_value = mock_ws
-        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
 
         cs = CandleStreamer()
 
@@ -147,7 +147,7 @@ class TestMockStreamingCandles:
         ]
 
         for exchange, symbol in exchanges:
-            mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+            mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
             result = cs.get_candles(exchange=exchange, symbol=symbol, numb_candles=5)
             assert result["metadata"]["exchange"] == exchange.upper()
 
@@ -173,7 +173,7 @@ class TestMockWithIndicators:
         mock_ws.recv.side_effect = recv_data
 
         mock_cc.return_value = mock_ws
-        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
         mock_fetch_meta.return_value = {
             "status": "success",
             "data": {
@@ -211,7 +211,7 @@ class TestMockWithIndicators:
         mock_ws.recv.side_effect = recv_data
 
         mock_cc.return_value = mock_ws
-        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
         mock_fetch_meta.return_value = {
             "status": "success",
             "data": {
@@ -241,7 +241,7 @@ class TestMockCombinations:
     )
     def test_all_timeframes_combination(self, mock_validate, mock_cc):
         """Test all supported timeframes."""
-        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
 
         timeframes = ["1m", "5m", "15m", "30m", "1h", "2h", "4h", "1d", "1w", "1M"]
 
@@ -271,7 +271,7 @@ class TestMockCombinations:
     )
     def test_all_exchanges_combination(self, mock_validate, mock_cc):
         """Test all exchanges with fixtures."""
-        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
 
         exchanges = [
             ("BINANCE", "BTCUSDT"),
@@ -306,7 +306,7 @@ class TestMockCombinations:
     )
     def test_numb_candles_combinations(self, mock_validate, mock_cc):
         """Test different numb_candles values."""
-        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
 
         numb_candles_values = [5, 10, 50]
 
@@ -343,7 +343,7 @@ class TestMockResponseEnvelope:
         """Test success envelope has all required fields."""
         mock_ws = create_mock_from_fixture("basic_candles")
         mock_cc.return_value = mock_ws
-        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
 
         cs = CandleStreamer()
         result = cs.get_candles(exchange="BINANCE", symbol="BTCUSDT", numb_candles=5)
@@ -387,7 +387,7 @@ class TestMockMetadata:
         """Test metadata contains all expected fields."""
         mock_ws = create_mock_from_fixture("basic_candles")
         mock_cc.return_value = mock_ws
-        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
 
         cs = CandleStreamer()
         result = cs.get_candles(
@@ -417,7 +417,7 @@ class TestMockEdgeCases:
         mock_ws = MagicMock()
         mock_ws.recv.side_effect = [ConnectionError("done")]
         mock_cc.return_value = mock_ws
-        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
 
         cs = CandleStreamer()
         result = cs.get_candles(exchange="BINANCE", symbol="BTCUSDT", numb_candles=5)
@@ -433,7 +433,7 @@ class TestMockEdgeCases:
         mock_ws = MagicMock()
         mock_ws.recv.side_effect = ["not valid json", ConnectionError("done")]
         mock_cc.return_value = mock_ws
-        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
 
         cs = CandleStreamer()
         result = cs.get_candles(exchange="BINANCE", symbol="BTCUSDT", numb_candles=5)
@@ -457,7 +457,7 @@ class TestMockEdgeCases:
             ConnectionError("done"),
         ]
         mock_cc.return_value = mock_ws
-        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
 
         cs = CandleStreamer()
         result = cs.get_candles(exchange="BINANCE", symbol="BTCUSDT", numb_candles=10)
@@ -476,7 +476,7 @@ class TestStreamerMock:
         """Test Streamer delegates to CandleStreamer."""
         mock_ws = create_mock_from_fixture("basic_candles")
         mock_cc.return_value = mock_ws
-        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
 
         s = Streamer()
         result = s.get_candles(exchange="BINANCE", symbol="BTCUSDT", numb_candles=5)

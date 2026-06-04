@@ -269,9 +269,17 @@ class BaseScraper:
             f"Invalid value: {value}. Must be between {min_val} and {max_val}."
         )
 
-    def _validate_timeframe(self, timeframe: str) -> bool:
+    def _validate_timeframe(self, timeframe: str, is_pro: bool = False) -> bool:
         if timeframe in TIMEFRAMES:
             return True
+        if is_pro:
+            import re
+            if re.match(r"^(\d+)[smhdwM]$", timeframe):
+                return True
+            raise ValidationError(
+                f"Invalid custom timeframe format: '{timeframe}'. "
+                f"Examples of valid formats: '15s', '10m', '2h', '3d', '1w', '2M'."
+            )
         valid = ", ".join(TIMEFRAMES.keys())
         raise ValidationError(
             f"Invalid timeframe: '{timeframe}'. Valid timeframes: {valid}"
@@ -279,7 +287,7 @@ class BaseScraper:
 
     def _verify_symbol_exchange(
         self, exchange: str | None, symbol: str | None
-    ) -> tuple[str, str]:
+    ) -> tuple[str, str, bool]:
         if (
             not exchange
             or not symbol
@@ -295,6 +303,7 @@ class BaseScraper:
         self._validate_choice(exchange_up, _EXCHANGES_SET)
 
         url = f"{BASE_URL}/symbols/{exchange_up}-{symbol_up}/?component-data-only=1"
+        is_pro = False
         try:
             resp = requests.get(url, timeout=5, headers=self._headers)
             if resp.status_code == 404:
@@ -302,12 +311,17 @@ class BaseScraper:
                     f"Symbol '{symbol_up}' not found on exchange '{exchange_up}'."
                 )
             resp.raise_for_status()
+            try:
+                data = resp.json()
+                is_pro = data.get("context", {}).get("request_context", {}).get("user", {}).get("is_pro", False)
+            except Exception:
+                pass
         except (requests.RequestException, ValidationError) as exc:
             if isinstance(exc, ValidationError):
                 raise
             pass
 
-        return exchange_up, symbol_up
+        return exchange_up, symbol_up, is_pro
 
     def _export(
         self,

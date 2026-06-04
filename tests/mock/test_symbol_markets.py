@@ -55,7 +55,7 @@ class TestMockSymbolMarketsBasic:
         self, mock_verify, scraper: SymbolMarkets
     ) -> None:
         """Test successful AAPL global query."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         fixture = load_fixture("aapl_global.json")
         if not fixture:
             fixture = {
@@ -83,7 +83,7 @@ class TestMockSymbolMarketsBasic:
         self, mock_verify, scraper: SymbolMarkets
     ) -> None:
         """Test successful BTCUSD crypto query."""
-        mock_verify.return_value = ("BINANCE", "BTCUSD")
+        mock_verify.return_value = ("BINANCE", "BTCUSD", False)
         load_fixture("btcusd_crypto.json")
         mock_data = [
             {"s": "BINANCE:BTCUSD", "d": ["BTCUSD", 45000.0, 2.5, 50000000]},
@@ -102,7 +102,7 @@ class TestMockSymbolMarketsBasic:
         self, mock_verify, scraper: SymbolMarkets
     ) -> None:
         """Test successful EURUSD forex query."""
-        mock_verify.return_value = ("FX", "EURUSD")
+        mock_verify.return_value = ("FX", "EURUSD", False)
         mock_data = [
             {"s": "FX:EURUSD", "d": ["EURUSD", 1.0850, 0.002, 0]},
         ]
@@ -122,7 +122,7 @@ class TestMockSymbolMarketsFields:
     )
     def test_mock_default_fields(self, mock_verify, scraper: SymbolMarkets) -> None:
         """Test default fields are used when none specified."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_data = [
             {
                 "s": "NASDAQ:AAPL",
@@ -142,7 +142,7 @@ class TestMockSymbolMarketsFields:
     )
     def test_mock_custom_fields(self, mock_verify, scraper: SymbolMarkets) -> None:
         """Test custom field selection."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         custom_fields = ["name", "close", "volume"]
         mock_data = [
             {"s": "NASDAQ:AAPL", "d": ["Apple Inc", 150.25, 1000000]},
@@ -162,7 +162,7 @@ class TestMockSymbolMarketsFields:
     )
     def test_mock_empty_fields(self, mock_verify, scraper: SymbolMarkets) -> None:
         """Test with empty fields list."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_data: list = []
         with patch.object(scraper, "_request") as mock_req:
             mock_req.return_value = ({"data": mock_data, "totalCount": 0}, None)
@@ -180,7 +180,7 @@ class TestMockSymbolMarketsLimits:
     )
     def test_mock_limit_50(self, mock_verify, scraper: SymbolMarkets) -> None:
         """Test limit of 50."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_data = [
             {"s": f"EXCHANGE{i}:AAPL", "d": ["AAPL", 150.0]} for i in range(50)
         ]
@@ -197,7 +197,7 @@ class TestMockSymbolMarketsLimits:
     )
     def test_mock_limit_100(self, mock_verify, scraper: SymbolMarkets) -> None:
         """Test limit of 100."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_data = [
             {"s": f"EXCHANGE{i}:AAPL", "d": ["AAPL", 150.0]} for i in range(100)
         ]
@@ -214,7 +214,7 @@ class TestMockSymbolMarketsLimits:
     )
     def test_mock_limit_150(self, mock_verify, scraper: SymbolMarkets) -> None:
         """Test limit of 150."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_data = [
             {"s": f"EXCHANGE{i}:AAPL", "d": ["AAPL", 150.0]} for i in range(150)
         ]
@@ -263,7 +263,7 @@ class TestMockSymbolMarketsValidation:
         self, mock_verify, scraper: SymbolMarkets
     ) -> None:
         """Test explicit exchange and symbol separation."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_data = [
             {"s": "NASDAQ:AAPL", "d": ["Apple Inc", 150.0]},
         ]
@@ -286,7 +286,7 @@ class TestMockSymbolMarketsErrors:
     )
     def test_mock_network_error(self, mock_verify, scraper: SymbolMarkets) -> None:
         """Test network error returns failed status."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         with patch.object(scraper, "_request") as mock_req:
             mock_req.return_value = (None, "Network error: Connection refused")
             result = scraper.get_symbol_markets(
@@ -301,7 +301,7 @@ class TestMockSymbolMarketsErrors:
     )
     def test_mock_empty_response(self, mock_verify, scraper: SymbolMarkets) -> None:
         """Test empty response returns error."""
-        mock_verify.return_value = ("NASDAQ", "NONEXISTENT")
+        mock_verify.return_value = ("NASDAQ", "NONEXISTENT", False)
         with patch.object(scraper, "_request") as mock_req:
             mock_req.return_value = ({"data": []}, None)
             result = scraper.get_symbol_markets(
@@ -315,7 +315,7 @@ class TestMockSymbolMarketsErrors:
     )
     def test_mock_timeout_error(self, mock_verify, scraper: SymbolMarkets) -> None:
         """Test timeout error handling."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         with patch.object(scraper, "_request") as mock_req:
             mock_req.return_value = (None, "Network error: HTTPSConnectionPool")
             result = scraper.get_symbol_markets(
@@ -371,7 +371,7 @@ class TestMockSymbolMarketsExport:
     )
     def test_mock_export_enabled(self, mock_verify, scraper: SymbolMarkets) -> None:
         """Test export is called when enabled."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         scraper.export_result = True
         mock_data = [
             {"s": "NASDAQ:AAPL", "d": ["Apple", 150.0]},
@@ -390,7 +390,7 @@ class TestMockSymbolMarketsExport:
     )
     def test_mock_export_disabled(self, mock_verify, scraper: SymbolMarkets) -> None:
         """Test export is not called when disabled."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         scraper.export_result = False
         mock_data = [
             {"s": "NASDAQ:AAPL", "d": ["Apple", 150.0]},
@@ -412,7 +412,7 @@ class TestMockSymbolMarketsResponseEnvelope:
     )
     def test_mock_success_envelope(self, mock_verify, scraper: SymbolMarkets) -> None:
         """Test success response has correct envelope structure."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_data = [
             {"s": "NASDAQ:AAPL", "d": ["Apple", 150.0]},
         ]
@@ -447,7 +447,7 @@ class TestMockSymbolMarketsResponseEnvelope:
     )
     def test_mock_metadata_fields(self, mock_verify, scraper: SymbolMarkets) -> None:
         """Test metadata contains expected fields."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_data = [
             {"s": "NASDAQ:AAPL", "d": ["Apple", 150.0]},
         ]

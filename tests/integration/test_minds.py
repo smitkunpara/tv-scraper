@@ -34,7 +34,7 @@ class TestMindsIntegrationWithValidator:
         with patch(
             "tv_scraper.scrapers.social.minds.Minds._verify_symbol_exchange"
         ) as mock_verify:
-            mock_verify.return_value = ("NASDAQ", "AAPL")
+            mock_verify.return_value = ("NASDAQ", "AAPL", False)
             with patch.object(scraper, "_request") as mock_req:
                 mock_req.return_value = ({"results": [], "next": "", "meta": {}}, None)
                 scraper.get_minds(exchange="NASDAQ", symbol="AAPL")
@@ -260,7 +260,7 @@ class TestMindsCrossModuleWorkflow:
         with patch(
             "tv_scraper.scrapers.social.minds.Minds._verify_symbol_exchange"
         ) as mock_verify:
-            mock_verify.return_value = ("NASDAQ", "AAPL")
+            mock_verify.return_value = ("NASDAQ", "AAPL", False)
 
             with patch.object(scraper, "_request") as mock_req:
                 mock_req.return_value = (

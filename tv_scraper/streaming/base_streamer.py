@@ -182,7 +182,31 @@ class BaseStreamer(BaseScraper):
         """Register a symbol for chart/indicator updates."""
         from tv_scraper.core.validation_data import TIMEFRAMES
 
-        mapped_tf = TIMEFRAMES.get(timeframe, "1")
+        if timeframe in TIMEFRAMES:
+            mapped_tf = TIMEFRAMES[timeframe]
+        else:
+            import re
+            match = re.match(r"^(\d+)([smhdwM])$", timeframe)
+            if match:
+                num_str, unit = match.groups()
+                num = int(num_str)
+                if unit == "s":
+                    mapped_tf = f"{num}S"
+                elif unit == "m":
+                    mapped_tf = str(num)
+                elif unit == "h":
+                    mapped_tf = str(num * 60)
+                elif unit == "d":
+                    mapped_tf = f"{num}D"
+                elif unit == "w":
+                    mapped_tf = f"{num}W"
+                elif unit == "M":
+                    mapped_tf = f"{num}M"
+                else:
+                    mapped_tf = timeframe
+            else:
+                mapped_tf = timeframe
+
         resolve_param = self._get_resolve_symbol_param(symbol)
 
         self._send_msg(

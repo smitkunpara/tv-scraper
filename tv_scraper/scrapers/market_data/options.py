@@ -103,7 +103,7 @@ class Options(ScannerScraper):
         return True
 
     def _verify_options_symbol(self, exchange: str, symbol: str) -> tuple[str, str]:
-        exchange_up, symbol_up = self._verify_symbol_exchange(exchange, symbol)
+        exchange_up, symbol_up, _ = self._verify_symbol_exchange(exchange, symbol)
         url = _OPTIONS_SEARCH_URL.format(symbol=symbol_up, exchange=exchange_up)
         try:
             resp = requests.get(url, headers=_OPTIONS_SEARCH_HEADERS, timeout=5)

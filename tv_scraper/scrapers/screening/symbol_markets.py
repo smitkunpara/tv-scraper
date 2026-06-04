@@ -70,7 +70,7 @@ class SymbolMarkets(ScannerScraper):
             ``metadata``, and ``error`` keys.
         """
         # --- Validation ---
-        v_exchange, v_symbol = self._verify_symbol_exchange(exchange, symbol)
+        v_exchange, v_symbol, _ = self._verify_symbol_exchange(exchange, symbol)
         self._validate_choice(scanner, self.SUPPORTED_SCANNERS)
         self._validate_range(limit, 1, 1000)
 

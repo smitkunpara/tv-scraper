@@ -101,3 +101,73 @@ class TestValidateRange:
 
     def test_none_passes(self, base_scraper) -> None:
         assert base_scraper._validate_range(None, 1, 10) is True
+
+
+class TestValidateTimeframe:
+    def test_standard_timeframes_work(self, base_scraper) -> None:
+        assert base_scraper._validate_timeframe("1m") is True
+        assert base_scraper._validate_timeframe("1d") is True
+
+    def test_custom_timeframes_fail_for_non_pro(self, base_scraper) -> None:
+        with pytest.raises(ValidationError, match="Invalid timeframe"):
+            base_scraper._validate_timeframe("15s", is_pro=False)
+        with pytest.raises(ValidationError, match="Invalid timeframe"):
+            base_scraper._validate_timeframe("2m", is_pro=False)
+
+    def test_custom_timeframes_success_for_pro(self, base_scraper) -> None:
+        assert base_scraper._validate_timeframe("15s", is_pro=True) is True
+        assert base_scraper._validate_timeframe("2m", is_pro=True) is True
+        assert base_scraper._validate_timeframe("3h", is_pro=True) is True
+        assert base_scraper._validate_timeframe("5d", is_pro=True) is True
+        assert base_scraper._validate_timeframe("2w", is_pro=True) is True
+        assert base_scraper._validate_timeframe("3M", is_pro=True) is True
+
+    def test_invalid_custom_timeframes_fail_for_pro(self, base_scraper) -> None:
+        with pytest.raises(ValidationError, match="Invalid custom timeframe format"):
+            base_scraper._validate_timeframe("15x", is_pro=True)
+        with pytest.raises(ValidationError, match="Invalid custom timeframe format"):
+            base_scraper._validate_timeframe("m", is_pro=True)
+
+
+class TestVerifySymbolExchangeProStatus:
+    def test_verify_symbol_exchange_pro_status_true(self, base_scraper) -> None:
+        from unittest.mock import MagicMock, patch
+        mock_resp = MagicMock()
+        mock_resp.status_code = 200
+        mock_resp.json.return_value = {
+            "context": {
+                "request_context": {
+                    "user": {
+                        "is_pro": True
+                    }
+                }
+            }
+        }
+        with patch("tv_scraper.core.base.requests.get", return_value=mock_resp) as mock_get:
+            exchange_up, symbol_up, is_pro = base_scraper._verify_symbol_exchange("NASDAQ", "AAPL")
+            assert exchange_up == "NASDAQ"
+            assert symbol_up == "AAPL"
+            assert is_pro is True
+            mock_get.assert_called_once()
+
+    def test_verify_symbol_exchange_pro_status_false(self, base_scraper) -> None:
+        from unittest.mock import MagicMock, patch
+        mock_resp = MagicMock()
+        mock_resp.status_code = 200
+        mock_resp.json.return_value = {
+            "context": {
+                "request_context": {
+                    "user": {
+                        "is_pro": False
+                    }
+                }
+            }
+        }
+        with patch("tv_scraper.core.base.requests.get", return_value=mock_resp) as mock_get:
+            exchange_up, symbol_up, is_pro = base_scraper._verify_symbol_exchange("NASDAQ", "AAPL")
+            assert exchange_up == "NASDAQ"
+            assert symbol_up == "AAPL"
+            assert is_pro is False
+            mock_get.assert_called_once()
+
+

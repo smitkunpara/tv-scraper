@@ -26,7 +26,7 @@ class TestTechnicalsWorkflows:
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
     ):
         """Test symbol analysis workflow: validate -> fetch -> analyze."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_validate_tf.return_value = True
         mock_validate_ind.return_value = True
 
@@ -79,7 +79,7 @@ class TestTechnicalsWorkflows:
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
     ):
         """Test multi-timeframe analysis workflow."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_validate_tf.return_value = True
         mock_validate_ind.return_value = True
 
@@ -155,7 +155,7 @@ class TestTechnicalsWithExport:
         self, mock_save, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
     ):
         """Test JSON export integration."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_validate_tf.return_value = True
         mock_validate_ind.return_value = True
 
@@ -186,7 +186,7 @@ class TestTechnicalsWithExport:
         self, mock_save, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
     ):
         """Test CSV export integration."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_validate_tf.return_value = True
         mock_validate_ind.return_value = True
 
@@ -221,7 +221,7 @@ class TestTechnicalsScenarios:
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
     ):
         """Test crypto screening workflow."""
-        mock_verify.return_value = ("BINANCE", "BTCUSDT")
+        mock_verify.return_value = ("BINANCE", "BTCUSDT", False)
         mock_validate_tf.return_value = True
         mock_validate_ind.return_value = True
 
@@ -262,7 +262,7 @@ class TestTechnicalsScenarios:
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
     ):
         """Test stock screening workflow."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_validate_tf.return_value = True
         mock_validate_ind.return_value = True
 
@@ -307,7 +307,7 @@ class TestTechnicalsScenarios:
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
     ):
         """Test momentum analysis workflow."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_validate_tf.return_value = True
         mock_validate_ind.return_value = True
 
@@ -378,7 +378,7 @@ class TestTechnicalsConcurrentOperations:
             return mock_response
 
         def verify_side_effect(exchange, symbol):
-            return (exchange, symbol)
+            return (exchange, symbol, False)
 
         mock_verify.side_effect = verify_side_effect
         mock_request.return_value = make_mock_response()
@@ -417,7 +417,7 @@ class TestTechnicalsPerformance:
         """Test response structure is consistent."""
         import time
 
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_validate_tf.return_value = True
         mock_validate_ind.return_value = True
 

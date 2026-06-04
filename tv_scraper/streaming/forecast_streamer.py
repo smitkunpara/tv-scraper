@@ -69,7 +69,7 @@ class ForecastStreamer(BaseStreamer):
             ``{"status", "data", "metadata", "error"}``.
         """
         # --- Validation ---
-        exchange, _symbol = self._verify_symbol_exchange(exchange, symbol)
+        exchange, _symbol, _ = self._verify_symbol_exchange(exchange, symbol)
         exchange_symbol = format_symbol(exchange, _symbol)
 
         symbol_type = self._get_symbol_type(exchange_symbol)

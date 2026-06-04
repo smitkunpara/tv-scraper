@@ -67,7 +67,7 @@ class TestIdeasConcurrency:
         self, mock_scrape: MagicMock, mock_verify: MagicMock
     ) -> None:
         """Verify multiple Ideas instances work independently."""
-        mock_verify.side_effect = lambda e, s: (e.upper(), s.upper())
+        mock_verify.side_effect = lambda e, s: (e.upper(), s.upper(), False)
 
         def scrape_effect(url_slug: str, page: int, sort_by: str):
             return ([{"title": f"Idea for {url_slug}"}], None)
@@ -95,7 +95,7 @@ class TestIdeasWithValidators:
         self, mock_scrape: MagicMock, mock_verify: MagicMock
     ) -> None:
         """Verify exchange validation is case-insensitive."""
-        mock_verify.side_effect = lambda e, s: (e.upper(), s.upper())
+        mock_verify.side_effect = lambda e, s: (e.upper(), s.upper(), False)
         mock_scrape.return_value = ([{"title": "Test"}], None)
 
         scraper = Ideas()
@@ -114,7 +114,7 @@ class TestIdeasWithValidators:
         self, mock_scrape: MagicMock, mock_verify: MagicMock
     ) -> None:
         """Verify symbol verification is called."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
 
         scraper = Ideas()
         scraper.get_ideas(exchange="NASDAQ", symbol="AAPL")
@@ -161,7 +161,7 @@ class TestIdeasExportWorkflow:
         self, mock_scrape: MagicMock, mock_verify: MagicMock
     ) -> None:
         """Verify export includes correct metadata."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_scrape.return_value = ([{"title": "Test Idea"}], None)
 
         scraper = Ideas(export="json")
@@ -178,7 +178,7 @@ class TestIdeasExportWorkflow:
     @patch.object(Ideas, "_scrape_page")
     def test_csv_export(self, mock_scrape: MagicMock, mock_verify: MagicMock) -> None:
         """Verify CSV export configuration."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_scrape.return_value = ([{"title": "Test"}], None)
 
         scraper = Ideas(export="csv")
@@ -194,7 +194,7 @@ class TestIdeasErrorPropagation:
         self, mock_scrape: MagicMock, mock_verify: MagicMock
     ) -> None:
         """Verify error metadata includes page info."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
 
         def scrape_effect(url_slug: str, page: int, sort_by: str):
             return (None, f"Page {page} failed")
@@ -216,7 +216,7 @@ class TestIdeasErrorPropagation:
         self, mock_scrape: MagicMock, mock_verify: MagicMock
     ) -> None:
         """Verify partial success still returns failed if any pages fail."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
 
         def scrape_effect(url_slug: str, page: int, sort_by: str):
             if page == 1:
@@ -242,7 +242,7 @@ class TestIdeasResponseEnvelope:
         self, mock_scrape: MagicMock, mock_verify: MagicMock
     ) -> None:
         """Verify success envelope has all required fields."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_scrape.return_value = ([{"title": "Test"}], None)
 
         scraper = Ideas()
@@ -260,7 +260,7 @@ class TestIdeasResponseEnvelope:
         self, mock_scrape: MagicMock, mock_verify: MagicMock
     ) -> None:
         """Verify error envelope has all required fields."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_scrape.return_value = (None, "Test error")
 
         scraper = Ideas()
@@ -277,7 +277,7 @@ class TestIdeasResponseEnvelope:
         self, mock_scrape: MagicMock, mock_verify: MagicMock
     ) -> None:
         """Verify metadata is preserved even on error."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_scrape.return_value = (None, "Error")
 
         scraper = Ideas()

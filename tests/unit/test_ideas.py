@@ -294,7 +294,7 @@ class TestIdeasGetIdeas:
         self, mock_scrape: MagicMock, mock_verify: MagicMock
     ) -> None:
         """Verify invalid sort_by is rejected."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
 
         scraper = Ideas()
         result = scraper.get_ideas(exchange="NASDAQ", symbol="AAPL", sort_by="bad")
@@ -307,7 +307,7 @@ class TestIdeasGetIdeas:
         self, mock_scrape: MagicMock, mock_verify: MagicMock
     ) -> None:
         """Verify successful single page fetch."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_scrape.return_value = (
             [
                 {"title": "Idea 1"},
@@ -330,7 +330,7 @@ class TestIdeasGetIdeas:
         self, mock_scrape: MagicMock, mock_verify: MagicMock
     ) -> None:
         """Verify multi-page fetching."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
 
         def scrape_side_effect(url_slug: str, page: int, sort_by: str):
             if page == 1:
@@ -354,7 +354,7 @@ class TestIdeasGetIdeas:
         self, mock_scrape: MagicMock, mock_verify: MagicMock
     ) -> None:
         """Verify handling when some pages fail."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
 
         def scrape_side_effect(url_slug: str, page: int, sort_by: str):
             if page == 1:
@@ -378,7 +378,7 @@ class TestIdeasGetIdeas:
         self, mock_scrape: MagicMock, mock_verify: MagicMock
     ) -> None:
         """Verify handling when all pages fail."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_scrape.return_value = (None, "Connection refused")
 
         scraper = Ideas()
@@ -397,7 +397,7 @@ class TestIdeasExport:
         self, mock_scrape: MagicMock, mock_verify: MagicMock
     ) -> None:
         """Verify export is triggered when enabled."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_scrape.return_value = ([{"title": "Idea"}], None)
 
         scraper = Ideas(export="json")
@@ -411,7 +411,7 @@ class TestIdeasExport:
         self, mock_scrape: MagicMock, mock_verify: MagicMock
     ) -> None:
         """Verify export is not triggered when disabled."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_scrape.return_value = ([{"title": "Idea"}], None)
 
         scraper = Ideas(export=None)

@@ -68,8 +68,8 @@ class CandleStreamer(BaseStreamer):
             ``{"status", "data": {"ohlcv": [...], "indicators": {...}}, "metadata", "error"}``.
         """
         # --- Validation ---
-        exchange, _symbol = self._verify_symbol_exchange(exchange, symbol)
-        self._validate_timeframe(timeframe)
+        exchange, _symbol, is_pro = self._verify_symbol_exchange(exchange, symbol)
+        self._validate_timeframe(timeframe, is_pro=is_pro)
         self._validate_range(numb_candles, 1, 5000)
         exchange_symbol = format_symbol(exchange, _symbol)
         self.study_id_to_name_map = {}
@@ -142,18 +142,20 @@ class CandleStreamer(BaseStreamer):
         self,
         exchange: EXCHANGE_LITERAL,
         symbol: str,
+        timeframe: str = "1m",
         indicators: list[tuple[str, str]] | None = None,
     ) -> Generator[dict[str, Any], None, None]:
         """Persistent generator yielding normalized realtime price updates."""
         # --- Validation ---
-        exchange, _symbol = self._verify_symbol_exchange(exchange, symbol)
+        exchange, _symbol, is_pro = self._verify_symbol_exchange(exchange, symbol)
+        self._validate_timeframe(timeframe, is_pro=is_pro)
         exchange_symbol = format_symbol(exchange, _symbol)
         self.study_id_to_name_map = {}
         ind_flag = bool(indicators)
 
         self.connect()
         self._subscribe_quote(exchange_symbol)
-        self._subscribe_chart(exchange_symbol, "1m", 300)
+        self._subscribe_chart(exchange_symbol, timeframe, 300)
 
         if ind_flag and indicators:
             self._add_indicators(indicators)

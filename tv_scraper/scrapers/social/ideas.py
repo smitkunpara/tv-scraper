@@ -83,7 +83,7 @@ class Ideas(BaseScraper):
                 f"end_page ({end_page}) must be >= start_page ({start_page})"
             )
 
-        v_exchange, v_symbol = self._verify_symbol_exchange(exchange, symbol)
+        v_exchange, v_symbol, _ = self._verify_symbol_exchange(exchange, symbol)
         self._validate_choice(sort_by, ALLOWED_SORT_VALUES)
 
         url_slug = f"{v_exchange}-{v_symbol}"

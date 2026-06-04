@@ -48,7 +48,7 @@ class TestMockTechnicalsBasic:
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
     ):
         """Test NASDAQ:AAPL with RSI indicator."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_validate_tf.return_value = True
         mock_validate_ind.return_value = True
         mock_request.return_value = _mock_response("nasdaq_aapl_rsi.json")
@@ -75,7 +75,7 @@ class TestMockTechnicalsBasic:
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
     ):
         """Test BINANCE:BTCUSDT with RSI indicator."""
-        mock_verify.return_value = ("BINANCE", "BTCUSDT")
+        mock_verify.return_value = ("BINANCE", "BTCUSDT", False)
         mock_validate_tf.return_value = True
         mock_validate_ind.return_value = True
         mock_request.return_value = _mock_response("binance_btcusdt_rsi.json")
@@ -106,7 +106,7 @@ class TestMockTechnicalsMultipleIndicators:
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
     ):
         """Test NASDAQ:AAPL with RSI and MACD indicators."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_validate_tf.return_value = True
         mock_validate_ind.return_value = True
         mock_request.return_value = _mock_response("nasdaq_aapl_rsi_macd.json")
@@ -132,7 +132,7 @@ class TestMockTechnicalsMultipleIndicators:
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
     ):
         """Test BINANCE:BTCUSDT with RSI and MACD indicators."""
-        mock_verify.return_value = ("BINANCE", "BTCUSDT")
+        mock_verify.return_value = ("BINANCE", "BTCUSDT", False)
         mock_validate_tf.return_value = True
         mock_validate_ind.return_value = True
         mock_request.return_value = _mock_response("binance_btcusdt_rsi_macd.json")
@@ -162,7 +162,7 @@ class TestMockTechnicalsTimeframes:
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
     ):
         """Test timeframe 1m."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_validate_tf.return_value = True
         mock_validate_ind.return_value = True
         mock_request.return_value = _mock_response("nasdaq_aapl_rsi_1m.json")
@@ -189,7 +189,7 @@ class TestMockTechnicalsTimeframes:
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
     ):
         """Test timeframe 5m."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_validate_tf.return_value = True
         mock_validate_ind.return_value = True
         mock_request.return_value = _mock_response("nasdaq_aapl_rsi_5m.json")
@@ -215,7 +215,7 @@ class TestMockTechnicalsTimeframes:
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
     ):
         """Test timeframe 15m."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_validate_tf.return_value = True
         mock_validate_ind.return_value = True
         mock_request.return_value = _mock_response("nasdaq_aapl_rsi_15m.json")
@@ -241,7 +241,7 @@ class TestMockTechnicalsTimeframes:
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
     ):
         """Test timeframe 30m."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_validate_tf.return_value = True
         mock_validate_ind.return_value = True
         mock_request.return_value = _mock_response("nasdaq_aapl_rsi_30m.json")
@@ -267,7 +267,7 @@ class TestMockTechnicalsTimeframes:
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
     ):
         """Test timeframe 1h."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_validate_tf.return_value = True
         mock_validate_ind.return_value = True
         mock_request.return_value = _mock_response("nasdaq_aapl_rsi_1h.json")
@@ -293,7 +293,7 @@ class TestMockTechnicalsTimeframes:
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
     ):
         """Test timeframe 4h."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_validate_tf.return_value = True
         mock_validate_ind.return_value = True
         mock_request.return_value = _mock_response("nasdaq_aapl_rsi_4h.json")
@@ -319,7 +319,7 @@ class TestMockTechnicalsTimeframes:
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
     ):
         """Test timeframe 1d."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_validate_tf.return_value = True
         mock_validate_ind.return_value = True
         mock_request.return_value = _mock_response("nasdaq_aapl_rsi_1d.json")
@@ -345,7 +345,7 @@ class TestMockTechnicalsTimeframes:
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
     ):
         """Test timeframe 1w."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_validate_tf.return_value = True
         mock_validate_ind.return_value = True
         mock_request.return_value = _mock_response("nasdaq_aapl_rsi_1w.json")
@@ -371,7 +371,7 @@ class TestMockTechnicalsTimeframes:
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
     ):
         """Test timeframe 1M (monthly)."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_validate_tf.return_value = True
         mock_validate_ind.return_value = True
         mock_request.return_value = _mock_response("nasdaq_aapl_rsi_1m_monthly.json")
@@ -400,7 +400,7 @@ class TestMockTechnicalsAllIndicators:
         self, mock_request, mock_validate_tf, mock_verify
     ):
         """Test NASDAQ:AAPL fetches all indicators when None is provided."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_validate_tf.return_value = True
         mock_request.return_value = _mock_response("nasdaq_aapl_all_indicators.json")
 
@@ -426,7 +426,7 @@ class TestMockTechnicalsErrorHandling:
     @patch("tv_scraper.scrapers.market_data.technicals.Technicals._validate_indicators")
     def test_invalid_indicator(self, mock_validate_ind, mock_validate_tf, mock_verify):
         """Test invalid indicator returns error."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_validate_tf.return_value = True
 
         from tv_scraper.core.exceptions import ValidationError
@@ -452,7 +452,7 @@ class TestMockTechnicalsErrorHandling:
     @patch("tv_scraper.scrapers.market_data.technicals.Technicals._validate_timeframe")
     def test_invalid_timeframe(self, mock_validate_tf, mock_verify):
         """Test invalid timeframe returns error."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
 
         from tv_scraper.core.exceptions import ValidationError
 
@@ -482,7 +482,7 @@ class TestMockTechnicalsErrorHandling:
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
     ):
         """Test empty response returns error."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_validate_tf.return_value = True
         mock_validate_ind.return_value = True
 
@@ -512,7 +512,7 @@ class TestMockTechnicalsErrorHandling:
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
     ):
         """Test network error returns error response."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_validate_tf.return_value = True
         mock_validate_ind.return_value = True
 
@@ -544,7 +544,7 @@ class TestMockTechnicalsSelectedIndicators:
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
     ):
         """Test provided technical_indicators returns only those indicators."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_validate_tf.return_value = True
         mock_validate_ind.return_value = True
         mock_request.return_value = _mock_response("nasdaq_aapl_rsi_macd.json")
@@ -573,7 +573,7 @@ class TestMockTechnicalsResponseEnvelope:
         self, mock_request, mock_validate_ind, mock_validate_tf, mock_verify
     ):
         """Test success response has correct structure."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_validate_tf.return_value = True
         mock_validate_ind.return_value = True
         mock_request.return_value = _mock_response("nasdaq_aapl_rsi.json")

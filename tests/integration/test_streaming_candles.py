@@ -20,7 +20,7 @@ class TestIntegrationStreamingCandlesWithValidation:
         with patch(
             "tv_scraper.streaming.candle_streamer.CandleStreamer._verify_symbol_exchange"
         ) as mock_validate:
-            mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+            mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
 
             mock_ws = MagicMock()
             ohlcv_entry = {"i": 0, "v": [1700000000, 100.0, 105.0, 99.0, 102.0, 5000]}
@@ -85,7 +85,7 @@ class TestIntegrationStreamingCandlesWithExport:
             with patch(
                 "tv_scraper.streaming.candle_streamer.CandleStreamer._verify_symbol_exchange"
             ) as mock_validate:
-                mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+                mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
 
                 with patch("tv_scraper.core.base.save_json_file") as mock_save:
                     cs = CandleStreamer(export="json")
@@ -152,7 +152,7 @@ class TestIntegrationStreamingCandlesWithIndicators:
                 with patch(
                     "tv_scraper.streaming.candle_streamer.CandleStreamer._verify_symbol_exchange"
                 ) as mock_validate:
-                    mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+                    mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
 
                     cs = CandleStreamer(cookie="valid_cookie")
                     with patch(
@@ -204,7 +204,7 @@ class TestIntegrationCandleStreamerAndStreamer:
             with patch(
                 "tv_scraper.streaming.candle_streamer.CandleStreamer._verify_symbol_exchange"
             ) as mock_validate:
-                mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+                mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
 
                 s = Streamer()
                 result = s.get_candles(
@@ -258,7 +258,7 @@ class TestIntegrationCandleDataProcessing:
             with patch(
                 "tv_scraper.streaming.candle_streamer.CandleStreamer._verify_symbol_exchange"
             ) as mock_validate:
-                mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+                mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
 
                 cs = CandleStreamer()
                 result = cs.get_candles(
@@ -301,7 +301,7 @@ class TestIntegrationCandleDataProcessing:
             with patch(
                 "tv_scraper.streaming.candle_streamer.CandleStreamer._verify_symbol_exchange"
             ) as mock_validate:
-                mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+                mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
 
                 cs = CandleStreamer()
                 result = cs.get_candles(
@@ -367,7 +367,7 @@ class TestIntegrationCandleDataWithMultipleIndicators:
                 with patch(
                     "tv_scraper.streaming.candle_streamer.CandleStreamer._verify_symbol_exchange"
                 ) as mock_validate:
-                    mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+                    mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
 
                     cs = CandleStreamer(cookie="valid_cookie")
                     with patch(
@@ -398,7 +398,7 @@ class TestIntegrationCandleWithConnectionHandling:
             with patch(
                 "tv_scraper.streaming.candle_streamer.CandleStreamer._verify_symbol_exchange"
             ) as mock_validate:
-                mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+                mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
 
                 cs = CandleStreamer()
                 result = cs.get_candles(
@@ -428,7 +428,7 @@ class TestIntegrationCandleWithConnectionHandling:
             with patch(
                 "tv_scraper.streaming.candle_streamer.CandleStreamer._verify_symbol_exchange"
             ) as mock_validate:
-                mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+                mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
 
                 cs = CandleStreamer()
                 result = cs.get_candles(
@@ -461,7 +461,7 @@ class TestIntegrationCandleWithHeartbeat:
             with patch(
                 "tv_scraper.streaming.candle_streamer.CandleStreamer._verify_symbol_exchange"
             ) as mock_validate:
-                mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+                mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
 
                 cs = CandleStreamer()
                 result = cs.get_candles(
@@ -511,7 +511,7 @@ class TestIntegrationCandleEndToEnd:
             with patch(
                 "tv_scraper.streaming.candle_streamer.CandleStreamer._verify_symbol_exchange"
             ) as mock_validate:
-                mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+                mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
 
                 streamer = Streamer()
                 result = streamer.get_candles(
@@ -571,7 +571,7 @@ class TestIntegrationCandleEndToEnd:
                 with patch(
                     "tv_scraper.streaming.candle_streamer.CandleStreamer._verify_symbol_exchange"
                 ) as mock_validate:
-                    mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+                    mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
 
                     streamer = Streamer(cookie="valid_cookie")
                     with patch(

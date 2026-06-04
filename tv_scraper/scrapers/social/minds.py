@@ -58,7 +58,7 @@ class Minds(BaseScraper):
             ``status``, ``data``, ``metadata``, ``error``.
         """
         # --- Validation ---
-        v_exchange, v_symbol = self._verify_symbol_exchange(exchange, symbol)
+        v_exchange, v_symbol, _ = self._verify_symbol_exchange(exchange, symbol)
 
         combined_symbol = f"{v_exchange}:{v_symbol}"
 

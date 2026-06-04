@@ -337,7 +337,7 @@ class TestNewsEndToEnd:
 
         with patch(
             "tv_scraper.scrapers.social.news.News._verify_symbol_exchange",
-            return_value=("NASDAQ", "AAPL"),
+            return_value=("NASDAQ", "AAPL", False),
         ):
             with patch.object(
                 news_scraper, "_request", return_value=mock_request.return_value
@@ -566,7 +566,7 @@ class TestNewsExportIntegration:
 
         with patch(
             "tv_scraper.scrapers.social.news.News._verify_symbol_exchange",
-            return_value=("NASDAQ", "AAPL"),
+            return_value=("NASDAQ", "AAPL", False),
         ):
             with patch.object(
                 scraper, "_request", return_value=mock_request.return_value

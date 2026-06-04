@@ -116,7 +116,7 @@ class News(BaseScraper):
                     "Both exchange and symbol must be provided together."
                 )
 
-            v_exchange, v_symbol = self._verify_symbol_exchange(exchange, symbol)
+            v_exchange, v_symbol, _ = self._verify_symbol_exchange(exchange, symbol)
             filters.append(f"symbol:{v_exchange}:{v_symbol}")
 
         if corp_activity:
@@ -208,7 +208,7 @@ class News(BaseScraper):
             Standardized response dict with keys
             ``status``, ``data``, ``metadata``, ``error``.
         """
-        v_exchange, v_symbol = self._verify_symbol_exchange(exchange, symbol)
+        v_exchange, v_symbol, _ = self._verify_symbol_exchange(exchange, symbol)
         self._validate_choice(language, set(LANGUAGES.values()))
         self._validate_choice(provider, set(NEWS_PROVIDERS))
         self._validate_choice(area, set(AREAS.keys()))

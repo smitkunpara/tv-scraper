@@ -170,7 +170,7 @@ class TestGetCandlesInvalidTimeframe:
         """Test invalid timeframe is handled gracefully."""
         mock_ws = MagicMock()
         mock_cc.return_value = mock_ws
-        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
         mock_ws.recv.side_effect = [ConnectionError("done")]
 
         cs = CandleStreamer()
@@ -194,7 +194,7 @@ class TestGetCandlesInvalidNumbCandles:
         """Test negative numb_candles returns error."""
         mock_ws = MagicMock()
         mock_cc.return_value = mock_ws
-        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
 
         cs = CandleStreamer()
         result = cs.get_candles(exchange="BINANCE", symbol="BTCUSDT", numb_candles=-5)
@@ -209,7 +209,7 @@ class TestGetCandlesInvalidNumbCandles:
         """Test zero numb_candles returns error."""
         mock_ws = MagicMock()
         mock_cc.return_value = mock_ws
-        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
 
         cs = CandleStreamer()
         result = cs.get_candles(exchange="BINANCE", symbol="BTCUSDT", numb_candles=0)
@@ -224,7 +224,7 @@ class TestGetCandlesInvalidNumbCandles:
         """Test non-integer numb_candles returns error."""
         mock_ws = MagicMock()
         mock_cc.return_value = mock_ws
-        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
 
         cs = CandleStreamer()
         result = cs.get_candles(exchange="BINANCE", symbol="BTCUSDT", numb_candles="5")
@@ -239,7 +239,7 @@ class TestGetCandlesInvalidNumbCandles:
         """Test very large numb_candles."""
         mock_ws = MagicMock()
         mock_cc.return_value = mock_ws
-        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
 
         ohlcv_entry = {"i": 0, "v": [1700000000, 100.0, 105.0, 99.0, 102.0, 5000]}
         ts_pkt = {
@@ -269,7 +269,7 @@ class TestGetCandlesInvalidIndicators:
         """Test empty indicators list works."""
         mock_ws = MagicMock()
         mock_cc.return_value = mock_ws
-        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
 
         ohlcv_entry = {"i": 0, "v": [1700000000, 100.0, 105.0, 99.0, 102.0, 5000]}
         ts_pkt = {
@@ -293,7 +293,7 @@ class TestGetCandlesInvalidIndicators:
         """Test None indicators works."""
         mock_ws = MagicMock()
         mock_cc.return_value = mock_ws
-        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
 
         ohlcv_entry = {"i": 0, "v": [1700000000, 100.0, 105.0, 99.0, 102.0, 5000]}
         ts_pkt = {
@@ -346,7 +346,7 @@ class TestGetCandlesValidInputs:
         """Test basic successful call."""
         mock_ws = MagicMock()
         mock_cc.return_value = mock_ws
-        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
         mock_ws.recv.side_effect = _make_mock_packets(5)
 
         cs = CandleStreamer()
@@ -366,7 +366,7 @@ class TestGetCandlesValidInputs:
         """Test with small numb_candles (1)."""
         mock_ws = MagicMock()
         mock_cc.return_value = mock_ws
-        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
         mock_ws.recv.side_effect = _make_mock_packets(1)
 
         cs = CandleStreamer()
@@ -383,7 +383,7 @@ class TestGetCandlesValidInputs:
         """Test with medium numb_candles (50)."""
         mock_ws = MagicMock()
         mock_cc.return_value = mock_ws
-        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
         mock_ws.recv.side_effect = _make_mock_packets(50)
 
         cs = CandleStreamer()
@@ -398,7 +398,7 @@ class TestGetCandlesValidInputs:
     )
     def test_all_timeframes(self, mock_validate, mock_cc):
         """Test with all supported timeframes."""
-        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
 
         def fresh_ws(*args, **kwargs):
             mock_ws = MagicMock()
@@ -422,7 +422,7 @@ class TestGetCandlesValidInputs:
     )
     def test_different_exchanges(self, mock_validate, mock_cc):
         """Test with different exchanges."""
-        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
 
         def fresh_ws(*args, **kwargs):
             mock_ws = MagicMock()
@@ -451,7 +451,7 @@ class TestGetCandlesWithIndicators:
         """Test with single RSI indicator."""
         mock_ws = MagicMock()
         mock_cc.return_value = mock_ws
-        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
         mock_fetch_meta.return_value = {
             "status": "success",
             "data": {
@@ -499,7 +499,7 @@ class TestGetCandlesWithIndicators:
         """Test with single MACD indicator."""
         mock_ws = MagicMock()
         mock_cc.return_value = mock_ws
-        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
         mock_fetch_meta.return_value = {
             "status": "success",
             "data": {
@@ -547,7 +547,7 @@ class TestGetCandlesWithIndicators:
         """Test with multiple indicators."""
         mock_ws = MagicMock()
         mock_cc.return_value = mock_ws
-        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
 
         study_responses = [
             {
@@ -603,7 +603,7 @@ class TestGetCandlesExport:
         """Test JSON export."""
         mock_ws = MagicMock()
         mock_cc.return_value = mock_ws
-        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
 
         ohlcv_entry = {"i": 0, "v": [1700000000, 100.0, 105.0, 99.0, 102.0, 5000]}
         ts_pkt = {
@@ -628,7 +628,7 @@ class TestGetCandlesExport:
         """Test CSV export."""
         mock_ws = MagicMock()
         mock_cc.return_value = mock_ws
-        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
 
         ohlcv_entry = {"i": 0, "v": [1700000000, 100.0, 105.0, 99.0, 102.0, 5000]}
         ts_pkt = {
@@ -656,7 +656,7 @@ class TestGetCandlesErrorHandling:
         """Test when no OHLCV data is received."""
         mock_ws = MagicMock()
         mock_cc.return_value = mock_ws
-        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
         mock_ws.recv.side_effect = [ConnectionError("done")]
 
         cs = CandleStreamer()
@@ -691,7 +691,7 @@ class TestGetCandlesErrorHandling:
         """Test timeout after 15 packets."""
         mock_ws = MagicMock()
         mock_cc.return_value = mock_ws
-        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
 
         ohlcv_entry = {"i": 0, "v": [1700000000, 100.0, 105.0, 99.0, 102.0, 5000]}
         ts_pkt = {
@@ -722,7 +722,7 @@ class TestMetadata:
         """Test metadata contains all input parameters."""
         mock_ws = MagicMock()
         mock_cc.return_value = mock_ws
-        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
 
         ohlcv_entry = {"i": 0, "v": [1700000000, 100.0, 105.0, 99.0, 102.0, 5000]}
         ts_pkt = {
@@ -757,7 +757,7 @@ class TestMetadata:
         """Test metadata without indicators doesn't include indicators key."""
         mock_ws = MagicMock()
         mock_cc.return_value = mock_ws
-        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
 
         ohlcv_entry = {"i": 0, "v": [1700000000, 100.0, 105.0, 99.0, 102.0, 5000]}
         ts_pkt = {
@@ -791,7 +791,7 @@ class TestResponseEnvelope:
         """Test success response has required keys."""
         mock_ws = MagicMock()
         mock_cc.return_value = mock_ws
-        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
 
         ohlcv_entry = {"i": 0, "v": [1700000000, 100.0, 105.0, 99.0, 102.0, 5000]}
         ts_pkt = {
@@ -877,7 +877,7 @@ class TestStudyIdMap:
         """Test that study_id_to_name_map is cleared before each call."""
         mock_ws = MagicMock()
         mock_cc.return_value = mock_ws
-        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
         mock_fetch_meta.return_value = {
             "status": "success",
             "data": {
@@ -922,7 +922,7 @@ class TestOHLCVSerialization:
         """Test OHLCV candle has correct structure."""
         mock_ws = MagicMock()
         mock_cc.return_value = mock_ws
-        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
         mock_ws.recv.side_effect = _make_mock_packets(1)
 
         cs = CandleStreamer()
@@ -945,7 +945,7 @@ class TestOHLCVSerialization:
         """Test OHLCV values are correct types."""
         mock_ws = MagicMock()
         mock_cc.return_value = mock_ws
-        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
         mock_ws.recv.side_effect = _make_mock_packets(1)
 
         cs = CandleStreamer()
@@ -968,7 +968,7 @@ class TestOHLCVSerialization:
         """Test OHLCV data is sorted by index."""
         mock_ws = MagicMock()
         mock_cc.return_value = mock_ws
-        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
         mock_ws.recv.side_effect = _make_mock_packets(10)
 
         cs = CandleStreamer()
@@ -990,7 +990,7 @@ class TestHeartbeatHandling:
         """Test heartbeat is echoed back."""
         mock_ws = MagicMock()
         mock_cc.return_value = mock_ws
-        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
 
         ohlcv_entry = {"i": 0, "v": [1700000000, 100.0, 105.0, 99.0, 102.0, 5000]}
         ts_pkt = {
@@ -1021,7 +1021,7 @@ class TestEdgeCases:
         """Test symbol with special characters."""
         mock_ws = MagicMock()
         mock_cc.return_value = mock_ws
-        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
 
         ohlcv_entry = {"i": 0, "v": [1700000000, 100.0, 105.0, 99.0, 102.0, 5000]}
         ts_pkt = {
@@ -1045,7 +1045,7 @@ class TestEdgeCases:
         """Test exchange is case insensitive."""
         mock_ws = MagicMock()
         mock_cc.return_value = mock_ws
-        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
 
         ohlcv_entry = {"i": 0, "v": [1700000000, 100.0, 105.0, 99.0, 102.0, 5000]}
         ts_pkt = {
@@ -1076,7 +1076,7 @@ class TestStreamerClass:
         """Test Streamer.get_candles delegates to CandleStreamer."""
         mock_ws = MagicMock()
         mock_cc.return_value = mock_ws
-        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
         mock_ws.recv.side_effect = _make_mock_packets(5)
 
         s = Streamer()
@@ -1093,7 +1093,7 @@ class TestStreamerClass:
         """Test Streamer export_result propagates to CandleStreamer."""
         mock_ws = MagicMock()
         mock_cc.return_value = mock_ws
-        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
         mock_ws.recv.side_effect = _make_mock_packets(1)
 
         s = Streamer(export="json")

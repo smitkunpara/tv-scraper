@@ -149,7 +149,7 @@ class TestGetMindsSuccess:
     @patch("tv_scraper.scrapers.social.minds.Minds._verify_symbol_exchange")
     def test_single_page_success(self, mock_verify, mock_request) -> None:
         """Test single page success."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
 
         mock_mind = {
             "text": "Test mind",
@@ -175,7 +175,7 @@ class TestGetMindsSuccess:
     @patch("tv_scraper.scrapers.social.minds.Minds._verify_symbol_exchange")
     def test_multi_page_pagination(self, mock_verify, mock_request) -> None:
         """Test multi-page pagination."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
 
         page1 = self._make_mock_api_response(
             [
@@ -216,7 +216,7 @@ class TestGetMindsSuccess:
     @patch("tv_scraper.scrapers.social.minds.Minds._verify_symbol_exchange")
     def test_limit_applied(self, mock_verify, mock_request) -> None:
         """Test limit parameter applied correctly."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
 
         minds = [
             {
@@ -242,7 +242,7 @@ class TestGetMindsSuccess:
     @patch("tv_scraper.scrapers.social.minds.Minds._verify_symbol_exchange")
     def test_symbol_info_extracted(self, mock_verify, mock_request) -> None:
         """Test symbol info extracted from first page."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
 
         symbol_info = {
             "name": "Apple Inc",
@@ -267,7 +267,7 @@ class TestGetMindsErrorHandling:
     @patch("tv_scraper.scrapers.social.minds.Minds._verify_symbol_exchange")
     def test_network_error(self, mock_verify, mock_request) -> None:
         """Test network error handling."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_request.return_value = (None, "Network error: Connection refused")
 
         scraper = Minds()
@@ -281,7 +281,7 @@ class TestGetMindsErrorHandling:
     @patch("tv_scraper.scrapers.social.minds.Minds._verify_symbol_exchange")
     def test_empty_results_break_loop(self, mock_verify, mock_request) -> None:
         """Test that empty results break the pagination loop."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_request.return_value = ({"results": [], "next": "", "meta": {}}, None)
 
         scraper = Minds()
@@ -294,7 +294,7 @@ class TestGetMindsErrorHandling:
     @patch("tv_scraper.scrapers.social.minds.Minds._verify_symbol_exchange")
     def test_max_pages_limit(self, mock_verify, mock_request) -> None:
         """Test max pages limit is enforced."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
 
         mind = {
             "text": "Mind",
@@ -323,7 +323,7 @@ class TestGetMindsExport:
     @patch("tv_scraper.core.base.save_json_file")
     def test_export_json(self, mock_save, mock_verify) -> None:
         """Test JSON export."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
 
         scraper = Minds(export="json")
 
@@ -353,7 +353,7 @@ class TestGetMindsExport:
     @patch("tv_scraper.core.base.save_csv_file")
     def test_export_csv(self, mock_save, mock_verify) -> None:
         """Test CSV export."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
 
         scraper = Minds(export="csv")
 
@@ -387,7 +387,7 @@ class TestGetMindsResponseEnvelope:
     @patch("tv_scraper.scrapers.social.minds.Minds._verify_symbol_exchange")
     def test_success_has_all_keys(self, mock_verify, mock_request) -> None:
         """Test success response has required keys."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_request.return_value = (
             {"results": [], "next": "", "meta": {}},
             None,
@@ -423,7 +423,7 @@ class TestGetMindsResponseEnvelope:
     @patch("tv_scraper.scrapers.social.minds.Minds._verify_symbol_exchange")
     def test_metadata_fields(self, mock_verify, mock_request) -> None:
         """Test metadata contains expected fields."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_request.return_value = (
             {
                 "results": [
@@ -461,7 +461,7 @@ class TestGetMindsEdgeCases:
     @patch("tv_scraper.scrapers.social.minds.Minds._verify_symbol_exchange")
     def test_cursor_without_c_ignored(self, mock_verify, mock_request) -> None:
         """Test that next URL without '?c=' is treated as no more pages."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
 
         mock_request.return_value = (
             {
@@ -490,7 +490,7 @@ class TestGetMindsEdgeCases:
     @patch("tv_scraper.scrapers.social.minds.Minds._verify_symbol_exchange")
     def test_empty_cursor_ignored(self, mock_verify, mock_request) -> None:
         """Test that empty cursor is treated as no more pages."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
 
         mock_request.return_value = (
             {
@@ -519,7 +519,7 @@ class TestGetMindsEdgeCases:
     @patch("tv_scraper.scrapers.social.minds.Minds._verify_symbol_exchange")
     def test_limit_none_metadata(self, mock_verify, mock_request) -> None:
         """Test that limit=None doesn't add limit to metadata."""
-        mock_verify.return_value = ("NASDAQ", "AAPL")
+        mock_verify.return_value = ("NASDAQ", "AAPL", False)
         mock_request.return_value = (
             {"results": [], "next": "", "meta": {}},
             None,

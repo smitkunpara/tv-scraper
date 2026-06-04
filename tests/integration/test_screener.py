@@ -142,7 +142,7 @@ class TestScreenerForecastStreamerWorkflow:
             "totalCount": 2,
         }
         mock_screener.return_value = (screener_response, None)
-        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper())
+        mock_validate.side_effect = lambda e, s: (e.upper(), s.upper(), False)
 
         mock_ws_instance = MagicMock()
         mock_ws.return_value = mock_ws_instance
